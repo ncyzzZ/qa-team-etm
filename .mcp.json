@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "xray": {
+      "command": "node",
+      "args": ["${USERPROFILE}/mcp/xray-mcp/index.mjs"],
+      "env": {
+        "XRAY_CLIENT_ID": "${XRAY_CLIENT_ID}",
+        "XRAY_CLIENT_SECRET": "${XRAY_CLIENT_SECRET}"
+      }
+    }
+  }
+}

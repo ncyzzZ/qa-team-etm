@@ -1,0 +1,19 @@
+# secrets - never commit
+.env
+**/.env
+*.env
+
+# per-card work data and generated files
+.claude/team/work/
+.claude/team/assets/report-*.html
+.claude/team/board.html
+.claude/team/*.json
+
+# zip copies and noise
+*.zip
+node_modules/
+.DS_Store
+Thumbs.db
+.claude/team/events.jsonl
+.claude/team/server.pid
+.claude/team/usage.json
