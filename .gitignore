@@ -6,7 +6,6 @@
 # per-card work data and generated files
 .claude/team/work/
 .claude/team/assets/report-*.html
-.claude/team/board.html
 .claude/team/*.json
 
 # zip copies and noise
