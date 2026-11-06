@@ -1,0 +1,7 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "node .claude/team/usage-feed.mjs",
+    "padding": 0
+  }
+}

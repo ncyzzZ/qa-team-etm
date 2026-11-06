@@ -17,3 +17,4 @@ Thumbs.db
 .claude/team/events.jsonl
 .claude/team/server.pid
 .claude/team/usage.json
+.claude/team/usage-raw.json

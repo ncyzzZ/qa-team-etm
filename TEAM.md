@@ -129,7 +129,8 @@ When the user tells a new bug story or a case the team forgot, add it there.
 - Token usage แยกตามเวลาเริ่มของแต่ละการ์ด (การ์ดที่รันซ้อนกันจะนับทับกันบางส่วน)
 
 ## ลิงก์บนบอร์ด (LINKS)
-หลังแปะผลรันเสร็จ Lead ใส่ลิงก์ให้ผู้ใช้กดเปิดจากบอร์ดได้เลย (ใส่ `--job` ด้วยถ้าทำหลายการ์ด):
-- รายงาน evidence: `node .claude/team/team.mjs link "Evidence report" <path ของ report.html> --kind report`
+รายงาน evidence ขึ้นบอร์ดเอง ทุกครั้งที่รัน pass หรือ fail: `tools/run-card.mjs` ส่งลิงก์ให้ (ป้าย "Evidence report <KEY> (เวลา) | N pass / M fail") ไม่ต้องสั่งซ้ำ ถ้าไม่ขึ้น (เช่น สร้างรายงานด้วยวิธีอื่น) ค่อยใช้คำสั่งด้านล่าง
+หลังแปะผลรันเสร็จ Lead ใส่ลิงก์อื่นให้ผู้ใช้กดเปิดจากบอร์ดได้เลย (ใส่ `--job` ด้วยถ้าทำหลายการ์ด):
+- รายงาน evidence (ใช้เฉพาะกรณีไม่ขึ้นเอง): `node .claude/team/team.mjs link "Evidence report" <path ของ report.html> --kind report`
 - TC ใน Jira/Xray: `node .claude/team/team.mjs link "ETM-1234 TC-1 ผ่าน" https://<jira>/browse/ETM-1234 --kind tc`
 - Defect: `--kind defect` (ลิงก์ซ้ำจะอัปเดตป้ายเดิม ไม่เพิ่มซ้ำ)
