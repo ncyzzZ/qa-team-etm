@@ -133,4 +133,5 @@ When the user tells a new bug story or a case the team forgot, add it there.
 หลังแปะผลรันเสร็จ Lead ใส่ลิงก์อื่นให้ผู้ใช้กดเปิดจากบอร์ดได้เลย (ใส่ `--job` ด้วยถ้าทำหลายการ์ด):
 - รายงาน evidence (ใช้เฉพาะกรณีไม่ขึ้นเอง): `node .claude/team/team.mjs link "Evidence report" <path ของ report.html> --kind report`
 - TC ใน Jira/Xray: `node .claude/team/team.mjs link "ETM-1234 TC-1 ผ่าน" https://<jira>/browse/ETM-1234 --kind tc`
+- TC ของการ์ด: ใส่ลิงก์ขึ้นบอร์ดเฉพาะตอนผู้ใช้แปะผลรันเสร็จ (Phase 6) ไม่ใส่ตอน push Xray. ใส่เฉพาะ TC ที่มีผลรัน ใบละ 1 ลิงก์ `--kind tc --job <KEY>` ป้ายเป็นแค่เลข "ETM-xxxx" (ลิงก์ `https://pttep.atlassian.net/browse/<TC key>`)
 - Defect: `--kind defect` (ลิงก์ซ้ำจะอัปเดตป้ายเดิม ไม่เพิ่มซ้ำ)
