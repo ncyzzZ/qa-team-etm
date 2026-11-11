@@ -767,7 +767,7 @@ function showAsk(ask) {
     const b = document.createElement('span'); b.className = 'opt'; b.textContent = v; box.appendChild(b);
   }
 }
-// plan limits, pushed in by the lead with `team.mjs usage ...` (the browser cannot read the account's usage itself)
+// plan limits, written to usage.json by the status line hook (usage-feed.mjs); the browser cannot read the account's usage itself
 function fmtReset(iso, withDay) {
   const d = new Date(iso); if (isNaN(d)) return '-';
   const tm = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }), same = d.toDateString() === new Date().toDateString();
@@ -779,12 +779,12 @@ function usageRow(label, pct, resets, withDay) {
 }
 function renderUsage(u) {
   const box = el('ul');
-  if (!u) { box.innerHTML = '<p class="unote">ยังไม่มีข้อมูล ให้ LEAD รัน team.mjs usage</p>'; return; }
+  if (!u) { box.innerHTML = '<p class="unote">ยังไม่มีข้อมูล (รออัปเดตจาก status line)</p>'; return; }
   let h = usageRow('5-hour limit', u.five.pct, u.five.resetsAt, false) + usageRow('Weekly · all models', u.week.pct, u.week.resetsAt, true);
   if (u.ctx != null) h += usageRow('Session context', u.ctx, null, false);
   if (u.five.pct >= 90) h += '<p class="uwarn">โควตา 5 ชั่วโมงใกล้เต็ม งานอาจหยุดจนกว่าจะรีเซ็ต</p>';
   else if (u.five.pct >= 70) h += '<p class="uwarn mid">โควตา 5 ชั่วโมงเกิน 70% ระวังงานใหญ่</p>';
-  if (Date.now() - u.t > 15 * 60 * 1000) h += '<p class="unote">ข้อมูลเก่า (' + hhmm(u.t) + ') ให้ LEAD รัน team.mjs usage ใหม่</p>';
+  if (Date.now() - u.t > 15 * 60 * 1000) h += '<p class="unote">ข้อมูลเก่า (' + hhmm(u.t) + ') รออัปเดตจาก status line</p>';
   box.innerHTML = h;
 }
 let curJob = null, dismissed = null;
