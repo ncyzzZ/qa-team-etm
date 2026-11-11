@@ -45,9 +45,8 @@ The user watches a board in the browser. Everyone updates it with one Bash comma
 node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short Thai text, max 60 chars>"
 ```
 
-- First action of every agent: `set <its id> working "..."` saying what it is doing now.
-- While working, an agent may add `--pct <0-100>` to `set` when it really knows the progress (for example 3 of 10 cases written = 30). The board then shows a download-style bar filling up. Without it the bar just slides and shows a timer. Never guess a percent.
-- Last action of every agent: `set <its id> done "..."` with the result in a few words (or `blocked "..."`).
+- Every agent updates the board exactly twice: `set <its id> working "..."` when it starts, and `set <its id> done "..."` with the result in a few words (or `blocked "..."`) when it ends. Nothing in between: no progress updates and no `--pct`.
+- Every board command costs a full round trip. Never send one alone when it can ride along: put it in the same Bash call as another command (`node .claude/team/team.mjs set ... ; <the other command>`), or send it in the same response as another tool call. This also holds for the lead's `ask`, `clear`, `link` and `log`.
 - Lead, before every question to the user: `node .claude/team/team.mjs ask "<the question>"`.
   After the user answers: `node .claude/team/team.mjs clear`.
 - Every time you need the user's yes in the chat (before running tests, before pushing to Xray, before logging a defect, before any Jira write), use the approval form so the board tells the user to go to the chat:
@@ -56,6 +55,22 @@ node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short 
 - Usage limits: do not call `mcp__ccd_session_mgmt__get_usage`, do not run `team.mjs usage`, and do not report usage numbers in the chat, unless the user asks. The status line (`usage-feed.mjs`) feeds the board by itself and costs no tokens.
 - Start of a run: `node .claude/team/team.mjs start ETM-1234` (resets the board, opens it if not running).
 - Never put secrets, passwords or tokens in a status text.
+
+## Which agents to call (every agent starts with its own context, so each call is expensive)
+
+Call an agent only when its row says so. When a row says "lead does it", the lead does the job itself and sets that agent's board state with `set <id> done "LEAD ทำเอง"`.
+
+| Agent | Call it when | Otherwise |
+|---|---|---|
+| analyst | every Story | - |
+| inspector | the Story has screens and a design to check | skip |
+| designer | test cases must be written | skip (the user already has test cases or scripts) |
+| reviewer | the draft has more than 5 test cases, or the user asks for a review | lead does it: checks the draft against the 9 points in `.claude/agents/test-reviewer.md` and `lessons-learned.md`, writes `review.md`, sends the draft back to the designer once at most |
+| logger | the user said yes to a Jira or Xray write | skip |
+| automator | the user wants Playwright scripts and has none | skip |
+| reporter | `tools/run-card.mjs` did not build the evidence report, or the user asks for a summary | skip, the report is already built |
+
+If the user says they already have Playwright scripts: no analyst, inspector, designer, reviewer or automator. Never call the same agent twice for something one call can do: give it everything it needs in one prompt.
 
 ## The cycle
 
@@ -70,7 +85,7 @@ node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short 
 
 **Phase 2 - Design (designer).** Reads the work files and the knowledge files. Writes the draft test cases as Markdown in `.claude/team/work/<KEY>/draft-tc.md`: manual version plus, per case, Automate or Manual only with a reason. No .xlsx or .csv, ever.
 
-**Phase 3 - Review (reviewer).** Checks the draft. If it fails, it goes back to the designer. At most 2 rounds, then Lead shows what is still open.
+**Phase 3 - Review (reviewer, or the lead for a draft of 5 test cases or fewer).** Checks the draft. If it fails, it goes back to the designer. At most 2 rounds, then Lead shows what is still open.
 
 **CHECKPOINT 2 - Test case review.** Lead shows the draft with a short summary per case (what it does, expected result, what it proves). `ask`, WAIT.
 
@@ -82,7 +97,7 @@ node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short 
 
 **Run command (every card, one or many at once).** Never give a bare `npx playwright test`. Give `node tools/run-card.mjs <KEY> <spec> -g "<filter>"` (run from `D:\mac\DocforAi\STMS`). It gives each run its own result folder (`test-results-<KEY>-<time>` in the Playwright repo) and its own report file (`Evidence/_reports/evidence-report-<KEY>-<time>.html`, plus `latest-<KEY>.html`), builds the report as soon as the run ends and prints the failed tests. Two or more cards can run at the same time without wiping each other. To rebuild from a saved folder: `node tools/run-card.mjs <KEY> --build-only <folder>`. Cards that touch the same QA data (the same plan) must still not run together.
 
-**Phase 6 - After the run.** When the user says the run is done ("รันเสร็จแล้ว"), reporter builds the evidence report with `etm-evidence-report`, before any new run.
+**Phase 6 - After the run.** When the user says the run is done ("รันเสร็จแล้ว"), make sure the evidence report exists before any new run. `tools/run-card.mjs` normally built it already: then just use it. Only if it is missing, reporter builds it with `etm-evidence-report`.
 
 **Phase 7 - Failures.** For every failed step ask the user: script bug, wrong test wording, or real app bug. Never decide alone. A real bug goes to the logger with `log-defect-jira-etm`, only after the user's explicit go-ahead.
 
@@ -102,7 +117,7 @@ node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short 
 - A subagent returns at most 10 lines: what it did, the file path, open questions.
 - Read only what the job needs: narrow Jira `fields`, small `maxResults`, one Figma frame at a time.
 - Never print big raw content or base64 into the chat.
-- Do not call an agent whose job is not needed (no screens, no inspector; no failed step, no logger).
+- Do not call an agent whose job is not needed: follow the table in "Which agents to call".
 
 ## Test case wording (every column: Summary, Description, Test Step, Expected Result)
 
@@ -116,7 +131,7 @@ node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short 
 
 ## Lessons
 
-`.claude/team/knowledge/lessons-learned.md` has the 9 base experience categories plus any lessons added later in section 10. Designer and reviewer go through all of them (base 9 and every added lesson) for every Story.
+`.claude/team/knowledge/lessons-learned.md` has the 9 base experience categories plus any lessons added later in section 10. Designer and reviewer (or the lead when it does the review) go through all of them (base 9 and every added lesson) for every Story.
 When the user tells a new bug story or a case the team forgot, add it there.
 
 ## หลายการ์ดพร้อมกัน (multi-job board)
