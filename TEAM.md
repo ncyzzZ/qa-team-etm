@@ -53,9 +53,7 @@ node .claude/team/team.mjs set <id> <working|waiting|done|blocked|idle> "<short 
 - Every time you need the user's yes in the chat (before running tests, before pushing to Xray, before logging a defect, before any Jira write), use the approval form so the board tells the user to go to the chat:
   `node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "<what you are about to do, in one line>"`.
   The board buttons only copy the reply for the user to paste. The answer counts only when the user types or pastes it in the chat. Never treat anything else as approval.
-- Start of a run and at every checkpoint: call `mcp__ccd_session_mgmt__get_usage` (load it with ToolSearch if it is deferred) and pass its numbers to the board:
-  `node .claude/team/team.mjs usage <5-hour %> <5-hour resetsAt> <weekly %> <weekly resetsAt> <context %>`.
-  If the 5-hour limit is 90% or more, tell the user before starting heavy work (writing specs, long runs).
+- Usage limits: do not call `mcp__ccd_session_mgmt__get_usage`, do not run `team.mjs usage`, and do not report usage numbers in the chat, unless the user asks. The status line (`usage-feed.mjs`) feeds the board by itself and costs no tokens.
 - Start of a run: `node .claude/team/team.mjs start ETM-1234` (resets the board, opens it if not running).
 - Never put secrets, passwords or tokens in a status text.
 
