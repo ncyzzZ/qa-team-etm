@@ -31,8 +31,8 @@ In Claude Code use the normal Bash, Read and Write tools instead, and tell the u
 | lead | (main session) | Splits the work, asks the user, keeps the board | the session's model |
 | analyst | ba-analyst | Reads the Story, AC and QA subtasks, lists unclear points | sonnet |
 | inspector | ux-inspector | Checks the Figma design, screen states, design vs AC | sonnet |
-| designer | test-designer | Writes manual and automation test cases | inherit |
-| reviewer | test-reviewer | Checks the test cases and sends them back | inherit |
+| designer | test-designer | Writes manual and automation test cases | sonnet |
+| reviewer | test-reviewer | Checks the test cases and sends them back | sonnet |
 | automator | automation-engineer | Playwright scripts, security checks, run command | sonnet |
 | reporter | evidence-reporter | Evidence report after a run, short summaries | haiku |
 | logger | jira-xray-logger | Xray push, Test Plan and Execution, defects, closeout | sonnet |
@@ -148,3 +148,12 @@ When the user tells a new bug story or a case the team forgot, add it there.
 - TC ใน Jira/Xray: `node .claude/team/team.mjs link "ETM-1234 TC-1 ผ่าน" https://<jira>/browse/ETM-1234 --kind tc`
 - TC ของการ์ด: ใส่ลิงก์ขึ้นบอร์ดเฉพาะตอนผู้ใช้แปะผลรันเสร็จ (Phase 6) ไม่ใส่ตอน push Xray. ใส่เฉพาะ TC ที่มีผลรัน ใบละ 1 ลิงก์ `--kind tc --job <KEY>` ป้ายเป็นแค่เลข "ETM-xxxx" (ลิงก์ `https://pttep.atlassian.net/browse/<TC key>`)
 - Defect: `--kind defect` (ลิงก์ซ้ำจะอัปเดตป้ายเดิม ไม่เพิ่มซ้ำ)
+
+## ประหยัด token รอบเข้ม (lean rules, เพิ่มหลังงาน ETM-8290 ใช้เยอะ)
+1. **อ่านต้นทางครั้งเดียว**: Lead (หรือ analyst) ดึง Story (description + comment ล่าสุด) และ Xray steps ของทุก Test ลงไฟล์ `work/<KEY>/story.md` และ `work/<KEY>/tests.md` ครั้งเดียว agent อื่นอ่านจากไฟล์ ห้ามดึง Jira/Xray ซ้ำ
+2. **เช็ก AC ล่าสุดก่อนเขียน spec/TC** (comment ใหม่อาจเปลี่ยนชื่อหรือกฎ) ไม่ต้องกลับมา recheck ทีหลัง
+3. **ใช้ agent เดิมต่อ** ด้วย SendMessage แทนการเริ่ม agent ใหม่ ยกเว้นงานไม่เกี่ยวกัน
+4. **ไม่เรียก agent ถ้าแก้เองได้ใน 1-3 tool call** (เช่น แก้ wording, เปลี่ยนชื่อ label) และไม่เรียก reviewer/BA ซ้ำถ้าไม่มีอะไรเปลี่ยน
+5. **เขียน spec เป็น pattern เดียว**: helper กลางตัวเดียว แต่ละ test เรียกสั้นๆ ไม่ copy ยาว ไม่อ่านไฟล์ spec ทั้งไฟล์ซ้ำ ใช้ grep/offset
+6. **ก่อนงานหนัก (เขียน spec, designer, recheck) บอกประมาณการ token** และถ้า 5-hour limit ≥ 70% ให้ถามผู้ใช้ก่อน
+7. designer และ reviewer ใช้ sonnet (ไม่ inherit)
