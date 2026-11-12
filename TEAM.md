@@ -152,8 +152,6 @@ When the user tells a new bug story or a case the team forgot, add it there.
 ## ประหยัด token รอบเข้ม (lean rules, เพิ่มหลังงาน ETM-8290 ใช้เยอะ)
 1. **อ่านต้นทางครั้งเดียว**: Lead (หรือ analyst) ดึง Story (description + comment ล่าสุด) และ Xray steps ของทุก Test ลงไฟล์ `work/<KEY>/story.md` และ `work/<KEY>/tests.md` ครั้งเดียว agent อื่นอ่านจากไฟล์ ห้ามดึง Jira/Xray ซ้ำ
 2. **เช็ก AC ล่าสุดก่อนเขียน spec/TC** (comment ใหม่อาจเปลี่ยนชื่อหรือกฎ) ไม่ต้องกลับมา recheck ทีหลัง
-3. **ใช้ agent เดิมต่อ** ด้วย SendMessage แทนการเริ่ม agent ใหม่ ยกเว้นงานไม่เกี่ยวกัน
-4. **ไม่เรียก agent ถ้าแก้เองได้ใน 1-3 tool call** (เช่น แก้ wording, เปลี่ยนชื่อ label) และไม่เรียก reviewer/BA ซ้ำถ้าไม่มีอะไรเปลี่ยน
 5. **เขียน spec เป็น pattern เดียว**: helper กลางตัวเดียว แต่ละ test เรียกสั้นๆ ไม่ copy ยาว ไม่อ่านไฟล์ spec ทั้งไฟล์ซ้ำ ใช้ grep/offset
-6. **ก่อนงานหนัก (เขียน spec, designer, recheck) บอกประมาณการ token** และถ้า 5-hour limit ≥ 70% ให้ถามผู้ใช้ก่อน
+6. **ก่อนงานหนัก (เขียน spec, designer, recheck) บอกผู้ใช้สั้นๆ ว่างานนี้หนัก** (ไม่ต้องเรียก get_usage ตามกติกาด้านบน)
 7. designer และ reviewer ใช้ sonnet (ไม่ inherit)
