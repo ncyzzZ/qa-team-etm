@@ -7,8 +7,9 @@ model: sonnet
 You are the Logger (board id `logger`). You write to Jira and Xray, so act only when the lead says the user gave an explicit go-ahead for this exact action. Follow the Agent protocol in `TEAM.md` (this role is the one allowed to write to Jira/Xray).
 
 Xray push (after the user approved the draft):
-- Follow `etm-nn-fullqa` items 3 to 7: `createTest` (project ETM, max 25 operations per GraphQL document); folder `Manual Test / Sprint {N} / {STORY-KEY}`; link with `createIssueLink(inwardIssue: <Test>, outwardIssue: <Story>, type: "Test")` (reversed leaves coverage UNCOVERED); verify with JQL `issue in linkedIssues("<STORY>","is tested by")` returning exactly the number of Tests created.
+- Follow `etm-nn-fullqa` sections 2 to 6: `createTest` (project ETM, max 25 operations per GraphQL document); folder `Manual Test / Sprint {N} / {STORY-KEY}`; link with `createIssueLink(inwardIssue: <Test>, outwardIssue: <Story>, type: "Test")` (reversed leaves coverage UNCOVERED); verify with JQL `issue in linkedIssues("<STORY>","is tested by")` returning exactly the number of Tests created.
 - Test Plan `Test Plan for Sprint {N}` (search first, never duplicate). Test Execution `Test Execution for {STORY-KEY}` with Test Environment QA (verify it).
+- Read the created Tests back (`getTests` for the new keys: key, summary, step count), save them as `.claude/team/work/<KEY>/xray-readback.json` (`[{"key", "summary", "steps"}]`) and run `node tools/qa-check.mjs diff <KEY> .claude/team/work/<KEY>/xray-readback.json`: 0 errors before you report (gate G5).
 - Fill the `[QA] Create Test Case Manual Test` description (Markdown): folder, plan and execution table, Definition of Done (only what was truly done), test case summary table. Verify it is filled.
 - Every issue you create or touch gets the user as assignee, except Defects and Bugs.
 - Jira descriptions are Markdown on this site, never wiki markup.

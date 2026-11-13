@@ -1,68 +1,65 @@
-# ทีม QA AI สำหรับ ETM - คู่มือเริ่มใช้
+# ทีม QA AI สำหรับ ETM
 
-## ติดตั้ง (ครั้งเดียว)
+ทุกอย่างของทีมอยู่ใน repo นี้ (agents, skills, เอกสาร, สคริปต์รายงาน, บอร์ด) คนอื่นแค่ clone แล้วเปิดด้วย Claude Code
 
-1. แตกไฟล์แล้วคัดลอกเข้าโฟลเดอร์ที่คุณใช้เขียน TC ของ ETM (โฟลเดอร์ที่มี `CLAUDE.md` ของ ETM อยู่):
-   - `TEAM.md`
-   - โฟลเดอร์ `.claude/agents/` (7 ไฟล์)
-   - โฟลเดอร์ `.claude/team/` (สคริปต์บอร์ด และไฟล์ความรู้)
-2. อย่าเขียนทับ `CLAUDE.md` เดิม ให้เพิ่มบรรทัดนี้ต่อท้าย:
+## เริ่มใช้ (ครั้งเดียว)
 
-   `เมื่อผู้ใช้สั่ง "เริ่มเขียน TC การ์ด ETM-xxxx" หรือ "ทีม QA: ETM-xxxx" ให้อ่าน TEAM.md แล้วทำงานเป็น QA LEAD ตามนั้น`
+1. `git clone https://github.com/ncyzzZ/qa-team-etm.git` แล้วเปิดโฟลเดอร์นี้ใน Claude Code
+2. ต้องมี **Node.js 18+** และ repo Playwright `ep-etm-fe-qa` (ติดตั้ง `npm install` แล้ว)
+3. ตั้ง environment variable (ห้ามใส่ลงไฟล์ที่ commit):
+   - `PW_REPO` = โฟลเดอร์ของ `ep-etm-fe-qa` (ถ้าวางไว้ข้าง repo นี้ในชื่อ `ep-etm-fe-qa` ไม่ต้องตั้ง)
+   - `XRAY_CLIENT_ID` และ `XRAY_CLIENT_SECRET` สำหรับ Xray (`.mcp.json` อ่านจากสองตัวนี้ และใช้ server ใน `xray-toolkit/`)
+4. เชื่อม connector ใน Claude: Atlassian (Jira) และ Figma ตามสิทธิ์ที่คุณมี
+5. เปิด Claude Code ในโฟลเดอร์นี้ พิมพ์ `/agents` ควรเห็น 7 ตัว: ba-analyst, ux-inspector, test-designer, test-reviewer, automation-engineer, evidence-reporter, jira-xray-logger
 
-3. เปิด Claude Code ในโฟลเดอร์นั้นใหม่ แล้วพิมพ์ `/agents` เพื่อเช็กว่าเห็น 7 ตัว:
-   ba-analyst, ux-inspector, test-designer, test-reviewer, automation-engineer, evidence-reporter, jira-xray-logger
-4. ต้องมี Node.js (คุณใช้ Playwright อยู่แล้ว จึงน่าจะมี)
+## วิธีเริ่มงาน
 
-## วิธีเริ่ม
+พิมพ์ `เริ่มเขียน TC การ์ด ETM-1234` (หรือส่งแค่คีย์ `ETM-1234`) Claude จะอ่าน `TEAM.md` แล้วทำงานเป็น QA LEAD และเปิดบอร์ดที่ http://localhost:4777
 
-พิมพ์ใน Claude Code:
+**เรียกครั้งเดียวจบ:** Lead ทำครบทุกขั้นเอง ไม่ถามว่า "ต่อไหม" ระหว่างขั้น และหยุดเฉพาะจุดที่ต้องให้คุณตัดสิน คุณอนุมัติล่วงหน้าได้ในข้อความเดียวกัน เช่น
 
-`เริ่มเขียน TC การ์ด ETM-1234`
+- `ETM-1234 ทำให้ครบ` = ดูผล quick scan และร่าง TC แล้วไปต่อโดยไม่รอ
+- `ETM-1234 ทำให้ครบ push ได้เลย รันได้เลย` = ผ่านด่านตรวจแล้ว push Xray และรันเทสให้เลย
+- การล็อก defect และการตัดสินว่า step ที่ fail เป็น bug หรือสคริปต์ผิด ไม่มีทางอนุมัติล่วงหน้า ต้องให้คุณตอบเสมอ
 
-ใช้ประโยคนี้แทนการส่งแค่คีย์ เพราะสกิล `etm-nn-fullqa` เดิมอาจทำงานเองโดยไม่ผ่านทีม
+ผลงานของทุก agent ผ่าน "ด่านตรวจคุณภาพ" (G1-G8 ใน `TEAM.md`) ก่อนถึงมือคุณ
 
-## แล้วมันจะเป็นยังไงต่อ
+## มีอะไรใน repo
 
-1. **Lead เปิดบอร์ด** เบราว์เซอร์จะเด้งขึ้นมาที่ http://localhost:4777 วางไว้ข้างหน้าต่าง Claude Code ได้เลย
-2. **Analyst** อ่าน Story, AC และ `[QA]` subtask ส่วน **Inspector** ดูดีไซน์ (ถ้า Story มีหน้าจอ) ทั้งคู่ทำพร้อมกัน
-3. **หยุดรอคุณ #1:** ดูผล quick scan และคำถามที่ยังไม่ชัด (หน้าบอร์ดจะขึ้นป๊อปอัปให้ด้วย)
-4. **Designer** เขียน test case แบบ manual พร้อมระบุว่าเคสไหนทำ automation ได้
-5. **Reviewer** ตรวจ ถ้าไม่ผ่านจะตีกลับให้ Designer แก้ (สูงสุด 2 รอบ)
-6. **หยุดรอคุณ #2:** ดูร่าง test case พร้อมสรุปรายเคส
-7. **หยุดรอคุณ #3:** อนุมัติให้ push เข้า Xray
-8. **Logger** push, ลิงก์, ทำ Test Plan และ Test Execution, เติมคำอธิบาย subtask
-9. **Automator** จัดตารางว่า Test ไหนทำ script ได้ รอคุณ OK แล้วเขียน Playwright ให้ และให้คำสั่งรัน
-10. **คุณรันเองบนเครื่อง** (ต้องเปิด VPN) พอเสร็จบอกว่า "รันเสร็จแล้ว"
-11. **Reporter** ทำรายงาน evidence
-12. ถ้ามี step ที่ไม่ผ่าน ทีมจะถามคุณก่อนเสมอว่าเป็นสคริปต์ผิด, wording ผิด หรือ bug จริง ถ้า bug จริงและคุณสั่งล็อก **Logger** จะล็อกตามสกิล `log-defect-jira-etm`
-13. ปิดงานเมื่อคุณสั่ง
+| ที่อยู่ | คืออะไร |
+|---|---|
+| `TEAM.md`, `CLAUDE.md` | กติกาและวงจรการทำงานของทีม, ค่า settings (Jira, board, `PW_REPO`) |
+| `.claude/agents/` | 7 บทบาท |
+| `.claude/skills/` | `etm-nn-fullqa` (กติกา Jira/Xray), `etm-evidence-report` (รายงานหลังรัน), `log-defect-jira-etm` (ล็อก defect), `etm-simop-rules` (Story SIMOP) |
+| `.claude/team/` | บอร์ดสถานะ, ไฟล์ความรู้ (`knowledge/`: lessons, วิธีออกแบบ, กฎเขียนสคริปต์, วิธีรัน/Xray) |
+| `docs/` | workflow doc, UI map ของ ETM, template เอกสาร |
+| `tools/` | `run-card.mjs` (รัน Playwright ต่อการ์ด แล้วสร้างรายงานทันที), `evidence-report-v4.mjs` (ตัวสร้างรายงาน) |
+| `tools/qa-check.mjs` | ตัวตรวจผลงานของ agent ก่อนส่งให้ผู้ใช้: `draft` (test case), `spec` (สคริปต์), `work` (ไฟล์ของ analyst/inspector/reviewer/automator), `manifest`, `diff` (Xray เทียบกับร่าง) |
+| `xray-toolkit/` | MCP server ของ Xray และสคริปต์ import |
 
-ทีมจะไม่รันเทส ไม่ล็อก defect และไม่ push เข้า Xray ถ้าคุณยังไม่ได้สั่งตรง ๆ
+## รันเทสและดูรายงาน
+
+จากโฟลเดอร์ root ของ repo นี้ (เปิด VPN ก่อน):
+
+```bash
+node tools/run-card.mjs ETM-1234 <spec> -g "ETM-1111|ETM-2222"
+```
+
+- ผลรันเก็บใน `test-results-<KEY>-<เวลา>` ใน `PW_REPO` และรายงาน HTML อยู่ที่ `Evidence/_reports/` ใน repo นี้ (ไม่ถูก commit)
+- สร้างรายงานใหม่จากโฟลเดอร์ที่เก็บไว้: `node tools/run-card.mjs ETM-1234 --build-only <โฟลเดอร์ผลรัน>`
+- รายงานมี 2 แท็บ: ผลรายขั้น (ตารางพร้อมรูป) และสรุปส่งต่อ dev / BA
+- Step (Action) / Expected / Test Data ในรายงานมาจาก manifest ที่ดึงจาก Xray (ดู `.claude/skills/etm-evidence-report/SKILL.md`)
 
 ## บอร์ด
 
-- การ์ดแต่ละใบคือสมาชิกในทีม บอกว่าใครกำลังทำอะไร (WORKING), รอคุณ (WAITING), เสร็จ (DONE) หรือติด (BLOCKED)
-- ฝั่งขวาคือบันทึกกิจกรรมล่าสุด
-- เมื่อทีมต้องการคำตอบจากคุณ จะมีป๊อปอัปเต็มจอบนบอร์ด และปิดเองเมื่อคุณตอบ
-- คำสั่งที่ใช้เอง: `node .claude/team/team.mjs open` (เปิดบอร์ด), `stop` (ปิดเซิร์ฟเวอร์), `status` (ดูสถานะ)
-- เซิร์ฟเวอร์ฟังเฉพาะเครื่องคุณ (127.0.0.1)
+`node .claude/team/team.mjs open` (เปิด), `stop` (ปิด), `status` (ดูสถานะ) เซิร์ฟเวอร์ฟังเฉพาะเครื่องคุณ (127.0.0.1)
+
+## ไม่ถูกเก็บใน git (อยู่เฉพาะเครื่อง)
+
+`.env`, ข้อมูลงานรายการ์ด `.claude/team/work/`, `Evidence/`, ผลรัน, ไฟล์ zip
 
 ## ข้อจำกัดที่ควรรู้
 
-- **ป๊อปอัปจริงใน terminal ทำไม่ได้** จึงทำเป็นหน้าบอร์ดในเบราว์เซอร์แทน
-- บอร์ดอัปเดตเมื่อ agent รันคำสั่ง `team.mjs` ตามที่เขียนไว้ใน prompt ถ้าตัวไหนลืม Lead จะอัปเดตแทน และคุณบอกให้แก้ prompt ได้
-- ที่ผมทดสอบแล้ว: คำสั่งบอร์ดกับเซิร์ฟเวอร์ ส่วนที่ **ยังไม่ได้ทดสอบ**: หน้าบอร์ดในเบราว์เซอร์จริง และการรันทั้งชุดใน Claude Code ของคุณ
-- สกิลเดิมของคุณบางตัวเขียนอ้างเครื่องมือที่ใช้ได้เฉพาะแอปอื่น (เช่น `device_bash`, `SendUserFile`) ใน Claude Code จะใช้ Bash, Read, Write ปกติแทน ถ้าขั้นไหนทำไม่ได้ทีมจะบอก
-- สกิล `etm-nn-fullqa`, `log-defect-jira-etm`, `etm-evidence-report` ต้องใช้งานได้ใน Claude Code ของคุณด้วย ถ้าไม่มี ทีมจะหยุดและบอก ไม่ทำจากความจำ
-- Figma ของคุณเป็น View seat เรียกได้จำกัดต่อเดือน Inspector จะแจ้งจำนวนครั้งก่อนใช้ และชอบรูปที่คุณวางให้มากกว่า
-- ตั้งโมเดลของแต่ละตัวได้ในบรรทัด `model:` ของไฟล์ใน `.claude/agents/` (ตอนนี้ Reporter ใช้ haiku เพื่อประหยัด, Designer กับ Reviewer ใช้โมเดลเดียวกับเซสชัน)
-
-## เพิ่มบทเรียนใหม่
-
-เจอ bug ที่หลุด หรือเคสที่ทีมลืม เพิ่มใน `.claude/team/knowledge/lessons-learned.md` Designer และ Reviewer จะอ่านทุกครั้ง
-
-## แชร์ให้ทีม / การอัปเดต
-- ทุกคนใช้ได้: แตก `qa-team-etm-share.zip` ลงโฟลเดอร์ทำงานของตัวเอง แล้วทำตามขั้นตอนติดตั้งด้านบน บอร์ดรันบนเครื่องของแต่ละคน (localhost:4777) ใช้ข้อมูลและโควตาของคนนั้นเอง
-- ต้องมี Jira/Xray ของตัวเอง: ตั้ง `XRAY_CLIENT_ID` / `XRAY_CLIENT_SECRET` ใน environment (ไฟล์ `.mcp.json` ไม่มีรหัสจริง)
-- เจ้าของ (นุชนาถ) คนเดียวที่แก้ `TEAM.md`, `.claude/agents/`, `.claude/team/` แล้วออกไฟล์ zip ใหม่ ทุกคนแค่แตกทับเพื่ออัปเดต อย่าแก้ไฟล์เหล่านี้เอง
+- ทีมจะไม่รันเทส ไม่ล็อก defect และไม่ push เข้า Xray ถ้าคุณยังไม่ได้สั่งตรง ๆ
+- Figma เป็น View seat เรียกได้จำกัดต่อเดือน Inspector จะแจ้งจำนวนครั้งก่อนใช้
+- ตั้งโมเดลของแต่ละตัวได้ที่บรรทัด `model:` ของไฟล์ใน `.claude/agents/`

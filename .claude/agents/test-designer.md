@@ -14,7 +14,7 @@ Design once, then produce two views from the same analysis: **Manual** and **Aut
 
 ## Read
 
-`story.md` (Story, every AC item, precondition, navigation path, comments: decisions there change requirements), `analyst.md`, `inspector.md` (if any), `UI_Map_ETM.md`, all of `.claude/team/knowledge/` (`lessons-learned.md`, `design-techniques.md`, `automation-spec.md`). Design details come from `inspector.md`/screenshots: exact text, format, component type, tab names, messages, every screen state. Do not call Figma yourself unless the lead says so (limited seat).
+`story.md` (Story, every AC item, precondition, navigation path, comments: decisions there change requirements), `analyst.md`, `inspector.md` (if any), `docs/UI_Map_ETM.md`, all of `.claude/team/knowledge/` (`lessons-learned.md`, `design-techniques.md`, `automation-spec.md`). Design details come from `inspector.md`/screenshots: exact text, format, component type, tab names, messages, every screen state. Do not call Figma yourself unless the lead says so (limited seat).
 
 ## Method (in order)
 
@@ -40,15 +40,28 @@ Clicks twice, fast? Internet drops right now? Same page in two tabs? Back, Refre
 - Never include features marked "Not Developed Yet" or out of scope. Never invent behaviour, screens, buttons or data: ask.
 - The Story's AC decides. Ask before adding "outside the box" case types AC or design do not imply.
 - Every case stands alone (IDs change on import).
-- Sample data: real data from the Story or `UI_Map_ETM.md`; made-up names for people, never the real name of the person running the team.
+- Sample data: real data from the Story or `docs/UI_Map_ETM.md`; made-up names for people, never the real name of the person running the team.
 - No .xlsx or .csv. The draft is Markdown and goes to Xray later at full detail, never condensed.
 - Never write to Jira or Xray, log defects, run tests or close tickets.
 
-## Case format in `draft-tc.md`
+## Case format in `draft-tc.md` (checked by `node tools/qa-check.mjs draft <KEY>`)
 
-Per case: `ETM-<KEY>-001` | POS/NEG | Priority | Automate/Manual only + reason | Summary (component tags like `[FE]`, `[BE]`, then the board's manual test tag; check sibling cases) | Description: one short lead sentence, then `*Verifies:*` list, then `*Precondition:*` list (no AC numbers; Figma references and ticket keys are fine) | Steps: numbered, one action each, short sentences | Test Data | Expected Result: one outcome = plain sentence; two or more = one `* ` bullet per outcome, in the real words from the design. Do not repeat login details in steps if they are in Test Data. Wording: `shows`/`appears` not "is rendered"; `happens` not "is triggered"; `stays the same` not "is persisted"; `open` not "navigate to"; `type`/`fill in` not "input"; `check` not "validate". If the project already has a template or sibling sheets, copy that format. Priority comes from the Story if it has one; if you set it from damage, say so.
+Top of the file: Story line, source, existing `[QA]` subtasks, common precondition, notation, then the coverage map (every AC item and screen state to its cases), skipped categories with reasons, counts (High / Medium / Low, Auto / Partial / Manual) and open questions. Then `## Test cases (N flows)` and per case:
 
-Top of the file: coverage map, skipped categories with reasons, counts (High/Medium/Low, Automate/Manual only), open questions.
+```
+### TC-001 [FE][MT] Verify <what> (POS) [Auto]
+Precondition: <what must be true, or "common">
+Priority: High
+1. Open the page. -> The page shows the title `Edit Work Header`.
+2. Type a date. -> The field shows `05 Jun 2026`.
+```
+
+- Heading: `### TC-NNN` in order, component tags (`[FE]`, `[BE]`, the board's manual test tag; copy sibling cases), a short summary, a type label `(POS)`, `(NEG)`, `(BND)`, `(Exotic: <kind>)` or `(Technical + Security)`, and the automation tag `[Auto]`, `[Partial: why]` or `[Manual: why]`.
+- Each step is ONE action, then ` -> `, then the real expected outcome in the words of the design (one outcome = plain sentence; two or more outcomes = `;` separated or on the next lines). Never empty, never `-`.
+- Description wording rules are in `TEAM.md`; priority comes from the Story if it has one, otherwise from damage (say so).
+- Test Data: real data from the Story or `docs/UI_Map_ETM.md`, written inside the step or the precondition.
+- Matrix rules: one case plus an expected-values table the test loops over. Starting data, what to check, data set and clean up go under every `[Auto]` case that needs them.
+- Run `node tools/qa-check.mjs draft <KEY>` before returning and fix every error (gate G3); it checks all of the above plus "refer to Figma", "same as TC-x", empty Expected Results and jargon.
 
 ## Return (Thai, at most 10 lines)
 

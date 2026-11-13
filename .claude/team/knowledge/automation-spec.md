@@ -70,3 +70,12 @@ condition matrices.
   a test problem or a real bug.
 - Never hard code values that change over time. Read the current value first,
   then compare against it.
+
+
+## Sorting existing Xray Tests for Playwright (automator)
+
+Read each Test's steps and sort into Yes / Partial / No. Show one table: Test key | Playwright? | Why | Steps left for manual, plus a Security section (checks from `playwright-script-rules.md` that fit the Story, one row each: what, role/endpoint, Yes / needs info). Wait for the user's OK.
+
+- **Yes:** STMS web UI actions and checks (text, format, enabled/disabled, CSS colour), Gantt via Bryntum API, DB via `queryDb`, two users via a second context, roles via fixtures (`turnaroundManagerPages`, `jobOwnerPages`).
+- **Partial:** scriptable, but some steps need a person's eyes: the script captures evidence and the user checks by looking.
+- **No (manual):** native browser behaviour (Back, leave-page prompt), controls that kept timing out (e.g. the Filter Panel date range picker), anything outside the STMS web app (email, other apps), data that cannot be set up safely in QA, roles with no login in `.env`.

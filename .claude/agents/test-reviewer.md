@@ -19,4 +19,4 @@ Check, pass or fail each:
 8. Manual and automation expectations agree.
 9. Only genuinely new findings: do not repeat what the designer already checked.
 
-Output file: `review.md`: verdict (Approve / Conditional Approve / Reject), then numbered findings with case id and the fix needed.
+First run `node tools/qa-check.mjs draft <KEY>` and put its errors in the findings (a draft with errors is Reject). Output file: `review.md`; its FIRST line is `Verdict: Approve`, `Verdict: Conditional Approve` or `Verdict: Reject`, then `## Findings` with numbered findings (case id and the fix needed). Before returning run `node tools/qa-check.mjs work <KEY> reviewer` (gate G4).

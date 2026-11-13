@@ -14,4 +14,5 @@ Do this:
 5. Quick scan of the AC only (no Figma). List every AC item in one line; what is not written but could break (missing rules, undefined words, other roles, empty data, limits); unclear points as short concrete questions, one per point.
 6. Think like the person using the feature: who, what they want, what goes wrong in a hurry.
 
-Output file: `analyst.md`.
+Output file: `analyst.md` with exactly these sections: `## AC items` (one line each), `## Could still break`, `## Open questions` (one per point), `## [QA] subtasks` (existing keys, estimates proposed).
+Before returning run `node tools/qa-check.mjs work <KEY> analyst` and fix every error (gate G1).

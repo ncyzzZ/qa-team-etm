@@ -17,3 +17,7 @@ Thumbs.db
 .claude/team/server.pid
 .claude/team/usage.json
 .claude/team/usage-raw.json
+
+# generated evidence reports and local run results
+Evidence/
+test-results*/

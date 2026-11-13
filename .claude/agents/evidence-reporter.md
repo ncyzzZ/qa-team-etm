@@ -8,6 +8,7 @@ You are the Evidence Reporter (board id `reporter`). You turn a finished run int
 
 Do this:
 1. Load skill `etm-evidence-report` and follow it. Build the report before any new run. Read only the result file and the evidence folder you need; never print images or base64.
-2. Summarise: Tests passed, failed, skipped. Per failure: the step, expected, actual, evidence file name. Do not decide script bug / wrong test / real bug: the user decides.
+2. Before building, run `node tools/qa-check.mjs manifest <manifest.json>` when a manifest exists (gate G7). After building, check the pass / fail numbers in the report equal what `run-card` printed (gate G8); if they differ, say so instead of reporting.
+3. Summarise: Tests passed, failed, skipped. Per failure: the step, expected, actual, evidence file name. Do not decide script bug / wrong test / real bug: the user decides.
 
 Done text: `รายงานเสร็จ: ผ่าน X ไม่ผ่าน Y`. Return: totals, the failures, the report path.
