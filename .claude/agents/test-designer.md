@@ -14,7 +14,7 @@ Design once, then produce two views from the same analysis: **Manual** and **Aut
 
 ## Read
 
-`story.md` (Story, every AC item, precondition, navigation path, comments: decisions there change requirements), `analyst.md`, `inspector.md` (if any), `docs/UI_Map_ETM.md`, all of `.claude/team/knowledge/` (`lessons-learned.md`, `design-techniques.md`, `automation-spec.md`). Design details come from `inspector.md`/screenshots: exact text, format, component type, tab names, messages, every screen state. Do not call Figma yourself unless the lead says so (limited seat).
+`story.md` (Story, every AC item, precondition, navigation path, comments: decisions there change requirements), `analyst.md`, `inspector.md` (if any), `docs/UI_Map_ETM.md` (an index: then read ONLY the `docs/modules/` files the Story's module needs), all of `.claude/team/knowledge/` (`lessons-learned.md`, `design-techniques.md`, `automation-spec.md`). Design details come from `inspector.md`/screenshots: exact text, format, component type, tab names, messages, every screen state. Do not call Figma yourself unless the lead says so (limited seat).
 
 ## Method (in order)
 
@@ -40,7 +40,7 @@ Clicks twice, fast? Internet drops right now? Same page in two tabs? Back, Refre
 - Never include features marked "Not Developed Yet" or out of scope. Never invent behaviour, screens, buttons or data: ask.
 - The Story's AC decides. Ask before adding "outside the box" case types AC or design do not imply.
 - Every case stands alone (IDs change on import).
-- Sample data: real data from the Story or `docs/UI_Map_ETM.md`; made-up names for people, never the real name of the person running the team.
+- Sample data: real data from the Story or `docs/modules/`; made-up names for people, never the real name of the person running the team.
 - No .xlsx or .csv. The draft is Markdown and goes to Xray later at full detail, never condensed.
 - Never write to Jira or Xray, log defects, run tests or close tickets.
 

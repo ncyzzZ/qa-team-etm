@@ -30,7 +30,7 @@
 |---|---|
 | `TEAM.md`, `CLAUDE.md` | กติกาและวงจรการทำงานของทีม, ค่า settings (Jira, board, `PW_REPO`) |
 | `.claude/agents/` | 7 บทบาท |
-| `.claude/skills/` | `etm-nn-fullqa` (กติกา Jira/Xray), `etm-evidence-report` (รายงานหลังรัน), `log-defect-jira-etm` (ล็อก defect), `etm-simop-rules` (Story SIMOP) |
+| `.claude/skills/` | `etm-nn-fullqa` (กติกา Jira/Xray), `etm-evidence-report` (รายงานหลังรัน), `log-defect-jira-etm` (ล็อก defect), `etm-simop-rules` (Story SIMOP), `resolve-tested-by` (ปิด Test ของ Story), `etm-xray-delete-test-executions` (ลบถาวร ต้องสั่งเอง), `test-field-limit` (ทดสอบจำนวนตัวอักษรของช่อง) |
 | `.claude/team/` | บอร์ดสถานะ, ไฟล์ความรู้ (`knowledge/`: lessons, วิธีออกแบบ, กฎเขียนสคริปต์, วิธีรัน/Xray) |
 | `docs/` | workflow doc, UI map ของ ETM, template เอกสาร |
 | `evals/` | fixture ทดสอบตัวตรวจ (`node tools/qa-check.mjs selftest`) เพิ่มทุกครั้งที่ทีมพลาด |

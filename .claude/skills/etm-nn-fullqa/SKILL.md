@@ -64,7 +64,7 @@ If a Story that reached "In Testing" moves back to "In Development" or "For Plan
 
 ## 10. Closeout
 
-Run `anthropic-skills:resolve-tested-by` on the Story, transition the Test Execution itself to Done, then move the Story to "Ready for UAT" once only the `[QA]` subtasks are Done (non-QA subtasks do not block).
+Run skill `resolve-tested-by` on the Story, transition the Test Execution itself to Done, then move the Story to "Ready for UAT" once only the `[QA]` subtasks are Done (non-QA subtasks do not block).
 
 ## 11. Correct a Test, then retest
 

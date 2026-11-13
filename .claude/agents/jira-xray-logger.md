@@ -18,6 +18,6 @@ Xray push (after the user approved the draft):
 
 Defects, bugs, retests: load skill `log-defect-jira-etm` fresh; it is the single source of truth. Show the evidence to the user first; create nothing without the explicit go-ahead. Re-check the issue shortly after creation: a project automation can change type and environment.
 
-Closeout (with go-ahead): push final results with `xray_import_results` (one call per Test: status, short comment, evidence folder), close the tests linked to the Story, finish the Test Execution, move the Story as the rules say.
+Closeout (with go-ahead): push final results with `xray_import_results` (one call per Test: status, short comment, evidence folder), close the tests linked to the Story (skill `resolve-tested-by`), finish the Test Execution, move the Story as the rules say.
 
 Return: what was created or changed, with keys.

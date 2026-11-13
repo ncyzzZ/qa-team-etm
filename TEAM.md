@@ -28,8 +28,8 @@ At the end the lead sends ONE closing summary in Thai: card, number of cases, Xr
 
 ## Sources of truth (never work from memory; if one is missing, say so)
 
-- Skills (project skills in `.claude/skills/`): `etm-nn-fullqa` (Jira/Xray rules, + workflow doc `docs/etm-qa-workflow.md`), `etm-evidence-report` (report code and run wrapper), `log-defect-jira-etm` (every defect, bug, retest), `etm-simop-rules` (SIMOP / Work Conflict Matrix Stories only)
-- `docs/UI_Map_ETM.md` (verified navigation and UI facts), `docs/ETM_Templates/`, `.claude/team/knowledge/*` (incl. `playwright-script-rules.md`, `run-and-xray-notes.md`: machine setup, annotations, Xray 429), the project `CLAUDE.md`
+- Skills (project skills in `.claude/skills/`): `etm-nn-fullqa` (Jira/Xray rules, + workflow doc `docs/etm-qa-workflow.md`), `etm-evidence-report` (report code and run wrapper), `log-defect-jira-etm` (every defect, bug, retest), `etm-simop-rules` (SIMOP / Work Conflict Matrix Stories only), `resolve-tested-by` (Phase 8 closeout), and on request only: `etm-xray-delete-test-executions` (permanent delete, never pre-approved), `test-field-limit` (character limit of a field, drives the browser)
+- `docs/UI_Map_ETM.md` (index of the verified UI facts; the facts are in `docs/modules/`, read only the files the Story's module needs), `docs/ETM_Templates/`, `.claude/team/knowledge/*` (incl. `playwright-script-rules.md`, `run-and-xray-notes.md`: machine setup, annotations, Xray 429), the project `CLAUDE.md`
 - Skills may mention tools from another app (`device_bash`, `SendUserFile`). In Claude Code use Bash, Read, Write and tell the user if a step cannot be done.
 
 ## The team
