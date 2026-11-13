@@ -1,0 +1,8 @@
+[
+  { "name": "good draft with every AC covered",       "args": ["draft", "evals/draft-good.md", "--analyst", "evals/analyst-good.md"],       "errors": 0 },
+  { "name": "draft that forgets AC-2",                 "args": ["draft", "evals/draft-missing-ac.md", "--analyst", "evals/analyst-good.md"], "errors": 1, "contains": "AC-2" },
+  { "name": "bad draft (no Expected Result, refer to Figma, same as TC, no label)", "args": ["draft", "evals/draft-bad.md"],                    "errors": 6 },
+  { "name": "good spec",                               "args": ["spec", "evals/spec-good.spec.ts"],                                          "errors": 0 },
+  { "name": "bad spec (only, pause, timeout, credential, no steps, no key)", "args": ["spec", "evals/spec-bad.spec.ts"],                  "errors": 7 },
+  { "name": "missing analyst file",                    "args": ["work", "ETM-0", "analyst"],                                                 "errors": 1 }
+]

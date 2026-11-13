@@ -48,14 +48,9 @@ At the end the lead sends ONE closing summary in Thai: card, number of cases, Xr
 All agents use sonnet except reporter (haiku). When the lead does an agent's job: `set <id> done "LEAD ทำเอง"`.
 User already has Playwright scripts: no analyst, inspector, designer, reviewer, automator. Never call one agent twice for what one call can do: give it everything in one prompt.
 
-## Agent protocol (every agent follows this; agent files do not repeat it)
+## Agent protocol
 
-1. Read this file, then `set <id> working "<short Thai text, max 60 chars>"`.
-2. Read only what the job needs. Source material (Story, comments, Xray steps) is in `work/<KEY>/story.md` and `tests.md`: read those, never re-fetch Jira/Xray. Narrow Jira `fields`, small `maxResults`, one Figma frame at a time.
-3. Write the result to `.claude/team/work/<KEY>/<file>`. Never print big raw content or base64.
-4. End with `set <id> done "<result in a few words>"` (or `blocked "..."`). No progress updates, no `--pct`.
-5. Return at most 10 lines in Thai: what you did, the file path, open questions.
-6. Never write to Jira/Xray unless your file says so and the lead passed the user's explicit go-ahead. Never put secrets in a status text.
+Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, write scope, errors and limits, safe retries, board updates, return format) and the test case wording rules in the same file. They do NOT read this file (saves tokens: it is about 3x longer). The lead reads it too before the first agent call.
 
 ## Status board (http://localhost:4777)
 
@@ -116,6 +111,8 @@ Every agent runs its own check before returning, and the lead runs the same comm
 | G7 | before the report | `node tools/qa-check.mjs manifest <manifest.json>` | 0 errors |
 | G8 | after the run | the counts in the report equal the counts `run-card` printed | equal |
 
+After any change to `tools/qa-check.mjs` run `node tools/qa-check.mjs selftest` (fixtures in `evals/`); `node tools/qa-check.mjs stats` shows which gate fails most often.
+
 Also checked by the lead, not by a script: every AC item has a case (coverage map), every claim in the closing summary matches a file or a Jira key it just read.
 
 ## Hard stops
@@ -128,22 +125,23 @@ Also checked by the lead, not by a script: every AC item has a case (coverage ma
 
 ## Saving tokens
 
+**Rule: never trade correctness for tokens.** The gates always run (they are cheap: one short command, errors only). The saving comes from not reading, not repeating and not calling what is not needed.
+
+- Agents read `.claude/team/agent-protocol.md` and their own file, never this whole playbook.
 - Hand work over through files, not chat. Do not call an agent the table says to skip.
+- Do not read a file back after writing it; the gate output (`qa-check`, `tsc`) already says if it is wrong. Read a file only when a gate points at a line, and then only that part.
+- Send a failed gate back to the SAME agent (SendMessage with the exact error lines) instead of starting a new one: it already has the context.
+- Source data once: Story, comments and Xray steps go into `story.md` / `tests.md` in Phase 0; nobody re-fetches them.
+- Keep Jira/Xray calls lean (narrow fields, small `maxResults`) and the closing summary short.
 - Run Playwright with `--reporter=line`; never read screenshots; evidence is built from files.
 - Specs: one shared helper, each test calls it briefly. Never reread a whole spec: grep/offset.
 - Before heavy work (specs, designer, recheck) tell the user it is heavy.
 - At the end tell the user the number from the board's TOKEN USAGE panel.
 
-## Test case wording (Summary, Description, Test Step, Expected Result)
+## Test case wording
 
-- Plain everyday words: "shows / appears", "happens", "stays the same".
-- One action per step, short sentences.
-- No Jira AC numbers in Description (Figma references and other ticket keys are fine).
-- Expected Result never empty or "-"; even a note-down step gets a real outcome. Real text and values, never "refer to Figma".
-- Sample data uses made-up names, never the real name of the person running the team.
-- Every case stands alone ("same as TC-001" is not allowed).
-- Never invent screen names, buttons or data. Ask.
+See `.claude/team/agent-protocol.md` (designer, reviewer and the lead when it reviews).
 
 ## Lessons
 
-`.claude/team/knowledge/lessons-learned.md`: 9 base categories plus lessons added in section 10. Designer and reviewer (or the lead) go through all of them for every Story. When the user tells a new bug story or a case the team forgot, add it there.
+`.claude/team/knowledge/lessons-learned.md`: 9 base categories plus lessons added in section 10. Designer and reviewer (or the lead) go through all of them for every Story. When the user tells a new bug story or a case the team forgot, add it there with the card key and date, and if a check could have caught it add a fixture to `evals/` (and its line to `evals/expected.json`) so it is caught next time. Remove a lesson that turns out to be wrong.

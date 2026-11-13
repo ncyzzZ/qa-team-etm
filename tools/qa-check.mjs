@@ -6,10 +6,13 @@
 //   node tools/qa-check.mjs work     <KEY> <analyst|inspector|designer|reviewer|automator>
 //   node tools/qa-check.mjs manifest <tc-manifest.json>
 //   node tools/qa-check.mjs diff     <KEY> <readback.json>     (Xray readback vs draft: [{key, summary, steps}])
+//   node tools/qa-check.mjs selftest                             (run the checker against evals/ fixtures)
+//   node tools/qa-check.mjs stats                                (how often each gate failed, from .claude/team/metrics.jsonl)
 //
 // Exit code 1 when there is at least one ERR. WARN lines are advice. Run it before handing anything to the user.
 import fs from 'node:fs';
 import path from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -17,7 +20,7 @@ const WORK = (key) => path.join(ROOT, '.claude', 'team', 'work', key);
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (n) => rest.includes(n);
 const arg = (n) => (rest.includes(n) ? rest[rest.indexOf(n) + 1] : '');
-const pos = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--tests'].includes(rest[i - 1])));
+const pos = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--tests', '--analyst'].includes(rest[i - 1])));
 
 const out = [];
 const err = (m) => out.push(['ERR ', m]);
@@ -29,6 +32,12 @@ function finish(title, extra = '') {
   const seen = new Map();
   for (const [lvl, m] of out) { const k = lvl + m; seen.set(k, { lvl, m, n: (seen.get(k)?.n || 0) + 1 }); }
   for (const { lvl, m, n } of seen.values()) console.log(`  ${lvl} ${m}${n > 1 ? `  (x${n})` : ''}`);
+  if (!process.env.QA_CHECK_NO_METRICS) {
+    try {
+      const first = out.find((x) => x[0] === 'ERR ');
+      fs.appendFileSync(path.join(ROOT, '.claude', 'team', 'metrics.jsonl'), JSON.stringify({ t: new Date().toISOString(), cmd: title, arg: pos[0] || '', errors: e, warnings: w, first: first ? first[1].slice(0, 120) : '' }) + '\n');
+    } catch { /* metrics are optional */ }
+  }
   process.exit(e ? 1 : 0);
 }
 
@@ -70,6 +79,16 @@ function checkDraft() {
   if (declared && Number(declared) !== cases.length) warn(`heading says ${declared} cases but ${cases.length} were found`);
   if (!/coverage/i.test(text)) warn('no coverage map found (the designer must list every AC item and screen state)');
   if (!/\b(high|medium|low)\b/i.test(text)) warn('no High / Medium / Low priority counts found');
+  // traceability: every AC-n listed in analyst.md must appear in the draft (coverage map or a case)
+  const keyOf = (/^ETM-\d+$/.test(arg0) ? arg0 : (file.match(/ETM-\d+/) || [])[0]) || '';
+  const anFile = arg('--analyst') || (keyOf ? path.join(WORK(keyOf), 'analyst.md') : '');
+  const an = anFile ? read(path.resolve(anFile)) : null;
+  if (an) {
+    const sec = (an.match(/^##\s+AC items[^\n]*\n([\s\S]*?)(?=^##\s|$(?![\s\S]))/im) || [])[1] || '';
+    const acIds = [...new Set([...sec.matchAll(/^\s*(?:[-*]\s*)?\**(AC-\d+)\b/gim)].map((m) => m[1].toUpperCase()))];
+    for (const id of acIds) if (!new RegExp(`\\b${id}\\b`, 'i').test(text)) err(`${id} is listed in analyst.md but no case or coverage-map line mentions it`);
+    if (!acIds.length) warn('analyst.md lists no AC-1, AC-2 ... ids, so AC coverage could not be checked');
+  }
   const ids = new Set();
   cases.forEach((c, idx) => {
     const at = `${c.id} (line ${c.line})`;
@@ -158,6 +177,7 @@ function checkWork() {
   if (text.trim().length < 80) err(`${c.file} is almost empty`);
   if (c.first && !c.first.test(text.split('\n').find((l) => l.trim()) || '')) err(`${c.file}: first line must be "Verdict: Approve | Conditional Approve | Reject"`);
   for (const h of c.heads) if (!h.test(text)) err(`${c.file}: missing required section ${String(h).replace(/^\/\^?|\/[a-z]*$/g, '').replace(/\\s\+/g, ' ')}`);
+  if (role === 'analyst' && !/\bAC-\d+\b/.test(text)) err(`${c.file}: number the AC items AC-1, AC-2 ... so the draft can be checked against them`);
   if (/(refer to figma|same as design)/i.test(text)) warn(`${c.file}: "refer to Figma" style text, write the real value`);
   finish(`work ${role}`);
 }
@@ -205,6 +225,39 @@ function checkDiff() {
   finish('diff', ` | ${items.length} Test(s) compared`);
 }
 
-const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff }[cmd];
-if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff> ...'); process.exit(2); }
+// ---------------------------------------------------------------- selftest (evals/)
+function selftest() {
+  const dir = path.join(ROOT, 'evals'), cfg = read(path.join(dir, 'expected.json'));
+  if (cfg == null) { console.error('evals/expected.json not found'); process.exit(2); }
+  let bad = 0;
+  for (const t of JSON.parse(cfg)) {
+    const r = spawnSync(process.execPath, [fileURLToPath(import.meta.url), ...t.args.map((a) => (a.startsWith('evals/') ? path.join(ROOT, a) : a))], { encoding: 'utf8', env: { ...process.env, QA_CHECK_NO_METRICS: '1' } });
+    const m = (r.stdout || '').match(/\] (\d+) error\(s\)/), got = m ? Number(m[1]) : -1;
+    const ok = got === t.errors && (!t.contains || (r.stdout || '').includes(t.contains));
+    if (!ok) bad++;
+    console.log(`${ok ? 'PASS' : 'FAIL'}  ${t.name}  (expected ${t.errors} error(s), got ${got}${t.contains && !(r.stdout || '').includes(t.contains) ? `, missing text "${t.contains}"` : ''})`);
+  }
+  console.log(bad ? `[selftest] ${bad} fixture(s) failed: the checker changed behaviour` : '[selftest] all fixtures behave as expected');
+  process.exit(bad ? 1 : 0);
+}
+
+// ---------------------------------------------------------------- stats (metrics.jsonl)
+function stats() {
+  const raw = read(path.join(ROOT, '.claude', 'team', 'metrics.jsonl'));
+  if (!raw) { console.log('no metrics yet (they are written every time a check runs)'); process.exit(0); }
+  const by = new Map();
+  for (const line of raw.split('\n').filter(Boolean)) {
+    let j; try { j = JSON.parse(line); } catch { continue; }
+    const o = by.get(j.cmd) || { runs: 0, failed: 0, firsts: new Map() };
+    o.runs++; if (j.errors) { o.failed++; o.firsts.set(j.first, (o.firsts.get(j.first) || 0) + 1); }
+    by.set(j.cmd, o);
+  }
+  console.log('check                 runs  with errors  fail rate');
+  for (const [k, o] of by) console.log(`${k.padEnd(20)} ${String(o.runs).padStart(5)}  ${String(o.failed).padStart(11)}  ${Math.round((100 * o.failed) / o.runs)}%`);
+  for (const [k, o] of by) { const top = [...o.firsts.entries()].sort((a, b) => b[1] - a[1])[0]; if (top) console.log(`most common first error in ${k}: ${top[0]} (x${top[1]})`); }
+  process.exit(0);
+}
+
+const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, selftest, stats }[cmd];
+if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff|selftest|stats> ...'); process.exit(2); }
 run();

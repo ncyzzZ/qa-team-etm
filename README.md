@@ -33,6 +33,7 @@
 | `.claude/skills/` | `etm-nn-fullqa` (กติกา Jira/Xray), `etm-evidence-report` (รายงานหลังรัน), `log-defect-jira-etm` (ล็อก defect), `etm-simop-rules` (Story SIMOP) |
 | `.claude/team/` | บอร์ดสถานะ, ไฟล์ความรู้ (`knowledge/`: lessons, วิธีออกแบบ, กฎเขียนสคริปต์, วิธีรัน/Xray) |
 | `docs/` | workflow doc, UI map ของ ETM, template เอกสาร |
+| `evals/` | fixture ทดสอบตัวตรวจ (`node tools/qa-check.mjs selftest`) เพิ่มทุกครั้งที่ทีมพลาด |
 | `tools/` | `run-card.mjs` (รัน Playwright ต่อการ์ด แล้วสร้างรายงานทันที), `evidence-report-v4.mjs` (ตัวสร้างรายงาน) |
 | `tools/qa-check.mjs` | ตัวตรวจผลงานของ agent ก่อนส่งให้ผู้ใช้: `draft` (test case), `spec` (สคริปต์), `work` (ไฟล์ของ analyst/inspector/reviewer/automator), `manifest`, `diff` (Xray เทียบกับร่าง) |
 | `xray-toolkit/` | MCP server ของ Xray และสคริปต์ import |
@@ -63,3 +64,10 @@ node tools/run-card.mjs ETM-1234 <spec> -g "ETM-1111|ETM-2222"
 - ทีมจะไม่รันเทส ไม่ล็อก defect และไม่ push เข้า Xray ถ้าคุณยังไม่ได้สั่งตรง ๆ
 - Figma เป็น View seat เรียกได้จำกัดต่อเดือน Inspector จะแจ้งจำนวนครั้งก่อนใช้
 - ตั้งโมเดลของแต่ละตัวได้ที่บรรทัด `model:` ของไฟล์ใน `.claude/agents/`
+
+## ช่องว่างที่ยังไม่ได้ปิด
+
+1. ชุดประเมินคุณภาพ agent จากการ์ดจริงที่รู้เฉลย (`evals/` ตอนนี้ทดสอบแค่ตัวตรวจ ไม่ได้ทดสอบว่า agent เขียนได้ดีไหม)
+2. จำกัดเครื่องมือต่อ agent (analyst/inspector/reviewer ไม่ควรเขียน Jira ได้เลย ตอนนี้กันด้วยกติกากับ Hard stops)
+3. ไฟล์ trace รวม AC -> TC -> Xray key -> ผลรัน
+4. ตัวชี้วัดที่ยังไม่มี: จำนวนครั้งที่ผู้ใช้ต้องแก้ผลของ agent, ต้นทุนต่อการ์ด

@@ -62,7 +62,7 @@ Always confirm against the actual Story or `lookupJiraAccountId`; other develope
 
 ## Step 4 - Create the issue
 
-Create via `createJiraIssue` with the fields above and `contentFormat: "markdown"`. Do not pass `timetracking` / Original Estimate. `customfield_10020` (Sprint) takes a plain number (the sprint id), not an array: `"customfield_10020": 17028`.
+First search for an existing defect (`project = ETM AND issuetype in (Defect, Bug) AND summary ~ "<Story key>"`, narrow `fields`) with the same symptom; if one exists, tell the user instead of creating a duplicate. After an error from `createJiraIssue`, search again before retrying. Create via `createJiraIssue` with the fields above and `contentFormat: "markdown"`. Do not pass `timetracking` / Original Estimate. `customfield_10020` (Sprint) takes a plain number (the sprint id), not an array: `"customfield_10020": 17028`.
 
 When creating an issue link (`createIssueLink`) pass `type`, `inwardIssue` and `outwardIssue` as plain strings (`type: "Relates"`, `inwardIssue: "ETM-6857"`, `outwardIssue: "ETM-6538"`), not JSON objects. Use `getIssueLinkTypes` first if the exact link type name is in doubt.
 
