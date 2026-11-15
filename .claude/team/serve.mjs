@@ -2,7 +2,6 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -17,60 +16,6 @@ const TOKEN = crypto.randomBytes(16).toString('hex');
 const SECRET = crypto.randomBytes(32);
 const sign = (job, askAt, text) => crypto.createHmac('sha256', SECRET).update(`${job}\n${askAt}\n${text}`).digest('hex');
 const HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
-
-// Token usage comes from the Claude Code transcripts of this project (read-only, local files).
-const PROJ = process.env.TEAM_TRANSCRIPTS ||
-  path.join(os.homedir(), '.claude', 'projects', path.resolve(dir, '..', '..').replace(/[^A-Za-z0-9]/g, '-'));
-const fileCache = new Map();
-let tokCache = { at: 0, since: 0, val: null };
-
-function walk(d, out = []) {
-  let ents = [];
-  try { ents = fs.readdirSync(d, { withFileTypes: true }); } catch { return out; }
-  for (const e of ents) {
-    const p = path.join(d, e.name);
-    if (e.isDirectory()) { if (e.name !== 'tool-results' && e.name !== 'memory') walk(p, out); }
-    else if (e.name.endsWith('.jsonl')) out.push(p);
-  }
-  return out;
-}
-
-function fileMessages(p, st) {
-  const c = fileCache.get(p);
-  if (c && c.size === st.size && c.mtime === st.mtimeMs) return c.msgs;
-  const msgs = new Map();
-  const side = p.includes(path.sep + 'subagents' + path.sep);
-  for (const l of fs.readFileSync(p, 'utf8').split('\n')) {
-    if (!l.includes('"usage"')) continue;
-    let e; try { e = JSON.parse(l); } catch { continue; }
-    const u = e.message && e.message.usage;
-    if (!u) continue;
-    msgs.set(e.message.id || e.uuid, { t: Date.parse(e.timestamp), side: side || !!e.isSidechain,
-      i: u.input_tokens || 0, o: u.output_tokens || 0, cw: u.cache_creation_input_tokens || 0, cr: u.cache_read_input_tokens || 0 });
-  }
-  fileCache.set(p, { size: st.size, mtime: st.mtimeMs, msgs });
-  return msgs;
-}
-
-function tokens(since) {
-  const now = Date.now();
-  if (tokCache.val && tokCache.since === since && now - tokCache.at < 2000) return tokCache.val;
-  const r = { input: 0, output: 0, cacheWrite: 0, cacheRead: 0, calls: 0, mainTotal: 0, subTotal: 0, total: 0 };
-  try {
-    for (const p of walk(PROJ)) {
-      const st = fs.statSync(p);
-      if (st.mtimeMs < since) continue;
-      for (const m of fileMessages(p, st).values()) {
-        if (!(m.t >= since)) continue;
-        const sum = m.i + m.o + m.cw + m.cr;
-        r.input += m.i; r.output += m.o; r.cacheWrite += m.cw; r.cacheRead += m.cr; r.calls++;
-        r.total += sum; if (m.side) r.subTotal += sum; else r.mainTotal += sum;
-      }
-    }
-  } catch {}
-  tokCache = { at: now, since, val: r };
-  return r;
-}
 
 function blank(t) {
   const agents = {};
@@ -155,10 +100,8 @@ function reduce(want) {
   let k = want && jobs.has(want) ? want : (list.find((j) => j.ask) || list[list.length - 1] || {}).key;
   const s = jobs.get(k) || { ticket: '', startedAt: Date.now(), agents: blank(Date.now()), ask: null, answer: null, log: [], links: [] };
   const out = { ...s, job: k || null, jobs: list };
-  out.log = s.log.slice(-40);
+  out.log = s.log.slice(-150);
   out.links = s.links.map((l) => ({ label: l.label, kind: l.kind, href: linkHref(l.target) }));
-  out.tokens = tokens(s.startedAt);
-  try { out.usage = JSON.parse(fs.readFileSync(path.join(dir, 'usage.json'), 'utf8')); } catch { out.usage = null; }
   out.now = Date.now();
   return out;
 }

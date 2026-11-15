@@ -5,7 +5,6 @@
 //   node .claude/team/team.mjs ask "question for the user"
 //   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
 //   node .claude/team/team.mjs wait [--timeout 540]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>)
-//   node .claude/team/team.mjs usage <5h %> <5h resetsAt ISO> <weekly %> <weekly resetsAt ISO> [context %]
 //   node .claude/team/team.mjs clear
 //   node .claude/team/team.mjs log "text"
 //   node .claude/team/team.mjs link "Evidence report" <path or https url> --kind report   (shows in the board's LINKS panel)
@@ -111,15 +110,6 @@ if (cmd === 'start') {
     if (Date.now() - t0 > limit) { console.log('TIMEOUT: no answer on the board yet'); process.exit(3); }
     await new Promise((r) => setTimeout(r, 1500));
   }
-} else if (cmd === 'usage') {
-  const [f, fr, w, wr, c] = args;
-  const num = (v) => Math.max(0, Math.min(100, Number(v)));
-  if (!Number.isFinite(Number(f)) || !Number.isFinite(Number(w)) || !fr || !wr) {
-    console.error('Usage: usage <5h %> <5h resetsAt ISO> <weekly %> <weekly resetsAt ISO> [context %]');
-    process.exit(1);
-  }
-  fs.writeFileSync(path.join(dir, 'usage.json'), JSON.stringify({ t: Date.now(), five: { pct: num(f), resetsAt: fr }, week: { pct: num(w), resetsAt: wr }, ctx: c === undefined ? null : num(c) }));
-  console.log('usage saved');
 } else if (cmd === 'clear') {
   add({ type: 'clear' });
   add({ type: 'set', agent: 'lead', state: 'working', text: 'ทำงานต่อ' });

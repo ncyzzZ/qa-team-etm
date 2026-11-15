@@ -60,7 +60,7 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 - `start <KEY>` at Phase 0 (resets that card only, opens the board). Tell the user the address.
 - Before any question: `ask "<question>"`; after the answer: `clear`.
 - Before any yes you need (run tests, push to Xray, log a defect, any Jira write): `ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "<one line>"`. The user answers on the board (buttons or the text box) or in the chat. Right after `ask`, run `team.mjs wait [--job <KEY>]` in the background: exit 0 prints `ANSWER: <text>` (given on the board), exit 3 = no answer yet (run it again), exit 4 = the question was closed another way. Only a reply typed in the chat or that `ANSWER:` line counts. A permanent delete can be approved on the board too: the question says what is deleted, how many, and that it cannot be undone. After a chat answer run `clear`.
-- Usage numbers: do not call `get_usage` or `team.mjs usage`, do not report them unless asked (the status line feeds the board).
+- Usage numbers: do not call `get_usage` and do not report them unless asked (the board no longer shows them).
 - Several cards at once: add `--job <KEY>` to every command (and tell agents their job key). Board has one tab per card (❓ = waiting for the user). Finished: `close --job <KEY>`.
 - Links: `tools/run-card.mjs` posts the evidence link itself (label "Evidence report <KEY> (time) | N pass / M fail"). Only if it did not: `link "Evidence report" <report.html> --kind report`. After the user pastes the run result (Phase 6, not at Xray push), add one link per TC that has a result: `link "ETM-xxxx" https://pttep.atlassian.net/browse/<TC key> --kind tc --job <KEY>`. Defects: `--kind defect` (same link updates the label).
 
@@ -136,7 +136,6 @@ Also checked by the lead, not by a script: every AC item has a case (coverage ma
 - Run Playwright with `--reporter=line`; never read screenshots; evidence is built from files.
 - Specs: one shared helper, each test calls it briefly. Never reread a whole spec: grep/offset.
 - Before heavy work (specs, designer, recheck) tell the user it is heavy.
-- At the end tell the user the number from the board's TOKEN USAGE panel.
 
 ## Test case wording
 

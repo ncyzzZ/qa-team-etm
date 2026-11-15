@@ -10,16 +10,22 @@
   html { overflow-y:scroll; }
   body { margin:0; min-height:100vh; background:var(--bg); color:var(--soft);
     font-family: ui-monospace, "Cascadia Mono", Consolas, "Noto Sans Thai", "Leelawadee UI", monospace; }
-  header { padding:14px 12px 10px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  header { padding:14px 12px 10px; display:flex; align-items:center; justify-content:flex-start; gap:20px; flex-wrap:wrap; }
+  .tools { display:flex; align-items:center; gap:8px; flex-wrap:wrap; } .tools .zbtn { margin:0; }
   h1 { margin:0; font-size:34px; letter-spacing:.14em; color:var(--neon); text-shadow:0 0 6px var(--neon), 0 0 18px rgba(79,216,255,.6), 3px 3px 0 #08334a; }
-  .meta { display:flex; gap:22px; font-size:16px; } .meta b { color:var(--accent); }
+  .meta { display:flex; gap:22px; font-size:16px; margin-left:auto; } .meta b { color:var(--accent); }
   @keyframes blink { 50% { opacity:.25; } }
-  main { padding:0 12px 24px; display:grid; grid-template-columns:250px 210px minmax(0,1fr) 400px; gap:12px; align-items:start; }
+  main { padding:0 12px 24px; display:grid; grid-template-columns:260px minmax(0,1fr) 400px; gap:12px; align-items:start; }
   @media (max-width:1100px) { main { grid-template-columns:1fr 1fr; } #stagewrap { grid-column:1 / -1; order:-1; } }
   @media (max-width:640px) { main { grid-template-columns:1fr; } }
   .mid { display:flex; flex-direction:column; gap:12px; min-width:0; }
   #linkp { padding:8px 10px 10px; } #linkp h2 { margin-bottom:6px; font-size:13px; }
-  #links { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  #links { display:flex; flex-direction:column; gap:8px; }
+  #links ul { list-style:none; margin:0; padding:6px; display:flex; flex-direction:column; gap:6px; }
+  #links details { border:2px solid var(--edge); }
+  #links summary { cursor:pointer; padding:5px 8px; font-size:12px; letter-spacing:.08em; color:var(--neon); list-style:none; display:flex; justify-content:space-between; user-select:none; }
+  #links summary::-webkit-details-marker { display:none; } #links summary::before { content:'▾'; margin-right:6px; } #links details:not([open]) summary::before { content:'▸'; }
+  #links summary b { margin-left:auto; color:var(--soft); }
   #links a { display:block; padding:6px 8px; background:var(--inset); border:2px solid var(--edge); border-left:5px solid var(--neon); color:var(--soft); text-decoration:none; font-size:12px; line-height:1.35; word-break:break-word; }
   #links a:hover { border-color:var(--neon); color:var(--strong); } #links a.report { border-left-color:var(--accent); } #links a.tc { border-left-color:var(--mint); } #links a.defect { border-left-color:var(--alert); }
   #links .none { font-size:11px; opacity:.6; padding:2px; }
@@ -33,6 +39,7 @@
   #cv { display:block; image-rendering:pixelated; image-rendering:crisp-edges; image-rendering:pixelated; }
   .lbl { position:absolute; transform:translate(-50%,0); font-weight:700; letter-spacing:.08em; color:#fff; text-shadow:1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000; white-space:nowrap; pointer-events:none; }
   .lbl { pointer-events:auto !important; cursor:text; }
+  .lblL { transform:translate(-100%,0); } .lblR { transform:translate(0,0); }   /* side seats: the name stands outside the chair */
   .nin { width:92px; background:var(--inset); color:var(--strong); border:2px solid var(--neon); font:inherit; text-align:center; padding:0 2px; outline:none; }
   #roster .who b { cursor:text; }
   .zbtn { background:var(--panel); color:var(--soft); border:3px solid var(--edge); font:inherit; font-size:13px; padding:4px 12px; cursor:pointer; margin-right:auto; margin-left:16px; }
@@ -86,11 +93,13 @@
   .split i { display:block; height:100%; transition:width .6s; } #sp-main { background:var(--accent); } #sp-sub { background:var(--main); }
   .splitlbl { display:flex; justify-content:space-between; gap:8px; margin-top:3px; font-size:10px; } .splitlbl b { color:var(--strong); margin-left:4px; }
   .note { margin:4px 0 0; font-size:9px; opacity:.55; line-height:1.3; }
-  #log { list-style:none; margin:0; padding:0; max-height:190px; overflow:auto; display:flex; flex-direction:column; gap:10px; font-size:15px; line-height:1.45; }
+  #log { list-style:none; margin:0; padding:0; overflow:auto; display:flex; flex-direction:column; gap:10px; font-size:15px; line-height:1.45; }
   #log li { border-left:4px solid var(--edge); padding-left:8px; }
   #log li.working { border-color:var(--accent); } #log li.done { border-color:var(--mint); } #log li.waiting { border-color:var(--main); } #log li.blocked { border-color:var(--alert); }
   #log time { color:var(--accent); margin-right:6px; font-size:13px; }
   #actp h2 { font-size:17px; }
+  #actp { position:relative; align-self:stretch; min-height:260px; }   /* as tall as the office next to it; the list scrolls inside */
+  #actp #log { position:absolute; left:14px; right:14px; top:48px; bottom:14px; }
   #err { display:none; margin:0 24px 12px; padding:10px 14px; background:var(--alert); color:var(--ink); font-weight:700; }
   #modal { display:none; position:fixed; inset:0; background:rgba(5,8,20,.78); align-items:center; justify-content:center; padding:24px; z-index:20; }
   #modal.on { display:flex; }
@@ -113,10 +122,13 @@
   .mopts button:hover { border-color:var(--neon); }
   .mhint { margin:0 0 12px !important; font-size:16px !important; color:var(--soft); }
   @media (prefers-reduced-motion: reduce) { .chip i, .mem .dot { animation:none !important; } }
-#tabs{display:flex;gap:6px;flex-wrap:wrap;padding:6px 12px;background:#0003}
-#tabs:empty{display:none}
-#tabs{padding:6px 12px}
-#tabs button{font:inherit;cursor:pointer;padding:4px 10px;border:1px solid #fff4;border-radius:6px;background:#0004;color:inherit}
+#tabbar{display:flex;gap:8px;align-items:center;padding:6px 12px;background:#0003}
+#tabbar.empty{display:none}
+#tabs{flex:1;min-width:0;display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;padding:2px 0 6px;scrollbar-width:thin}
+#tabs button{flex:0 0 auto;white-space:nowrap;font:inherit;cursor:pointer;padding:4px 10px;border:1px solid #fff4;border-radius:6px;background:#0004;color:inherit}
+#tsearch,#tfilter{flex:0 0 auto;font:inherit;font-size:13px;padding:4px 8px;background:#0004;color:inherit;border:1px solid #fff4;border-radius:6px}
+#tsearch{width:150px} #tfilter option{color:#111}
+#tcount{flex:0 0 auto;font-size:12px;opacity:.75;white-space:nowrap}
 #tabs button.sel{background:#fff3;border-color:var(--strong);font-weight:bold}
 #tabs button.ask{border-color:#f90;animation:tb 1s infinite}
 #tabs button small{opacity:.7;margin-left:4px}
@@ -140,7 +152,7 @@
 :root[data-theme=princess] #stagewrap { overflow:hidden; }
 :root[data-theme=princess] .mem, :root[data-theme=princess] .tile, :root[data-theme=princess] #links a { border-radius:8px; }
 :root[data-theme=princess] #log time, :root[data-theme=princess] .meta b { color:#B8860B; }
-:root[data-theme=princess] #tabs { background:#F7D7EA; }
+:root[data-theme=princess] #tabbar { background:#F7D7EA; }
 :root[data-theme=princess] #modal { background:rgba(120,60,140,.4); } :root[data-theme=princess] #modal .box h2 { color:#B8860B; }
 :root[data-theme=princess] .zbtn { border-radius:10px; }
 </style>
@@ -148,34 +160,24 @@
 <body>
 <header>
   <h1>Ninas Agent (ETM)</h1>
-  <button id="zbtn" class="zbtn" type="button"></button>
-  <label class="zbtn thl">🎨 ธีม <select id="thsel"></select></label>
-  <button id="mbtn" class="zbtn" type="button" aria-pressed="false">🎵 เพลง: ปิด</button>
+  <div class="tools">
+    <button id="zbtn" class="zbtn" type="button"></button>
+    <label class="zbtn thl">🎨 ธีม <select id="thsel"></select></label>
+    <button id="mbtn" class="zbtn" type="button" aria-pressed="false">🎵 เพลง: ปิด</button>
+  </div>
   <div class="meta"><span>CARD <b id="ticket">-</b><span class="tag" id="jtag">IDLE</span></span><span>TIME <b id="clock">00:00</b></span><span>ONLINE <b id="online">0</b>/8</span></div>
 </header>
-<div id="tabs"></div>
+<div id="tabbar" class="empty">
+  <input id="tsearch" type="search" placeholder="ค้นหาการ์ด" aria-label="ค้นหาการ์ด">
+  <select id="tfilter" aria-label="กรองตามสถานะ"><option value="all">ทุกสถานะ</option><option value="ask">รอคำตอบ</option><option value="working">กำลังทำ</option><option value="waiting">รอ</option><option value="done">เสร็จ</option><option value="idle">ว่าง</option><option value="blocked">ติดขัด</option></select>
+  <span id="tcount"></span>
+  <div id="tabs"></div>
+</div>
 <div id="err">เชื่อมต่อบอร์ดไม่ได้ ลองรัน: node .claude/team/team.mjs open</div>
 <main>
-  <div class="left">
-    <aside class="panel" id="usage"><h2>USAGE LIMITS</h2><div id="ul"></div></aside>
-    <section class="panel" id="tok" aria-label="Token usage">
-      <h2>TOKEN USAGE <small id="tok-since"></small></h2>
-      <div class="tiles">
-        <div class="tile big"><span>TOTAL</span><b id="t-total">0</b></div>
-        <div class="tile"><span>INPUT</span><b id="t-in">0</b></div>
-        <div class="tile"><span>OUTPUT</span><b id="t-out">0</b></div>
-        <div class="tile"><span>CACHE WRITE</span><b id="t-cw">0</b></div>
-        <div class="tile"><span>CACHE READ</span><b id="t-cr">0</b></div>
-        <div class="tile"><span>CALLS</span><b id="t-calls">0</b></div>
-      </div>
-      <div class="split"><i id="sp-main"></i><i id="sp-sub"></i></div>
-      <div class="splitlbl"><span>MAIN <b id="t-main">0</b></span><span>SUB <b id="t-sub">0</b></span></div>
-      <p class="note">นับตั้งแต่เริ่มการ์ดนี้ จาก transcript ของ Claude Code</p>
-    </section>
-  </div>
   <div class="mid">
     <aside class="panel" id="team"><h2>TEAM STATUS</h2><div id="roster"></div></aside>
-    <aside class="panel" id="linkp"><h2>LINKS</h2><ul id="links"></ul></aside>
+    <aside class="panel" id="linkp"><h2>LINKS</h2><div id="links"></div></aside>
   </div>
   <section id="stagewrap" aria-label="Team office">
     <div id="stage"><canvas id="cv"></canvas><div id="wallcard">CARD -</div></div>
@@ -196,7 +198,7 @@ const TEAM = [
   { id:'reviewer',  name:'REVIEWER',  job:'Checks every case',      ch:4, hue:0 },
   { id:'automator', name:'AUTOMATOR', job:'Playwright scripts',     ch:5, hue:0 },
   { id:'reporter',  name:'REPORTER',  job:'Builds the evidence',    ch:0, hue:-35 },
-  { id:'logger',    name:'LOGGER',    job:'Jira, Xray and defects', ch:0, hue:60 }
+  { id:'logger',    name:'LOGGER',    job:'Jira, Xray and defects', ch:0, hue:0, zombie:true }
 ];
 const LABEL = { idle:'IDLE', working:'WORKING', waiting:'WAITING', done:'DONE', blocked:'BLOCKED' };
 const STATES = ['idle','working','waiting','done','blocked'];
@@ -208,33 +210,56 @@ function esc(s) { const d = document.createElement('div'); d.textContent = s; re
 function linkify(s) { return esc(s).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener" style="color:var(--neon)">$1</a>'); }
 
 // ---- layout (logical pixels) ----
-const COLX = [24, 120, 216, 312], DESKY = [88, 200], AISLE_TOP = 150;
-TEAM.forEach((a, i) => {
-  a.col = i % 4; a.row = Math.floor(i / 4);
-  a.cx = COLX[a.col] + 24; a.deskY = DESKY[a.row];
-  a.hx = a.cx - 8; a.hy = a.deskY + 12;
-  a.gx = a.col < 3 ? a.cx + 40 : a.cx - 56;   // lane between desks, used for walking
+// Two rooms split by a partition wall (x = WALL_X) with a doorway on the aisle: the work room on the left, a lounge on the right.
+// Work room (x 4..WALL_X - 4): the lead's front desk (top left, his back to us, screen facing us) and group 1's table (top right) mirror each other
+// about the room's middle; group 2's big table is centred below them. At the tables, people sit on the two long sides in side view,
+// facing each other; each PC stands on the table edge in front of its owner with the screen turned to him.
+const WALL_X = 262, DOOR_Y0 = 112, DOOR_Y1 = 158;
+const LX = 311, LY = 176, CFX = 278, CFY = 238, BOWL = { x: 355, y: 268 };   // lounge: coffee table of the sofa corner, coffee corner, food bowl
+const LOUNGE_R = 364;   // the free lane down the right side of the lounge: everything in the lounge is reached through it
+const AISLE_TOP = 118, ROWH = 40, SIT = 0;   // ROWH: height of one seat row; SIT: how far the sitting sprite is lowered onto its chair
+const TABLES = [
+  { x: 50,  y: 72,  w: 48, seats: [['lead', 'N', 0]] },
+  { x: 162, y: 72,  w: 48, n: 1, side: true, seats: [['analyst', 'L', 0], ['inspector', 'R', 0]] },
+  { x: 107, y: 148, w: 48, n: 3, side: true, seats: [['designer', 'L', 0], ['reviewer', 'L', 1], ['automator', 'L', 2], ['reporter', 'R', 0], ['logger', 'R', 1]] },
+];
+for (const T of TABLES) {
+  for (const [id, side, row] of T.seats) {
+    const a = TEAM.find((m) => m.id === id);
+    a.side = side; a.deskY = T.y;
+    if (side === 'N') { a.cx = T.x + 24; a.hx = a.cx - 8; a.hy = T.y + 12; a.bw = 68; a.out = [[a.hx, AISLE_TOP]]; }
+    else {
+      a.seatY = T.y + row * ROWH; a.hy = a.seatY + SIT;
+      a.chairX = side === 'L' ? T.x - 16 : T.x + 48; a.pcX = side === 'L' ? T.x : T.x + 32;
+      a.hx = a.chairX; a.cx = a.hx + 8; a.bw = 54;   // widest speech bubble that fits the seat
+      const lane = side === 'L' ? T.x - 36 : T.x + 68;   // the free strip outside the chairs: out to the side, then up to the aisle
+      a.out = [[lane, a.hy], [lane, AISLE_TOP]];
+    }
+    a.ax = a.out[a.out.length - 1][0];
+  }
+}
+const back = (a) => a.out.slice(0, -1).reverse();   // from the aisle back to the spot beside / behind the chair
+TEAM.forEach((a) => {
   a.x = a.hx; a.y = a.hy; a.away = false; a.moving = false; a.dir = 'down'; a.flip = false; a.carry = false; a.state = 'idle'; a.task = ''; a.recvUntil = 0;
-  a.act = null; a.say = ''; a.mug = false; a.fx = null; a.face = null; a.cancel = false; a.hit = 0; a.nextAct = 3000 + Math.random() * 12000;
+  a.act = null; a.say = ''; a.face = null; a.cancel = false; a.zp = Math.random() * 6.28; a.nextAct = 3000 + Math.random() * 12000;
 });
 
 // ---- assets ----
 const IMG = {};
 const loadImg = (k, src) => new Promise(r => { const i = new Image(); i.onload = () => { IMG[k] = i; r(); }; i.onerror = () => r(); i.src = src; });
-const FURN = ['DESK/DESK_FRONT','PC/PC_FRONT_ON_1','PC/PC_FRONT_ON_2','PC/PC_FRONT_ON_3','PC/PC_FRONT_OFF','WOODEN_CHAIR/WOODEN_CHAIR_BACK','PLANT/PLANT','LARGE_PLANT/LARGE_PLANT','BOOKSHELF/BOOKSHELF','DOUBLE_BOOKSHELF/DOUBLE_BOOKSHELF','WHITEBOARD/WHITEBOARD','CLOCK/CLOCK','SOFA/SOFA_FRONT','SMALL_PAINTING/SMALL_PAINTING','LARGE_PAINTING/LARGE_PAINTING','BIN/BIN','COFFEE/COFFEE','COFFEE_TABLE/COFFEE_TABLE'];
-const COFFEE_SPOT = { x: 136, y: 260 };
+const FURN = ['DESK/DESK_FRONT','PC/PC_FRONT_ON_1','PC/PC_FRONT_ON_2','PC/PC_FRONT_ON_3','PC/PC_FRONT_OFF','PC/PC_SIDE','WOODEN_CHAIR/WOODEN_CHAIR_SIDE','TABLE_FRONT/TABLE_FRONT','SOFA/SOFA_FRONT','SOFA/SOFA_BACK','SOFA/SOFA_SIDE','COFFEE_TABLE/COFFEE_TABLE','COFFEE/COFFEE','PLANT/PLANT','PLANT_2/PLANT_2','SMALL_PAINTING_2/SMALL_PAINTING_2','WOODEN_CHAIR/WOODEN_CHAIR_BACK','LARGE_PLANT/LARGE_PLANT','BOOKSHELF/BOOKSHELF','DOUBLE_BOOKSHELF/DOUBLE_BOOKSHELF','WHITEBOARD/WHITEBOARD','CLOCK/CLOCK','SMALL_PAINTING/SMALL_PAINTING','LARGE_PAINTING/LARGE_PAINTING'];
 const sheets = [];   // per team index: baked 112x96 canvas (hue-shifted when needed)
 let bg = null;
 let ZOMBIE = true; try { ZOMBIE = localStorage.getItem('ninas-zombie') !== '0'; } catch {}
-function zombify(c) {   // pale green skin, tired desaturated clothes
+function zombify(c, h0 = 8, h1 = 50, rotten = false) {   // pale green skin, tired desaturated clothes (h0..h1 = the skin hues; rotten = greyer skin, darker clothes)
   const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), p = d.data;
   for (let i = 0; i < p.length; i += 4) {
     if (!p[i + 3]) continue;
     const r = p[i], g = p[i + 1], b = p[i + 2], mx = Math.max(r, g, b), mn = Math.min(r, g, b), v = mx / 255, s = mx ? (mx - mn) / mx : 0, lum = (0.3 * r + 0.59 * g + 0.11 * b);
     let h = 0;
     if (mx !== mn) { if (mx === r) h = 60 * (((g - b) / (mx - mn)) % 6); else if (mx === g) h = 60 * ((b - r) / (mx - mn) + 2); else h = 60 * ((r - g) / (mx - mn) + 4); if (h < 0) h += 360; }
-    if (h >= 8 && h <= 50 && s > 0.2 && v > 0.6) { const l = lum / 255; p[i] = Math.round(70 + 80 * l); p[i + 1] = Math.round(115 + 115 * l); p[i + 2] = Math.round(55 + 55 * l); }
-    else { p[i] = Math.round((r * 0.6 + lum * 0.4) * 0.88); p[i + 1] = Math.round((g * 0.6 + lum * 0.4) * 0.9); p[i + 2] = Math.round((b * 0.6 + lum * 0.4) * 0.88); }
+    if (h >= h0 && h <= h1 && s > 0.2 && v > 0.6) { const l = lum / 255; if (rotten) { p[i] = Math.round(62 + 62 * l); p[i + 1] = Math.round(100 + 95 * l); p[i + 2] = Math.round(64 + 50 * l); } else { p[i] = Math.round(70 + 80 * l); p[i + 1] = Math.round(115 + 115 * l); p[i + 2] = Math.round(55 + 55 * l); } }
+    else { const k = rotten ? 0.75 : 1; p[i] = Math.round((r * 0.6 + lum * 0.4) * 0.88 * k); p[i + 1] = Math.round((g * 0.6 + lum * 0.4) * 0.9 * k); p[i + 2] = Math.round((b * 0.6 + lum * 0.4) * 0.88 * k); }
   }
   x.putImageData(d, 0, 0);
 }
@@ -242,42 +267,59 @@ function bake(i) {
   const a = TEAM[i], src = IMG['ch' + a.ch];
   let c = document.createElement('canvas'); c.width = 112; c.height = 96;
   c.getContext('2d').drawImage(src, 0, 0);
-  if (ZOMBIE) zombify(c);
-  if (a.hue) { const d = document.createElement('canvas'); d.width = 112; d.height = 96; const x = d.getContext('2d'); x.filter = 'hue-rotate(' + a.hue + 'deg)'; x.drawImage(c, 0, 0); c = d; }
+  const hueShift = (k, deg) => { const d = document.createElement('canvas'); d.width = 112; d.height = 96; const x = d.getContext('2d'); x.filter = 'hue-rotate(' + deg + 'deg)'; x.drawImage(k, 0, 0); return d; };
+  if (a.zombie) zombify(c, 8, 50, true);   // a zombie even with the switch off: grey-green skin, rotted dark clothes, his own hair
+  else {
+    if (ZOMBIE) zombify(c);
+    if (a.hue) c = hueShift(c, a.hue);
+  }
   return c;
 }
 function buildBackground() {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-  // wall
-  x.fillStyle = '#1B2347'; x.fillRect(0, 0, W, 60);
-  for (let i = 0; i < W; i += 16) { x.fillStyle = i % 32 ? '#1F2A55' : '#1B2347'; x.fillRect(i, 0, 16, 60); }
-  x.fillStyle = '#0E1430'; x.fillRect(0, 60, W, 4); x.fillStyle = '#2E3A74'; x.fillRect(0, 58, W, 2);
-  // floor: tinted wood tiles
-  const tile = IMG.floor;
-  if (tile) {
-    const t = document.createElement('canvas'); t.width = 16; t.height = 16;
-    const tx = t.getContext('2d'); tx.drawImage(tile, 0, 0);
-    tx.globalCompositeOperation = 'multiply'; tx.fillStyle = '#B07A4C'; tx.fillRect(0, 0, 16, 16);
-    for (let yy = 64; yy < H; yy += 16) for (let xx = 0; xx < W; xx += 16) x.drawImage(t, xx, yy);
-  } else { x.fillStyle = '#6B4529'; x.fillRect(0, 64, W, H - 64); }
+  // wall: burlywood stripes alternating with light grey
+  for (let i = 0; i < W; i += 16) { x.fillStyle = i % 32 ? '#D3D3D3' : '#DEB887'; x.fillRect(i, 0, 16, 60); }
+  x.fillStyle = '#8F7650'; x.fillRect(0, 60, W, 4); x.fillStyle = '#B89B6E'; x.fillRect(0, 58, W, 2);
+  // floors: dark slate grey in the work room, medium purple in the lounge, a black and white checker strip along the bottom of the lounge.
+  // A floor tile is a grey picture: keep its pattern but give it the wanted colour (the pattern is softened so a pale floor stays pale).
+  const colorize = (img, hex) => {
+    const k = document.createElement('canvas'); k.width = 16; k.height = 16; const kx = k.getContext('2d'); kx.drawImage(img, 0, 0);
+    const d = kx.getImageData(0, 0, 16, 16), p = d.data, lum = [];
+    for (let i = 0; i < p.length; i += 4) lum.push(0.3 * p[i] + 0.59 * p[i + 1] + 0.11 * p[i + 2]);
+    const base = lum.slice().sort((a, b) => a - b)[lum.length >> 1] || 1, R = parseInt(hex.slice(1, 3), 16), G = parseInt(hex.slice(3, 5), 16), B = parseInt(hex.slice(5, 7), 16);
+    for (let i = 0, j = 0; i < p.length; i += 4, j++) { const fct = 1 - (1 - lum[j] / base) * 0.45; p[i] = Math.min(255, R * fct); p[i + 1] = Math.min(255, G * fct); p[i + 2] = Math.min(255, B * fct); }
+    kx.putImageData(d, 0, 0); return k;
+  };
+  const CHECK_Y = 280;
+  const tile = (img, col, x0, x1, y0, y1) => { if (!img) { x.fillStyle = col || '#888'; x.fillRect(x0, y0, x1 - x0, y1 - y0); return; } const k = col ? colorize(img, col) : img; for (let yy = y0; yy < y1; yy += 16) for (let xx = x0; xx < x1; xx += 16) x.drawImage(k, xx, yy); };
+  tile(IMG.floor, '#2F4F4F', 0, WALL_X, 64, H);
+  tile(IMG.floorBlue, '#9370DB', WALL_X, W, 64, CHECK_Y);
+  tile(IMG.floorChk, null, WALL_X, W, CHECK_Y, H);
+  // partition wall with a doorway on the aisle
+  const WL = '#D3D3D3', WH = '#DEB887', WD = '#8F7650';
+  for (const [y0, y1] of [[60, DOOR_Y0], [DOOR_Y1, H]]) {
+    x.fillStyle = WD; x.fillRect(WALL_X, y0, 8, y1 - y0); x.fillStyle = WL; x.fillRect(WALL_X + 1, y0, 6, y1 - y0); x.fillStyle = WH; x.fillRect(WALL_X, y0, 1, y1 - y0);
+    x.fillStyle = WH; x.fillRect(WALL_X, y0 === 60 ? y1 - 3 : y0, 8, 3);   // door post caps
+  }
   const put = (k, px, py) => { if (IMG[k]) x.drawImage(IMG[k], px, py); };
   const at = (k, px, bottom) => { if (IMG[k]) x.drawImage(IMG[k], px, bottom - IMG[k].height); };
-  // wall dressing
-  put('BOOKSHELF', 12, 22); put('CLOCK', 66, 14); put('LARGE_PAINTING', 96, 8); put('WHITEBOARD', 176, 14);
-  put('SMALL_PAINTING', 236, 18); put('DOUBLE_BOOKSHELF', 286, 14); put('BOOKSHELF', 340, 22);
+  // wall dressing: shelves and the clock above the work room, paintings above the lounge
+  put('BOOKSHELF', 10, 22); put('CLOCK', 60, 14); put('DOUBLE_BOOKSHELF', 180, 14); put('BOOKSHELF', 220, 22);
+  put('SMALL_PAINTING', 280, 18); put('LARGE_PAINTING', 311, 8); put('SMALL_PAINTING_2', 354, 18);
+  put('DOUBLE_BOOKSHELF', 306, 70);   // the reading corner at the top of the lounge
   // floor decor
-  at('LARGE_PLANT', 2, H - 2); at('LARGE_PLANT', 350, H - 2); at('PLANT', 6, 150); at('PLANT', 362, 150);
-  at('SOFA_FRONT', 176, H - 12); at('BIN', 362, H - 4);
-  const T = IMG.COFFEE_TABLE, cb = IMG.COFFEE;   // coffee corner
-  if (T) {
-    at('COFFEE_TABLE', 96, H - 8); COFFEE_SPOT.x = 96 + T.width + 4;
-    const mx = 100, my = H - 8 - T.height + 5;   // coffee machine standing on the table
-    const R = (c, x0, y0, w, h) => { x.fillStyle = c; x.fillRect(mx + x0, my - 15 + y0, w, h); };
+  at('LARGE_PLANT', 2, H - 2); at('LARGE_PLANT', WALL_X - 38, H - 2);
+  // the lounge: four sofas around a coffee table with a mug, a plant in each back corner, a coffee corner and the chicken's food bowl
+  at('PLANT', WALL_X + 12, 100); at('PLANT_2', W - 20, 100);
+  put('SOFA_FRONT', LX, LY - 16); put('SOFA_BACK', LX, LY + 32); put('SOFA_SIDE', LX - 16, LY);
+  if (IMG.SOFA_SIDE) { x.save(); x.translate(LX + 32 + 16, LY); x.scale(-1, 1); x.drawImage(IMG.SOFA_SIDE, 0, 0); x.restore(); }
+  put('COFFEE_TABLE', LX, LY); put('COFFEE', LX, LY + 8);
+  put('COFFEE_TABLE', CFX, CFY);
+  { const mx = CFX + 10, my = CFY + 6, R = (col, x0, y0, w, h) => { x.fillStyle = col; x.fillRect(mx + x0, my + y0, w, h); };   // coffee machine: its base rests on the table top (rows 7-25 of the table picture)
     R('#0B1022', -1, -1, 14, 16); R('#4A5280', 0, 0, 12, 14); R('#2A2F4A', 0, 0, 12, 3); R('#FF5A5A', 2, 1, 1, 1); R('#9BE3B5', 9, 1, 1, 1);
-    R('#C8D3F0', 4, 3, 4, 2); R('#14182C', 2, 5, 8, 6); R('#fff', 5, 8, 3, 3); R('#8B5A33', 5, 8, 3, 1); R('#C8D3F0', 1, 11, 10, 2);
-    if (cb) x.drawImage(cb, 96 + T.width - cb.width - 3, H - 8 - T.height - cb.height + 4);
-  }
+    R('#C8D3F0', 4, 3, 4, 2); R('#14182C', 2, 5, 8, 6); R('#fff', 5, 8, 3, 3); R('#8B5A33', 5, 8, 3, 1); R('#C8D3F0', 1, 11, 10, 2); }
+  x.fillStyle = '#5A3A1E'; x.fillRect(BOWL.x, BOWL.y + 2, 9, 3); x.fillStyle = '#8B5A33'; x.fillRect(BOWL.x, BOWL.y + 1, 9, 2); x.fillStyle = '#E8C06A'; x.fillRect(BOWL.x + 1, BOWL.y, 7, 1);   // food bowl
   return c;
 }
 
@@ -287,20 +329,26 @@ cv.width = W; cv.height = H;
 let K = 2;
 const SZ = 1;   // fixed at 100%: fits the window
 function layout() {
-  const avail = el('stagewrap').parentElement.clientWidth - (innerWidth > 1100 ? 250 + 210 + 400 + 36 : 0) - 8, top = el('stagewrap').getBoundingClientRect().top + scrollY, availH = Math.max(200, innerHeight - top - 24);
-  K = Math.max(0.4, Math.floor(Math.min(avail / W, Math.min(avail / W, availH / H) * SZ) * 100) / 100);   // fit the window, scaled by the size slider (never wider than the column)   // fit the screen: no taller than the window minus the bottom panels   // fill the whole width of the column; the page scrolls to the panels below
+  const avail = el('stagewrap').parentElement.clientWidth - (innerWidth > 1100 ? 260 + 400 + 24 : 0) - 8, top = el('stagewrap').getBoundingClientRect().top + scrollY, availH = Math.max(200, innerHeight - top - 24);
+  K = Math.max(0.4, Math.floor(avail / W * SZ * 100) / 100);   // fill the whole column between the side panels (the page scrolls if the office is taller than the window)
   el('stage').style.width = (W * K) + 'px'; el('stage').style.height = (H * K) + 'px';
   cv.style.width = (W * K) + 'px'; cv.style.height = (H * K) + 'px';
-  el('log').style.maxHeight = Math.max(160, H * K - 56) + 'px';
 }
 function frame(a, t) {   // -> [row, col, flip] for the character's current pose
-  if (a.moving) return [a.dir === 'up' ? 1 : a.dir === 'down' ? 0 : 2, [0,1,2,1][Math.floor(t * (a.run ? 14 : 8)) % 4], a.dir === 'side' && a.flip];
-  if (a.away) return a.face ? [2, 1, a.face === 'l'] : [0, 1, false];   // standing somewhere (handoff, coffee, ...)
+  if (a.moving) return [a.dir === 'up' ? 1 : a.dir === 'down' ? 0 : 2, [0,1,2,1][Math.floor(t * (ZOMBIE ? 3 : a.run ? 14 : 8)) % 4], a.dir === 'side' && a.flip];
+  if (a.away) return a.face === 'u' ? [1, 1, false] : a.face ? [2, 1, a.face === 'l'] : [0, 1, false];   // standing somewhere (handoff, coffee, ...)
   const s = a.state;
-  if (s === 'working') return [1, 3 + (Math.floor(t * 6) % 2), false];
-  if (s === 'idle') return [1, 3 + (Math.floor(t * 2.5 + a.hx) % 2), false];
-  if (s === 'waiting') return [0, 5 + (Math.floor(t * 2) % 2), false];
-  return [0, 1, false];   // done / blocked: turn around and stand
+  if (a.side === 'N') {   // back to us, typing at the front desk
+    if (s === 'working') return [1, 3 + (Math.floor(t * 6) % 2), false];
+    if (s === 'idle') return [1, 3 + (Math.floor(t * 2.5 + a.hx) % 2), false];
+    if (s === 'waiting') return [0, 5 + (Math.floor(t * 2) % 2), false];
+    return [0, 1, false];   // done / blocked: turn around and stand
+  }
+  const m = a.side === 'R';   // side seat: faces the table (the right seat is the mirror image)
+  if (s === 'working') return [2, 3 + (Math.floor(t * 6) % 2), m];
+  if (s === 'idle') return [2, 3 + (Math.floor(t * 2.5 + a.hx) % 2), m];
+  if (s === 'waiting') return [2, 5 + (Math.floor(t * 2) % 2), m];
+  return [0, 1, false];   // done / blocked: stand up and face us
 }
 function pcImg(a, t) {
   if (a.state === 'blocked') return IMG['PC_FRONT_OFF'];
@@ -308,65 +356,65 @@ function pcImg(a, t) {
   if (a.state === 'idle') return IMG['PC_FRONT_ON_' + (1 + Math.floor(t * 2) % 3)];
   return IMG['PC_FRONT_ON_1'];
 }
+// a table of any width from the desk picture: its left end, a repeated middle, its right end
+function drawTable(T) {
+  const d = IMG.DESK_FRONT; if (!d) return;
+  if (T.w <= 48) { ctx.drawImage(d, T.x, T.y); return; }
+  const C = 8, end = T.x + T.w - C;
+  ctx.drawImage(d, 0, 0, C, 32, T.x, T.y, C, 32); ctx.drawImage(d, 48 - C, 0, C, 32, end, T.y, C, 32);
+  for (let x = T.x + C; x < end; x += 32) { const w = Math.min(32, end - x); ctx.drawImage(d, C, 0, w, 32, x, T.y, w, 32); }
+}
+// a table from the front, any number of seat rows: the top edge, a repeated middle, the legs
+function drawSideTable(T) {
+  const d = IMG.TABLE_FRONT; if (!d) return;
+  const h = T.n * ROWH, top = 24;
+  ctx.drawImage(d, 0, 0, 48, top, T.x, T.y, 48, top);
+  if (h <= 48) { const b = h - top; ctx.drawImage(d, 0, 64 - b, 48, b, T.x, T.y + top, 48, b); return; }
+  ctx.drawImage(d, 0, 40, 48, 24, T.x, T.y + h - 24, 48, 24);
+  for (let y = top; y < h - 24; y += 16) { const hh = Math.min(16, h - 24 - y); ctx.drawImage(d, 0, 24, 48, hh, T.x, T.y + y, 48, hh); }
+}
+// mirrored copy of a 16x32 picture for the right-hand seats
+function drawSide(img, x, y, mirror) {
+  if (!img) return;
+  if (!mirror) { ctx.drawImage(img, x, y); return; }
+  ctx.save(); ctx.translate(x + 16, y); ctx.scale(-1, 1); ctx.drawImage(img, 0, 0); ctx.restore();
+}
+const SCREEN = { idle:'#7A6CFF', working:'#3DDC84', waiting:'#F25C9C', done:'#9BE3B5', blocked:'#FF8A80' };
+function drawSidePc(a, t) {
+  const m = a.side === 'R';
+  drawSide(IMG.PC_SIDE, a.pcX, a.seatY, m);
+  ctx.fillStyle = a.state === 'working' && Math.floor(t * 6) % 2 ? '#B5F5CF' : SCREEN[a.state];   // the screen shows his state
+  ctx.fillRect(a.pcX + (m ? 7 : 6), a.seatY + 4, 3, 4);
+}
 const LED = { idle:'#7A6CFF', working:'#3DDC84', waiting:'#F25C9C', done:'#9BE3B5', blocked:'#FF8A80' };
 function draw(t) {
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(bg, 0, 0);
   const items = [];
+  for (const T of TABLES) items.push(T.side ? { z: T.y + 11, f: () => drawSideTable(T) } : { z: T.y + 31.9, f: () => drawTable(T) });
   TEAM.forEach((a, i) => {
-    items.push({ z: a.deskY + 32, f: () => { if (IMG.DESK_FRONT) ctx.drawImage(IMG.DESK_FRONT, a.cx - 24, a.deskY); ctx.fillStyle = LED[a.state]; ctx.fillRect(a.cx - 1, a.deskY + 22, 3, 2);
-      if (a.state === 'working') {   // download-style bar on the desk front: real percent when known, otherwise a sliding stripe
-        const bx = a.cx - 18, by = a.deskY + 26;
-        ctx.fillStyle = '#1B1B3A'; ctx.fillRect(bx - 1, by - 1, 38, 5); ctx.fillStyle = '#3A4580'; ctx.fillRect(bx, by, 36, 3); ctx.fillStyle = '#FFD23F';
-        if (a.pct != null) ctx.fillRect(bx, by, Math.round(36 * a.pct / 100), 3);
-        else { const p = (t * 0.8) % 1, x0 = bx + Math.round(48 * p) - 12, l = Math.max(bx, x0), r = Math.min(bx + 36, x0 + 12); if (r > l) ctx.fillRect(l, by, r - l, 3); }
-      }
-    } });
-    items.push({ z: a.deskY + 32.5, f: () => { const p = pcImg(a, t); if (p) ctx.drawImage(p, a.cx - 8, a.deskY - 16); } });
-    items.push({ z: a.hy + 31, f: () => { if (IMG.WOODEN_CHAIR_BACK) ctx.drawImage(IMG.WOODEN_CHAIR_BACK, a.hx, a.hy + 6); } });
+    if (a.side === 'N') {   // front desk: his back to us, the screen faces us (its state shows on the screen and the status light)
+      items.push({ z: a.deskY + 32.5, f: () => { const p = pcImg(a, t); if (!p) return; const px = a.cx - 8; ctx.drawImage(p, px, a.deskY - 6); ctx.fillStyle = LED[a.state]; ctx.fillRect(px + 7, a.deskY + 10, 2, 2); } });
+      items.push({ z: a.hy + 31, f: () => { if (IMG.WOODEN_CHAIR_BACK) ctx.drawImage(IMG.WOODEN_CHAIR_BACK, a.hx, a.hy + 6); } });
+    } else {
+      items.push({ z: a.seatY + 32.5, f: () => drawSidePc(a, t) });
+      items.push({ z: a.hy + 31, f: () => drawSide(IMG.WOODEN_CHAIR_SIDE, a.chairX, a.seatY, a.side === 'R') });
+    }
     items.push({ z: a.y + 32 + (a.moving ? 0.2 : 0.1), f: () => {
       const [r, c, fl] = frame(a, t), s = sheets[i];
-      if (a.fx && a.fx.type === 'rope') {
-        const p = ((t - a.fx.t0) / 0.6) % 1, hop = Math.max(0, Math.sin(Math.PI * p)) * 7, px = Math.round(a.x), py = Math.round(a.y - hop);
-        ctx.drawImage(s, 16, 0, 16, 32, px, py, 16, 32);
-        const cy = py + 20 - 34 * Math.cos(2 * Math.PI * p); ctx.fillStyle = '#FFD23F';
-        for (let k = 0; k <= 12; k++) { const u = k / 12, bx = (1 - u) * (1 - u) * (px - 1) + 2 * u * (1 - u) * (px + 8) + u * u * (px + 17), by = (1 - u) * (1 - u) * (py + 20) + 2 * u * (1 - u) * cy + u * u * (py + 20); ctx.fillRect(Math.round(bx), Math.round(by), 2, 2); }
-      }
-      else if (a.fx && a.fx.type === 'sit') {   // chilling on the red sofa with a phone: upper body only, legs hidden in the sofa
-        ctx.drawImage(s, 16 * (5 + Math.floor(t * 1.4) % 2), 0, 16, 20, Math.round(a.x), Math.round(a.y), 16, 20);
-      }
-      else if (a.fx && a.fx.type === 'situp') {
-        const p = ((t - a.fx.t0) / 1.2) % 1, ang = (80 - 65 * (0.5 - 0.5 * Math.cos(2 * Math.PI * p))) * Math.PI / 180, mx = Math.round(a.x), my = Math.round(a.y);
-        ctx.fillStyle = '#1B2A66'; ctx.fillRect(mx - 15, my + 30, 46, 5); ctx.fillStyle = '#3B6BD0'; ctx.fillRect(mx - 14, my + 30, 44, 3);
-        ctx.save(); ctx.translate(mx + 8, my + 32); ctx.rotate(ang); ctx.drawImage(s, 16, 0, 16, 32, -8, -32, 16, 32); ctx.restore();
-      }
-      else if (a.fx && a.fx.type === 'dance') {
-        const p = ((t - a.fx.t0) / 0.6) % 1 + a.fx.ph;
-        ctx.save(); ctx.translate(Math.round(a.x) + 8 + Math.round(Math.sin(2 * Math.PI * p) * 3), Math.round(a.y) + 32 - Math.abs(Math.sin(Math.PI * p * 2)) * 4);
-        ctx.rotate(Math.sin(2 * Math.PI * p) * 0.14); ctx.drawImage(s, 16, 0, 16, 32, -8, -32, 16, 32); ctx.restore();
-      }
-      else if (a.fx && a.fx.type === 'ballet') {
-        const p = ((t - a.fx.t0) / 1.1) % 1, sx = Math.cos(2 * Math.PI * p), hop = 3 + Math.abs(Math.sin(Math.PI * p * 2)) * 4;
-        ctx.save(); ctx.translate(Math.round(a.x) + 8, Math.round(a.y) + 16 - hop); ctx.scale(Math.abs(sx) < 0.12 ? 0.12 : sx, 1);
-        ctx.drawImage(s, 16, 0, 16, 32, -8, -16, 16, 32); ctx.fillStyle = '#FF9AC9'; ctx.fillRect(-7, 6, 14, 3); ctx.fillStyle = '#FFC2DE'; ctx.fillRect(-7, 6, 14, 1); ctx.restore();
-      }
-      else if (a.fx) { const p = ((t - a.fx.t0) / 0.9) % 1; ctx.save(); ctx.translate(Math.round(a.x) + 8, Math.round(a.y) + 16 - Math.sin(Math.PI * p) * 18); ctx.rotate(p * 2 * Math.PI); ctx.drawImage(s, 16, 0, 16, 32, -8, -16, 16, 32); ctx.restore(); }
+      if (a.fx && a.fx.type === 'sitR') { ctx.save(); ctx.translate(Math.round(a.x) + 16, Math.round(a.y)); ctx.scale(-1, 1); ctx.drawImage(s, 16 * (5 + Math.floor(t * 1.4) % 2), 64, 16, 32, 0, 0, 16, 32); ctx.restore(); }   // the whole seated figure, like at the tables
       else if (fl) { ctx.save(); ctx.translate(Math.round(a.x) + 16, Math.round(a.y)); ctx.scale(-1, 1); ctx.drawImage(s, c * 16, r * 32, 16, 32, 0, 0, 16, 32); ctx.restore(); }
-      else ctx.drawImage(s, c * 16, r * 32, 16, 32, Math.round(a.x) + ((a.hit && performance.now() - a.hit < 1000) ? Math.round(Math.sin(t * 50) * 2) : 0), Math.round(a.y) - ((a.hop && performance.now() - a.hop < 350) ? Math.round(Math.sin(Math.PI * (performance.now() - a.hop) / 350) * 6) : 0), 16, 32);
+      else ctx.drawImage(s, c * 16, r * 32, 16, 32, Math.round(a.x), Math.round(a.y), 16, 32);
       if (a.carry) { const px = Math.round(a.x) + (a.dir === 'side' ? (a.flip ? -3 : 13) : 11), py = Math.round(a.y) + 15;
         ctx.fillStyle = '#1B1B3A'; ctx.fillRect(px - 1, py - 1, 7, 8); ctx.fillStyle = '#fff'; ctx.fillRect(px, py, 5, 6); ctx.fillStyle = '#8A93BD'; ctx.fillRect(px + 1, py + 1, 3, 1); ctx.fillRect(px + 1, py + 3, 3, 1); }
-      if (a.mug) { const mx = Math.round(a.x) + (a.dir === 'side' ? (a.flip ? -2 : 13) : 12), my = Math.round(a.y) + 17;
+      if (a.mug) { const mx = Math.round(a.x) + (a.fx && a.fx.type === 'sitR' ? -2 : a.dir === 'side' ? (a.flip ? -2 : 13) : 12), my = Math.round(a.y) + 17;
         ctx.fillStyle = '#1B1B3A'; ctx.fillRect(mx - 1, my - 1, 6, 7); ctx.fillStyle = '#fff'; ctx.fillRect(mx, my, 4, 5); ctx.fillStyle = '#8B5A33'; ctx.fillRect(mx, my, 4, 2); }
+      if (a.book) { const bx = Math.round(a.x) + 5, by = Math.round(a.y) + 14, pg = Math.floor(t * 0.8) % 2;   // a book held up in front of him
+        ctx.fillStyle = '#1B1B3A'; ctx.fillRect(bx - 1, by - 1, 12, 8); ctx.fillStyle = '#C0392B'; ctx.fillRect(bx, by, 10, 6); ctx.fillStyle = '#8E2A20'; ctx.fillRect(bx + 4, by, 2, 6); ctx.fillStyle = '#F4D58D'; ctx.fillRect(bx + 1 + pg * 7, by + 4, 2, 1); }   // seen from behind: the cover, with a bookmark that swings now and then
     } });
   });
-  if (tbl.on) items.push({ z: tbl.y + 33, f: () => { const tx = Math.round(tbl.x) - 12, ty = Math.round(tbl.y) + 22; ctx.fillStyle = '#3B2414'; ctx.fillRect(tx, ty + 5, 24, 1); ctx.fillStyle = '#8B5A33'; ctx.fillRect(tx, ty, 24, 5); ctx.fillStyle = '#A8723F'; ctx.fillRect(tx, ty, 24, 1); } });
-  if (ball.on) items.push({ z: ball.y + 1, f: () => {
-    const hop = Math.min(4, Math.abs(ball.vx) / 20) * Math.abs(Math.sin(t * 12)), bx = Math.round(ball.x), by = Math.round(ball.y - hop + (ball.dy || 0));
-    ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fillRect(bx - 2, Math.round(ball.y), 5, 1);
-    ctx.fillStyle = '#1B1B3A'; ctx.fillRect(bx - 3, by - 5, 6, 6); ctx.fillStyle = '#fff'; ctx.fillRect(bx - 2, by - 4, 4, 4); ctx.fillStyle = '#F25C9C'; ctx.fillRect(bx - 1, by - 3, 2, 2);
-  } });
   if (hen.on) items.push({ z: hen.y + 9, f: () => {
-    const hx = Math.round(hen.x), hy = Math.round(hen.y) - (Math.floor(t * 8) % 2), o = hen.owner;
+    const hx = Math.round(hen.x), hy = Math.round(hen.y) + (hen.peck ? (Math.floor(t * 5) % 2) * 2 : -(Math.floor(t * 8) % 2)), o = hen.owner;   // pecking at the bowl: head down, up
     const fx = o ? Math.round(o.x) + (o.flip ? 0 : 16) : hx, fy = o ? Math.round(o.y) + 20 : hy;
     ctx.fillStyle = '#F2C94C';
     for (let k = 1; k < 8; k++) ctx.fillRect(Math.round(fx + (hx + 5 - fx) * k / 8), Math.round(fy + (hy + 4 - fy) * k / 8), 1, 1);
@@ -381,27 +429,21 @@ function draw(t) {
 
 // ---- movement + handoff ----
 const SPEED = 56;
+// zombie mode: a slow shamble, a third of the normal pace, that surges and drags with each lurching step
+const zombieGait = (a) => ZOMBIE ? 0.3 * (0.6 + 0.8 * (0.5 + 0.5 * Math.sin(performance.now() / 1000 * 2.4 + (a.zp || 0)))) : 1;
 function goto(a, x, y) {
   return new Promise(res => { a.tx = x; a.ty = y; a.moving = true; a.done = res; });
 }
-const ball = { x: 192, y: AISLE_TOP + 30, vx: 0, dy: 0, tw: null, on: false, owner: null };
-const tbl = { on: false, x: 0, y: 0 };   // little table for arm wrestling
-const hen = { x: 0, y: 0, dir: 1, on: false, owner: null };
-const sofa = { owner: null };
+const hen = { x: 0, y: 0, dir: 1, on: false, owner: null, peck: false };
 function step(dt) {
   if (hen.on && hen.owner) {
     const o = hen.owner, side = o.dir === 'side' ? (o.flip ? 1 : -1) : -1, k = Math.min(1, 4 * dt), ox = hen.x;
     hen.x += (o.x + 4 + side * 22 - hen.x) * k; hen.y += (o.y + 23 - hen.y) * k;
     if (Math.abs(hen.x - ox) > 0.05) hen.dir = hen.x > ox ? 1 : -1;
   }
-  if (ball.tw) { const p = Math.min(1, (performance.now() - ball.tw.t0) / ball.tw.dur); ball.x = ball.tw.x0 + (ball.tw.x1 - ball.tw.x0) * p; ball.dy = -Math.sin(Math.PI * p) * 16; if (p >= 1) { ball.tw = null; ball.dy = 0; } }
-  else if (ball.on) {
-    ball.x += ball.vx * dt; ball.vx *= Math.max(0, 1 - 1.6 * dt);
-    if (ball.x < 28) { ball.x = 28; ball.vx = Math.abs(ball.vx); } else if (ball.x > 356) { ball.x = 356; ball.vx = -Math.abs(ball.vx); }
-  }
   for (const a of TEAM) {
     if (!a.moving) continue;
-    const dx = a.tx - a.x, dy = a.ty - a.y, d = Math.hypot(dx, dy), s = SPEED * (a.run || 1) * dt;
+    const dx = a.tx - a.x, dy = a.ty - a.y, d = Math.hypot(dx, dy), s = SPEED * (a.run || 1) * dt * zombieGait(a);
     if (Math.abs(dx) > Math.abs(dy)) { a.dir = 'side'; a.flip = dx < 0; } else a.dir = dy < 0 ? 'up' : 'down';
     if (d <= s) { a.x = a.tx; a.y = a.ty; a.moving = false; const r = a.done; a.done = null; if (r) r(); }
     else { a.x += dx / d * s; a.y += dy / d * s; }
@@ -413,254 +455,110 @@ async function handoff(fromId, toId) {
   if (!a || !b) return;
   a.cancel = true; for (let i = 0; i < 100 && a.act; i++) await sleep(200); a.cancel = false;
   a.away = true; a.carry = true;
-  const route = [[a.gx, a.hy], [a.gx, AISLE_TOP], [b.gx, AISLE_TOP]];
+  const route = [...a.out, [b.ax, AISLE_TOP], ...back(b)];   // ends right behind b's chair
   for (const [x, y] of route) await goto(a, x, y);
-  a.dir = 'down'; a.flip = false; a.carry = false; b.recvUntil = performance.now() + 1500;
+  a.face = 'u'; a.flip = false; a.carry = false; b.recvUntil = performance.now() + 1500;
   await sleep(1500);
-  a.carry = false;
-  for (const [x, y] of [[a.gx, AISLE_TOP], [a.gx, a.hy], [a.hx, a.hy]]) await goto(a, x, y);
+  a.carry = false; a.face = null;
+  for (const [x, y] of [...b.out.slice(1), [a.ax, AISLE_TOP], ...back(a), [a.hx, a.hy]]) await goto(a, x, y);
   a.away = false; a.dir = 'down';
 }
 // ---- idle life: free agents wander off for coffee, football, acrobatics ... then go back to their seat ----
+// ---- idle life: a free agent's only pastime is taking the chicken for a walk ----
 const idle = (a) => a.state === 'idle';
-const live = (a) => !a.cancel && a.state === (a.act === 'punch' ? 'done' : 'idle');   // still free to carry on with its activity
+const live = (a) => !a.cancel && a.state === 'idle';   // still free to carry on
+const rnd = (lo, hi) => lo + Math.random() * (hi - lo);
+const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 async function walk(a, pts) { for (const [x, y] of pts) { if (!live(a)) return false; await goto(a, x, y); } return true; }
 async function nap(a, ms) { const end = performance.now() + ms; while (performance.now() < end && live(a)) await sleep(100); }
-const leave = (a) => walk(a, [[a.gx, a.hy], [a.gx, AISLE_TOP]]);
-const CL = 184, rnd = (lo, hi) => lo + Math.random() * (hi - lo);
-// performers each claim their own spot in the aisle so nobody stands on top of anybody else
-const SLOTS = [28, 126, 224, 322], slotOwner = {};   // between the lanes people walk out of (88, 184, 280)
-function claimSlot(a) {
-  const free = SLOTS.map((_, i) => i).filter(i => !slotOwner[i]);
-  const i = free.length ? pick(free) : Math.floor(Math.random() * SLOTS.length);
-  slotOwner[i] = a; return SLOTS[i];
-}
-const ACT = {
-  async coffee(a) {
-    a.say = '☕ ชงกาแฟ';
-    if (!await leave(a) || !await walk(a, [[CL, AISLE_TOP], [CL, COFFEE_SPOT.y], [COFFEE_SPOT.x, COFFEE_SPOT.y]])) return;
-    await nap(a, 2500); a.mug = true; a.say = '☕ หอมจัง';
-    await walk(a, [[CL, COFFEE_SPOT.y], [CL, AISLE_TOP]]); await nap(a, 1200);
-  },
-  async ball(a) {
-    a.say = '⚽ เตะบอล';
-    if (!await leave(a)) return;
-    ball.owner = a; ball.on = true; ball.vx = 0; ball.x = Math.max(28, Math.min(356, a.x + 30));
-    for (let k = 0; k < 4 && idle(a); k++) {
-      const dir = ball.x < 192 ? 1 : -1;
-      if (!await walk(a, [[Math.max(4, Math.min(364, ball.x - dir * 18 - 8)), AISLE_TOP]])) break;
-      ball.vx = dir * rnd(110, 160); await nap(a, 1500);
-    }
-  },
-  async flip(a) {
-    a.say = '🤸 กายกรรม!';
-    if (!await leave(a) || !await walk(a, [[claimSlot(a), AISLE_TOP]])) return;
-    a.fx = { t0: performance.now() / 1000 }; await nap(a, 2700); a.fx = null; await nap(a, 600);
-  },
-  async rope(a) {
-    a.say = '🪢 กระโดดเชือก';
-    if (!await leave(a) || !await walk(a, [[claimSlot(a), AISLE_TOP]])) return;
-    a.fx = { t0: performance.now() / 1000, type: 'rope' }; await nap(a, 4200); a.fx = null;
-  },
-  async chicken(a) {
-    a.say = '🐔 จูงไก่';
-    if (!await leave(a)) return;
-    hen.owner = a; hen.on = true; hen.x = a.x - 22; hen.y = a.y + 23; hen.dir = 1;
-    for (const x of [rnd(30, 110), rnd(250, 340), rnd(140, 220)]) { if (!await walk(a, [[x, AISLE_TOP]])) return; await nap(a, 500); }
-  },
-  async phone(a) {
-    const S = IMG.SOFA_FRONT; if (!S || sofa.owner) return;
-    a.say = '📱 เล่นมือถือ ชิลๆ'; sofa.owner = a;
-    const sx = 176 + Math.round(S.width / 2) - 8, sy = H - 12 - 5 - 20;   // torso sits on the seat cushion
-    if (!await leave(a) || !await walk(a, [[CL, AISLE_TOP], [CL, sy], [sx, sy]])) return;
-    a.fx = { type: 'sit' }; await nap(a, 9000); a.fx = null;
-    await walk(a, [[CL, sy], [CL, AISLE_TOP]]);
-  },
-  async jog(a) {
-    a.say = '🏃 จ๊อกกิง';
-    if (!await leave(a)) return;
-    a.run = 2.4;
-    for (let k = 0; k < 3; k++) if (!await walk(a, [[24, AISLE_TOP], [346, AISLE_TOP]])) break;
-    a.run = false;
-  },
-  async situp(a) {
-    a.say = '💪 ซิทอัพ';
-    if (!await leave(a) || !await walk(a, [[claimSlot(a), AISLE_TOP]])) return;
-    a.fx = { t0: performance.now() / 1000, type: 'situp' };
-    for (let n = 1; n <= 8 && live(a); n++) { a.say = '💪 ซิทอัพ ' + n; await nap(a, 1200); }
-    a.fx = null;
-  },
-  async ballet(a) {
-    a.say = '🩰 เต้นบัลเลต์';
-    if (!await leave(a) || !await walk(a, [[claimSlot(a), AISLE_TOP]])) return;
-    a.fx = { t0: performance.now() / 1000, type: 'ballet' }; await nap(a, 6000); a.fx = null;
-  },
-  async wander(a) {
-    a.say = '🚶 เดินเล่น';
-    if (!await leave(a)) return;
-    for (let k = 0; k < 2 && idle(a); k++) { await walk(a, [[rnd(40, 330), AISLE_TOP + rnd(-4, 4)]]); await nap(a, 900); }
-  }
-};
-const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+const leave = (a) => walk(a, a.out);
 async function goHome(a) {
-  a.fx = null; a.mug = false; a.face = null; a.run = false;
-  for (const k in slotOwner) if (slotOwner[k] === a) delete slotOwner[k];
-  if (sofa.owner === a) sofa.owner = null;
-  if (ball.owner === a) { ball.on = false; ball.owner = null; }
+  a.mug = false; a.book = false; a.face = null; a.fx = null; hen.peck = false;
   if (hen.owner === a) { hen.on = false; hen.owner = null; }
-  for (const [x, y] of [[a.gx, AISLE_TOP], [a.gx, a.hy], [a.hx, a.hy]]) await goto(a, x, y);
+  for (const [x, y] of [[a.ax, AISLE_TOP], ...back(a), [a.hx, a.hy]]) await goto(a, x, y);
   a.away = false; a.say = ''; a.dir = 'down'; a.act = null; a.nextAct = performance.now() + rnd(8000, 20000);
 }
-async function runActivity(a) {
-  const pool = ['coffee', 'coffee', 'coffee', 'flip', 'flip', 'wander', 'wander', 'rope', 'rope'].concat(ball.owner ? [] : ['ball', 'ball'], hen.owner ? [] : ['chicken', 'chicken'], ['jog', 'jog', 'situp', 'situp', 'ballet', 'ballet'], sofa.owner || !IMG.SOFA_FRONT ? [] : ['phone', 'phone', 'phone']);
-  a.act = pick(pool); a.away = true;
-  try { await ACT[a.act](a); } catch {}
+// what a free agent does: take the chicken to the lounge to eat, fetch a coffee (and take it back to his seat or drink it on the lounge sofa),
+// or read in the reading corner. Everything in the lounge is reached through the lane down its right side, so nobody crosses furniture.
+const COFFEE_SPOT = [CFX + 34, 232], SOFA_SEAT = [LX + 32, LY], READ_SPOT = [322, 94];
+const ACT = {
+  async eat(a) {
+    a.say = '🐔 พาไก่ไปกินข้าว';
+    if (!await leave(a)) return;
+    hen.owner = a; hen.on = true; hen.x = a.x - 22; hen.y = a.y + 23; hen.dir = 1;
+    if (!await walk(a, [[LOUNGE_R, AISLE_TOP], [LOUNGE_R, 236]])) return;   // through the doorway, down the right side of the lounge to the bowl
+    hen.dir = 1; hen.peck = true; a.say = '🐔 กินเยอะๆ นะ'; await nap(a, 6000);
+    await walk(a, [[LOUNGE_R, AISLE_TOP]]);
+  },
+  async brew(a) {   // to the coffee corner, stand there while it brews; leaves him holding the mug
+    a.say = '☕ ไปชงกาแฟ';
+    if (!await leave(a) || !await walk(a, [[LOUNGE_R, AISLE_TOP], [LOUNGE_R, COFFEE_SPOT[1]], COFFEE_SPOT])) return false;
+    a.face = 'l'; await nap(a, 3500);
+    a.face = null; a.mug = true; a.say = '☕ หอมจัง';
+    return live(a);
+  },
+  async coffee(a) {   // ...and back to his seat with the mug
+    if (!await ACT.brew(a)) return;
+    await walk(a, [[LOUNGE_R, COFFEE_SPOT[1]], [LOUNGE_R, AISLE_TOP]]); await nap(a, 1200);
+  },
+  async coffeeSit(a) {   // ...or sit down on the right sofa and drink it
+    if (!await ACT.brew(a)) return;
+    if (!await walk(a, [[LOUNGE_R, COFFEE_SPOT[1]], [LOUNGE_R, SOFA_SEAT[1]]])) return;
+    a.fx = { type: 'sitR' }; a.say = '☕ นั่งจิบกาแฟ'; await goto(a, SOFA_SEAT[0], SOFA_SEAT[1]);
+    await nap(a, 8000);
+    a.say = ''; await goto(a, LOUNGE_R, SOFA_SEAT[1]); a.fx = null;   // slide back out in the seated pose, then stand up in the lane
+    await walk(a, [[LOUNGE_R, AISLE_TOP]]);
+  },
+  async read(a) {   // stand in front of the bookshelf with an open book
+    a.say = '📖 ไปอ่านหนังสือ';
+    if (!await leave(a) || !await walk(a, [[READ_SPOT[0], AISLE_TOP], READ_SPOT])) return;
+    a.face = 'u'; a.book = true; a.say = '📖 น่าสนใจจัง'; await nap(a, 7000);
+    a.book = false; a.face = null;
+    await walk(a, [[READ_SPOT[0], AISLE_TOP]]);
+  },
+};
+// Each agent decides for himself when to go. Urges build up with time (coffee faster while he works; the chicken's dinner and a good read faster
+// while he is idle), each at his own pace. When one is strong enough and he is free he thinks it over out loud for a moment, then goes.
+const URGES = {
+  coffee: { acts: ['coffee', 'coffeeSit'], thoughts: ['💭 ง่วงจัง อยากกินกาแฟ', '💭 ขอกาแฟสักแก้วก่อน', '💭 สมองเริ่มตื้อ ไปชงกาแฟดีกว่า'] },
+  hen:    { acts: ['eat'], thoughts: ['💭 ไก่คงหิวแล้ว', '💭 ถึงเวลาข้าวของไก่แล้ว', '💭 พาไก่ไปกินข้าวดีกว่า'] },
+  read:   { acts: ['read'], thoughts: ['💭 ว่างๆ ไปอ่านหนังสือดีกว่า', '💭 อยากอ่านอะไรสักหน่อย', '💭 ไปดูหนังสือที่ชั้นหน่อยดีกว่า'] },
+};
+TEAM.forEach((a) => {   // his own temperament: how fast each urge builds (per second) and how strong it must be before he acts
+  a.urge = { coffee: rnd(0, 0.5), hen: rnd(0, 0.5), read: rnd(0, 0.5) };
+  a.rate = { coffee: 1 / rnd(60, 140), hen: 1 / rnd(90, 200), read: 1 / rnd(100, 220) };
+  a.bar = { coffee: rnd(0.85, 1.1), hen: rnd(0.85, 1.1), read: rnd(0.85, 1.1) };
+});
+async function runActivity(a, urge) {
+  const U = URGES[urge]; a.act = pick(U.acts); a.away = false;
+  try {
+    a.say = pick(U.thoughts); await nap(a, 2500);   // thinks it over at his desk first
+    if (live(a)) { a.away = true; await ACT[a.act](a); }
+  } catch {}
+  a.say = ''; a.urge[urge] = 0; a.bar[urge] = rnd(0.85, 1.1);
   await goHome(a);
 }
-// two free agents meet in the aisle: a kiss, or rock-paper-scissors
-const napP = async (a, b, ms) => { const end = performance.now() + ms; while (performance.now() < end && live(a) && live(b)) await sleep(100); };
-async function meetUp(a, b) {
-  const mx = claimSlot(a) + 16;
-  const r = await Promise.all([leave(a).then(ok => ok && walk(a, [[mx - 14, AISLE_TOP]])), leave(b).then(ok => ok && walk(b, [[mx + 14, AISLE_TOP]]))]);
-  if (!(r[0] && r[1])) return false;
-  a.face = 'r'; b.face = 'l'; return true;
-}
-const PAIR = {
-  async kiss(a, b) {
-    a.say = '😍'; b.say = '😳';
-    if (!await meetUp(a, b)) return;
-    const m = (a.x + b.x) / 2;
-    await Promise.all([goto(a, m - 7, AISLE_TOP), goto(b, m + 7, AISLE_TOP)]);
-    a.say = '💋'; b.say = '❤️'; await napP(a, b, 2400); a.say = b.say = '😊'; await napP(a, b, 900);
-  },
-  async highfive(a, b) {
-    a.say = b.say = '🙌';
-    if (!await meetUp(a, b)) return;
-    for (let k = 0; k < 3; k++) { a.say = b.say = '🙌 ไฮไฟว์!'; a.hop = b.hop = performance.now(); await napP(a, b, 1000); }
-    a.say = b.say = '😆'; await napP(a, b, 800);
-  },
-  async hug(a, b) {
-    a.say = '🤗'; b.say = '🥰';
-    if (!await meetUp(a, b)) return;
-    const m = (a.x + b.x) / 2;
-    await Promise.all([goto(a, m - 6, AISLE_TOP), goto(b, m + 6, AISLE_TOP)]);
-    for (let k = 0; k < 3; k++) { a.say = b.say = '🤗 กอดๆ'; a.hop = b.hop = performance.now(); await napP(a, b, 900); }
-    a.say = b.say = '💕'; await napP(a, b, 800);
-  },
-  async dance(a, b) {
-    a.say = '💃'; b.say = '🕺';
-    if (!await meetUp(a, b)) return;
-    const t0 = performance.now() / 1000; a.fx = { type: 'dance', t0, ph: 0 }; b.fx = { type: 'dance', t0, ph: 0.5 };
-    a.say = '💃 เต้นคู่'; b.say = '🕺 เต้นคู่'; await napP(a, b, 6500); a.fx = b.fx = null;
-  },
-  async armwrestle(a, b) {
-    a.say = b.say = '💪';
-    if (!await meetUp(a, b)) return;
-    const m = (a.x + b.x) / 2;
-    await Promise.all([goto(a, m - 10, AISLE_TOP), goto(b, m + 10, AISLE_TOP)]);
-    tbl.on = true; tbl.x = m + 8; tbl.y = AISLE_TOP;
-    for (let k = 0; k < 4; k++) { a.say = b.say = '💪 ปล้ำแขน!'; a.hit = b.hit = performance.now(); await napP(a, b, 1000); }
-    const aw = Math.random() < 0.5; a.say = aw ? '😎 ชนะ' : '😭 แพ้'; b.say = aw ? '😭 แพ้' : '😎 ชนะ'; await napP(a, b, 1800);
-  },
-  async race(a, b) {
-    a.say = b.say = '🏁 วิ่งแข่ง!';
-    const ok = await Promise.all([leave(a).then(o => o && walk(a, [[24, 142]])), leave(b).then(o => o && walk(b, [[24, 152]]))]);
-    if (!(ok[0] && ok[1])) return;
-    a.face = b.face = 'r'; a.say = b.say = '🏁 3..2..1..'; await napP(a, b, 1200); a.face = b.face = null;
-    a.say = b.say = '🏃 ไปๆๆ'; a.run = rnd(1.8, 3); b.run = rnd(1.8, 3);
-    const done = [0, 0];
-    await Promise.all([goto(a, 346, 142).then(() => { done[0] = performance.now(); }), goto(b, 346, 152).then(() => { done[1] = performance.now(); })]);
-    a.run = b.run = false; const aw = done[0] < done[1];
-    a.say = aw ? '🏆 ชนะ!' : '😩 แพ้'; b.say = aw ? '😩 แพ้' : '🏆 ชนะ!'; await napP(a, b, 2000);
-  },
-  async toss(a, b) {
-    a.say = b.say = '⚾ โยนบอล';
-    const x0 = rnd(30, 110), x1 = x0 + 130;
-    const r = await Promise.all([leave(a).then(o => o && walk(a, [[x0, AISLE_TOP]])), leave(b).then(o => o && walk(b, [[x1, AISLE_TOP]]))]);
-    if (!(r[0] && r[1])) return;
-    a.face = 'r'; b.face = 'l'; ball.owner = a; ball.on = true; ball.vx = 0; ball.x = x0 + 18;
-    for (let k = 0; k < 6 && live(a) && live(b); k++) {
-      ball.tw = { x0: ball.x, x1: k % 2 ? x0 + 18 : x1 - 2, t0: performance.now(), dur: 800 };
-      a.say = k % 2 ? '🙌 รับ!' : '⚾ โยน!'; b.say = k % 2 ? '⚾ โยน!' : '🙌 รับ!';
-      await napP(a, b, 900);
-    }
-    ball.tw = null; ball.dy = 0;
-  },
-  async fight(a, b) {
-    a.say = b.say = '😠';
-    if (!await meetUp(a, b)) return;
-    for (let k = 0; k < 4 && live(a) && live(b); k++) {
-      const x = k % 2 ? b : a, y = k % 2 ? a : b, d = x === a ? 1 : -1;
-      x.say = '👊'; y.say = '💥 โอ๊ย!'; await goto(x, x.x + d * 8, AISLE_TOP); y.hit = performance.now(); await napP(a, b, 700);
-      await goto(x, x.x - d * 8, AISLE_TOP);
-    }
-    a.say = b.say = '😵'; await napP(a, b, 900);
-  },
-  async gossip(a, b) {
-    a.say = b.say = '🤫';
-    if (!await meetUp(a, b)) return;
-    const lines = [['🤫 นี่ๆ รู้ยัง...', '👂'], ['👂', '😲 อะไรอ่ะ!'], ['🤭 เมื่อวานเห็น...', '👂'], ['👂', '😱 จริงดิ!!'], ['🤐 อย่าบอกใครนะ', '🙏 สาบาน!']];
-    for (const [x, y] of lines) { if (!(live(a) && live(b))) break; a.say = x; b.say = y; await napP(a, b, 1500); }
-  },
-  async selfie(a, b) {
-    a.say = '🤳'; b.say = '😁';
-    if (!await meetUp(a, b)) return;
-    const m = (a.x + b.x) / 2;
-    await Promise.all([goto(a, m - 6, AISLE_TOP), goto(b, m + 6, AISLE_TOP)]);
-    for (const [x, y] of [['🤳 เซลฟี่!', '😁'], ['📸 แชะ!', '✌️'], ['🤳 อีกรูป!', '😜'], ['📸 แชะ!', '🤪']]) { if (!(live(a) && live(b))) break; a.say = x; b.say = y; a.hop = b.hop = performance.now(); await napP(a, b, 1200); }
-  },
-  async rps(a, b) {
-    a.say = b.say = '✊ เป่ายิ้งฉุบ!';
-    if (!await meetUp(a, b)) return;
-    const hands = ['✊', '✌️', '✋'];
-    for (let round = 0; round < 3; round++) {
-      a.say = b.say = '✊ เป่า...'; await napP(a, b, 700); a.say = b.say = '✌️ ยิ้ง...'; await napP(a, b, 700); a.say = b.say = '✋ ฉุบ!'; await napP(a, b, 600);
-      const x = Math.floor(Math.random() * 3), y = Math.floor(Math.random() * 3);
-      a.say = hands[x]; b.say = hands[y]; await napP(a, b, 1100);
-      if (x === y) { a.say = b.say = 'เสมอ! เป่าใหม่'; await napP(a, b, 900); continue; }
-      const aWins = (y - x + 3) % 3 === 1;
-      a.say = aWins ? '🎉 ชนะ!' : '😭 แพ้'; b.say = aWins ? '😭 แพ้' : '🎉 ชนะ!'; await napP(a, b, 1800); return;
+let urgeT = 0;
+function schedule(now) {
+  const dt = urgeT ? Math.min(1, (now - urgeT) / 1000) : 0; urgeT = now;
+  if (!last) return;
+  for (const a of TEAM) {
+    const working = a.state === 'working';
+    a.urge.coffee += dt * a.rate.coffee * (working ? 2.2 : 1);
+    a.urge.hen += dt * a.rate.hen * (working ? 0.4 : 1.4);
+    a.urge.read += dt * a.rate.read * (working ? 0.3 : 1.6);
+  }
+  if (TEAM.some(a => a.act)) return;   // one at a time: nobody walks the same lanes together
+  let best = null;
+  for (const a of TEAM) {
+    if (!idle(a) || a.away || now < a.nextAct) continue;
+    for (const k of Object.keys(URGES)) {
+      if (k === 'hen' && hen.owner) continue;
+      const over = a.urge[k] / a.bar[k];
+      if (over >= 1 && (!best || over > best.over)) best = { a, k, over };
     }
   }
-};
-async function runPair(a, b, kind) {
-  if (a.col > b.col) [a, b] = [b, a];
-  a.act = b.act = kind; a.away = b.away = true;
-  try { await PAIR[kind](a, b); } catch {}
-  tbl.on = false; a.hop = b.hop = 0;
-  await Promise.all([goHome(a), goHome(b)]);
-}
-// someone who finished their work goes and punches a free colleague (cartoon slapstick)
-async function runPunch(p, v) {
-  p.act = 'punch'; v.act = 'hit'; p.away = true;
-  try {
-    p.say = '😤 ไปต่อยหน่อย';
-    if (await leave(p) && await walk(p, [[v.gx, AISLE_TOP], [v.gx, v.hy]])) {
-      const s = v.gx > v.hx ? -1 : 1; p.face = s < 0 ? 'l' : 'r';
-      for (let k = 0; k < 3 && live(p); k++) {
-        await goto(p, v.gx + s * 12, v.hy);
-        p.say = '👊'; v.hit = performance.now(); v.say = '💥 โอ๊ย!'; await nap(p, 600);
-        v.say = '😵'; await goto(p, v.gx, v.hy); await nap(p, 300);
-      }
-    }
-  } catch {}
-  v.hit = 0; v.say = ''; v.act = null; v.nextAct = performance.now() + rnd(6000, 14000);
-  await goHome(p);
-  p.nextAct = performance.now() + rnd(15000, 30000);
-}
-function schedule(now) {
-  if (!last) return;
-  const busy = TEAM.filter(a => a.act).length;
-  if (busy >= 3) return;
-  const free = (a) => !a.away && !a.act && now > a.nextAct;
-  const victims = TEAM.filter(a => idle(a) && !a.away && !a.act);
-  const dones = TEAM.filter(a => a.state === 'done' && free(a));
-  if (dones.length && victims.length) { runPunch(pick(dones), pick(victims)); return; }
-  const idles = TEAM.filter(a => idle(a) && free(a));
-  if (!idles.length) return;
-  const a = pick(idles), mates = idles.filter(x => x !== a);
-  if (mates.length && busy <= 1 && Math.random() < 0.6) runPair(a, pick(mates), pick(Object.keys(PAIR)));
-  else runActivity(a);
+  if (best) runActivity(best.a, best.k);
 }
 let prev = null, pendDone = null, pendWork = null, last = null;
 function track(s) {
@@ -687,12 +585,12 @@ const lbl = {}, bub = {};
 function buildOverlay() {
   const stage = el('stage');
   TEAM.forEach(a => {
-    const l = document.createElement('div'); l.className = 'lbl'; l.textContent = a.name; stage.appendChild(l); lbl[a.id] = l;
-    const b = document.createElement('div'); b.className = 'bub idle'; b.textContent = '🎮 เล่นเกม'; stage.appendChild(b); bub[a.id] = b;
+    const l = document.createElement('div'); l.className = 'lbl' + (a.side === 'L' ? ' lblL' : a.side === 'R' ? ' lblR' : ''); l.textContent = a.name; stage.appendChild(l); lbl[a.id] = l;
+    const b = document.createElement('div'); b.className = 'bub idle'; b.textContent = ''; stage.appendChild(b); bub[a.id] = b;
   });
 }
 const MARK = { idle:'', waiting:'? ', done:'✓ ', blocked:'! ', working:'' };
-function bubbleText(a) { return a.state === 'idle' ? '🎮 เล่นเกม' : MARK[a.state] + (a.task || LABEL[a.state]); }
+function bubbleText(a) { return a.state === 'idle' ? '' : MARK[a.state] + (a.task || LABEL[a.state]); }
 // one line only; if the text is wider than the bubble it scrolls by itself (animation is not restarted every frame)
 function setBub(b, cls, txt) {
   const key = cls + '|' + txt + '|' + b.style.maxWidth;
@@ -705,17 +603,18 @@ function setBub(b, cls, txt) {
   });
 }
 function placeOverlay(now) {
-  const fs = Math.max(11, Math.round(4.4 * K)), bfs = Math.max(13, Math.round(6 * K));
-  el('wallcard').style.left = (192 * K) + 'px'; el('wallcard').style.top = (30 * K) + 'px'; el('wallcard').style.fontSize = Math.max(16, 7 * K) + 'px';
+  const fs = Math.max(9, Math.round(3.6 * K)), bfs = Math.max(11, Math.round(5 * K));   // desks stand 64 apart: names and bubbles must fit in that
+  el('wallcard').style.left = (WALL_X / 2 * K) + 'px'; el('wallcard').style.top = (30 * K) + 'px'; el('wallcard').style.fontSize = Math.max(16, 7 * K) + 'px';
   for (const a of TEAM) {
     const l = lbl[a.id], b = bub[a.id];
-    l.style.left = (a.cx * K) + 'px'; l.style.top = ((a.hy + 34) * K) + 'px'; l.style.fontSize = fs + 'px';
+    l.style.left = ((a.side === 'L' ? a.hx - 2 : a.side === 'R' ? a.hx + 18 : a.cx) * K) + 'px'; l.style.top = ((a.side === 'N' ? a.hy + 34 : a.hy + 18) * K) + 'px'; l.style.fontSize = fs + 'px';
     const recv = now < a.recvUntil;
     const showAway = a.away && !a.moving;
-    const px = a.away ? a.x + 8 : a.cx, py = (a.away ? a.y : a.hy) - 1;
-    b.style.left = (px * K) + 'px'; b.style.top = (py * K) + 'px'; b.style.fontSize = bfs + 'px'; b.style.maxWidth = (68 * K) + 'px';
+    // seated: the bubble hangs above the monitor, so the PC is seen standing on the table (not hidden behind a white box)
+    const px = a.away ? a.x + 8 : a.cx, py = a.away ? a.y - 1 : a.side === 'N' ? a.deskY - 8 : a.hy + 4;
+    b.style.left = (px * K) + 'px'; b.style.top = (py * K) + 'px'; b.style.fontSize = bfs + 'px'; b.style.maxWidth = ((a.away ? 68 : a.bw) * K) + 'px';
     if (recv) { setBub(b, 'bub done', '📄 ได้รับงานแล้ว'); }
-    else { setBub(b, 'bub ' + a.state + (a.away && a.moving ? ' hide' : ''), a.say || (a.away ? '📄 ส่งงานต่อ' : bubbleText(a))); }
+    else { const txt = a.say || (a.away ? '📄 ส่งงานต่อ' : bubbleText(a)); setBub(b, 'bub ' + a.state + ((a.away && a.moving) || !txt ? ' hide' : ''), txt); }   // idle at the desk: no bubble
   }
 }
 
@@ -791,31 +690,16 @@ async function sendAnswer(ask, text) {
     el('mh').textContent = '✔ ส่งแล้ว: ' + text.slice(0, 60); poll();
   } catch { el('mh').textContent = '⚠ ส่งไม่ได้ บอร์ดไม่ตอบ'; }
 }
-// plan limits, written to usage.json by the status line hook (usage-feed.mjs); the browser cannot read the account's usage itself
-function fmtReset(iso, withDay) {
-  const d = new Date(iso); if (isNaN(d)) return '-';
-  const tm = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }), same = d.toDateString() === new Date().toDateString();
-  return 'Resets ' + (withDay || !same ? d.toLocaleDateString('en-US', { weekday: 'short' }) + ' ' : 'at ') + tm;
-}
-function usageRow(label, pct, resets, withDay) {
-  const p = Math.round(pct), lv = p >= 90 ? 'hi' : p >= 70 ? 'mid' : 'lo';
-  return '<div class="ur ' + lv + '"><div class="urow"><span class="ul">' + label + '</span><b>' + p + '%</b>' + (resets ? '<span class="rs">' + fmtReset(resets, withDay) + '</span>' : '') + '</div><div class="ubar"><i style="width:' + Math.min(100, p) + '%"></i></div></div>';
-}
-function renderUsage(u) {
-  const box = el('ul');
-  if (!u) { box.innerHTML = '<p class="unote">ยังไม่มีข้อมูล (รออัปเดตจาก status line)</p>'; return; }
-  let h = usageRow('5-hour limit', u.five.pct, u.five.resetsAt, false) + usageRow('Weekly · all models', u.week.pct, u.week.resetsAt, true);
-  if (u.ctx != null) h += usageRow('Session context', u.ctx, null, false);
-  if (u.five.pct >= 90) h += '<p class="uwarn">โควตา 5 ชั่วโมงใกล้เต็ม งานอาจหยุดจนกว่าจะรีเซ็ต</p>';
-  else if (u.five.pct >= 70) h += '<p class="uwarn mid">โควตา 5 ชั่วโมงเกิน 70% ระวังงานใหญ่</p>';
-  if (Date.now() - u.t > 15 * 60 * 1000) h += '<p class="unote">ข้อมูลเก่า (' + hhmm(u.t) + ') รออัปเดตจาก status line</p>';
-  box.innerHTML = h;
-}
 let curJob = null, dismissed = null;
+let tabQ = '', tabF = 'all', tabScrolled = null;
 function renderTabs(s) {
-  const box = el('tabs'), jobs = s.jobs || [];
-  box.innerHTML = '';
-  if (!jobs.length) return;
+  const bar = el('tabbar'), box = el('tabs'), all = s.jobs || [];
+  bar.classList.toggle('empty', !all.length);
+  const q = tabQ.trim().toLowerCase();
+  // the open card always stays in the list, even when the search or filter would hide it
+  const jobs = all.filter(j => j.key === s.job || ((tabF === 'all' || (tabF === 'ask' ? j.ask : j.state === tabF)) && (!q || String(j.ticket || j.key).toLowerCase().includes(q))));
+  el('tcount').textContent = jobs.length === all.length ? all.length + ' การ์ด' : jobs.length + '/' + all.length + ' การ์ด';
+  const keep = box.scrollLeft; box.innerHTML = '';
   for (const j of jobs) {
     const b = document.createElement('button'); b.type = 'button';
     b.className = (j.key === s.job ? 'sel ' : '') + (j.ask ? 'ask' : '');
@@ -823,12 +707,13 @@ function renderTabs(s) {
     b.addEventListener('click', () => { curJob = j.key; prev = null; poll(); });
     box.appendChild(b);
   }
+  box.scrollLeft = keep;
+  if (tabScrolled !== s.job) { tabScrolled = s.job; const sel = box.querySelector('.sel'); if (sel) sel.scrollIntoView({ inline: 'nearest', block: 'nearest' }); }
 }
 function render(s) {
   if (curJob !== s.job) { curJob = s.job; prev = null; askKey = null; }
   renderTabs(s);
   renderLinks(s.links);
-  renderUsage(s.usage);
   last = s;
   track(s);
   el('ticket').textContent = s.ticket || '-';
@@ -844,14 +729,6 @@ function render(s) {
     if (st.state !== 'idle') online++;
   }
   el('online').textContent = online;
-  const tk = s.tokens || {}, fmt = (n) => Number(n || 0).toLocaleString('en-US');
-  el('t-total').textContent = fmt(tk.total); el('t-in').textContent = fmt(tk.input); el('t-out').textContent = fmt(tk.output);
-  el('t-cw').textContent = fmt(tk.cacheWrite); el('t-cr').textContent = fmt(tk.cacheRead); el('t-calls').textContent = fmt(tk.calls);
-  el('t-main').textContent = fmt(tk.mainTotal); el('t-sub').textContent = fmt(tk.subTotal);
-  const tot = (tk.mainTotal || 0) + (tk.subTotal || 0);
-  el('sp-main').style.width = tot ? (100 * tk.mainTotal / tot) + '%' : '100%';
-  el('sp-sub').style.width = tot ? (100 * tk.subTotal / tot) + '%' : '0%';
-  el('tok-since').textContent = s.ticket ? 'since ' + hhmm(s.startedAt) + ' · ' + s.ticket : '';
   el('log').innerHTML = s.log.slice().reverse().map(l => '<li class="'+l.state+'"><time>'+hhmm(l.t)+'</time><b>'+esc(nameOf(l.agent))+'</b> '+linkify(l.text)+'</li>').join('');
   el('modal').classList.toggle('on', !!s.ask && dismissed !== s.ask.at);   // closed with the X: stays closed until a new question arrives
   if (s.ask) showAsk(s.ask);
@@ -859,12 +736,19 @@ function render(s) {
 }
 const LK = { report:'📊', tc:'🧪', defect:'🐞', other:'🔗' };
 let linksKey = '';
+const LGROUPS = [['evidence', 'EVIDENCE', l => l.kind === 'report', 'ยังไม่มีรายงานหลักฐาน'], ['jira', 'JIRA / XRAY', l => l.kind !== 'report', 'ยังไม่มีลิงก์ Jira / Xray']];
+let LGOPEN = {}; try { LGOPEN = JSON.parse(localStorage.getItem('ninas-link-groups') || '{}'); } catch {}
 function renderLinks(list) {
   const key = JSON.stringify(list || []); if (key === linksKey) return; linksKey = key;
-  el('links').innerHTML = (list && list.length)
-    ? list.map(l => '<li><a class="' + esc(l.kind) + '" href="' + esc(l.href) + '" target="_blank" rel="noopener noreferrer">' + (LK[l.kind] || LK.other) + ' ' + esc(l.label) + '</a></li>').join('')
-    : '<li class="none">ลิงก์ report / TC จะขึ้นที่นี่หลังรันเสร็จ</li>';
+  el('links').innerHTML = LGROUPS.map(([id, title, test, none]) => {
+    const items = (list || []).filter(test);
+    return '<details data-g="' + id + '"' + (LGOPEN[id] === false ? '' : ' open') + '><summary>' + title + ' <b>' + items.length + '</b></summary><ul>' +
+      (items.length ? items.map(l => '<li><a class="' + esc(l.kind) + '" href="' + esc(l.href) + '" target="_blank" rel="noopener noreferrer">' + (LK[l.kind] || LK.other) + ' ' + esc(l.label) + '</a></li>').join('') : '<li class="none">' + none + '</li>') + '</ul></details>';
+  }).join('');
 }
+el('links').addEventListener('toggle', (e) => { const g = e.target.dataset && e.target.dataset.g; if (!g) return; LGOPEN[g] = e.target.open; try { localStorage.setItem('ninas-link-groups', JSON.stringify(LGOPEN)); } catch {} }, true);
+el('tsearch').addEventListener('input', () => { tabQ = el('tsearch').value; if (last) renderTabs(last); });
+el('tfilter').addEventListener('change', () => { tabF = el('tfilter').value; if (last) renderTabs(last); });
 el('mclose').addEventListener('click', () => { if (last && last.ask) dismissed = last.ask.at; el('modal').classList.remove('on'); });
 addEventListener('keydown', e => { if (e.key === 'Escape' && el('modal').classList.contains('on')) el('mclose').click(); });
 function tick() {
@@ -884,7 +768,7 @@ async function poll() {
 
 // ---- boot ----
 (async () => {
-  const jobs = [loadImg('floor', 'assets/floors/floor_3.png')];
+  const jobs = [loadImg('floor', 'assets/floors/floor_3.png'), loadImg('floorBlue', 'assets/floors/floor_0.png'), loadImg('floorChk', 'assets/floors/floor_8.png')];
   for (let i = 0; i < 6; i++) jobs.push(loadImg('ch' + i, 'assets/characters/char_' + i + '.png'));
   for (const f of FURN) jobs.push(loadImg(f.split('/')[1], 'assets/furniture/' + f + '.png'));
   await Promise.all(jobs);
