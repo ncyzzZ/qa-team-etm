@@ -27,3 +27,4 @@ test-results*/
 
 # local nickname list of the developers
 .claude/team/people.local.md
+evals/agents/results/
