@@ -3,7 +3,8 @@
 //   node .claude/team/team.mjs start ETM-1234
 //   node .claude/team/team.mjs set <agent> <working|waiting|done|blocked|idle> "text" [--pct 0-100]
 //   node .claude/team/team.mjs ask "question for the user"
-//   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs a yes typed in chat"
+//   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
+//   node .claude/team/team.mjs wait [--timeout 540]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>)
 //   node .claude/team/team.mjs usage <5h %> <5h resetsAt ISO> <weekly %> <weekly resetsAt ISO> [context %]
 //   node .claude/team/team.mjs clear
 //   node .claude/team/team.mjs log "text"
@@ -97,7 +98,19 @@ if (cmd === 'start') {
     else rest.push(args[i]);
   }
   add({ type: 'ask', text: text(rest), kind, options });
-  add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติในแชท' : 'รอคำตอบจากคุณ' });
+  add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติ (บอร์ดหรือแชท)' : 'รอคำตอบจากคุณ' });
+} else if (cmd === 'wait') {
+  // The answer is read from the board server, which only reports answers it received from the board page itself.
+  // Exit 0 = answered (ANSWER: <text>), 3 = no answer in time, 4 = the question was closed another way (e.g. answered in chat).
+  const i = args.indexOf('--timeout'); const limit = (i >= 0 ? Number(args[i + 1]) : 540) * 1000; const t0 = Date.now(); let seen = false;
+  for (;;) {
+    let s = null; try { s = await (await fetch(URL_BASE + '/state' + (JOB ? '?job=' + encodeURIComponent(JOB) : ''), { signal: AbortSignal.timeout(3000) })).json(); } catch {}
+    if (s && s.ask) seen = true;
+    if (s && s.answer) { console.log('QUESTION: ' + s.answer.question + '\nANSWER: ' + s.answer.text + '\n(answered on the board at ' + new Date(s.answer.at).toLocaleTimeString() + ', job ' + s.job + ')'); process.exit(0); }
+    if (s && !s.ask && !s.answer) { console.log(seen ? 'CLOSED: the question was cleared without a board answer' : 'NO QUESTION: nothing is open on the board'); process.exit(4); }
+    if (Date.now() - t0 > limit) { console.log('TIMEOUT: no answer on the board yet'); process.exit(3); }
+    await new Promise((r) => setTimeout(r, 1500));
+  }
 } else if (cmd === 'usage') {
   const [f, fr, w, wr, c] = args;
   const num = (v) => Math.max(0, Math.min(100, Number(v)));

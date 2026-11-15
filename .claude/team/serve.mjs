@@ -11,6 +11,13 @@ const EVENTS = path.join(dir, 'events.jsonl');
 const PORT = Number(process.env.TEAM_PORT || 4777);
 const AGENTS = ['lead', 'analyst', 'inspector', 'designer', 'reviewer', 'automator', 'reporter', 'logger'];
 
+// Answers typed on the board. TOKEN is put into the board page only (other web sites cannot read it), SECRET never leaves
+// this process: an "answer" line in events.jsonl counts only when this server signed it, so nothing else can write a yes.
+const TOKEN = crypto.randomBytes(16).toString('hex');
+const SECRET = crypto.randomBytes(32);
+const sign = (job, askAt, text) => crypto.createHmac('sha256', SECRET).update(`${job}\n${askAt}\n${text}`).digest('hex');
+const HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
+
 // Token usage comes from the Claude Code transcripts of this project (read-only, local files).
 const PROJ = process.env.TEAM_TRANSCRIPTS ||
   path.join(os.homedir(), '.claude', 'projects', path.resolve(dir, '..', '..').replace(/[^A-Za-z0-9]/g, '-'));
@@ -123,12 +130,19 @@ function reduce(want) {
       s.log.push({ t: e.t, agent: e.agent, state: e.state, text: e.text });
     } else if (e.type === 'ask') {
       s.ask = { text: e.text, at: e.t, kind: e.kind || 'info', options: e.options || [] };
+      s.answer = null;
+    } else if (e.type === 'answer') {
+      if (s.ask && s.ask.at === e.askAt && e.sig === sign(k, e.askAt, e.text)) {
+        s.answer = { text: e.text, at: e.t, askAt: e.askAt, question: s.ask.text, kind: s.ask.kind };
+        s.ask = null;
+        s.log.push({ t: e.t, agent: 'lead', state: 'info', text: 'ตอบจากบอร์ด: ' + e.text.replace(/\s+/g, ' ').slice(0, 120) });
+      }
     } else if (e.type === 'link') {
       const i = s.links.findIndex((x) => x.target === e.target);
       const L = { label: e.label, kind: e.kind || 'other', target: e.target, t: e.t };
       if (i >= 0) s.links[i] = L; else s.links.push(L);
     } else if (e.type === 'clear') {
-      s.ask = null;
+      s.ask = null; s.answer = null;
     } else if (e.type === 'log') {
       s.log.push({ t: e.t, agent: 'lead', state: 'info', text: e.text });
     }
@@ -139,7 +153,7 @@ function reduce(want) {
     state: jobState(j),
   }));
   let k = want && jobs.has(want) ? want : (list.find((j) => j.ask) || list[list.length - 1] || {}).key;
-  const s = jobs.get(k) || { ticket: '', startedAt: Date.now(), agents: blank(Date.now()), ask: null, log: [], links: [] };
+  const s = jobs.get(k) || { ticket: '', startedAt: Date.now(), agents: blank(Date.now()), ask: null, answer: null, log: [], links: [] };
   const out = { ...s, job: k || null, jobs: list };
   out.log = s.log.slice(-40);
   out.links = s.links.map((l) => ({ label: l.label, kind: l.kind, href: linkHref(l.target) }));
@@ -172,12 +186,34 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'content-type': TY[ext] || 'application/octet-stream', 'cache-control': 'no-store' });
       res.end(fs.readFileSync(file));
     } catch { res.writeHead(404); res.end('not found'); }
+  } else if (urlPath === '/answer') {
+    // The user's answer to the open question, sent by the board page. Refused unless it comes from this board page
+    // (same host, same origin, the page's token) and matches the question that is open right now.
+    const deny = (code, msg) => { res.writeHead(code, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: msg })); };
+    const origin = req.headers.origin;
+    if (req.method !== 'POST') return deny(405, 'POST only');
+    if (!HOSTS.has(req.headers.host || '') || (origin && !HOSTS.has(origin.replace(/^http:\/\//, '')))) return deny(403, 'wrong host');
+    if (req.headers['x-board-token'] !== TOKEN) return deny(403, 'reload the board');
+    let body = '';
+    req.on('data', (c) => { body += c; if (body.length > 40000) req.destroy(); });
+    req.on('end', () => {
+      let b; try { b = JSON.parse(body); } catch { return deny(400, 'bad json'); }
+      // long, many-line answers (e.g. pasted from the BA) are kept as typed
+      const text = String(b.text || '').replace(/\r\n?/g, '\n').trim().slice(0, 4000);
+      const s = reduce(b.job);
+      if (!text) return deny(400, 'empty answer');
+      if (!s.job || s.job !== b.job || !s.ask || s.ask.at !== b.askAt) return deny(409, 'that question is no longer open');
+      const t = Date.now();
+      fs.appendFileSync(EVENTS, JSON.stringify({ t, job: s.job, type: 'answer', askAt: b.askAt, text, sig: sign(s.job, b.askAt, text) }) + '\n'
+        + JSON.stringify({ t, job: s.job, type: 'set', agent: 'lead', state: 'working', text: 'ได้คำตอบจากบอร์ด' }) + '\n');
+      res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+    });
   } else if (req.url.startsWith('/state')) {
     res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
     res.end(JSON.stringify(reduce(new URL(req.url, 'http://x').searchParams.get('job'))));
   } else {
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
-    res.end(fs.readFileSync(path.join(dir, 'board.html')));
+    res.end(fs.readFileSync(path.join(dir, 'board.html'), 'utf8').replace('<script>', `<script>window.BOARD_TOKEN=${JSON.stringify(TOKEN)};</script>\n<script>`));
   }
 });
 server.on('error', () => process.exit(0));

@@ -103,6 +103,11 @@
   #mclose:hover { border-color:var(--neon); }
   #modal .box.appr { border-color:var(--accent); } #modal .box.appr h2 { color:var(--accent); }
   .mopts { display:flex; gap:10px; flex-wrap:wrap; margin:0 0 14px; }
+  .mopts button.opt { cursor:pointer; font-family:inherit; }
+  .mopts button.opt:hover, .mopts button.opt:focus-visible { border-color:#f90; outline:none; }
+  .mopts .mfree { display:flex; gap:8px; width:100%; margin-top:10px; align-items:flex-end; }
+  .mopts .mfree textarea { resize:vertical; max-height:40vh; line-height:1.4; }
+  .mopts .mfree input, .mopts .mfree textarea { flex:1; min-width:0; background:var(--inset); color:var(--strong); border:3px solid var(--edge); font:inherit; font-size:16px; padding:8px 10px; }
   .mopts .opt { background:var(--inset); color:var(--strong); border:3px solid var(--edge); font-size:17px; padding:8px 18px; }
   .mopts button { background:var(--inset); color:var(--strong); border:3px solid var(--edge); font:inherit; font-size:17px; padding:8px 18px; cursor:pointer; }
   .mopts button:hover { border-color:var(--neon); }
@@ -178,7 +183,7 @@
   <aside class="panel" id="actp"><h2>ACTIVITY</h2><ul id="log" aria-live="polite"></ul></aside>
 </main>
 <div id="modal" role="alertdialog" aria-labelledby="mt" aria-modal="true">
-  <div class="box" id="mbox"><button id="mclose" type="button" aria-label="ปิด" title="ปิด (ถามอีกครั้งเมื่อมีคำถามใหม่)">✕</button><h2 id="mt">WAITING FOR YOU</h2><p id="mx"></p><div id="mo" class="mopts"></div><p id="mh" class="mhint"></p><small>ป๊อปอัปนี้จะปิดเองเมื่อคุณตอบในแชท</small></div>
+  <div class="box" id="mbox"><button id="mclose" type="button" aria-label="ปิด" title="ปิด (ถามอีกครั้งเมื่อมีคำถามใหม่)">✕</button><h2 id="mt">WAITING FOR YOU</h2><p id="mx"></p><div id="mo" class="mopts"></div><p id="mh" class="mhint"></p><small>ป๊อปอัปนี้จะปิดเองเมื่อคุณตอบ (ที่นี่หรือในแชท)</small></div>
 </div>
 <script>
 // Pixel art by Pixel Agents (MIT, see assets/LICENSE-pixel-agents.txt). Sheet rows: 0 front, 1 back, 2 side. Frames: 0-2 walk, 3-4 type, 5-6 read.
@@ -746,7 +751,7 @@ function editName(a, host) {
 function buildPanels() {
   el('roster').innerHTML = TEAM.map(a => '<div class="mem idle" id="m-'+a.id+'"><div class="av"><canvas id="av-'+a.id+'"></canvas></div><div class="who"><b id="rn-'+a.id+'" title="คลิกเพื่อเปลี่ยนชื่อ">'+a.name+'</b><em>'+a.job+'</em><div class="pbar" id="pb-'+a.id+'"><i></i></div><span class="pt" id="pt-'+a.id+'"></span></div><span class="st">[IDLE]</span><span class="dot"></span></div>').join('');
   TEAM.forEach((a, i) => avatar(el('av-' + a.id), i));}
-// a question for the user. "approve" questions must be answered by typing in the Claude Code chat: the buttons only copy the reply
+// a question for the user: answered here (buttons or the text box, sent to /answer) or in the Claude Code chat
 const baseTitle = document.title; let askKey = null;
 function copyText(v) {
   if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(v).catch(() => legacyCopy(v));
@@ -758,14 +763,33 @@ function showAsk(ask) {
   el('mbox').classList.toggle('appr', approve);
   el('mt').textContent = approve ? 'NEEDS YOUR APPROVAL' : 'WAITING FOR YOU';
   el('mx').textContent = ask.text;
-  document.title = (Math.floor(Date.now() / 1000) % 2 ? '(!) ' : '') + (approve ? 'รอคุณตอบในแชท' : 'รอคำตอบจากคุณ');
+  document.title = (Math.floor(Date.now() / 1000) % 2 ? '(!) ' : '') + (approve ? 'รอคุณอนุมัติ' : 'รอคำตอบจากคุณ');
   if (askKey === ask.at) return;
   askKey = ask.at;
-  el('mh').textContent = approve ? '👉 ไปตอบในแชท Claude Code (พิมพ์คำตอบแล้วกด Enter) งานจะทำต่อเอง' : '👉 ไปตอบในแชท Claude Code';
+  el('mh').textContent = approve ? '👉 กดปุ่มหรือพิมพ์คำตอบที่นี่ (หรือตอบในแชท Claude Code) การอนุมัติจะถามยืนยันอีกครั้ง' : '👉 กดปุ่มหรือพิมพ์คำตอบที่นี่ หรือตอบในแชท Claude Code';
   const box = el('mo'); box.innerHTML = '';
-  for (const v of ask.options || []) {   // just shows the choices; nothing to copy or click
-    const b = document.createElement('span'); b.className = 'opt'; b.textContent = v; box.appendChild(b);
+  for (const v of ask.options || []) {   // a click sends that choice as the user's answer
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = v;
+    b.addEventListener('click', () => sendAnswer(ask, v)); box.appendChild(b);
   }
+  const f = document.createElement('form'); f.className = 'mfree';
+  // a textarea: answers pasted from the BA are long and have many lines. Enter = new line, Ctrl+Enter or the button = send
+  const i = document.createElement('textarea'); i.rows = 3; i.maxLength = 4000; i.placeholder = 'พิมพ์หรือวางคำตอบ (หลายบรรทัดได้ ไม่เกิน 4000 ตัว) แล้วกด Ctrl+Enter หรือปุ่มส่ง'; i.setAttribute('aria-label', 'คำตอบ');
+  i.addEventListener('keydown', (e) => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); f.requestSubmit(); } });
+  const s = document.createElement('button'); s.type = 'submit'; s.className = 'opt'; s.textContent = 'ส่ง';
+  f.append(i, s); f.addEventListener('submit', (e) => { e.preventDefault(); if (i.value.trim()) sendAnswer(ask, i.value.trim()); });
+  box.appendChild(f);
+}
+// send the answer to this board's server; an approval asks once more because it lets the team write to a real system
+async function sendAnswer(ask, text) {
+  if (ask.kind === 'approve' && !confirm('ยืนยันคำตอบ: "' + (text.length > 200 ? text.slice(0, 200) + '…' : text) + '"\n\nคำถาม: ' + ask.text)) return;
+  try {
+    const r = await fetch('/answer', { method: 'POST', headers: { 'content-type': 'application/json', 'x-board-token': window.BOARD_TOKEN || '' },
+      body: JSON.stringify({ job: curJob, askAt: ask.at, text }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) { el('mh').textContent = '⚠ ส่งไม่ได้: ' + (j.error === 'reload the board' ? 'รีเฟรชหน้านี้แล้วลองใหม่' : j.error || r.status); return; }
+    el('mh').textContent = '✔ ส่งแล้ว: ' + text.slice(0, 60); poll();
+  } catch { el('mh').textContent = '⚠ ส่งไม่ได้ บอร์ดไม่ตอบ'; }
 }
 // plan limits, written to usage.json by the status line hook (usage-feed.mjs); the browser cannot read the account's usage itself
 function fmtReset(iso, withDay) {
