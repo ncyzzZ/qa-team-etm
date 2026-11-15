@@ -1,6 +1,6 @@
 ---
 name: etm-nn-fullqa
-description: Jira and Xray rules for the ETM QA cycle. Use when the user's message is just an ETM Story link or key (e.g. ETM-1234 or the Jira URL), and whenever Tests, Test Plans, Test Executions or [QA] subtasks are created or closed.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Jira and Xray rules for the ETM QA cycle. Use when the user's message is just an ETM Story link or key (e.g. ETM-1234 or the Jira URL), and whenever Tests, Test Plans, Test Executions or [QA] subtasks are created or closed.
 ---
 
 # ETM Jira / Xray rules (full QA cycle)

@@ -12,6 +12,8 @@
 4. เชื่อม connector ใน Claude: Atlassian (Jira) และ Figma ตามสิทธิ์ที่คุณมี
 5. เปิด Claude Code ในโฟลเดอร์นี้ พิมพ์ `/agents` ควรเห็น 7 ตัว: ba-analyst, ux-inspector, test-designer, test-reviewer, automation-engineer, evidence-reporter, jira-xray-logger
 
+> **หมายเหตุ skill ซ้ำบนบัญชี:** บัญชี Claude ที่ใช้ร่วมกันยังมี skill ชื่อเดียวกันรุ่นเก่า (ขึ้นต้น `anthropic-skills:`) ที่คนอื่นใช้อยู่ ใน repo นี้ให้ใช้ skill ของโปรเจกต์ (ไม่มี prefix) เท่านั้น กติกานี้เขียนไว้ใน `CLAUDE.md` แล้ว ถ้าเห็น Claude เรียก `anthropic-skills:...` ให้บอกมันให้หยุดและกลับไปทำตาม `TEAM.md` (โค้ดรายงานของ repo อยู่ใน `tools/` จึงไม่ถูก skill เก่าเขียนทับ)
+
 ## วิธีเริ่มงาน
 
 พิมพ์ `เริ่มเขียน TC การ์ด ETM-1234` (หรือส่งแค่คีย์ `ETM-1234`) Claude จะอ่าน `TEAM.md` แล้วทำงานเป็น QA LEAD และเปิดบอร์ดที่ http://localhost:4777

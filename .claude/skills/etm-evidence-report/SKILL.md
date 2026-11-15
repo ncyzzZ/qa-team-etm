@@ -1,6 +1,6 @@
 ---
 name: "etm-evidence-report"
-description: "Use after any Playwright run of the ETM (STMS) tests, pass or fail, to build the HTML evidence report (step pictures, card links, failure reasons, spec notes, review verdicts, TC totals) without changing the repo."
+description: "Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use after any Playwright run of the ETM (STMS) tests, pass or fail, to build the HTML evidence report (step pictures, card links, failure reasons, spec notes, review verdicts, TC totals) without changing the repo."
 ---
 
 # ETM Playwright evidence report (generator v5.3)

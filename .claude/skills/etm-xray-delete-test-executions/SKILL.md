@@ -1,6 +1,6 @@
 ---
 name: etm-xray-delete-test-executions
-description: Bulk-delete PTTEP ETM Jira/Xray cards. Test Executions from a JQL/key list, or the Tests in an Xray Test Repository folder (e.g. Manual Test/Bin). Use for ลบ test execution / ลบการ์ด / ลบ Bin requests.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Bulk-delete PTTEP ETM Jira/Xray cards. Test Executions from a JQL/key list, or the Tests in an Xray Test Repository folder (e.g. Manual Test/Bin). Use for ลบ test execution / ลบการ์ด / ลบ Bin requests.
 ---
 
 # ETM - Bulk delete Xray cards (API first)

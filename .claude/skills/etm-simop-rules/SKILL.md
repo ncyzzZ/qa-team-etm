@@ -1,6 +1,6 @@
 ---
 name: etm-simop-rules
-description: Rules for ETM Stories about the SIMOP button, Work Conflict Matrix and conflict bar colours on the Shutdown Logic page (e.g. ETM-7289). Load only for those Stories.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Rules for ETM Stories about the SIMOP button, Work Conflict Matrix and conflict bar colours on the Shutdown Logic page (e.g. ETM-7289). Load only for those Stories.
 ---
 
 # SIMOP / Shutdown Logic conflict-check rules (learned on ETM-7289, Oct 2026)

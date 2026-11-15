@@ -1,6 +1,6 @@
 ---
 name: log-defect-jira-etm
-description: Use instead of log-defect-jira for the PTTEP ETM (EP-Turnaround Management) Jira project. Runs the full ETM-specific defect-logging procedure end-to-end - correct fields, environment-based Work type, auto-resolved FE/BE assignee from the originating Story, mandatory embedded evidence images, FE/UI labels, QA sub-task, and Xray step-level linking.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use instead of log-defect-jira for the PTTEP ETM (EP-Turnaround Management) Jira project. Runs the full ETM-specific defect-logging procedure end-to-end - correct fields, environment-based Work type, auto-resolved FE/BE assignee from the originating Story, mandatory embedded evidence images, FE/UI labels, QA sub-task, and Xray step-level linking.
 ---
 
 # Log a Defect/Bug in the ETM Jira project

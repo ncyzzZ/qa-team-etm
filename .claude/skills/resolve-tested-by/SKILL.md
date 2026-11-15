@@ -1,6 +1,6 @@
 ---
 name: resolve-tested-by
-description: Use when the user gives a Jira Story/issue key and asks to change the status of its "is tested by" linked Test issues, e.g. "resolve test cases for ETM-1234", "เปลี่ยน status is tested by ในการ์ด", "ปิด test case ทั้งหมดของ story นี้", "close out the linked tests for this ticket". Assigns every linked Test issue to the current user, transitions to Resolved (Resolution = Done), then to Closed, and verifies with JQL. Needs the Atlassian Rovo (Jira) MCP connector.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use when the user gives a Jira Story/issue key and asks to change the status of its "is tested by" linked Test issues, e.g. "resolve test cases for ETM-1234", "เปลี่ยน status is tested by ในการ์ด", "ปิด test case ทั้งหมดของ story นี้", "close out the linked tests for this ticket". Assigns every linked Test issue to the current user, transitions to Resolved (Resolution = Done), then to Closed, and verifies with JQL. Needs the Atlassian Rovo (Jira) MCP connector.
 ---
 
 # Resolve "is tested by" linked Test issues

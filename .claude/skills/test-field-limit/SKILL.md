@@ -1,6 +1,6 @@
 ---
 name: test-field-limit
-description: Use when the user asks to test a text field's character limit on a web page, e.g. "ลอง remark หน่อยว่าใส่ได้กี่ตัว", "test max length of this field", "ใส่เกิน 500 แล้วเป็นยังไง", or asks to check a limit that was just increased.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use when the user asks to test a text field's character limit on a web page, e.g. "ลอง remark หน่อยว่าใส่ได้กี่ตัว", "test max length of this field", "ใส่เกิน 500 แล้วเป็นยังไง", or asks to check a limit that was just increased.
 ---
 
 # Test a field's character limit
