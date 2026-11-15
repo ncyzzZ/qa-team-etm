@@ -56,7 +56,11 @@ The Defect/Bug goes to the developer who built the affected part of the originat
 1. Fetch the originating Story (`getJiraIssue`) and its sub-tasks.
 2. Find the sub-task prefixed `[FE]` or `[BE]` matching the defect's nature (UI/Frontend defect: the `[FE]` sub-task's assignee; backend/API defect: the `[BE]` sub-task's assignee). If the Story has no such sub-tasks, use the Story's own Assignee.
 3. Assign the new Defect/Bug to that person's accountId.
-4. If the user names the assignee explicitly in the message (a nickname or "ให้ <name>"), that overrides the auto-resolution; still confirm the accountId with `lookupJiraAccountId` (param `searchString`, a plain string, not a JSON object) instead of trusting a cached id if two ids for the same nickname ever disagree.
+4. If the user names the assignee explicitly in the message (a nickname or "ให้ <name>"), that overrides the auto-resolution. Jira search does NOT understand Thai nicknames (`lookupJiraAccountId` with `ก๊อต` returns 0 users), so resolve it like this:
+   - Look the nickname up in `.claude/team/people.local.md` (a local, git-ignored list `nickname = name as in Jira`, ignoring upper/lower case; template `.claude/team/people.example.md`). `ฉัน` / `me` means the running user: use `ME_ID`, no lookup.
+   - Then `lookupJiraAccountId` (param `searchString`, a plain string, not a JSON object) with that English name, and use the accountId only when exactly 1 user comes back.
+   - Nickname not in the file, or the lookup returns 0 or 2+ users: do not guess. Ask the user once for the name as it is in Jira (or choose between the candidates), then offer to add the line to `people.local.md`.
+   - If two ids for the same nickname ever disagree, trust the fresh lookup, not a remembered id.
 
 Always confirm against the actual Story or `lookupJiraAccountId`; other developers work ETM tickets too. (The original skill also listed a few team accountIds for quick recognition; they are left out of this shared repo on purpose. Look them up.)
 

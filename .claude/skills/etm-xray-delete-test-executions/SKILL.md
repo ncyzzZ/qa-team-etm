@@ -29,7 +29,7 @@ XRAY_CLIENT_ID=...
 XRAY_CLIENT_SECRET=...
 ```
 1. If a variable is missing, stop and tell the user which one to set. Never ask them to paste secrets into the chat.
-2. The helper is `etm_xray_del.py` in this skill's folder (needs Python 3). Run it from the repo root; if the secrets are in a file, load it without printing it (the file may have CRLF line ends, strip `\r`):
+2. The helper is `etm_xray_del.py` in this skill's folder (needs Python 3; the command is `python3` on Mac, `python` on Windows). Run it from the repo root; if the secrets are in a file, load it without printing it (the file may have CRLF line ends, strip `\r`):
    `set -a; . <(tr -d '\r' < path/to/etm-api.env); set +a; python .claude/skills/etm-xray-delete-test-executions/etm_xray_del.py <cmd> ...`
    Never `cat` or echo the file.
 3. First run `whoami`: it must print `Jira OK` and `Xray OK`. Jira 401: check JIRA_EMAIL is the Jira login email (Rovo `atlassianUserInfo` shows it) and the token is not expired; tell the user which line to fix.

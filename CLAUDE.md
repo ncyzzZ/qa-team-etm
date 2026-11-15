@@ -19,7 +19,7 @@ ETM QA work means: a card key such as ETM-1234, "เริ่มเขียน 
 ## Settings (for every ETM QA task)
 
 - `JIRA_SITE`: pttep.atlassian.net. `PROJECT_KEY`: ETM (project id 14436). `BOARD_ID`: 4014.
-- `PW_REPO`: folder of the Playwright repo `ep-etm-fe-qa` (env variable; default is `../ep-etm-fe-qa` next to this repo). Needed by `tools/run-card.mjs`.
+- `PW_REPO`: folder of the Playwright repo `ep-etm-fe-qa`: environment variable, else `PW_REPO=` in the git-ignored `.env`, else `../ep-etm-fe-qa` next to this repo. Set it with `node tools/setup.mjs <folder>` (same on Windows and Mac); `node tools/setup.mjs` alone checks the whole setup. Needed by `tools/run-card.mjs`.
 - Xray credentials: env variables `XRAY_CLIENT_ID` and `XRAY_CLIENT_SECRET` (never in a file that is committed). The Xray MCP server is `xray-toolkit/index.mjs` (see `.mcp.json`).
 - Workflow doc: `docs/etm-qa-workflow.md`. UI facts: `docs/UI_Map_ETM.md`. Templates: `docs/ETM_Templates/`. Project skills: `.claude/skills/`.
 

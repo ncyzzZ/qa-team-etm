@@ -85,7 +85,7 @@ query { getTestRuns(testIssueIds: ["<issueId>"], limit: 20) {
             steps { id action status { name } defects } } } }
 ```
 
-**Evidence attach — working, confirmed 25 Sep 2026.** The `addEvidenceToTestRun`/`addEvidenceToTestRunStep` base64-inline path is still impractical from Claude's own **code execution** (blocked by that environment's domain allowlist, and a screenshot's base64 is too long for a tool call anyway) — but that was never the only path. The dedicated **`xray_import_results` tool runs on the user's own device**, not in code execution, so it was never subject to that allowlist. Once Chunin also enabled the domain in her own org's allowlist, it was confirmed working end to end:
+**Evidence attach — working, confirmed 25 Sep 2026.** The `addEvidenceToTestRun`/`addEvidenceToTestRunStep` base64-inline path is still impractical from Claude's own **code execution** (blocked by that environment's domain allowlist, and a screenshot's base64 is too long for a tool call anyway) — but that was never the only path. The dedicated **`xray_import_results` tool runs on the user's own device**, not in code execution, so it was never subject to that allowlist. Once the user also enabled the domain in their own org's allowlist, it was confirmed working end to end:
 
 ```
 xray_import_results(executionKey: "ETM-xxxx", tests: [{
@@ -130,7 +130,7 @@ Linking at step level is what lets anyone later open the execution and see which
 **After creating**
 
 - **Re-fetch the issue shortly after creation.** A project automation has been seen silently flipping Found-in Environment QA → UAT and Work type Defect → Bug. Correct it back before attaching any media.
-- Create the mandatory `[QA]` sub-task: assigned to Ninuchz, worklog logged, remaining estimate 0m, transitioned Open → Start implementation → In Progress → Finished → Done.
+- Create the mandatory `[QA]` sub-task: assigned to the user (`ME_ID`), worklog logged, remaining estimate 0m, transitioned Open → Start implementation → In Progress → Finished → Done.
 
 **Evidence — hard rule**
 
@@ -209,7 +209,7 @@ query { getTests(jql: "key = ETM-6291", limit: 1) {
 
 - cloudId accepts the site URL: `https://pttep.atlassian.net` (cloud `e94e9701-d426-48b7-b23a-d2786dadffc4`)
 - Project ETM id 14436, board 4014
-- Own account: Nuchanart Pantarath (Ninuchz), `712020:83b89f3d-4a68-4241-b280-b1b84ab631bf`
+- Own account: get the user's accountId and name once per session with `atlassianUserInfo` (`ME_ID`, `ME_NAME`); they are not stored in this repo
 
 ### Browser automation
 
@@ -292,7 +292,7 @@ Probably one root cause: the guard reads as "is Mob Date blank" rather than "are
 
 ## 10. Session log
 
-**17 Sep 2026 — ETM-6291.** Ran the card on QA and found its test data did not exist there. Traced the rule past ETM-5837 to ETM-5616 AC 1.2.7, whose stricter wording turned one observation from "the card is ambiguous" into "this is a defect". Rewrote the Description and replaced 7 steps with 8 based on real data, splitting a multi-action step; the originals were overwritten and cannot be recovered from the API. Assignee moved to Ninuchz, reporter and status untouched.
+**17 Sep 2026 — ETM-6291.** Ran the card on QA and found its test data did not exist there. Traced the rule past ETM-5837 to ETM-5616 AC 1.2.7, whose stricter wording turned one observation from "the card is ambiguous" into "this is a defect". Rewrote the Description and replaced 7 steps with 8 based on real data, splitting a multi-action step; the originals were overwritten and cannot be recovered from the API. Assignee moved to the user, reporter and status untouched.
 
 Executed against Test Execution **ETM-6300**. Steps 1 and 2 FAILED with **ETM-6354** and **ETM-6358** linked at step level; steps 3, 4, 6, 7, 8 PASSED; step 5 left TODO. Evidence not attached — see §4. Both defects were filed under ETM-5836.
 
@@ -378,7 +378,7 @@ Still waiting on: Test Plan/Test Execution examples from the user, to close the 
 
 **Post-execution step added to §12 (18 Sep 2026) — close everything out.** Once execution is fully finished (all steps run, all results written back to Xray, all defects raised per §5), two closing actions follow — do not leave the run "done" without them:
 
-1. **Resolve the "is tested by" linked Tests on the Story.** Run the `anthropic-skills:resolve-tested-by` skill against the Story key: it finds every Test linked via "is tested by", assigns each to the current user (Ninuchz), transitions Resolved (Resolution = Done), then Closed, and verifies via JQL. Use this skill rather than doing it by hand — it already has the transition-id quirks worked out.
+1. **Resolve the "is tested by" linked Tests on the Story.** Run the `anthropic-skills:resolve-tested-by` skill against the Story key: it finds every Test linked via "is tested by", assigns each to the current user, transitions Resolved (Resolution = Done), then Closed, and verifies via JQL. Use this skill rather than doing it by hand — it already has the transition-id quirks worked out.
 2. **Transition the Test Execution card itself to Done.** This is separate from step 1 — closing the individual Test issues does not automatically close the Test Execution issue that ran them. Confirm the transition path with `getTransitionsForJiraIssue` on that Execution (don't assume the same ids as other issue types) and move it to Done, matching the pattern shown for ETM-6300 (Test Execution for ETM-5837).
 
 Both steps apply after every full execution run, not just the first one.
@@ -468,10 +468,9 @@ Whenever any issue created or touched in this ETM QA workflow needs an "Assignee
 any future Defect issues), always set it to the user's own Jira account automatically, without
 asking:
 
-- accountId: `712020:83b89f3d-4a68-4241-b280-b1b84ab631bf`
-- displayName: Nuchanart Pantarath (Ninuchz)
+- accountId and displayName: get them once per session with `atlassianUserInfo` (`ME_ID`, `ME_NAME`); they are not stored in this repo
 
-Apply via `editJiraIssue(fields: {"assignee": {"accountId": "712020:83b89f3d-4a68-4241-b280-b1b84ab631bf"}})`
+Apply via `editJiraIssue(fields: {"assignee": {"accountId": "<ME_ID>"}})`
 right after creating/editing the issue, as part of the same flow — not as a separate follow-up step
 the user has to request.
 
@@ -558,14 +557,14 @@ prompted.
 
 ## Addition (23 Sep 2026) — keep Jira/Xray MCP calls token-lean
 
-Chunin is running heavy POC usage on this project and wants token usage kept down. Apply these whenever this doc's steps call Atlassian_Rovo or Xray GraphQL tools:
+The user is running heavy POC usage on this project and wants token usage kept down. Apply these whenever this doc's steps call Atlassian_Rovo or Xray GraphQL tools:
 
 - Always pass a narrow `fields` list on `searchJiraIssuesUsingJql` / `getJiraIssue` (e.g. `["summary","status","assignee"]`) — never omit fields or use `"*all"` unless a specific extra field is actually needed for that step.
 - Cap `maxResults` to what the step actually needs (10-20 for a status check, not 50-100) instead of pulling a large page and filtering client-side.
 - Prefer a specific JQL filter (status, issuetype, key) over a broad "all issues" query that risks exceeding the token cap and getting dumped to a file for a follow-up read.
 - Use `searchResultMode: "count"` when only a count is needed, not full issue objects.
-- Don't re-run a failed connector/tool call more than once or twice with variations — surface the blocker to Chunin instead of trial-and-error.
-- When reporting results back to Chunin, summarize instead of pasting raw dumps; show full detail only on request.
+- Don't re-run a failed connector/tool call more than once or twice with variations — surface the blocker to the user instead of trial-and-error.
+- When reporting results back to the user, summarize instead of pasting raw dumps; show full detail only on request.
 
 ## Addition (23 Sep 2026) — evidence screenshot standard: full page + highlight frame
 
@@ -608,7 +607,7 @@ Replaced the old `xray-import.mjs`, which guessed each TC id's real Xray key wit
 
 Confirmed via GraphQL that xray_import_results' evidenceDir attaches evidence at the TEST RUN level only (getTestRunById.evidence), not per individual step (steps[].evidence stays empty). Attaching evidence per-step requires the addEvidenceToTestRunStep GraphQL mutation, which needs the file content inlined as base64 in the tool call - for a ~37KB screenshot that is ~49,600 base64 characters dumped straight into the chat context. This conflicts hard with the token-lean rule.
 
-Decision (Chunin, 25 Sep 2026): use test-run-level evidence only, going forward, for all tests in this project. Do not attempt per-step base64 evidence attachment via chat. If a token-lean device-side path (a script authenticating to Xray directly from device_bash, never passing base64 through the conversation) becomes available/verified later, it can be reconsidered - but do not default to inlining base64 in chat again.
+Decision (user, 25 Sep 2026): use test-run-level evidence only, going forward, for all tests in this project. Do not attempt per-step base64 evidence attachment via chat. If a token-lean device-side path (a script authenticating to Xray directly from device_bash, never passing base64 through the conversation) becomes available/verified later, it can be reconsidered - but do not default to inlining base64 in chat again.
 
 ---
 

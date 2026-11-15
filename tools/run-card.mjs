@@ -6,7 +6,7 @@
 //   node tools/run-card.mjs ETM-7879 <spec> -g "<filter>" --workers=2        (extra flags go to Playwright)
 //   node tools/run-card.mjs ETM-7879 --build-only test-results-ETM-7879-111500   (report from a saved folder)
 //
-// Env: PW_REPO = folder of the Playwright repo ep-etm-fe-qa (default: the folder `ep-etm-fe-qa` next to this repo)
+// Env: PW_REPO = folder of the Playwright repo ep-etm-fe-qa (or PW_REPO=... in the git-ignored .env at the repo root; default: the folder `ep-etm-fe-qa` next to this repo)
 // Optional: <os tmp>/tc-manifest-<KEY>.json  (same shape as the skill's tc-manifest.json)
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -18,7 +18,14 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 const GEN = path.join(HERE, 'evidence-report-v4.mjs');
 const REPORTS = path.join(ROOT, 'Evidence', '_reports');
-const REPO = process.env.PW_REPO || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
+// PW_REPO: environment variable, else `PW_REPO=...` in the git-ignored `.env` at the repo root, else ../ep-etm-fe-qa
+function envFileValue(name) {
+  try {
+    const m = fs.readFileSync(path.join(ROOT, '.env'), 'utf8').match(new RegExp('^\s*' + name + '\s*=\s*(.+?)\s*$', 'm'));
+    return m ? m[1].replace(/^["']|["']$/g, '') : '';
+  } catch { return ''; }
+}
+const REPO = process.env.PW_REPO || envFileValue('PW_REPO') || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
 
 const [key, ...rest] = process.argv.slice(2);
 if (!key || !/^ETM-\d+$/.test(key)) {

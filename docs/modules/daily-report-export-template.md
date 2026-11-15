@@ -161,7 +161,7 @@ Daily Report: {Turnaround Name}
 | Details | Description | `500567942 : PM ME 2Y DESANDER H...` | มีลูกศร ˅ ขยาย/ยุบ, ย่อหน้าตามระดับ, ข้อความยาวถูกตัดด้วย `...`, มี tag เช่น `Group 1`, `Ramp Down` |
 | Details | Work Number | `500567942`, `TBC`, `-` | |
 | Details | Activity Group | `Group 1`, `Ramp Down`, `-` | |
-| — | Job Owner | `Saranya T` | รูปแบบ `ชื่อ + อักษรย่อนามสกุล` |
+| — | Job Owner | `Somchai T` | รูปแบบ `ชื่อ + อักษรย่อนามสกุล` |
 | Scheduled | Duration | `48.00` | ทศนิยม 2 ตำแหน่ง (ชั่วโมง) มีไอคอนปฏิทิน |
 | Scheduled | Start Date | `19 Feb, 00:00` | `DD Mon, HH:mm` (แถว parent ถูกตัดเป็น `19 Feb, 00...`) |
 | Scheduled | End Date | `21 Feb, 00:00` | `DD Mon, HH:mm` |

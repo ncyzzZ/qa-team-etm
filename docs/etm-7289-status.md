@@ -1,6 +1,6 @@
 # ETM-7289 – SIMOP On-Demand Button – status (20 Oct 2026, update 4)
 
-Story: ETM-7289 (Sprint 24). Test as Turnaround Manager only (Bkk41).
+Story: ETM-7289 (Sprint 24). Test as Turnaround Manager only (the Turnaround Manager login from `.env`).
 
 ## Xray (done)
 - 19 Tests ETM-7542..7559 + ETM-7564. Test Plan ETM-7560. Test Execution ETM-7561 (env QA). Subtask ETM-7398 filled.
@@ -11,7 +11,7 @@ Story: ETM-7289 (Sprint 24). Test as Turnaround Manager only (Bkk41).
   * Rewrote step 15+ of ETM-7556 (17 steps), 7558 (25), 7559 (25), 7564 (25).
   * ETM-7542, 7557 not changed. Test descriptions have no Save-before-SIMOP wording.
 - Edit method: xray_graphql removeTestStep / updateTestStep / addTestStep (addTestStep only appends at the end).
-- Parked by Chunin (not done yet): ETM-7544 step 18 "and a message shows" (app shows no message); ETM-7545..7547 "Edit SIMOP window opens" -> window title is "SIMOP".
+- Parked by the user (not done yet): ETM-7544 step 18 "and a message shows" (app shows no message); ETM-7545..7547 "Edit SIMOP window opens" -> window title is "SIMOP".
 
 ## Playwright (stms-fe v1.24.1 locators verified)
 Repo ep-etm-fe-qa, tests/fe/e2e/shutdownLogic/. Run: PLAYWRIGHT_JSON_OUTPUT_NAME=test-results/results.json npx playwright test verifyShutdownLogicSimop -g "ETM-xxxx" --workers=1 --reporter=list,json

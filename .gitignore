@@ -24,3 +24,6 @@ test-results*/
 
 # check metrics (local only)
 .claude/team/metrics.jsonl
+
+# local nickname list of the developers
+.claude/team/people.local.md

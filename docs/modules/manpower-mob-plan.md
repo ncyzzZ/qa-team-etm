@@ -83,7 +83,7 @@ Part of the ETM UI map (index: `docs/UI_Map_ETM.md`). Text below is moved verbat
 |---|---|
 | ยุบแถวชื่อ Resource (สีน้ำเงิน) | **แถว `Required Manpower` ยังอยู่** หายแต่แถวคน |
 | ยุบกลุ่มคอลัมน์แล้ว refresh | **ไม่จำ กลับเป็น default** (เหมือน toggle Table/Split View) |
-| **ยุบ/กางแถวชื่อ Resource** | **ทำให้ปุ่ม `Save` กลายเป็น enabled และกด Save ได้** — ✅ **เป็นสเปก ไม่ใช่ bug** พฤติกรรมเดียวกันกับหน้า **Shutdown Logic** และ **Daily Report** (Benz ยืนยัน 08 Sep 2026)<br>→ ผลพลอยได้: ยุบแถวแล้วออกจากหน้าจะเจอ modal `Unsaved Change` ทั้งที่ไม่ได้แก้ข้อมูล **ถูกต้องตามสเปก** |
+| **ยุบ/กางแถวชื่อ Resource** | **ทำให้ปุ่ม `Save` กลายเป็น enabled และกด Save ได้** — ✅ **เป็นสเปก ไม่ใช่ bug** พฤติกรรมเดียวกันกับหน้า **Shutdown Logic** และ **Daily Report** (ทีม ยืนยัน 08 Sep 2026)<br>→ ผลพลอยได้: ยุบแถวแล้วออกจากหน้าจะเจอ modal `Unsaved Change` ทั้งที่ไม่ได้แก้ข้อมูล **ถูกต้องตามสเปก** |
 | ตารางไม่มี Resource เลย | ข้อความ **`No resource available to display.`** + ปุ่ม **`Route` และ `Save` เป็น disabled** |
 | **ชื่อซ้ำ** | **ซ้ำได้ทั้งชื่อ Resource และชื่อคน** ไม่มี error ไม่รวมแถว |
 ### ✅ Max Character — สรุปแล้ว (BA อัปเดตเอกสาร Validation · อ่านซ้ำ 08 Sep 2026)
@@ -111,7 +111,7 @@ Part of the ETM UI map (index: `docs/UI_Map_ETM.md`). Text below is moved verbat
   → ⚠️ **ไม่ใช่ `Route: DD Mon YYYY`** (ผมเคยบันทึกผิด · แก้จากภาพจริง 08 Sep 2026)
 - **ปุ่ม `⊕ Add Route` มีปุ่มเดียว อยู่มุมขวาบนของหัว drawer** (การ์ด ETM-5838 ที่บอกว่ามีปุ่มละตาราง **ผิด**)
 - **มีปุ่ม `Back` อยู่มุมซ้ายล่างของ drawer** ใช้ปิด drawer
-- **2 field ด้านบนคือ Filter ของรายการเส้นทาง** ไม่ใช่ช่องกรอกข้อมูล (Benz ยืนยัน 08 Sep 2026)
+- **2 field ด้านบนคือ Filter ของรายการเส้นทาง** ไม่ใช่ช่องกรอกข้อมูล (ทีม ยืนยัน 08 Sep 2026)
   → `Transportation:` chip `Helicopter ×` `MSB ×` `Vessel ×` + chevron
   → `Mob/Demob:` chip `Mob ×` `Demob ×` + chevron
   → **default ติ๊กมาครบทุกค่า** ผู้ใช้กด `×` เพื่อตัดค่าที่ไม่ต้องการเห็นออก
@@ -148,9 +148,9 @@ Part of the ETM UI map (index: `docs/UI_Map_ETM.md`). Text below is moved verbat
 | แก้เส้นทางสำเร็จ | `Edit Success` | `Edit Route Successfully` | — |
 | ลบเส้นทางสำเร็จ | `Delete Success` | `Delete Route Successfully` | — |
 
-**error ของ Demob = กรอบแดงที่ช่องเท่านั้น ไม่มีข้อความ ไม่มี toast** (Benz ยืนยัน 08 Sep 2026 · ช่อง Message ในเอกสารเป็น `-` แปลว่าไม่มีจริง)
+**error ของ Demob = กรอบแดงที่ช่องเท่านั้น ไม่มีข้อความ ไม่มี toast** (ทีม ยืนยัน 08 Sep 2026 · ช่อง Message ในเอกสารเป็น `-` แปลว่าไม่มีจริง)
 
-**เพิ่ม/ลบ Resource และ People — ไม่มี toast และไม่มี modal ยืนยัน** (Benz ยืนยัน 08 Sep 2026)
+**เพิ่ม/ลบ Resource และ People — ไม่มี toast และไม่มี modal ยืนยัน** (ทีม ยืนยัน 08 Sep 2026)
 
 > ⚠️ **กับดักในเอกสาร Validation**: ชีต 1 มีแถว `Add Resource` · `Delete Resource` ·
 > `Confirm Delete Resource` · `Add People` โดยช่องข้อความว่างทั้งหมด
@@ -217,19 +217,19 @@ Part of the ETM UI map (index: `docs/UI_Map_ETM.md`). Text below is moved verbat
 
 | AC | การ์ดเขียน | ของจริง |
 |---|---|---|
-| **AC 1.2.4** | *"`Required Manpower` … **strictly view-only and cannot be edited or overwritten**"* | 🔴 **แก้ไขได้แล้ว** — **การ์ดยังไม่ได้แก้** · Benz จะแจ้ง BA (08 Sep 2026) |
-| **AC 1.2.6** | *"Snapshotted trade categories … **do not display a delete action**"* | 🔴 **ลบได้** — **การ์ดยังไม่ได้แก้** · Benz จะแจ้ง BA (08 Sep 2026) |
+| **AC 1.2.4** | *"`Required Manpower` … **strictly view-only and cannot be edited or overwritten**"* | 🔴 **แก้ไขได้แล้ว** — **การ์ดยังไม่ได้แก้** · ทีม จะแจ้ง BA (08 Sep 2026) |
+| **AC 1.2.6** | *"Snapshotted trade categories … **do not display a delete action**"* | 🔴 **ลบได้** — **การ์ดยังไม่ได้แก้** · ทีม จะแจ้ง BA (08 Sep 2026) |
 | **AC 2.1** | *"sorted in **alphabetical ascending order (A to Z)**"* | 🔴 เรียงตาม **Unicode code point** (case-sensitive) → ไม่ใช่ A-Z แบบพจนานุกรม |
 | **AC 3.3** | *"All column groups … initialize in the **Expanded** state"* | 🔴 **บางกลุ่มยุบอยู่** ตอนเปิดหน้า |
-| **Data Source + AC 3.1.2 / 3.1.4 / 3.2.2.2 / 3.2.2.3** | *"`Vessel No.`"* | 🔴 **BA พิมพ์ผิด · ชื่อจริงคือ `Route No.`** (Benz ยืนยัน 08 Sep 2026) |
+| **Data Source + AC 3.1.2 / 3.1.4 / 3.2.2.2 / 3.2.2.3** | *"`Vessel No.`"* | 🔴 **BA พิมพ์ผิด · ชื่อจริงคือ `Route No.`** (ทีม ยืนยัน 08 Sep 2026) |
 
 **สิ่งที่การ์ดเขียนตรงกับของจริง (ใช้อ้างอิงได้)**
 
 - **AC 1.2.5** สีแดงของ `Required Manpower` = **`#A8071A`** · เงื่อนไข `POB(C,d) < Required Manpower(C,d)`
-- **AC 1.3.1** Resource ที่เพิ่มเอง **ไม่มีแถว `Required Manpower`** ✅ ตรงกับที่ Benz ยืนยัน
+- **AC 1.3.1** Resource ที่เพิ่มเอง **ไม่มีแถว `Required Manpower`** ✅ ตรงกับที่ ทีม ยืนยัน
 - **AC 1.3.2** Resource ที่เพิ่มเอง **ไม่มีไอคอน `(i)`** ✅
 - **AC 2.2.2** ยุบแถวชื่อ Resource แล้ว **แถว `Required Manpower` ยังแสดงอยู่** ✅ ตรงกับคำตอบ Q5614-3
 - **AC 1.2.3** สูตร `Required Manpower(C,d) = MAX(headcount ชั่วโมง 0..23 ของวัน d)`
-- **คอลัมน์ที่ 3 ของกลุ่ม `Mob` และ `Demob` คือ `Route No.` ไม่ใช่ `Vessel No.`** — การ์ดพิมพ์ผิด (Benz ยืนยัน 08 Sep 2026)
+- **คอลัมน์ที่ 3 ของกลุ่ม `Mob` และ `Demob` คือ `Route No.` ไม่ใช่ `Vessel No.`** — การ์ดพิมพ์ผิด (ทีม ยืนยัน 08 Sep 2026)
   → **max character = 20** (เอกสาร Validation ชีต 3 แถว `Route No.`)
   → ยุบกลุ่มแล้วซ่อน `Transportation` และ `Route No.` เหลือ `Mob Date` / `Demob Date`

@@ -6,9 +6,15 @@
 
 1. `git clone https://github.com/ncyzzZ/qa-team-etm.git` แล้วเปิดโฟลเดอร์นี้ใน Claude Code
 2. ต้องมี **Node.js 18+** และ repo Playwright `ep-etm-fe-qa` (ติดตั้ง `npm install` แล้ว)
-3. ตั้ง environment variable (ห้ามใส่ลงไฟล์ที่ commit):
-   - `PW_REPO` = โฟลเดอร์ของ `ep-etm-fe-qa` (ถ้าวางไว้ข้าง repo นี้ในชื่อ `ep-etm-fe-qa` ไม่ต้องตั้ง)
-   - `XRAY_CLIENT_ID` และ `XRAY_CLIENT_SECRET` สำหรับ Xray (`.mcp.json` อ่านจากสองตัวนี้ และใช้ server ใน `xray-toolkit/`)
+3. ตั้งค่าเครื่อง (ใช้ได้ทั้ง **Windows และ Mac**):
+   - บอกที่อยู่ของ repo Playwright `ep-etm-fe-qa` (คำสั่งนี้ตรวจโฟลเดอร์ให้ แล้วเก็บใน `.env` ที่ไม่ขึ้น git):
+     - Windows: `node tools/setup.mjs "D:\path\to\ep-etm-fe-qa"`
+     - Mac: `node tools/setup.mjs ~/path/to/ep-etm-fe-qa`
+     - ถ้าวาง `ep-etm-fe-qa` ไว้ข้าง repo นี้ ไม่ต้องบอก
+   - ตั้ง `XRAY_CLIENT_ID` และ `XRAY_CLIENT_SECRET` เป็น environment variable (ห้ามใส่ในไฟล์ที่ commit; `.mcp.json` อ่านสองตัวนี้ และใช้ server ใน `xray-toolkit/`):
+     - Windows (PowerShell, มีผลกับ terminal ที่เปิดใหม่): `[Environment]::SetEnvironmentVariable('XRAY_CLIENT_ID','<ค่า>','User')` แล้วทำซ้ำกับ `XRAY_CLIENT_SECRET`
+     - Mac (zsh): เพิ่มบรรทัด `export XRAY_CLIENT_ID=<ค่า>` และ `export XRAY_CLIENT_SECRET=<ค่า>` ใน `~/.zshrc` แล้วเปิด terminal ใหม่
+   - ตรวจว่าครบ: `node tools/setup.mjs` (ไม่แก้อะไร แค่รายงานว่าอะไรยังขาด)
 4. เชื่อม connector ใน Claude: Atlassian (Jira) และ Figma ตามสิทธิ์ที่คุณมี
 5. เปิด Claude Code ในโฟลเดอร์นี้ พิมพ์ `/agents` ควรเห็น 7 ตัว: ba-analyst, ux-inspector, test-designer, test-reviewer, automation-engineer, evidence-reporter, jira-xray-logger
 
