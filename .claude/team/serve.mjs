@@ -151,6 +151,22 @@ const server = http.createServer((req, res) => {
         + JSON.stringify({ t, job: s.job, type: 'set', agent: 'lead', state: 'working', text: 'ได้คำตอบจากบอร์ด' }) + '\n');
       res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
     });
+  } else if (urlPath === '/close') {
+    // Close one card's tab from the board (same checks as /answer). Writes the same "close" event as `team.mjs close`.
+    const deny = (code, msg) => { res.writeHead(code, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: msg })); };
+    const origin = req.headers.origin;
+    if (req.method !== 'POST') return deny(405, 'POST only');
+    if (!HOSTS.has(req.headers.host || '') || (origin && !HOSTS.has(origin.replace(/^http:\/\//, '')))) return deny(403, 'wrong host');
+    if (req.headers['x-board-token'] !== TOKEN) return deny(403, 'reload the board');
+    let body = '';
+    req.on('data', (c) => { body += c; if (body.length > 2000) req.destroy(); });
+    req.on('end', () => {
+      let b; try { b = JSON.parse(body); } catch { return deny(400, 'bad json'); }
+      const s = reduce(b.job);
+      if (!s.job || s.job !== b.job) return deny(404, 'no such card');
+      fs.appendFileSync(EVENTS, JSON.stringify({ t: Date.now(), job: s.job, type: 'close' }) + '\n');
+      res.writeHead(200, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: true }));
+    });
   } else if (req.url.startsWith('/state')) {
     res.writeHead(200, { 'content-type': 'application/json', 'cache-control': 'no-store' });
     res.end(JSON.stringify(reduce(new URL(req.url, 'http://x').searchParams.get('job'))));

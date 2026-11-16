@@ -132,6 +132,8 @@
 #tabs button.sel{background:#fff3;border-color:var(--strong);font-weight:bold}
 #tabs button.ask{border-color:#f90;animation:tb 1s infinite}
 #tabs button small{opacity:.7;margin-left:4px}
+#tabs button .x{margin-left:6px;padding:0 5px;border-radius:4px;opacity:.6;font-weight:bold}
+#tabs button .x:hover{opacity:1;background:#f446;color:#fff}
 .tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;padding:1px 6px;border-radius:3px;margin-left:6px;color:#0B1022;background:#8A93BD;vertical-align:middle}
 .tag.working{background:#3DDC84} .tag.waiting{background:var(--main)} .tag.done{background:var(--mint)} .tag.blocked{background:var(--alert)}
 .tag.working,.tag.waiting{animation:blink 1.2s steps(2) infinite}
@@ -705,6 +707,19 @@ function renderTabs(s) {
     b.className = (j.key === s.job ? 'sel ' : '') + (j.ask ? 'ask' : '');
     b.innerHTML = esc(j.ticket || j.key) + '<span class="tag ' + j.state + '">' + (LABEL[j.state] || j.state) + '</span><small>' + j.active + '/8</small>';
     b.addEventListener('click', () => { curJob = j.key; prev = null; poll(); });
+    const x = document.createElement('span'); x.className = 'x'; x.textContent = '✕'; x.title = 'ปิดการ์ดนี้';
+    x.addEventListener('click', async (ev) => {
+      ev.stopPropagation();
+      const name = j.ticket || j.key;
+      if (!confirm('ปิดแท็บการ์ด ' + name + ' ?' + (j.ask ? '\n(การ์ดนี้ยังมีคำถามค้างอยู่)' : '') + '\nแท็บจะหายจากบอร์ด (เริ่มการ์ดนี้ใหม่ได้ด้วย team.mjs start)')) return;
+      try {
+        const r = await fetch('/close', { method: 'POST', headers: { 'content-type': 'application/json', 'x-board-token': window.BOARD_TOKEN || '' }, body: JSON.stringify({ job: j.key }) });
+        if (!r.ok) throw new Error((await r.json()).error || r.status);
+        if (curJob === j.key) { curJob = null; prev = null; }
+        poll();
+      } catch (e) { alert('ปิดไม่สำเร็จ: ' + e.message); }
+    });
+    b.appendChild(x);
     box.appendChild(b);
   }
   box.scrollLeft = keep;
