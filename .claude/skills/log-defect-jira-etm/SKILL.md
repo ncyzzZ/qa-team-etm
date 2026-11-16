@@ -48,7 +48,7 @@ If the Test Case / AC behind the defect conflicts with what the user describes a
 - **Labels**: for a UI or Frontend (FE) issue set **both** `FE` and `UI`, never just one.
 - **Issue link**: link to the originating Story with the standard "Relates" type. Never the Tests / is-tested-by type (reserved for Test issues).
 - **Sprint**: set the Defect/Bug's Sprint to the originating Story's active sprint (read the Story's `customfield_10020`, copy the sprint id). Easy to forget: do it in this same step.
-- **Original Estimate / time tracking**: never set an Original Estimate on the Defect/Bug itself; leave time tracking untouched (the `[QA]` sub-task in Step 8 is where an estimate belongs).
+- **Original Estimate / time tracking**: NEVER set an Original Estimate on the Defect/Bug or on its `[QA]` sub-task (Step 8). Leave `timetracking.originalEstimate` empty everywhere in this flow. Only the Remaining estimate on the sub-task is set, and only through the worklog (Step 8).
 
 ## Step 3 - Resolve the assignee automatically (do not ask, do not guess)
 
@@ -116,13 +116,13 @@ Create a sub-task under the new Defect/Bug every time, right after the Defect/Bu
 - Title: `[QA] Fix and verify <short description of the fix needed>`
 - Assignee: self (`ME_ID`)
 - Worklog of **10m** (corrected 1 Oct 2026; 15m was too high).
-- Remaining estimate of **15m** on the sub-task (corrected 1 Oct 2026, down from 30m), never `0m`. This is the one place in the flow that gets an estimate; the parent Defect/Bug never does (Step 2).
+- Remaining estimate of **15m** on the sub-task (corrected 1 Oct 2026, down from 30m), never `0m`. **No Original Estimate on the sub-task, ever** (corrected 16 Nov 2026: Jira copies a Remaining estimate set at creation into Original Estimate, which is not allowed). So: create the sub-task with NO `timetracking` field at all; add the 10m worklog with `addWorklogToJiraIssue` using `remainingEstimate: "15m"` (adjust the remaining estimate to 15m there); then re-read the sub-task (`getJiraIssue`, `fields: ["timetracking"]`) and confirm `originalEstimate` is empty. If it is set, clear it with `editJiraIssue` and re-check; if it cannot be cleared, say so in Step 9. The parent Defect/Bug never gets any estimate (Step 2).
 - A sub-task cannot be given a Sprint directly (the API rejects `customfield_10020` on a sub-task); it inherits the parent's sprint (Step 2), so leave that field out.
 - **When the parent is a Defect or Bug, mark the sub-task Done immediately at creation** (confirmed 25 Sep 2026; on ETM-6767 Jira's own automation had already set it to Done). Transition Open -> "Start implementation" (In Progress) -> "Finished" (Done); if the transition list comes back empty, check the status again: automation may already have moved it to Done, then nothing more is needed.
 
 ## Step 9 - Confirm
 
-Report back, short: the created ticket key/link, the Test/step it was linked to in Xray (or why none exists), the resolved assignee and which Story sub-task that came from, and explicit confirmation that images are embedded inline (not just attached) and that any Xray step linking was verified to have persisted.
+Report back, short: the created ticket key/link (and that no Original Estimate is set on the Defect/Bug or the `[QA]` sub-task, verified), the Test/step it was linked to in Xray (or why none exists), the resolved assignee and which Story sub-task that came from, and explicit confirmation that images are embedded inline (not just attached) and that any Xray step linking was verified to have persisted.
 
 ## Notes
 

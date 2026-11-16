@@ -89,4 +89,4 @@ Whenever live behaviour contradicts a Test's wording and the user confirms the r
 - Never create `.xlsx` or `.csv` test case files.
 - Every Jira description is Markdown. Every Test Execution has Test Environment = QA. Every Test-to-Story link has Test as inward and Story as outward and is verified with `linkedIssues(...)`.
 - The `[QA] Create Test Case Manual Test` description is always filled (section 4).
-- A Defect/Bug never gets an Original Estimate; only its `[QA]` subtask does.
+- A Defect/Bug never gets an Original Estimate, and neither does its `[QA]` sub-task (only a Remaining estimate via worklog, see `log-defect-jira-etm` Step 8).

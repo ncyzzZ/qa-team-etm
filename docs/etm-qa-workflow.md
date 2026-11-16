@@ -623,3 +623,4 @@ New flow for step 6 / 7:
 
 The `etm-nn-fullqa` skill carries the same rule.
 
+**Correction (16 Nov 2026) — defect `[QA]` sub-task gets no Original Estimate.** Lines above about estimates on the defect's `[QA]` sub-task are superseded by `log-defect-jira-etm` Step 8: no Original Estimate, only a Remaining estimate of 15m set through the worklog, and verify `originalEstimate` is empty afterwards. (The Story's two `[QA]` subtasks in §11 still get Original Estimates.)
