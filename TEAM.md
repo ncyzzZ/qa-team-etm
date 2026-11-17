@@ -88,7 +88,7 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 
 **Run command (every card).** Never a bare `npx playwright test`. From the repo root (`PW_REPO` = folder of `ep-etm-fe-qa`, default `../ep-etm-fe-qa`):
 `node tools/run-card.mjs <KEY> <spec> -g "<filter>"`
-Own result folder (`test-results-<KEY>-<time>`), own report (`Evidence/_reports/evidence-report-<KEY>-<time>.html` + `latest-<KEY>.html`), report built when the run ends, failures printed. Rebuild: `node tools/run-card.mjs <KEY> --build-only <folder>`. Several cards can run together, except cards touching the same QA data (same plan).
+Own result folder (`output/runs/<date_time>_<KEY>` in the Playwright repo), own report (`output/runs/<date_time>_<KEY>/evidence-report-<KEY>-<time>.html`, shortcuts `output/runs/latest-<KEY>.html` and `latest.html`), report built when the run ends, failures printed. Rebuild: `node tools/run-card.mjs <KEY> --build-only <folder>`. Several cards can run together, except cards touching the same QA data (same plan).
 
 **Phase 6 - After the run.** "รันเสร็จแล้ว": use the report `run-card.mjs` built; only if missing, reporter builds it with `etm-evidence-report`. Report before any new run.
 

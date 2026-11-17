@@ -17,7 +17,7 @@ The user runs the tests on their own machine (VPN on). This app cannot open the 
 node tools/run-card.mjs <KEY> <spec> -g "ETM-xxxx|ETM-yyyy"
 ```
 
-- Each run gets its own result folder (`test-results-<KEY>-<time>` in `PW_REPO`) and its own report (`Evidence/_reports/evidence-report-<KEY>-<time>.html`, plus `latest-<KEY>.html` and `latest.html`). The report is built when the run ends, failed tests are printed, and the link goes to the status board.
+- Each run gets its own result folder (`output/runs/<date_time>_<KEY>` in `PW_REPO`) and its own report (`output/runs/<date_time>_<KEY>/evidence-report-<KEY>-<time>.html`, plus `latest-<KEY>.html` and `latest.html`). The report is built when the run ends, failed tests are printed, and the link goes to the status board.
 - Extra Playwright flags can follow (`--workers=2`, `--headed`). Use `--workers=1` when tests share the same plan data.
 - Several cards can run at the same time, except cards touching the same QA data (same plan).
 - Never use `cp -r test-results ...` and never keep results in `test-results/` (Playwright wipes it each run).
@@ -48,7 +48,7 @@ node tools/run-card.mjs <KEY> --build-only <result-folder>
 By hand (several runs, ONE report) from the repo root:
 
 ```
-node tools/evidence-report-v4.mjs --input <folderA>/results.json <folderB>/results.json --out Evidence/_reports --manifest <manifest.json> --title "<KEY> run <date>" [--review <review.json>] [--story <KEY>]
+node tools/evidence-report-v4.mjs --input <folderA>/results.json <folderB>/results.json --out <run folder> --manifest <manifest.json> --title "<KEY> run <date>" [--review <review.json>] [--story <KEY>]
 ```
 
 If the same test appears in two runs, the LAST file wins. A run that died before any test started (login timeout, VPN off) has an empty results.json: leave it out and tell the user to run it again. `--story` is for tests whose title has no card key. Pictures are read from the folder next to each `results.json`.
@@ -59,7 +59,7 @@ Then tell the user in 2-3 lines: the report file name (and that it is on the boa
 
 ## 5. Review verdicts (optional, only the user decides)
 
-For each failed step the user decides: script bug, wrong test wording, or real app bug. Never decide alone. Record it in `Evidence/_reports/review-<KEY>.json` (run-card passes it when the file exists):
+For each failed step the user decides: script bug, wrong test wording, or real app bug. Never decide alone. Record it in `output/runs/<run folder>/review-<KEY>.json` (in the Playwright repo) (run-card passes it when the file exists):
 
 ```
 {"ETM-8339": {"steps": {"10": {"verdict": "script", "note": "..."}, "11": {"verdict": "defect", "note": "defect ETM-8501"}}}}

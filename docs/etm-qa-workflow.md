@@ -90,13 +90,13 @@ query { getTestRuns(testIssueIds: ["<issueId>"], limit: 20) {
 ```
 xray_import_results(executionKey: "ETM-xxxx", tests: [{
   testKey: "ETM-yyyy", status: "PASSED",
-  comment: "...", evidenceDir: "/Users/np/Downloads/DocforAi/STMS/evidence/<TEST-KEY>"
+  comment: "...", evidenceDir: "<PW_REPO>/output/evidence/<TEST-KEY>"
 }])
 ```
 
 `evidenceDir` must be a real absolute path on the user's device inside a connected folder (from `get_device_info.connectedFolders`, not a `$HOME/mnt/...` device_bash spelling) — attaches every file in that folder as evidence and sets the test's status in one call.
 
-**Standard flow per test, going forward:** capture full-page + highlight-frame screenshots during execution into `/mnt/user-data/outputs/` → `SendUserFile` them (delivers to chat + gives a `file_uuid`) → `device_commit_files` into `STMS/evidence/<TEST-KEY>/` on the user's machine → call `xray_import_results` with that folder as `evidenceDir` plus the final status/comment. This replaces the old "evidence goes up by hand" fallback — don't stop at saving files locally and asking the user to attach them, that was the pre-25-Sep workaround for before this tool path had been tried. Per-step status still goes through `updateTestRunStepStatus` as before; `xray_import_results` is for the test-level status + evidence bundle.
+**Standard flow per test, going forward:** capture full-page + highlight-frame screenshots during execution into `/mnt/user-data/outputs/` → `SendUserFile` them (delivers to chat + gives a `file_uuid`) → `device_commit_files` into `<PW_REPO>/output/evidence/<TEST-KEY>/` on the user's machine → call `xray_import_results` with that folder as `evidenceDir` plus the final status/comment. This replaces the old "evidence goes up by hand" fallback — don't stop at saving files locally and asking the user to attach them, that was the pre-25-Sep workaround for before this tool path had been tried. Per-step status still goes through `updateTestRunStepStatus` as before; `xray_import_results` is for the test-level status + evidence bundle.
 
 ---
 
@@ -355,7 +355,7 @@ Still waiting on: Test Plan/Test Execution examples from the user, to close the 
 5. **Take a full-page screenshot for every step, no exceptions** — not just the ones that seem to need it. Capture before leaving the page, since draft edits are lost on refresh (§8). Rename each screenshot immediately (the Chrome extension auto-names them `screenshot-<timestamp>-<n>`) and copy them out of the macOS temp folder before it gets cleared.
 6. Write the result back to Xray per step as you go (`updateTestRunStepStatus`), not batched at the end. The run status rolls up on its own.
 7. On a FAILED step: stop, raise the defect per §5 (bilingual report → confirm fields → log to Jira → `addDefectsToTestRunStep` at the exact step, not the whole run), set that step failed, then continue with the remaining steps that still make sense.
-8. Evidence attachment to the Xray Test Run works via `xray_import_results` (device-side tool, §4) — bundle the screenshots for that test into `STMS/evidence/<TEST-KEY>/` and pass that folder as `evidenceDir` along with the final status/comment.
+8. Evidence attachment to the Xray Test Run works via `xray_import_results` (device-side tool, §4) — bundle the screenshots for that test into `<PW_REPO>/output/evidence/<TEST-KEY>/` and pass that folder as `evidenceDir` along with the final status/comment.
 
 **Rule added to §6 (18 Sep 2026) — Navigation Path needs the real URL.** When writing a TC's Description, the Navigation Path must include the actual URL of the page under test whenever that URL is known (e.g. test data already exists on QA, like the Manpower Mob Plan link in §8) — not just a page name. This is what lets execution (§12) open the right page directly via browser automation instead of guessing the click-path. If no URL exists yet (no test data ready), say so explicitly in the Navigation Path instead of leaving it vague.
 
@@ -394,7 +394,7 @@ Both steps apply after every full execution run, not just the first one.
 - **Create a `[QA] Retest` sub-task** under the Defect ticket before retesting — description states what will be retested and how (based on the defect's original repro steps), mirroring the mandatory `[QA]` sub-task already required when the defect was first created.
 - **Retest by following the defect's original repro steps** exactly, step by step, comparing against what the fix should now produce.
 - **Capture screenshot evidence during retest**, same as normal execution (§12 step 5 — full page, every step).
-- **Save the evidence locally in the user's connected folder** (under the STMS folder, in a clearly named subfolder per Defect key, e.g. `STMS/Evidence/<Defect Key>/`) rather than attempting to attach it to Jira/Xray directly — the user attaches it themselves. Tell the user where the files landed.
+- **Save the evidence locally in the user's connected folder** (under the Playwright repo's `output/evidence/`, in a clearly named subfolder per Defect key, e.g. `<PW_REPO>/output/evidence/<Defect Key>/`) rather than attempting to attach it to Jira/Xray directly — the user attaches it themselves. Tell the user where the files landed.
 
 **Regression trigger added to §11 (18 Sep 2026) — Story moves backward on the board.** If a Story card that had already reached "In Testing" (or later) moves **back** to "In Development" or "For Planning", treat that as a signal the requirements changed mid-flight. When it happens:
 

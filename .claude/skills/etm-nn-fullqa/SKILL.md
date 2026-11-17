@@ -74,8 +74,8 @@ Whenever live behaviour contradicts a Test's wording and the user confirms the r
 3. Fix the step with `updateTestStep(stepId, step) { warnings }` (expect `{warnings: []}`).
 4. Fix the Jira Summary via `editJiraIssue`.
 5. Fix the Description with `contentFormat: "markdown"` in the standard shape plus a short "(corrected DD Mon YYYY - what and why.)" note.
-6. Rerun the script for fresh evidence (the `evidence()` helper frames and labels each picture; move old images to `evidence/_old/` first).
-7. Check the pictures are in `evidence/<TEST-KEY>/`.
+6. Rerun the script for fresh evidence (the `evidence()` helper frames and labels each picture; move old images to `output/evidence/_old/` first).
+7. Check the pictures are in `output/evidence/<TEST-KEY>/`.
 8. `xray_import_results(executionKey, tests:[{testKey, status:"PASSED", comment:"<what was corrected and why>", evidenceDir:"<evidence folder path>"}])`.
 9. Verify with `getTestRunById(id) { status{name} evidence{id filename size} }`.
 10. If old invalid evidence remains, `removeEvidenceFromTestRun(id, evidenceIds)`.

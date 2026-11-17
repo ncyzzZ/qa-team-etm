@@ -54,7 +54,7 @@
 node tools/run-card.mjs ETM-1234 <spec> -g "ETM-1111|ETM-2222"
 ```
 
-- ผลรันเก็บใน `test-results-<KEY>-<เวลา>` ใน `PW_REPO` และรายงาน HTML อยู่ที่ `Evidence/_reports/` ใน repo นี้ (ไม่ถูก commit)
+- ผลรันและรายงาน HTML เก็บรวมในโฟลเดอร์เดียวต่อรัน `output/runs/<วันที่_เวลา>_<KEY>/` ใน `PW_REPO` (ไม่ถูก commit)
 - สร้างรายงานใหม่จากโฟลเดอร์ที่เก็บไว้: `node tools/run-card.mjs ETM-1234 --build-only <โฟลเดอร์ผลรัน>`
 - รายงานมี 2 แท็บ: ผลรายขั้น (ตารางพร้อมรูป) และสรุปส่งต่อ dev / BA
 - Step (Action) / Expected / Test Data ในรายงานมาจาก manifest ที่ดึงจาก Xray (ดู `.claude/skills/etm-evidence-report/SKILL.md`)

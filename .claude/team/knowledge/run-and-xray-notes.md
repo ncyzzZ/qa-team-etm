@@ -7,7 +7,7 @@ Only what `TEAM.md` and the skills do not already say. Read by automator, report
 - VPN on (QA site). `.env` in the Playwright repo holds the page URLs and the login of each role (TA Manager, Job Owner). **Passwords in `.env` must be in quotes.**
 - `../../.secrets/etm-api.env` holds `JIRA_EMAIL`, `JIRA_API_TOKEN`, `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`. Never put them in a committed file, a report, a board text or the chat.
 - Same plan data for several tests: `--workers 1`.
-- Never keep results in `test-results/`: Playwright wipes it at the start of every run.
+- Keep results in the run folder `output/runs/<date_time>_<KEY>` of the Playwright repo, never in `test-results/` (Playwright wipes it each run).
 
 ## Annotations a spec can put on a test
 
@@ -39,7 +39,7 @@ Dry-run first, upload only the TCs that passed, then open the Test Execution and
 ## Report: spec notes and review verdicts (generator v4.5)
 
 - Annotations from the table above show on each test as "หมายเหตุจากสคริปต์".
-- Per-step verdicts: write `Evidence/_reports/review-<KEY>.json` (`{"ETM-8339": {"steps": {"10": {"verdict": "script", "note": "..."}}}}`). `tools/run-card.mjs` passes it to the generator when the file exists; by hand use `--review <file>`.
+- Per-step verdicts: write `output/runs/<run folder>/review-<KEY>.json` (in the Playwright repo) (`{"ETM-8339": {"steps": {"10": {"verdict": "script", "note": "..."}}}}`). `tools/run-card.mjs` passes it to the generator when the file exists; by hand use `--review <file>`.
 - `verdict`: `accepted` (not counted as a fail, shown yellow, test badge "PASS (ยอมรับ)") / `defect` / `tc-update` / `script` / `ba-pending`.
 - Only the user decides a verdict (TEAM.md Phase 7). Rebuild with `node tools/run-card.mjs <KEY> --build-only <folder>`.
 - The run-card line "N pass / M fail" counts the raw Playwright result, so an accepted test still counts as a fail there; the HTML report counts it as pass.

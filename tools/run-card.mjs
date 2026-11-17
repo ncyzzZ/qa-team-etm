@@ -4,7 +4,7 @@
 //
 //   node tools/run-card.mjs ETM-7879 etm7879/verifyMobPlanNoColumn.spec -g "ETM-8086|ETM-8087"
 //   node tools/run-card.mjs ETM-7879 <spec> -g "<filter>" --workers=2        (extra flags go to Playwright)
-//   node tools/run-card.mjs ETM-7879 --build-only test-results-ETM-7879-111500   (report from a saved folder)
+//   node tools/run-card.mjs ETM-7879 --build-only output/runs/2026-11-17_111500_ETM-7879   (report from a saved folder)
 //
 // Env: PW_REPO = folder of the Playwright repo ep-etm-fe-qa (or PW_REPO=... in the git-ignored .env at the repo root; default: the folder `ep-etm-fe-qa` next to this repo)
 // Optional: <os tmp>/tc-manifest-<KEY>.json  (same shape as the skill's tc-manifest.json)
@@ -17,7 +17,6 @@ import { fileURLToPath } from 'node:url';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 const GEN = path.join(HERE, 'evidence-report-v4.mjs');
-const REPORTS = path.join(ROOT, 'Evidence', '_reports');
 // PW_REPO: environment variable, else `PW_REPO=...` in the git-ignored `.env` at the repo root, else ../ep-etm-fe-qa
 function envFileValue(name) {
   try {
@@ -46,19 +45,20 @@ function buildReport(resultsDir) {
   const manifest = path.join(os.tmpdir(), `tc-manifest-${key}.json`);
   const args = [GEN, '--input', input, '--out', tmpOut, '--title', `${key} run ${stamp}`];
   if (fs.existsSync(manifest)) args.push('--manifest', manifest);
-  const review = path.join(REPORTS, `review-${key}.json`); // optional per-step verdicts, see evidence-report-v4.mjs
+  const review = path.join(resultsDir, `review-${key}.json`); // optional per-step verdicts, see evidence-report-v4.mjs
   if (fs.existsSync(review)) args.push('--review', review);
   const r = spawnSync(process.execPath, args, { cwd: ROOT, encoding: 'utf8' });
   if (r.status !== 0) { console.error(`Report generator failed:\n${r.stderr || r.stdout}`); return null; }
   const built = fs.readdirSync(tmpOut).find((f) => /^evidence-report-.*\.html$/.test(f));
   if (!built) { console.error('Generator produced no report file.'); return null; }
-  fs.mkdirSync(REPORTS, { recursive: true });
+  // the report lives in the run folder next to results.json; only the "latest" shortcuts sit one level up
   const finalName = `evidence-report-${key}-${stamp}.html`;
-  fs.copyFileSync(path.join(tmpOut, built), path.join(REPORTS, finalName));
-  fs.copyFileSync(path.join(tmpOut, built), path.join(REPORTS, `latest-${key}.html`));
-  fs.copyFileSync(path.join(tmpOut, built), path.join(REPORTS, 'latest.html'));
+  const runsRoot = path.dirname(path.resolve(resultsDir));
+  fs.copyFileSync(path.join(tmpOut, built), path.join(resultsDir, finalName));
+  fs.copyFileSync(path.join(tmpOut, built), path.join(runsRoot, `latest-${key}.html`));
+  fs.copyFileSync(path.join(tmpOut, built), path.join(runsRoot, 'latest.html'));
   fs.rmSync(tmpOut, { recursive: true, force: true });
-  return path.join(REPORTS, finalName);
+  return path.join(resultsDir, finalName);
 }
 
 let counts = null;
@@ -101,7 +101,8 @@ if (rest[0] === '--build-only') {
 }
 
 // ---- run mode
-const resultsDirName = `test-results-${key}-${stamp.split('-')[1]}`;
+// everything of one run goes under output/runs/ in the Playwright repo (one folder per run)
+const resultsDirName = path.join('output', 'runs', `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${stamp.split('-')[1]}_${key}`);
 const resultsDir = path.join(REPO, resultsDirName);
 // call Playwright's own CLI with node, no shell: a "|" in -g "A|B" must reach Playwright untouched
 const PW_CLI = path.join(REPO, 'node_modules', '@playwright', 'test', 'cli.js');
