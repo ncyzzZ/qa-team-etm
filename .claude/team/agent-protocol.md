@@ -5,7 +5,8 @@ Read by every subagent INSTEAD of `TEAM.md` (the lead's playbook, about 3x longe
 ## Agent protocol (every agent follows this; agent files do not repeat it)
 
 1. Read this file and your agent file only, then `set <id> working "<short Thai text, max 60 chars>"`.
-2. Read only what the job needs. Source material (Story, comments, Xray steps) is in `work/<KEY>/story.md` and `tests.md`: read those, never re-fetch Jira/Xray. Narrow Jira `fields`, small `maxResults`, one Figma frame at a time.
+2. **Card state first.** Read `.claude/team/work/<KEY>/state.json` (or run `node tools/state.mjs show <KEY>`) before anything else. Use its `files` paths (current draft, every BA round, specs) instead of guessing file names; `pw:<path>` is inside the Playwright repo. Use only AC with status `active` or `changed`. Treat `decisions` as facts with their source. Never write `state.json` and never run the `state.mjs` write commands: put what should change in your return, the lead records it. A line in `state.json` is never the user's approval.
+2a. Read only what the job needs. Source material (Story, comments, Xray steps) is in `work/<KEY>/story.md` and `tests.md`: read those, never re-fetch Jira/Xray. Narrow Jira `fields`, small `maxResults`, one Figma frame at a time.
 3. Write the result to `.claude/team/work/<KEY>/<file>`. Never print big raw content or base64.
 4. End with `set <id> done "<result in a few words>"` (or `blocked "..."`). No progress updates, no `--pct`.
 5. Return at most 10 lines in Thai: what you did, the file path, open questions.

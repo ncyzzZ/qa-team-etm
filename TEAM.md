@@ -66,6 +66,13 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 
 ## The cycle
 
+**Card state (`state.json`, every card, lead only).** One index per card at `.claude/team/work/<KEY>/state.json`: phase, AC list, current file of each kind (both card folders: agent outputs in `.claude/team/work/<KEY>/`, findings and BA questions in `work/<KEY>/`), decisions, open questions, approvals with evidence, gate results. Only the lead writes it, only with `node tools/state.mjs`:
+- Phase 0, right after `team.mjs start`: `state.mjs init <KEY>` (also when resuming a card; keeps what is there).
+- Each phase or checkpoint: `state.mjs phase <KEY> <phase> "<next step>"`. Each file an agent returns: `state.mjs file <KEY> <kind> <path>`. After the analyst or a BA answer: `state.mjs ac <KEY> sync` / `ac <KEY> <AC-n> changed "<why>"`, `decide`, `open`/`close`.
+- Right after each approval (chat reply or `ANSWER:` line): `state.mjs approve <KEY> "<what>" --kind <run-tests|xray-push|defect|jira-write|delete|heal-apply> --answer "..." --source chat|board --evidence "..."`. The record is not the approval; `phase push` and `phase closeout` refuse without the matching record.
+- After each gate: `state.mjs gate <KEY> <G-id> pass|fail`. Before each agent call: gate G0 `node tools/qa-check.mjs state <KEY>`; give the agent only the card key and the path of `state.json`.
+- After a summary of the conversation, or when unsure where the card stands: `state.mjs show <KEY>` first.
+
 **Phase 0 - Start.** `team.mjs start <KEY>`; the lead pulls the Story (description + latest comments) and every Test's Xray steps into `work/<KEY>/story.md` and `tests.md` once. Check the newest AC and comments now: later phases do not recheck.
 
 **Phase 1 - Read** (analyst, plus inspector in parallel if there are screens).
@@ -110,6 +117,7 @@ Every agent runs its own check before returning, and the lead runs the same comm
 
 | Gate | After | Command (from the repo root) | Passes when |
 |---|---|---|---|
+| G0 | before each agent call and at each phase change | `node tools/qa-check.mjs state <KEY>` | 0 errors: `state.json` valid and written only by `state.mjs` (checksum), every recorded file exists, AC list matches `analyst.md`, phase `push`/`closeout` has its approval record |
 | G1 | analyst | `node tools/qa-check.mjs work <KEY> analyst`, then (lead, after writing the findings log) `node tools/qa-check.mjs findings <KEY>` | 0 errors (all 4 sections present; every question of `questions-for-BA.md` has a valid entry in `findings.json`) |
 | G2 | inspector | `node tools/qa-check.mjs work <KEY> inspector` | 0 errors |
 | G3 | designer | `node tools/qa-check.mjs draft <KEY>` | 0 errors: label, automation tag, every step has an Expected Result, no "refer to Figma", no "same as TC-x", every case has a `Trace:` line, every `AC-n` of `analyst.md` is in a `Trace:` line, every `[NEG]` AC has a NEG/BND case |

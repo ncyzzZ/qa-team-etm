@@ -59,6 +59,13 @@ node tools/run-card.mjs ETM-1234 <spec> -g "ETM-1111|ETM-2222"
 - รายงานมี 2 แท็บ: ผลรายขั้น (ตารางพร้อมรูป) และสรุปส่งต่อ dev / BA
 - Step (Action) / Expected / Test Data ในรายงานมาจาก manifest ที่ดึงจาก Xray (ดู `.claude/skills/etm-evidence-report/SKILL.md`)
 
+## สถานะการ์ด (state.json)
+
+- ไฟล์เดียวต่อการ์ดที่ `.claude/team/work/<KEY>/state.json` บอก phase, AC ที่ใช้อยู่, ไฟล์ปัจจุบัน (draft, BA ทุกรอบ, spec), การตัดสินใจ, คำถามค้าง, การอนุมัติพร้อมหลักฐาน
+- lead เขียนคนเดียวผ่าน `node tools/state.mjs ...` agent อ่านอย่างเดียว ดูสรุป: `node tools/state.mjs show ETM-1234`
+- ตรวจ: `node tools/qa-check.mjs state ETM-1234` (gate G0) ถ้ามีใครแก้ไฟล์ด้วยมือ checksum จะไม่ตรงและ gate ไม่ผ่าน
+- board แสดง phase บนแท็บของการ์ด (หลัง restart board)
+
 ## Self-healing (ซ่อม locator)
 
 - ก่อนรัน: `node tools/heal/preflight.mjs --card ETM-1234 <spec>` ดู locator ที่น่าจะพังจากโค้ดใหม่ใน stms-fe (pull เฉพาะตอน develop สะอาด ไม่แก้ไฟล์ใน stms-fe)
