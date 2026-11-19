@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "card": "ETM-0001",
+  "phase": "start",
+  "next": "",
+  "updated": "2026-11-19T15:44:31.575Z",
+  "ac": [],
+  "files": {
+    "questions": [],
+    "answers": [],
+    "specs": [],
+    "extra": {},
+    "story": ".claude/team/work/ETM-0001/story.md"
+  },
+  "decisions": [],
+  "open": [],
+  "approvals": [],
+  "gates": {},
+  "history": [
+    {
+      "at": "2026-11-19T15:44:31.575Z",
+      "by": "lead",
+      "change": "fixture"
+    }
+  ],
+  "checksum": "f72a379a494c5e736702c43ff475934432d6d08b070651b193e3fc847f4beb15"
+}

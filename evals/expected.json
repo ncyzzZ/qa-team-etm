@@ -20,5 +20,11 @@
   {"name": "an English-only questions file is checked with its own prefix", "args": ["findings", "evals/findings-en-only"], "errors": 1, "contains": "question extra-1"},
   {"name": "heal guard: pure locator change passes", "cmd": "heal-guard", "args": ["evals/heal/heal-good.diff"], "errors": 0},
   {"name": "heal guard: .first(), changed expect, force:true, widening selector are refused", "cmd": "heal-guard", "args": ["evals/heal/heal-bad.diff"], "errors": 4},
-  {"name": "sprint report prints the self-healing line", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "self-healing:"}
+  {"name": "sprint report prints the self-healing line", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "self-healing:"},
+  {"name": "G0: a good card state passes", "args": ["state", "ETM-0001", "--root", "evals/state/good"], "errors": 0},
+  {"name": "G0: a hand edit breaks the checksum", "args": ["state", "ETM-0001", "--root", "evals/state/edited"], "errors": 1, "contains": "checksum"},
+  {"name": "G0: a recorded file that does not exist", "args": ["state", "ETM-0001", "--root", "evals/state/missing-file"], "errors": 1, "contains": "review.md"},
+  {"name": "G0: an AC in analyst.md missing from state.json", "args": ["state", "ETM-0001", "--root", "evals/state/ac-gap"], "errors": 1, "contains": "AC-3"},
+  {"name": "G0: phase push without an xray-push approval", "args": ["state", "ETM-0001", "--root", "evals/state/no-approval"], "errors": 1, "contains": "xray-push"},
+  {"name": "G0: an older card without numbered AC is a warning, not an error", "args": ["state", "ETM-0001", "--root", "evals/state/legacy"], "errors": 0, "contains": "no numbered AC"}
 ]

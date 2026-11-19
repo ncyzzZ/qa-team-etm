@@ -18,12 +18,14 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
+import { load as loadState, resolveFile, SINGLE_KINDS, LIST_KINDS } from './state/core.mjs';
+import { resolveRepos } from './heal/config.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const WORK = (key) => path.join(ROOT, '.claude', 'team', 'work', key);
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (n) => rest.includes(n);
 const arg = (n) => (rest.includes(n) ? rest[rest.indexOf(n) + 1] : '');
-const pos = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--tests', '--analyst'].includes(rest[i - 1])));
+const pos = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--tests', '--analyst', '--root'].includes(rest[i - 1])));
 
 const out = [];
 const err = (m) => out.push(['ERR ', m]);
@@ -448,6 +450,41 @@ function stats() {
   process.exit(0);
 }
 
-const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, strength: checkStrength, selftest, stats }[cmd];
-if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff|coverage|findings|strength|selftest|stats> ...'); process.exit(2); }
+// ---------------------------------------------------------------- state (G0): the card's state.json against its files
+function checkState() {
+  const key = pos[0];
+  if (!/^ETM-\d+$/.test(key || '')) { console.error('Usage: qa-check state <KEY> [--root <dir>]'); process.exit(2); }
+  const root = arg('--root') || ROOT;
+  const { pwRepo } = resolveRepos();
+  const { state: s, errors } = loadState(key, root);
+  for (const e of errors) err(e);
+  if (!s || errors.some((e) => e.startsWith('checksum mismatch'))) return finish(`state ${key}`); // content cannot be trusted
+  const paths = [...SINGLE_KINDS.filter((k) => s.files[k]).map((k) => [k, s.files[k]]), ...LIST_KINDS.flatMap((k) => (s.files[k] || []).map((p) => [k, p])), ...Object.entries(s.files.extra || {}).map(([k, p]) => [`extra.${k}`, p])];
+  for (const [kind, p] of paths) {
+    const r = resolveFile(key, p, { root, pwRepo });
+    if (!r.allowed) { err(`files.${kind}: ${p} is outside this card's folders`); continue; }
+    const ok = kind === 'lastRun' ? fs.existsSync(path.join(r.abs, 'results.json')) : fs.existsSync(r.abs);
+    if (!ok) err(`files.${kind}: ${p} does not exist (looked at ${r.abs})`);
+  }
+  const an = s.files.analyst ? read(path.join(root, s.files.analyst)) : null;
+  const acs = an ? parseAc(an) : [];
+  if (!acs.length) warn('no numbered AC in analyst.md (older card?): AC checks skipped');
+  else {
+    const inState = new Map(s.ac.map((a) => [a.id, a.status]));
+    for (const a of acs) if (!inState.has(a.id) || inState.get(a.id) === 'dropped') err(`${a.id} is in analyst.md but not active in state.json (run: node tools/state.mjs ac ${key} sync)`);
+    const ids = new Set(acs.map((a) => a.id));
+    for (const a of s.ac) if (a.status !== 'dropped' && !ids.has(a.id)) err(`${a.id} is active in state.json but no longer in analyst.md (run: node tools/state.mjs ac ${key} sync)`);
+  }
+  const has = (kind) => s.approvals.some((a) => a.kind === kind);
+  if (s.phase === 'push' && !has('xray-push')) err('phase is push but there is no xray-push approval');
+  if ((s.phase === 'closeout' || s.phase === 'done') && !has('jira-write')) err(`phase is ${s.phase} but there is no jira-write approval`);
+  const team = path.join(root, '.claude', 'team', 'work', key);
+  const baks = fs.existsSync(team) ? fs.readdirSync(team).filter((f) => /^draft-tc.*\.bak\.md$/.test(f)) : [];
+  if (baks.length) warn(`${baks.length} old draft(s) (*.bak.md) in the card folder; the current one is ${s.files.draft || 'not recorded'}`);
+  for (const q of s.open) if (Date.now() - Date.parse(q.since) > 7 * 864e5) warn(`${q.id} has been open more than 7 days: ${q.text.slice(0, 60)}`);
+  return finish(`state ${key}`);
+}
+
+const run = { state: checkState, draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, strength: checkStrength, selftest, stats }[cmd];
+if (!run) { console.error('Usage: node tools/qa-check.mjs <state|draft|spec|work|manifest|diff|coverage|findings|strength|selftest|stats> ...'); process.exit(2); }
 run();

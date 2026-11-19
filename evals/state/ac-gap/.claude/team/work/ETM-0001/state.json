@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "card": "ETM-0001",
+  "phase": "start",
+  "next": "",
+  "updated": "2026-11-19T15:44:31.572Z",
+  "ac": [
+    {
+      "id": "AC-1",
+      "text": "Plan shows",
+      "status": "active",
+      "source": "analyst.md"
+    },
+    {
+      "id": "AC-2",
+      "text": "Weekly cells",
+      "status": "active",
+      "source": "analyst.md"
+    }
+  ],
+  "files": {
+    "questions": [],
+    "answers": [],
+    "specs": [],
+    "extra": {},
+    "story": ".claude/team/work/ETM-0001/story.md",
+    "analyst": ".claude/team/work/ETM-0001/analyst.md"
+  },
+  "decisions": [],
+  "open": [],
+  "approvals": [],
+  "gates": {},
+  "history": [
+    {
+      "at": "2026-11-19T15:44:31.572Z",
+      "by": "lead",
+      "change": "fixture"
+    }
+  ],
+  "checksum": "4ff6d75e05436e6d919401c9ab705f6d675055b690445958d682fd2e5bf72fba"
+}
