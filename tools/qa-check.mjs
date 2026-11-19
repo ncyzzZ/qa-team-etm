@@ -6,6 +6,8 @@
 //   node tools/qa-check.mjs work     <KEY> <analyst|inspector|designer|reviewer|automator>
 //   node tools/qa-check.mjs manifest <tc-manifest.json>
 //   node tools/qa-check.mjs diff     <KEY> <readback.json>     (Xray readback vs draft: [{key, summary, steps}])
+//   node tools/qa-check.mjs findings <KEY | folder>            (work/<KEY>/findings.json vs questions-for-BA*.md)
+//   node tools/qa-check.mjs coverage <KEY>                     (AC -> cases table from analyst.md and the Trace: lines)
 //   node tools/qa-check.mjs selftest                             (run the checker against evals/ fixtures)
 //   node tools/qa-check.mjs stats                                (how often each gate failed, from .claude/team/metrics.jsonl)
 //
@@ -61,9 +63,43 @@ export function parseDraft(text) {
     const s = line.match(/^\s*(\d+)\.\s+(.*)$/);
     if (s) { step = { n: Number(s[1]), text: s[2], line: i + 1 }; cur.steps.push(step); return; }
     if (/^\s+\S/.test(line) && step) { step.text += ' ' + line.trim(); return; }
-    if (line.trim()) { cur.other.push(line.trim()); if (/^precondition/i.test(line.trim())) cur.pre.push(line.trim()); step = null; }
+    if (line.trim()) {
+      cur.other.push(line.trim());
+      if (/^precondition/i.test(line.trim())) cur.pre.push(line.trim());
+      const tr = line.trim().match(/^\**trace\**:\s*(.*)$/i);
+      if (tr) cur.trace = [...tr[1].matchAll(/\bAC-\d+(?:\.\d+)*\b/gi)].map((m) => m[0].toUpperCase());
+      step = null;
+    }
   });
   return cases;
+}
+
+// AC items of analyst.md: [{id, neg, text}] (only the "## AC items" section)
+export function parseAc(an) {
+  const sec = (an.match(/^##\s+AC items[^\n]*\n([\s\S]*?)(?=^##\s|$(?![\s\S]))/im) || [])[1] || '';
+  const seen = new Map();
+  for (const m of sec.matchAll(/^\s*(?:[-*]\s*)?\**(AC-\d+(?:\.\d+)*)\b\**[:.)]?\s*(.*)$/gim)) {
+    const id = m[1].toUpperCase();
+    if (!seen.has(id)) seen.set(id, { id, neg: /\[NEG\]/i.test(m[2]), text: m[2].replace(/\[NEG\]/gi, '').trim() });
+  }
+  // a parent listed together with its own sub-items is not a rule of its own
+  return [...seen.values()].filter((a) => ![...seen.keys()].some((k) => k.startsWith(a.id + '.')));
+}
+
+const isNegCase = (c) => /\((?:[^)]*[/\s])?(NEG|BND)\b/i.test(c.heading);
+function acCoverage(ac, cases) {
+  return ac.map((a) => {
+    const hit = cases.filter((c) => (c.trace || []).some((t) => t === a.id || t.startsWith(a.id + '.')));
+    return { ...a, cases: hit.map((c) => c.id), negCases: hit.filter(isNegCase).map((c) => c.id) };
+  });
+}
+
+// leaf items of the "Acceptance Criteria" section of story.md (1., 1.1, 2. ...), to spot AC the analyst missed
+function storyLeafCount(story) {
+  const sec = (story.match(/^#{1,3}\s*Acceptance Criteria[^\n]*\n([\s\S]*?)(?=^#{1,3}\s|$(?![\s\S]))/im) || [])[1];
+  if (!sec) return 0;
+  const nums = [...sec.matchAll(/^\s*(\d+(?:\.\d+)*)[.)]?\s+\S/gm)].map((m) => m[1]);
+  return nums.filter((n) => !nums.some((o) => o.startsWith(n + '.'))).length;
 }
 
 function checkDraft() {
@@ -79,15 +115,20 @@ function checkDraft() {
   if (declared && Number(declared) !== cases.length) warn(`heading says ${declared} cases but ${cases.length} were found`);
   if (!/coverage/i.test(text)) warn('no coverage map found (the designer must list every AC item and screen state)');
   if (!/\b(high|medium|low)\b/i.test(text)) warn('no High / Medium / Low priority counts found');
-  // traceability: every AC-n listed in analyst.md must appear in the draft (coverage map or a case)
+  // traceability: every AC-n of analyst.md must be in the Trace: line of a case (the coverage map alone does not count)
   const keyOf = (/^ETM-\d+$/.test(arg0) ? arg0 : (file.match(/ETM-\d+/) || [])[0]) || '';
   const anFile = arg('--analyst') || (keyOf ? path.join(WORK(keyOf), 'analyst.md') : '');
   const an = anFile ? read(path.resolve(anFile)) : null;
+  for (const c of cases) if (!c.trace) err(`${c.id} (line ${c.line}): no "Trace: AC-1, AC-2" line (or "Trace: none (<what it covers>)")`);
   if (an) {
-    const sec = (an.match(/^##\s+AC items[^\n]*\n([\s\S]*?)(?=^##\s|$(?![\s\S]))/im) || [])[1] || '';
-    const acIds = [...new Set([...sec.matchAll(/^\s*(?:[-*]\s*)?\**(AC-\d+)\b/gim)].map((m) => m[1].toUpperCase()))];
-    for (const id of acIds) if (!new RegExp(`\\b${id}\\b`, 'i').test(text)) err(`${id} is listed in analyst.md but no case or coverage-map line mentions it`);
-    if (!acIds.length) warn('analyst.md lists no AC-1, AC-2 ... ids, so AC coverage could not be checked');
+    const ac = parseAc(an);
+    if (!ac.length) warn('analyst.md lists no AC-1, AC-2 ... ids, so AC coverage could not be checked');
+    const known = new Set(ac.map((a) => a.id));
+    for (const r of acCoverage(ac, cases)) {
+      if (!r.cases.length) err(`${r.id} is listed in analyst.md but no case has it in its Trace: line`);
+      else if (r.neg && !r.negCases.length) err(`${r.id} is marked [NEG] but no (NEG) or (BND) case traces to it (cases: ${r.cases.join(', ')})`);
+    }
+    for (const c of cases) for (const t of c.trace || []) if (ac.length && !known.has(t) && ![...known].some((k) => k.startsWith(t + '.') || t.startsWith(k + '.'))) warn(`${c.id}: Trace ${t} is not an AC id in analyst.md`);
   }
   const ids = new Set();
   cases.forEach((c, idx) => {
@@ -138,12 +179,16 @@ function checkSpec() {
     marks.forEach((t, i) => {
       nTests++;
       const body = text.slice(t.at, i + 1 < marks.length ? marks[i + 1].at : text.length);
-      const key = (t.title.match(/^(ETM-\d+)\b/) || [])[1];
+      // Security tests (rules file): title `[ETM-1234][Security] ...`, no Xray Test, so the key comes from the bracket
+      const secKey = (t.title.match(/^\[(ETM-\d+)\]\[Security\]/) || [])[1];
+      const skipped = /^test\.(skip|fixme)\(/.test(t.whole);
+      const key = (t.title.match(/^(ETM-\d+)\b/) || [])[1] || secKey;
       if (!key) err(`${name}: test "${t.title.slice(0, 50)}" - title must start with the Xray key (ETM-1234 - ...)`);
-      else if (testsMd && !testsMd.includes(key)) warn(`${name}: ${key} is not in the card's tests file`);
+      else if (testsMd && !secKey && !testsMd.includes(key)) warn(`${name}: ${key} is not in the card's tests file`);
       const steps = (body.match(/\btest\.step\(/g) || []).length;
       const ev = (body.match(/\bevidence\(/g) || []).length;
-      if (!steps) err(`${name}: ${key || t.title.slice(0, 30)} has no test.step (one test.step per Xray step)`);
+      if (!steps && skipped) warn(`${name}: ${key || t.title.slice(0, 30)} is skipped (no test.step needed until it is enabled)`);
+      else if (!steps) err(`${name}: ${key || t.title.slice(0, 30)} has no test.step (one test.step per Xray step)`);
       else if (ev < steps) warn(`${name}: ${key || t.title.slice(0, 30)} has ${steps} steps but ${ev} evidence() calls (a picture per step)`);
       if (/\.only\(/.test(t.whole)) err(`${name}: ${key || ''} test.only left in`);
     });
@@ -178,6 +223,13 @@ function checkWork() {
   if (c.first && !c.first.test(text.split('\n').find((l) => l.trim()) || '')) err(`${c.file}: first line must be "Verdict: Approve | Conditional Approve | Reject"`);
   for (const h of c.heads) if (!h.test(text)) err(`${c.file}: missing required section ${String(h).replace(/^\/\^?|\/[a-z]*$/g, '').replace(/\\s\+/g, ' ')}`);
   if (role === 'analyst' && !/\bAC-\d+\b/.test(text)) err(`${c.file}: number the AC items AC-1, AC-2 ... so the draft can be checked against them`);
+  if (role === 'analyst') {
+    const ac = parseAc(text), story = read(path.join(WORK(key), 'story.md'));
+    const leaves = story ? storyLeafCount(story) : 0;
+    if (leaves && ac.length < leaves) warn(`${c.file}: the Story's Acceptance Criteria has ${leaves} numbered items but only ${ac.length} AC ids are listed: check none was missed or merged`);
+    const long = ac.filter((a) => (a.text.match(/\b(and|also|then)\b|;/gi) || []).length >= 2);
+    if (long.length) warn(`${c.file}: ${long.map((a) => a.id).join(', ')} may hold more than one rule: split into AC-n.1, AC-n.2`);
+  }
   if (/(refer to figma|same as design)/i.test(text)) warn(`${c.file}: "refer to Figma" style text, write the real value`);
   finish(`work ${role}`);
 }
@@ -225,13 +277,83 @@ function checkDiff() {
   finish('diff', ` | ${items.length} Test(s) compared`);
 }
 
+// ---------------------------------------------------------------- findings.json (early findings raised while reading a card)
+export const FINDING = {
+  kind: ['gap', 'conflict', 'risk', 'question'],
+  impact: ['high', 'medium', 'low'],
+  outcome: ['open', 'ac-changed', 'dev-fixed', 'confirmed', 'no-issue', 'ignored'],
+};
+// question ids of every questions-for-BA*.md in a card folder:
+// questions-for-BA.md -> "1", "2" ...; -round2.md -> "R2-1" ...; any other suffix (e.g. -remaining) -> "remaining-1" ...
+// x.en.md is a translation of x.md and is skipped only when x.md exists.
+// A question line starts at column 0: "1." "1)" "1:" "Q1" "**Q1**" "**1.**" "## Q1 ..." "## 1 ..." "Q1 - ..."; indented lines and "1.1" are sub-items.
+const Q_LINE = /^(?:#{1,4}\s+)?(?:\*\*)?(?:Q(\d+)\b|(\d+)(?:\*\*)?(?:\.(?!\d)|\)|:|\s+[-–]\s))|^#{1,4}\s+(\d+)\s/gim;
+export function questionIds(dir) {
+  const names = fs.existsSync(dir) ? fs.readdirSync(dir) : [];
+  const ids = [];
+  for (const name of names) {
+    if (!/^questions-for-BA.*\.md$/i.test(name)) continue;
+    if (/\.en\.md$/i.test(name) && names.includes(name.replace(/\.en\.md$/i, '.md'))) continue;
+    const suffix = name.replace(/^questions-for-BA-?/i, '').replace(/(\.en)?\.md$/i, '');
+    const round = (suffix.match(/^round(\d+)$/i) || [])[1];
+    const prefix = round ? `R${round}-` : suffix ? `${suffix}-` : '';
+    for (const m of (read(path.join(dir, name)) || '').matchAll(Q_LINE)) ids.push(prefix + (m[1] || m[2] || m[3]));
+  }
+  return [...new Set(ids)];
+}
+
+function checkFindings() {
+  const a = pos[0];
+  if (!a) { console.error('Usage: qa-check findings <KEY | folder>'); process.exit(2); }
+  const dir = /^ETM-\d+$/.test(a) ? path.join(ROOT, 'work', a) : path.resolve(a);
+  const raw = read(path.join(dir, 'findings.json'));
+  if (raw == null) { err(`missing ${path.join(dir, 'findings.json')}`); return finish('findings'); }
+  let list; try { list = JSON.parse(raw); } catch (e) { err(`findings.json is not valid JSON: ${e.message}`); return finish('findings'); }
+  if (!Array.isArray(list)) { err('findings.json must be an array'); return finish('findings'); }
+  const ids = new Set();
+  for (const f of list) {
+    const at = f.id || `entry for question ${f.q}`;
+    if (!/^F-\d+$/.test(f.id || '')) err(`${at}: id must be F-1, F-2 ...`);
+    else if (ids.has(f.id)) err(`${at}: duplicate id`);
+    ids.add(f.id);
+    for (const k of Object.keys(FINDING)) if (!FINDING[k].includes(f[k])) err(`${at}: ${k} "${f[k]}" is not one of ${FINDING[k].join(', ')}`);
+    if (!/^\d{4}-\d{2}-\d{2}/.test(f.raised || '')) err(`${at}: raised must be a date YYYY-MM-DD`);
+    if (f.outcome && f.outcome !== 'open' && !f.outcome_date) err(`${at}: outcome "${f.outcome}" needs an outcome_date`);
+    if (f.later_defect && !/^ETM-\d+$/.test(f.later_defect)) warn(`${at}: later_defect "${f.later_defect}" is not an ETM key`);
+    if (!f.story_status) warn(`${at}: no story_status (needed to split "before dev" and "after dev started")`);
+  }
+  const qs = new Set();
+  for (const q of questionIds(dir)) qs.add(q);
+  const have = new Set(list.map((f) => String(f.q)));
+  for (const q of qs) if (!have.has(q)) err(`question ${q} of questions-for-BA has no entry in findings.json`);
+  finish('findings', ` | ${list.length} finding(s), ${qs.size} question(s)`);
+}
+
+// ---------------------------------------------------------------- coverage table (AC -> cases), for the lead and checkpoint 2
+function coverage() {
+  const key = pos[0];
+  if (!key) { console.error('Usage: qa-check coverage <KEY | draft.md> [--analyst analyst.md]'); process.exit(2); }
+  const dFile = /^ETM-\d+$/.test(key) ? path.join(WORK(key), 'draft-tc.md') : path.resolve(key);
+  const aFile = arg('--analyst') || path.join(path.dirname(dFile), 'analyst.md');
+  const d = read(dFile), a = read(path.resolve(aFile));
+  if (d == null || a == null) { console.error(`missing ${d == null ? dFile : aFile}`); process.exit(2); }
+  const cases = parseDraft(d), rows = acCoverage(parseAc(a), cases);
+  console.log('| AC | Rule | Cases | NEG/BND |\n|---|---|---|---|');
+  for (const r of rows) console.log(`| ${r.id}${r.neg ? ' [NEG]' : ''} | ${r.text.slice(0, 70)} | ${r.cases.join(', ') || '**none**'} | ${r.neg ? (r.negCases.join(', ') || '**none**') : '-'} |`);
+  const none = cases.filter((c) => c.trace && !c.trace.length).map((c) => c.id);
+  const gaps = rows.filter((r) => !r.cases.length || (r.neg && !r.negCases.length)).length;
+  console.log(`\n${rows.length} AC, ${rows.length - gaps} covered, ${gaps} gap(s). Cases with no AC (screen state / lesson): ${none.join(', ') || 'none'}`);
+  process.exit(gaps ? 1 : 0);
+}
+
 // ---------------------------------------------------------------- selftest (evals/)
 function selftest() {
   const dir = path.join(ROOT, 'evals'), cfg = read(path.join(dir, 'expected.json'));
   if (cfg == null) { console.error('evals/expected.json not found'); process.exit(2); }
   let bad = 0;
   for (const t of JSON.parse(cfg)) {
-    const r = spawnSync(process.execPath, [fileURLToPath(import.meta.url), ...t.args.map((a) => (a.startsWith('evals/') ? path.join(ROOT, a) : a))], { encoding: 'utf8', env: { ...process.env, QA_CHECK_NO_METRICS: '1' } });
+    const script = t.cmd === 'metrics' ? path.join(ROOT, 'tools', 'sprint-metrics.mjs') : fileURLToPath(import.meta.url);
+    const r = spawnSync(process.execPath, [script, ...t.args.map((a) => (a.startsWith('evals/') ? path.join(ROOT, a) : a))], { encoding: 'utf8', env: { ...process.env, QA_CHECK_NO_METRICS: '1' } });
     const m = (r.stdout || '').match(/\] (\d+) error\(s\)/), got = m ? Number(m[1]) : -1;
     const ok = got === t.errors && (!t.contains || (r.stdout || '').includes(t.contains));
     if (!ok) bad++;
@@ -258,6 +380,6 @@ function stats() {
   process.exit(0);
 }
 
-const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, selftest, stats }[cmd];
-if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff|selftest|stats> ...'); process.exit(2); }
+const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, selftest, stats }[cmd];
+if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff|coverage|findings|selftest|stats> ...'); process.exit(2); }
 run();

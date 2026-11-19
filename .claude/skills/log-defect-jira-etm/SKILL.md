@@ -29,6 +29,8 @@ Thai for the conversational parts (confirming details, reporting the created tic
 
 Before touching Jira, write a bilingual (English + Thai) defect report: title, description/context, steps to reproduce, actual result, expected result. Never fabricate a step, environment or build number: ask. If the user says to draft anyway without more info, mark inferred parts clearly as an assumption to confirm.
 
+In this repo, also read `work/<Story key>/findings.json` (read-only, if it exists): if one finding describes the same rule as this defect, name it in the go-ahead question ("ทีมเคยเตือนไว้ใน F-3: ..."). After the defect is created, write its key into that finding's `later_defect`, unless the user rejected the match. Local file only, nothing goes to Jira.
+
 The Jira Description follows the format confirmed against reference ticket ETM-6358 (this Jira renders Markdown, not wiki markup):
 - A plain opening narrative paragraph (no "Description:" label).
 - `### Step to Reproduce` (numbered steps)
@@ -48,7 +50,7 @@ If the Test Case / AC behind the defect conflicts with what the user describes a
 - **Labels**: for a UI or Frontend (FE) issue set **both** `FE` and `UI`, never just one.
 - **Issue link**: link to the originating Story with the standard "Relates" type. Never the Tests / is-tested-by type (reserved for Test issues).
 - **Sprint**: set the Defect/Bug's Sprint to the originating Story's active sprint (read the Story's `customfield_10020`, copy the sprint id). Easy to forget: do it in this same step.
-- **Original Estimate / time tracking**: NEVER set an Original Estimate on the Defect/Bug or on its `[QA]` sub-task (Step 8). Leave `timetracking.originalEstimate` empty everywhere in this flow. Only the Remaining estimate on the sub-task is set, and only through the worklog (Step 8).
+- **Original Estimate / time tracking**: NEVER set an Original Estimate on the Defect/Bug or on its `[QA]` sub-task (Step 8). Leave `timetracking.originalEstimate` empty everywhere in this flow. Do not set a Remaining estimate either (changed 18 Nov 2026, user: "no Original Estimate, take it out of raising a defect"): setting one through `editJiraIssue` makes Jira copy it into Original Estimate and the MCP tool cannot clear it again. The only time tracking in this flow is the 10m worklog on the sub-task (Step 8).
 
 ## Step 3 - Resolve the assignee automatically (do not ask, do not guess)
 
@@ -116,7 +118,7 @@ Create a sub-task under the new Defect/Bug every time, right after the Defect/Bu
 - Title: `[QA] Fix and verify <short description of the fix needed>`
 - Assignee: self (`ME_ID`)
 - Worklog of **10m** (corrected 1 Oct 2026; 15m was too high).
-- Remaining estimate of **15m** on the sub-task (corrected 1 Oct 2026, down from 30m), never `0m`. **No Original Estimate on the sub-task, ever** (corrected 16 Nov 2026: Jira copies a Remaining estimate set at creation into Original Estimate, which is not allowed). So: create the sub-task with NO `timetracking` field at all; add the 10m worklog with `addWorklogToJiraIssue` using `remainingEstimate: "15m"` (adjust the remaining estimate to 15m there); then re-read the sub-task (`getJiraIssue`, `fields: ["timetracking"]`) and confirm `originalEstimate` is empty. If it is set, clear it with `editJiraIssue` and re-check; if it cannot be cleared, say so in Step 9. The parent Defect/Bug never gets any estimate (Step 2).
+- **No Original Estimate and no Remaining estimate on the sub-task, ever** (corrected 16 Nov 2026, and again 18 Nov 2026 when the user dropped the 15m Remaining estimate: Jira copies any estimate set by `editJiraIssue` into Original Estimate, and the MCP tool cannot clear it; on ETM-8673 and ETM-8674 the user had to remove it by hand). So: create the sub-task with NO `timetracking` field at all; add only the 10m worklog with `addWorklogToJiraIssue` (the tool has no remaining-estimate parameter; Remaining then shows `0m`, that is accepted); never call `editJiraIssue` on `timetracking`. Then re-read the sub-task (`getJiraIssue`, `fields: ["timetracking"]`) and confirm `originalEstimate` is empty; if it is set, tell the user in Step 9 (do not try to clear it). The parent Defect/Bug never gets any estimate (Step 2).
 - A sub-task cannot be given a Sprint directly (the API rejects `customfield_10020` on a sub-task); it inherits the parent's sprint (Step 2), so leave that field out.
 - **When the parent is a Defect or Bug, mark the sub-task Done immediately at creation** (confirmed 25 Sep 2026; on ETM-6767 Jira's own automation had already set it to Done). Transition Open -> "Start implementation" (In Progress) -> "Finished" (Done); if the transition list comes back empty, check the status again: automation may already have moved it to Done, then nothing more is needed.
 
@@ -129,4 +131,8 @@ Report back, short: the created ticket key/link (and that no Original Estimate i
 - Never fabricate reproduction steps, environment or build info: ask.
 - This Jira renders Markdown, not Confluence wiki markup.
 - For anything that overlaps a skill the user already set up (browser automation via `claude-in-chrome`, Thai response style), use that skill rather than reinventing its steps.
-- When a new correction changes a number/value already applied to tickets created earlier in the same session, go back and fix those tickets too (e.g. `editJiraIssue` on `timetracking.remainingEstimate`) rather than only applying it going forward, and say plainly which part could not be corrected (e.g. an already-logged worklog entry if no edit/delete tool exists).
+- When a new correction changes a number/value already applied to tickets created earlier in the same session, go back and fix those tickets too (e.g. `editJiraIssue` on `labels`; never on `timetracking`, see Step 8) rather than only applying it going forward, and say plainly which part could not be corrected (e.g. an already-logged worklog entry if no edit/delete tool exists).
+
+## Retest result (corrected 19 Nov 2026)
+
+When a retest of a defect passes, always add a comment on the Defect itself: "Retest: Passed" with the date, the environment, which test steps or repro steps were followed (and the Test Execution key), what was observed, and the `[QA] Retest` sub-task key. Also @mention the developer who fixed it (the assignee of the Defect, or of its `[FE]`/`[BE]` fix sub-task) in the same comment or a follow-up comment. A real mention needs `contentFormat: "adf"` with a `mention` node (`attrs: {id: <accountId>, text: "@Name", accessLevel: ""}`); the wiki form `[~accountid:...]` in markdown is NOT a mention (it is escaped as plain text). Comments can be edited with `commentId`. Do this together with the sub-task and the status change, never skip it. Evidence images stay local unless the user asks to embed them. If the retest fails, do not comment or change anything: tell the user why it failed and wait.
