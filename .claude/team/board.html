@@ -705,7 +705,7 @@ function renderTabs(s) {
   for (const j of jobs) {
     const b = document.createElement('button'); b.type = 'button';
     b.className = (j.key === s.job ? 'sel ' : '') + (j.ask ? 'ask' : '');
-    b.innerHTML = esc(j.ticket || j.key) + '<span class="tag ' + j.state + '">' + (LABEL[j.state] || j.state) + '</span><small>' + j.active + '/8</small>';
+    b.innerHTML = esc(j.ticket || j.key) + '<span class="tag ' + j.state + '">' + (LABEL[j.state] || j.state) + '</span><small>' + (j.phase ? esc(j.phase) + ' · ' : '') + j.active + '/8</small>';
     b.addEventListener('click', () => { curJob = j.key; prev = null; poll(); });
     const x = document.createElement('span'); x.className = 'x'; x.textContent = '✕'; x.title = 'ปิดการ์ดนี้';
     x.addEventListener('click', async (ev) => {
@@ -732,6 +732,7 @@ function render(s) {
   last = s;
   track(s);
   el('ticket').textContent = s.ticket || '-';
+  { const cur = (s.jobs || []).find(j => j.key === s.job); el('ticket').title = cur && cur.phase ? 'phase: ' + cur.phase + (cur.next ? ' / next: ' + cur.next : '') : ''; }
   const cj = (s.jobs || []).find(j => j.key === s.job), jt = el('jtag'); jt.className = 'tag ' + (cj ? cj.state : 'idle'); jt.textContent = LABEL[cj ? cj.state : 'idle'];
   el('wallcard').innerHTML = '<small>CARD</small><b>' + esc(s.ticket || '-') + '</b>';
   let online = 0;

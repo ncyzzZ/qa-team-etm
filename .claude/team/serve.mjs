@@ -4,6 +4,8 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { phaseOf } from '../../tools/state/core.mjs';
+const ROOT_REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const EVENTS = path.join(dir, 'events.jsonl');
@@ -96,6 +98,7 @@ function reduce(want) {
     key, ticket: j.ticket, startedAt: j.startedAt, ask: !!j.ask,
     active: Object.values(j.agents).filter((a) => a.state !== 'idle').length,
     state: jobState(j),
+    ...phaseOf(key, ROOT_REPO), // card phase from .claude/team/work/<KEY>/state.json (read only)
   }));
   let k = want && jobs.has(want) ? want : (list.find((j) => j.ask) || list[list.length - 1] || {}).key;
   const s = jobs.get(k) || { ticket: '', startedAt: Date.now(), agents: blank(Date.now()), ask: null, answer: null, log: [], links: [] };

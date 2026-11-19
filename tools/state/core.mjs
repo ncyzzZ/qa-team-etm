@@ -120,3 +120,11 @@ export function parseAc(text) {
   }
   return [...seen.values()].filter((a) => ![...seen.keys()].some((k) => k.startsWith(a.id + '.')));
 }
+
+/** Phase and next step of a card for the board. Read-only, never throws (missing or broken file -> nulls). */
+export function phaseOf(key, root = ROOT) {
+  try {
+    const s = JSON.parse(fs.readFileSync(statePath(key, root), 'utf8'));
+    return { phase: PHASES.includes(s.phase) ? s.phase : null, next: typeof s.next === 'string' && s.next ? s.next : null };
+  } catch { return { phase: null, next: null }; }
+}
