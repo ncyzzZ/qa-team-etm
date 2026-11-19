@@ -109,7 +109,29 @@ function summarise(resultsDir) {
     rows.filter((x) => x.status === 'flaky').forEach((x) => console.log(`  FLAKY ${x.title.slice(0, 70)} (failed, then passed on retry: not a clean pass)`));
     rows.filter((x) => x.status === 'failed' || x.status === 'timedOut').forEach((x) => console.log(`  FAIL ${x.title.slice(0, 70)} :: ${x.msg}`));
     recordQuality(rows);
+    recordRunResults(rows, resultsDir);
   } catch (e) { console.error(`Could not read results.json: ${e.message}`); }
+}
+
+// ---- result per Xray test key, merged over runs: work/<KEY>/run-results.json (read by `qa-check strength` for "AC proven") ----
+// A key keeps its newest result; a run with -g only updates the keys it ran. Worst result wins inside one run.
+const RANK = { failed: 0, timedOut: 0, interrupted: 0, flaky: 1, skipped: 2, passed: 3 };
+function recordRunResults(rows, resultsDir) {
+  const file = path.join(ROOT, 'work', key, 'run-results.json');
+  let j = { card: key, tests: {} };
+  try { j = JSON.parse(fs.readFileSync(file, 'utf8')); j.tests = j.tests || {}; } catch { /* first run */ }
+  const t = new Date().toISOString(), run = path.basename(path.resolve(resultsDir)), now = {};
+  for (const x of rows) {
+    for (const k of new Set(x.title.match(/\bETM-\d+\b/g) || [])) {
+      if (k === key) continue;
+      const r = { status: x.status, why: x.status === 'skipped' ? x.why : undefined, t, run };
+      if (!now[k] || (RANK[r.status] ?? 0) < (RANK[now[k].status] ?? 0)) now[k] = r;
+    }
+  }
+  Object.assign(j.tests, now);
+  j.card = key; j.updated = t;
+  try { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(j, null, 1) + '\n'); console.log(`  run results: ${Object.keys(now).length} test key(s) -> ${path.relative(ROOT, file)}`); }
+  catch (e) { console.log(`  run results not saved: ${e.message}`); }
 }
 
 // Put the new report on the QA status board (pass or fail). Never stops the run if the board is missing.

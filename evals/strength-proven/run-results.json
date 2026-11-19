@@ -1,0 +1,5 @@
+{"card": "ETM-0001", "tests": {
+ "ETM-2": {"status": "passed"}, "ETM-3": {"status": "passed"},
+ "ETM-4": {"status": "failed"},
+ "ETM-6": {"status": "passed"}
+}}

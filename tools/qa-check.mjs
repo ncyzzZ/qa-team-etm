@@ -25,7 +25,7 @@ const WORK = (key) => path.join(ROOT, '.claude', 'team', 'work', key);
 const [cmd, ...rest] = process.argv.slice(2);
 const flag = (n) => rest.includes(n);
 const arg = (n) => (rest.includes(n) ? rest[rest.indexOf(n) + 1] : '');
-const pos = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--tests', '--analyst', '--root'].includes(rest[i - 1])));
+const pos = rest.filter((a, i) => !a.startsWith('--') && !(i > 0 && ['--tests', '--analyst', '--root', '--runs'].includes(rest[i - 1])));
 
 const out = [];
 const err = (m) => out.push(['ERR ', m]);
@@ -430,7 +430,20 @@ function checkStrength() {
   for (const id of new Set(analyst.match(/\bAC-\d+(?:\.\d+)?\b/g) || [])) if (!seen.has(id)) warn(`${id} of analyst.md is not rated`);
   if (j.verdict === 'ready' && (n.blocked || n.none)) err('verdict "ready" but some AC are blocked or have no test');
   const total = (j.ac || []).length;
-  finish('strength', ` | strong ${n.strong}/${total}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}`);
+  // AC proven = rated strong AND every one of its tests passed in the latest run (work/<KEY>/run-results.json, by run-card).
+  // Coverage is reported as AC proven, never as "TC with a key in a script": a strong rating read from code is only a claim.
+  const rf = arg('--runs') || path.join(path.dirname(file), 'run-results.json');
+  let runs = null; try { runs = JSON.parse(read(path.resolve(rf)) ?? 'null'); } catch { warn(`run results not valid JSON: ${rf}`); }
+  const res = (k) => runs?.tests?.[k];
+  let proven = 0;
+  for (const a of j.ac || []) {
+    const ts = a.tests || [], id = a.id || '?';
+    const bad = ts.filter((k) => res(k)?.status !== 'passed').map((k) => `${k}: ${res(k) ? res(k).status + (res(k).why ? ` (${res(k).why})` : '') : 'not run'}`);
+    if (a.rating === 'strong') { if (runs && ts.length && !bad.length) proven++; else if (runs) warn(`${id}: strong on paper, not proven by a run (${bad.join(', ')})`); }
+    else if (runs && ts.length && !bad.length && a.rating !== 'none') warn(`${id}: rated ${a.rating} but all its tests passed in the last run: re-rate it`);
+  }
+  if (!runs) warn('no run yet (run-results.json missing): 0 AC proven; strong is only a reading of the code');
+  finish('strength', ` | AC proven ${proven}/${total} | strong on paper ${n.strong}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}`);
 }
 
 // ---------------------------------------------------------------- stats (metrics.jsonl)

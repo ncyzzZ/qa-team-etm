@@ -109,11 +109,16 @@ export function scriptQuality(sprints, work, qualityFile) {
   return sprints.map((s) => {
     const runs = s.stories.map((k) => latest.get(k)).filter(Boolean);
     const sum = (f) => runs.reduce((n, q) => n + (q[f] || 0), 0);
-    const ac = { total: 0, strong: 0, weak: 0, blocked: 0, none: 0, cards: 0 };
+    const ac = { total: 0, proven: 0, strong: 0, weak: 0, blocked: 0, none: 0, cards: 0 };
     for (const k of s.stories) {
       try {
         const j = JSON.parse(fs.readFileSync(path.join(work, k, 'ac-strength.json'), 'utf8')); ac.cards++;
-        for (const a of j.ac || []) { ac.total++; if (a.rating in ac) ac[a.rating]++; }
+        let rr = null; try { rr = JSON.parse(fs.readFileSync(path.join(work, k, 'run-results.json'), 'utf8')).tests || null; } catch { /* never run */ }
+        for (const a of j.ac || []) {
+          ac.total++; if (a.rating in ac) ac[a.rating]++;
+          // proven = strong AND every test passed in the latest run (same rule as qa-check strength)
+          if (a.rating === 'strong' && rr && (a.tests || []).length && a.tests.every((t) => rr[t]?.status === 'passed')) ac.proven++;
+        }
       } catch { /* not reviewed */ }
     }
     const ran = sum('ran');
@@ -156,9 +161,9 @@ th:first-child,td:first-child{text-align:left}tr.first td{background:var(--hi)}.
 <div class="tw"><table><thead><tr><th>Sprint</th><th>Story</th><th>Defect</th><th>Defect/Story</th><th>Bug</th><th>ข้อที่ยก</th><th>ก่อน / หลัง dev</th><th>กันได้</th><th>ยืนยันเดิม</th><th>ไม่มีคนตอบ</th><th>เตือนแล้วยังเกิด</th><th>เติมย้อนหลัง</th></tr></thead><tbody>${body}</tbody></table></div>
 <p class="sub" style="margin-top:8px">ประเภทข้อที่ยก: ${esc(kindTxt)}${unassigned.length ? ` · การ์ดที่ไม่อยู่ใน sprint ใด: ${esc(unassigned.join(', '))}` : ''}</p>
 ${quality.some((q) => q.ran || q.ac.total) ? `<h2 style="font-size:17px;margin:24px 0 4px">คุณภาพ script ของ AI agent</h2>
-<p class="sub" style="margin:0">Proven = test ที่ผ่านจริงทุก step หารด้วย test ที่รัน (รอบล่าสุดของแต่ละการ์ด) · AC strong = AC ที่ script พิสูจน์ได้จริง (รีวิวตอนปิดการ์ด)</p>
-<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>การ์ดที่รัน</th><th>Test</th><th>ผ่าน</th><th>Fail</th><th>ไม่ได้พิสูจน์</th><th>Fixme</th><th>ขาด .env/data</th><th>Proven</th><th>AC strong / ทั้งหมด</th><th>weak / blocked / none</th></tr></thead><tbody>
-${quality.map((q) => `<tr><td>Sprint ${q.sprint}${q.active ? ' *' : ''}</td><td>${q.cardsRun}</td><td>${q.ran}</td><td>${q.passed}</td><td>${q.failed}</td><td>${q.notProven}</td><td>${q.fixme}</td><td>${q.precondition}</td><td><b>${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'}</b></td><td>${q.ac.total ? `${q.ac.strong} / ${q.ac.total}` : '-'}</td><td>${q.ac.total ? `${q.ac.weak} / ${q.ac.blocked} / ${q.ac.none}` : '-'}</td></tr>`).join('')}
+<p class="sub" style="margin:0">Proven = test ที่ผ่านจริงทุก step หารด้วย test ที่รัน (รอบล่าสุดของแต่ละการ์ด) · AC proven = AC ที่ strong และ test ของมันผ่านในการรันล่าสุด (ตัวเลข coverage หลัก) · strong = อ่านจากโค้ดเท่านั้น ยังไม่ใช่หลักฐาน</p>
+<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>การ์ดที่รัน</th><th>Test</th><th>ผ่าน</th><th>Fail</th><th>ไม่ได้พิสูจน์</th><th>Fixme</th><th>ขาด .env/data</th><th>Proven</th><th>AC proven / ทั้งหมด</th><th>strong (อ่านโค้ด)</th><th>weak / blocked / none</th></tr></thead><tbody>
+${quality.map((q) => `<tr><td>Sprint ${q.sprint}${q.active ? ' *' : ''}</td><td>${q.cardsRun}</td><td>${q.ran}</td><td>${q.passed}</td><td>${q.failed}</td><td>${q.notProven}</td><td>${q.fixme}</td><td>${q.precondition}</td><td><b>${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'}</b></td><td><b>${q.ac.total ? `${q.ac.proven} / ${q.ac.total}` : '-'}</b></td><td>${q.ac.total ? q.ac.strong : '-'}</td><td>${q.ac.total ? `${q.ac.weak} / ${q.ac.blocked} / ${q.ac.none}` : '-'}</td></tr>`).join('')}
 </tbody></table></div>` : ''}
 <div class="note"><b>วิธีอ่าน</b><ul>
 <li><b>Defect</b> = issue type Defect (เจอใน QA) · <b>Bug</b> = issue type Bug (หลุดไป UAT/PROD) · นับตาม Sprint ของ defect เอง หารด้วยจำนวน Story ใน sprint นั้น (Story ที่ยกข้าม sprint นับทุก sprint)</li>
@@ -189,7 +194,7 @@ function main() {
     const h = healSummary(resolveRepos().pwRepo, {});
     console.log(`  self-healing: locator failures ${h.locatorFailures}, healed ${h.healed} (fe ${h.bySource.fe}, live ${h.bySource.live}), rate ${h.rate == null ? '-' : `${Math.round(h.rate * 100)}%`}`);
   } catch (e) { console.log(`  self-healing: - (${e.message})`); }
-  for (const q of quality) if (q.ran || q.ac.total) console.log(`  script quality S${q.sprint}: proven ${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'} (${q.passed}/${q.ran}, not proven ${q.notProven}, fixme ${q.fixme}, precondition ${q.precondition}) | AC strong ${q.ac.total ? `${q.ac.strong}/${q.ac.total}` : '-'}`);
+  for (const q of quality) if (q.ran || q.ac.total) console.log(`  script quality S${q.sprint}: proven ${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'} (${q.passed}/${q.ran}, not proven ${q.notProven}, fixme ${q.fixme}, precondition ${q.precondition}) | AC proven ${q.ac.total ? `${q.ac.proven}/${q.ac.total}` : '-'} (strong on paper ${q.ac.strong})`);
   console.log(`  unassigned: ${unassigned.length}${unassigned.length ? ` (${unassigned.join(', ')})` : ''}`);
   if (sprints.length) console.log(`  report: ${path.relative(process.cwd(), out)}`);
   for (const e of errors) console.log(`  ERR  ${e}`);

@@ -28,5 +28,5 @@ First run `node tools/qa-check.mjs draft <KEY>` and put its errors in the findin
 - `weak`: the test runs but checks only visibility or a proxy, or depends on data it may not find (then it ends "Not proven"), or uses hard-coded data of one plan.
 - `blocked`: the only tests are fixme, `test.skip`, or skip because a `.env` value is empty (name it).
 - `none`: no script (manual or missing).
-Write `work/<KEY>/ac-strength.json`: `{"card","date","verdict":"ready|partly|not-ready","ac":[{"id","rule","tests":[...],"rating","why"}]}`, `why` one short line with file:line when it is weak. Check: `node tools/qa-check.mjs strength <KEY>` (gate G6b). Return the table AC | rating | why and the 1-3 most important fixes. Read-only: never edit a spec.
+Write `work/<KEY>/ac-strength.json`: `{"card","date","verdict":"ready|partly|not-ready","ac":[{"id","rule","tests":[...],"rating","why"}]}`, `why` one short line with file:line when it is weak. Check: `node tools/qa-check.mjs strength <KEY>` (gate G6b). Return the table AC | rating | why and the 1-3 most important fixes. Read-only: never edit a spec. Your rating is read from code: a selector or helper never run on the app is a guess, so say "never run on the app" in `why` when you know it. After a run, `qa-check strength` names AC to re-rate from `work/<KEY>/run-results.json`; re-rate only those.
 

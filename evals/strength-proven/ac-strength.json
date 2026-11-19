@@ -1,0 +1,6 @@
+{"card": "ETM-0001", "date": "2026-11-19", "verdict": "partly", "ac": [
+ {"id": "AC-1", "rule": "strong and passed", "tests": ["ETM-2", "ETM-3"], "rating": "strong", "why": "asserted"},
+ {"id": "AC-2", "rule": "strong but one test failed", "tests": ["ETM-4"], "rating": "strong", "why": "asserted"},
+ {"id": "AC-3", "rule": "strong but never run", "tests": ["ETM-5"], "rating": "strong", "why": "asserted"},
+ {"id": "AC-4", "rule": "blocked but now passes", "tests": ["ETM-6"], "rating": "blocked", "why": "env was empty"}
+]}
