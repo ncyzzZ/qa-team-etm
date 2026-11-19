@@ -1,0 +1,244 @@
+{
+ "sprint": 23,
+ "sprintId": 17074,
+ "name": "Scrum Sprint 23",
+ "fetched": "2026-11-19T00:00:00Z",
+ "frozen": true,
+ "firstSprintRule": "a defect counts in the first sprint it was in",
+ "stories": [
+  "ETM-7321",
+  "ETM-7320",
+  "ETM-6928",
+  "ETM-6919",
+  "ETM-6876",
+  "ETM-6869",
+  "ETM-6868",
+  "ETM-6862",
+  "ETM-6844",
+  "ETM-6843",
+  "ETM-6787",
+  "ETM-6778",
+  "ETM-6777",
+  "ETM-6506",
+  "ETM-6373"
+ ],
+ "defects": [
+  {
+   "key": "ETM-7533",
+   "type": "Defect",
+   "created": "2026-10-19",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7480",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7477",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7456",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7450",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7448",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7381",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7379",
+   "type": "Defect",
+   "created": "2026-10-16",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7369",
+   "type": "Defect",
+   "created": "2026-10-15",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7366",
+   "type": "Defect",
+   "created": "2026-10-15",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7361",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7355",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7352",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7328",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7316",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7300",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7294",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7281",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7276",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7272",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7270",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7268",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7264",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7262",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7260",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7254",
+   "type": "Defect",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7252",
+   "type": "Bug",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7245",
+   "type": "Bug",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7243",
+   "type": "Bug",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7181",
+   "type": "Bug",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7040",
+   "type": "Bug",
+   "created": "2026-10",
+   "story": null,
+   "status": "Done"
+  }
+ ]
+}

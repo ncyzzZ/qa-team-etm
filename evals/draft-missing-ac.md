@@ -11,17 +11,20 @@ Source: Story AC. Priority: High 1, Medium 1, Low 1. Auto 2, Manual 1.
 ### TC-001 [FE][MT] Verify Save stays disabled until a field changes (POS) [Auto]
 Precondition: open the Edit window of any row.
 Priority: High
+Trace: AC-1
 1. Look at the Save button. -> Save is greyed out.
 2. Type `A` in the Name field. -> Save turns blue and can be clicked.
 
 ### TC-002 [FE][MT] Verify Save turns off again when the change is undone (NEG) [Auto]
 Precondition: open the Edit window of any row.
 Priority: Medium
+Trace: AC-1
 1. Type `A` in the Name field. -> Save turns blue.
 2. Delete the `A`. -> Save is greyed out again.
 
 ### TC-003 [FE][MT] Verify Cancel closes the window and keeps the old value (POS) [Manual: needs a person to judge the pop-up wording]
 Precondition: open the Edit window of any row.
 Priority: Low
+Trace: none (pop-up wording)
 1. Type `A` in the Name field. -> The field shows `A`.
 2. Click Cancel. -> The window closes and a pop-up asks `Discard changes?`.

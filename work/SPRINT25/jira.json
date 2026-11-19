@@ -1,0 +1,352 @@
+{
+ "sprint": 25,
+ "sprintId": null,
+ "name": "Scrum Sprint 25",
+ "fetched": "2026-11-19T00:00:00Z",
+ "frozen": true,
+ "firstSprintRule": "a defect counts in the first sprint it was in",
+ "stories": [
+  "ETM-8517",
+  "ETM-8152",
+  "ETM-7984",
+  "ETM-7902",
+  "ETM-7901",
+  "ETM-7900",
+  "ETM-7899",
+  "ETM-7898",
+  "ETM-7897",
+  "ETM-7896",
+  "ETM-7879",
+  "ETM-7609",
+  "ETM-7351",
+  "ETM-7350",
+  "ETM-7349",
+  "ETM-7348",
+  "ETM-7347",
+  "ETM-7346",
+  "ETM-7345",
+  "ETM-7340",
+  "ETM-7315",
+  "ETM-7314",
+  "ETM-7313",
+  "ETM-7312",
+  "ETM-7311",
+  "ETM-7310",
+  "ETM-7309",
+  "ETM-7308",
+  "ETM-7307",
+  "ETM-7306",
+  "ETM-7305",
+  "ETM-7289",
+  "ETM-7288",
+  "ETM-7287",
+  "ETM-6849",
+  "ETM-6848",
+  "ETM-6847",
+  "ETM-6846",
+  "ETM-6845"
+ ],
+ "defects": [
+  {
+   "key": "ETM-8513",
+   "type": "Defect",
+   "created": "2026-11-13",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8501",
+   "type": "Defect",
+   "created": "2026-11-13",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8499",
+   "type": "Defect",
+   "created": "2026-11-13",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8497",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8490",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8471",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8470",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8462",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8460",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8456",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8450",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8447",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8444",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8441",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8439",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8437",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8435",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8433",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8430",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8429",
+   "type": "Defect",
+   "created": "2026-11-12",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8422",
+   "type": "Defect",
+   "created": "2026-11-11",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8420",
+   "type": "Defect",
+   "created": "2026-11-11",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8412",
+   "type": "Defect",
+   "created": "2026-11-11",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8409",
+   "type": "Defect",
+   "created": "2026-11-11",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8403",
+   "type": "Defect",
+   "created": "2026-11-10",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8398",
+   "type": "Defect",
+   "created": "2026-11-10",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8396",
+   "type": "Defect",
+   "created": "2026-11-10",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8377",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8375",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8370",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8367",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8365",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8361",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8358",
+   "type": "Defect",
+   "created": "2026-11-09",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8328",
+   "type": "Defect",
+   "created": "2026-11-06",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8320",
+   "type": "Defect",
+   "created": "2026-11-06",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8295",
+   "type": "Defect",
+   "created": "2026-11-06",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8293",
+   "type": "Defect",
+   "created": "2026-11-06",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8291",
+   "type": "Bug",
+   "created": "2026-11-05",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8219",
+   "type": "Defect",
+   "created": "2026-11-05",
+   "story": null,
+   "status": "Deployed to UAT"
+  },
+  {
+   "key": "ETM-8080",
+   "type": "Bug",
+   "created": "2026-11-03",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-8078",
+   "type": "Bug",
+   "created": "2026-11-02",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-8073",
+   "type": "Defect",
+   "created": "2026-11-02",
+   "story": null,
+   "status": "Done"
+  }
+ ]
+}

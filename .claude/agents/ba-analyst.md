@@ -16,5 +16,14 @@ Do this:
 5. Quick scan of the AC only (no Figma). List every AC item in one line; what is not written but could break (missing rules, undefined words, other roles, empty data, limits); unclear points as short concrete questions, one per point.
 6. Think like the person using the feature: who, what they want, what goes wrong in a hurry.
 
-Output file: `analyst.md` with exactly these sections: `## AC items` (one line each, numbered `AC-1`, `AC-2` ... in the Story's order; the draft is checked against these ids), `## Could still break`, `## Open questions` (one per point), `## [QA] subtasks` (existing keys, estimates proposed).
+Output file: `analyst.md` with exactly these sections: `## AC items`, `## Could still break`, `## Open questions` (one per point), `## [QA] subtasks` (existing keys, estimates proposed).
+
+Each open question starts with three tags so the lead can log it as a finding without re-reading: `1. [gap|conflict|risk|question][high|medium|low][AC-n or -] <question>`. gap = a rule is missing; conflict = AC disagrees with design, another AC or a comment; risk = could break even if the rule is clear; question = wording only. high = the answer changes an Expected Result.
+
+`## AC items` rules (the draft is checked against these ids by `qa-check draft`, so they decide coverage):
+- One rule per line: `- AC-1: <one testable rule>`. Numbered in the Story's order; a Story item `1.2` becomes `AC-1.2`.
+- Split an item that holds more than one rule (required + max length + error message = three lines `AC-2.1`, `AC-2.2`, `AC-2.3`). Do not list a parent and its own sub-items both as rules: list only the leaves.
+- Rules from comments or an "AC 0" block get their own id too (next free number), with the source in brackets: `- AC-8: ... (comment 12 Nov)`.
+- End the line with `[NEG]` when the rule has a way to fail that must be tested: a limit, a required field, a permission, a not-allowed value, an error message, a "does not" rule. The draft must then have a NEG or BND case for it.
+- An out-of-scope or regression item still gets an id (the draft proves nothing else changed).
 Before returning run `node tools/qa-check.mjs work <KEY> analyst` and fix every error (gate G1).

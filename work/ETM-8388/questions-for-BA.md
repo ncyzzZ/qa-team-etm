@@ -6,9 +6,9 @@
 
 ## Paste Validation Failed modal (AC 1.5)
 
-1. ⭐ What does the `Paste Validation Failed` modal show (title, message, listed cells or counts, buttons, how it closes)? Is it the same modal on Timeline and Edit Plan?
+1. ⭐ Context: for the Edit Plan weekly `Plan (%)` cells the modal is already confirmed in the validation sheet row 17 (title `Paste Validation Failed`, message `Some pasted values do not meet the validation rules and were not applied.`, button `OK`). Is the same modal (title, message, button) used on the Timeline screen, and for Status, date and text-field errors on both screens?
 2. ⭐ Is paste partial (valid cells applied, invalid cells cleared) or all-or-nothing?
-3. ⭐ Does the modal also appear when values are only truncated, clamped, cut off (future week, outside Start-End range) or ignored (extra rows on Timeline)?
+3. ⭐ Context: Edit Plan weekly `Plan (%)` clamp and truncate show no modal (validation sheet row 17). Is that also true on Timeline (weekly Actual clamp/truncate)? Does the modal appear for values cut off (future week on Timeline, outside the Start-End range on Edit Plan) or ignored (extra rows on Timeline)?
 4. For a date pasted in another Excel format (e.g. `2025-11-03`, `03/11/2025`): is it "not applied", cleared, and shown in the modal?
 
 ## Copy across Activity Groups (AC 1.3, 1.4)

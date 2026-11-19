@@ -1,7 +1,7 @@
 # ETM-1111 analyst notes (fixture)
 
 ## AC items
-- AC-1: The Save button is enabled only after a field changes.
+- AC-1: The Save button is enabled only after a field changes. [NEG]
 - AC-2: The Cancel button closes the window without saving.
 
 ## Could still break

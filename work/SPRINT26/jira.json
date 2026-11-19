@@ -1,0 +1,72 @@
+{
+ "sprint": 26,
+ "sprintId": 17237,
+ "name": "Scrum Sprint 26",
+ "fetched": "2026-11-19T00:00:00Z",
+ "frozen": false,
+ "firstSprintRule": "a defect counts in the first sprint it was in",
+ "stories": [
+  "ETM-8521",
+  "ETM-8517",
+  "ETM-8449",
+  "ETM-8415",
+  "ETM-8405",
+  "ETM-8394",
+  "ETM-8393",
+  "ETM-8392",
+  "ETM-8391",
+  "ETM-8388",
+  "ETM-8152",
+  "ETM-8049",
+  "ETM-8042",
+  "ETM-8034",
+  "ETM-8003",
+  "ETM-7984",
+  "ETM-7902",
+  "ETM-7901",
+  "ETM-7900",
+  "ETM-7899",
+  "ETM-7898",
+  "ETM-7897",
+  "ETM-7896",
+  "ETM-7879",
+  "ETM-7350",
+  "ETM-7349",
+  "ETM-7348",
+  "ETM-7347",
+  "ETM-7346",
+  "ETM-7345",
+  "ETM-7343"
+ ],
+ "defects": [
+  {
+   "key": "ETM-8672",
+   "type": "Defect",
+   "created": "2026-11-18",
+   "story": null,
+   "status": "Ready for UAT"
+  },
+  {
+   "key": "ETM-8671",
+   "type": "Defect",
+   "created": "2026-11-18",
+   "story": null,
+   "status": "Ready for UAT"
+  },
+  {
+   "key": "ETM-8666",
+   "type": "Defect",
+   "created": "2026-11-17",
+   "story": null,
+   "status": "Ready for UAT"
+  },
+  {
+   "key": "ETM-8664",
+   "type": "Defect",
+   "created": "2026-11-17",
+   "story": null,
+   "status": "Ready for UAT"
+  }
+ ],
+ "state": "active"
+}

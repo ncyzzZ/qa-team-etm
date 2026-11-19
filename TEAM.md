@@ -72,13 +72,15 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 - analyst: AC (an "AC 0 User Review Updates" block overrides older AC), the two `[QA]` subtasks, estimates, unclear points → `analyst.md`.
 - inspector: design vs AC, every screen state → `inspector.md`. Figma only via Figma MCP; the seat is limited (about 6 calls a month): prefer user-pasted screenshots and ask before spending calls.
 
-**CHECKPOINT 1 - Quick scan.** Lead shows findings and open questions, `ask`, WAIT.
+**Findings log (every card, done by the lead, no user step).** From the analyst's (and inspector's) open questions the lead writes `work/<KEY>/questions-for-BA.md` (English, for BA/dev) and `work/<KEY>/findings.json`, one entry per question: `{id: "F-n", q, ac, kind, impact, raised, story_status, outcome: "open", outcome_date: null, note, later_defect: null}` (`story_status` = the Story status in `story.md` today). Check: `node tools/qa-check.mjs findings <KEY>` (part of G1). When `ba-answers.md` arrives or the AC changes, the lead sets each outcome: `ac-changed` (BA added or changed a rule because of it), `dev-fixed` (dev changed the build before QA), `confirmed` (already intended, nothing changed), `no-issue`. Phase 6 turns every `open` into `ignored`. Phase 7 links a defect to the finding that warned about it (`log-defect-jira-etm`). Values and rules: `docs/superpowers/specs/2026-11-19-early-findings-metrics-design.md`.
+
+**CHECKPOINT 1 - Quick scan.** Lead shows findings and open questions, plus one line `N findings: a AC changed, b confirmed, c open` when outcomes exist, `ask`, WAIT.
 
 **Phase 2 - Design** (designer): `draft-tc.md` in Markdown in the format of `.claude/agents/test-designer.md` (`### TC-001 ... (POS) [Auto]`, steps `N. action -> expected`). No .xlsx or .csv ever. Gate G3.
 
 **Phase 3 - Review** (reviewer or lead; gate G4). Failed → back to designer, at most 2 rounds, then the lead shows what is still open.
 
-**CHECKPOINT 2 - Test case review.** Draft with a short summary per case (what it does, expected result, what it proves). `ask`, WAIT.
+**CHECKPOINT 2 - Test case review.** First the AC to case table from `node tools/qa-check.mjs coverage <KEY>` (pasted as is, no tokens spent writing it), then a short summary per case (what it does, expected result, what it proves). `ask`, WAIT.
 
 **CHECKPOINT 3 - Xray approval.** "push to Xray?" WAIT for a clear yes. First batch on a new project is a pilot; say so.
 
@@ -102,9 +104,9 @@ Every agent runs its own check before returning, and the lead runs the same comm
 
 | Gate | After | Command (from the repo root) | Passes when |
 |---|---|---|---|
-| G1 | analyst | `node tools/qa-check.mjs work <KEY> analyst` | 0 errors (all 4 sections present) |
+| G1 | analyst | `node tools/qa-check.mjs work <KEY> analyst`, then (lead, after writing the findings log) `node tools/qa-check.mjs findings <KEY>` | 0 errors (all 4 sections present; every question of `questions-for-BA.md` has a valid entry in `findings.json`) |
 | G2 | inspector | `node tools/qa-check.mjs work <KEY> inspector` | 0 errors |
-| G3 | designer | `node tools/qa-check.mjs draft <KEY>` | 0 errors: label, automation tag, every step has an Expected Result, no "refer to Figma", no "same as TC-x" |
+| G3 | designer | `node tools/qa-check.mjs draft <KEY>` | 0 errors: label, automation tag, every step has an Expected Result, no "refer to Figma", no "same as TC-x", every case has a `Trace:` line, every `AC-n` of `analyst.md` is in a `Trace:` line, every `[NEG]` AC has a NEG/BND case |
 | G4 | reviewer | `node tools/qa-check.mjs work <KEY> reviewer` | 0 errors and the verdict is Approve / Conditional Approve |
 | G5 | Xray push | logger saves `work/<KEY>/xray-readback.json` (`[{key, summary, steps}]`), then `node tools/qa-check.mjs diff <KEY> work/<KEY>/xray-readback.json`, plus the `linkedIssues` count | 0 errors: same number of Tests, same step count as the draft, link count correct |
 | G6 | scripts | `node tools/qa-check.mjs spec <spec files> --tests work/<KEY>/tests.md` and `npx tsc --noEmit -p .` (in `PW_REPO`) | 0 errors: key in every title, a `test.step` per step, no `waitForTimeout`, no credentials, compiles |
@@ -113,7 +115,16 @@ Every agent runs its own check before returning, and the lead runs the same comm
 
 After any change to `tools/qa-check.mjs` run `node tools/qa-check.mjs selftest` (fixtures in `evals/`); `node tools/qa-check.mjs stats` shows which gate fails most often.
 
-Also checked by the lead, not by a script: every AC item has a case (coverage map), every claim in the closing summary matches a file or a Jira key it just read.
+G1 also warns when the Story has more numbered AC items than `analyst.md` lists, or an AC line looks like more than one rule: send it back to the analyst to split. Also checked by the lead, not by a script: each traced case really proves its AC (the Expected Result states the AC's outcome), every claim in the closing summary matches a file or a Jira key it just read.
+
+## Sprint report (for the manager: defects per sprint, problems stopped before code)
+
+On request, or when a sprint ends. Read-only Jira, no approval needed.
+1. For the current and the previous sprint (older ones are saved with `"frozen": true` and never fetched again), run with narrow fields (`key`, `issuetype`, `created`, `status`, `issuelinks`), `maxResults` 100:
+   `project = ETM AND issuetype = Story AND sprint = <id>` and `project = ETM AND issuetype in (Defect, Bug) AND sprint = <id>`.
+2. Save `work/SPRINT<N>/jira.json`: `{sprint, sprintId, name, fetched, frozen, stories: [keys], defects: [{key, type: "Defect"|"Bug", created, story: <Relates Story key or null>, status}]}`.
+3. `node tools/sprint-metrics.mjs --marker 27` writes `work/SPRINT<latest>/metrics.html` and prints the summary. Show the summary; publish the HTML as a private Artifact only when the user says so.
+Baseline: Sprints 23-26 (26 = findings raised after dev had started). Sprint 27 = first sprint where every card is read before dev.
 
 ## Hard stops
 

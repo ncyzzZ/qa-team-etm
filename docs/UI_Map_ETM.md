@@ -17,7 +17,7 @@ The map is split by module so an agent reads only what the Story needs (the old 
 | `docs/modules/shutdown-logic-validation.md` | Shutdown Logic: toast / modal messages and field validation of Create/Edit Shutdown Logic and the Gantt Edit Work Header / Work / Work Breakdown windows (converted from the xlsx) | large |
 | `docs/modules/daily-report-validation.md` | Daily Report: every toast / modal title and message (CR-01..CR-39), field limits and file rules for Create/Edit Plan and Attached Image (VP, VI), spec issues I-01..I-15 | medium |
 | `docs/modules/daily-report-export-template.md` | Daily Report export to Word: page layout, sections A-F, S-Curve chart, colour rules, open points | medium |
-| `docs/modules/shutdown-timeline.md` | Shutdown Timeline rules confirmed card by card: frame and split pane (ETM-7345), calendar engine and weekly plan % (7346), seeding and SD type estimate (7347), edit plan (7348), type change (7984), open points | large |
+| `docs/modules/shutdown-timeline.md` | Shutdown Timeline rules confirmed card by card: frame and split pane (ETM-7345), calendar engine and weekly plan % (7346), seeding and SD type estimate (7347), edit plan (7348), type change (7984), editable weekly Plan % (8405), open points | large |
 | `docs/modules/shutdown-timeline-validation.md` | Shutdown Timeline: toast / modal messages (Update Progress, Notes, Save Plan, change Shutdown Type) and field limits (Update Progress, Note, Edit Plan) | small |
 | `docs/modules/shutdown-timeline-default-plan.md` | Shutdown Timeline default plan: Major / Medium / Minor SD durations, start rules, Ramp Down date logic, weights | large |
 

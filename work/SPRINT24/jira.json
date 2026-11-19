@@ -1,0 +1,350 @@
+{
+ "sprint": 24,
+ "sprintId": 17129,
+ "name": "Scrum Sprint 24",
+ "fetched": "2026-11-19T00:00:00Z",
+ "frozen": true,
+ "firstSprintRule": "a defect counts in the first sprint it was in",
+ "stories": [
+  "ETM-7609",
+  "ETM-7351",
+  "ETM-7340",
+  "ETM-7321",
+  "ETM-7320",
+  "ETM-7315",
+  "ETM-7314",
+  "ETM-7313",
+  "ETM-7312",
+  "ETM-7311",
+  "ETM-7310",
+  "ETM-7309",
+  "ETM-7308",
+  "ETM-7307",
+  "ETM-7306",
+  "ETM-7305",
+  "ETM-7289",
+  "ETM-7288",
+  "ETM-7287",
+  "ETM-6928",
+  "ETM-6919",
+  "ETM-6876",
+  "ETM-6869",
+  "ETM-6868",
+  "ETM-6862",
+  "ETM-6849",
+  "ETM-6848",
+  "ETM-6847",
+  "ETM-6846",
+  "ETM-6845",
+  "ETM-6844",
+  "ETM-6843",
+  "ETM-6787",
+  "ETM-6778",
+  "ETM-6777",
+  "ETM-6506",
+  "ETM-6373"
+ ],
+ "defects": [
+  {
+   "key": "ETM-7979",
+   "type": "Defect",
+   "created": "2026-10-30",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7957",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7951",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7949",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7947",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7945",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7943",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7940",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7938",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7936",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7933",
+   "type": "Defect",
+   "created": "2026-10-29",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7922",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7920",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7915",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7913",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7910",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7903",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7892",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7889",
+   "type": "Defect",
+   "created": "2026-10-28",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7886",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7884",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7876",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7869",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7863",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7860",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7859",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Cancelled"
+  },
+  {
+   "key": "ETM-7857",
+   "type": "Defect",
+   "created": "2026-10-27",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7846",
+   "type": "Defect",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7809",
+   "type": "Bug",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7807",
+   "type": "Bug",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7805",
+   "type": "Bug",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7803",
+   "type": "Bug",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7801",
+   "type": "Defect",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7799",
+   "type": "Defect",
+   "created": "2026-10-26",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7796",
+   "type": "Defect",
+   "created": "2026-10-22",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7787",
+   "type": "Defect",
+   "created": "2026-10-22",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7709",
+   "type": "Defect",
+   "created": "2026-10-22",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7610",
+   "type": "Defect",
+   "created": "2026-10-21",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7607",
+   "type": "Defect",
+   "created": "2026-10-20",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7580",
+   "type": "Defect",
+   "created": "2026-10-20",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7578",
+   "type": "Defect",
+   "created": "2026-10-20",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7565",
+   "type": "Defect",
+   "created": "2026-10-19",
+   "story": null,
+   "status": "Done"
+  },
+  {
+   "key": "ETM-7562",
+   "type": "Defect",
+   "created": "2026-10-19",
+   "story": null,
+   "status": "Done"
+  }
+ ]
+}

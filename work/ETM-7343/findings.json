@@ -1,0 +1,58 @@
+[
+ {
+  "id": "F-1",
+  "q": "1",
+  "ac": null,
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-18",
+  "story_status": "In Development",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "",
+  "later_defect": null,
+  "backfilled": true
+ },
+ {
+  "id": "F-2",
+  "q": "2",
+  "ac": null,
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-18",
+  "story_status": "In Development",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "",
+  "later_defect": null,
+  "backfilled": true
+ },
+ {
+  "id": "F-3",
+  "q": "3",
+  "ac": null,
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-18",
+  "story_status": "In Development",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "",
+  "later_defect": null,
+  "backfilled": true
+ },
+ {
+  "id": "F-4",
+  "q": "4",
+  "ac": null,
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-18",
+  "story_status": "In Development",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "",
+  "later_defect": null,
+  "backfilled": true
+ }
+]

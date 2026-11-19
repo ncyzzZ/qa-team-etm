@@ -1,0 +1,4 @@
+{"sprint":25,"sprintId":2,"name":"Sprint 25","fetched":"2026-10-15T00:00:00Z","frozen":true,"stories":["ETM-9101","ETM-9102","ETM-9103","ETM-9104"],"defects":[
+ {"key":"ETM-9201","type":"Defect","created":"2026-10-10","story":"ETM-9101","status":"Closed"},
+ {"key":"ETM-9202","type":"Defect","created":"2026-10-11","story":"ETM-9102","status":"Closed"},
+ {"key":"ETM-9203","type":"Bug","created":"2026-10-20","story":"ETM-9103","status":"Open"}]}

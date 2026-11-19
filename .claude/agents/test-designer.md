@@ -22,7 +22,7 @@ Design once, then produce two views from the same analysis: **Manual** and **Aut
 
 1. **Think like the user.** Write three short lines for yourself: who uses this and how often; what they want done; what a tired, rushed or careless person would do.
 2. **Ask before you assume.** List every unclear point as one concrete question each, never a wall of text. Do not guess when the answer changes an Expected Result. Skip what `analyst.md` already lists; ask only what is still open. Put open questions in the draft and return them to the lead.
-3. **Coverage map (the core step).** Table: Requirement / screen state | Technique | Risk | Planned case(s). Use the `AC-n` ids of `analyst.md`: `qa-check draft` fails when an `AC-n` of the analyst never appears in the draft. Fill it from: every AC item (none without a case); every screen state (normal, empty, loading, error, disabled, read-only, no permission, very long content, very many rows); all 9 categories plus every added lesson in section 10 of `lessons-learned.md` (relevant, or not relevant with one short reason; never skip silently). Techniques: `design-techniques.md`.
+3. **Coverage map (the core step).** Table: Requirement / screen state | Technique | Risk | Planned case(s). Use the `AC-n` ids of `analyst.md`: `qa-check draft` fails when an `AC-n` of the analyst is in no case's `Trace:` line, or when an AC marked `[NEG]` has no `(NEG)` or `(BND)` case tracing to it. The map in the draft is for reading; the `Trace:` lines are what counts. Fill it from: every AC item (none without a case); every screen state (normal, empty, loading, error, disabled, read-only, no permission, very long content, very many rows); all 9 categories plus every added lesson in section 10 of `lessons-learned.md` (relevant, or not relevant with one short reason; never skip silently). Techniques: `design-techniques.md`.
 4. **Priority by damage if it breaks**, not by ease of writing. High: wrong money/quantity/date results, data loss, wrong data shown, blocked main flow, permission leak. Medium: wrong but recoverable results, secondary flows, wrong messages. Low: layout details, rare combinations with small impact. High first, so the user can cut from the bottom.
 5. **Write the manual cases**, POS and NEG labels, in this order: Permission and Access, Page Display, Interactive Elements, Popups, Data Rules and Calculations, Edge and Strange Cases, Close and Cancel.
 6. **Automation fit.** Each case: Automate or Manual only, one-line reason (`automation-spec.md`). Matrix rules (many conditions, many results): one case plus a separate expected-values table the test loops over, not one case per cell. For Automate cases note: starting data, what to check, data set, clean up.
@@ -56,9 +56,12 @@ Top of the file: Story line, source, existing `[QA]` subtasks, common preconditi
 ### TC-001 [FE][MT] Verify <what> (POS) [Auto]
 Precondition: <what must be true, or "common">
 Priority: High
+Trace: AC-1, AC-2.1
 1. Open the page. -> The page shows the title `Edit Work Header`.
 2. Type a date. -> The field shows `05 Jun 2026`.
 ```
+
+- `Trace:` line (required, right after Priority): the `AC-n` ids this case proves, comma separated, exactly as in `analyst.md`. A case that proves no AC item (a screen state or lesson only) writes `Trace: none (<what it covers>)`. Not pushed to Xray (the logger drops it), so it may hold AC numbers.
 
 - Heading: `### TC-NNN` in order, component tags (`[FE]`, `[BE]`, the board's manual test tag; copy sibling cases), a short summary, a type label `(POS)`, `(NEG)`, `(BND)`, `(Exotic: <kind>)` or `(Technical + Security)`, and the automation tag `[Auto]`, `[Partial: why]` or `[Manual: why]`.
 - Each step is ONE action, then ` -> `, then the real expected outcome in the words of the design (one outcome = plain sentence; two or more outcomes = `;` separated or on the next lines). Never empty, never `-`.

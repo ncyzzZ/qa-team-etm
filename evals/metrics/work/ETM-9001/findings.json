@@ -1,0 +1,5 @@
+[
+ {"id":"F-1","q":1,"ac":"AC-1","kind":"gap","impact":"high","raised":"2026-11-05","story_status":"In Development","outcome":"ac-changed","outcome_date":"2026-11-06","note":"","later_defect":null,"backfilled":true},
+ {"id":"F-2","q":2,"ac":"AC-2","kind":"conflict","impact":"high","raised":"2026-11-05","story_status":"In Development","outcome":"ac-changed","outcome_date":"2026-11-06","note":"","later_defect":null},
+ {"id":"F-3","q":3,"ac":null,"kind":"question","impact":"low","raised":"2026-11-05","story_status":"In Development","outcome":"confirmed","outcome_date":"2026-11-06","note":"","later_defect":"ETM-9301"}
+]

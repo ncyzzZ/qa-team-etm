@@ -1,0 +1,4 @@
+[
+ {"id":"F-1","q":1,"ac":"AC-1","kind":"question","impact":"high","raised":"2026-11-18","story_status":"Open","outcome":"confirmed","outcome_date":"2026-11-19","note":"","later_defect":null},
+ {"id":"F-1","q":2,"ac":"AC-2.1","kind":"gap","impact":"high","raised":"2026-11-18","story_status":"Open","outcome":"fixed","outcome_date":"2026-11-19","note":"","later_defect":null}
+]

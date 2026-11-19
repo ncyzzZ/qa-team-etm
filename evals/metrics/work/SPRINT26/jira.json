@@ -1,0 +1,4 @@
+{"sprint":26,"sprintId":3,"name":"Sprint 26","fetched":"2026-11-19T00:00:00Z","frozen":false,"stories":["ETM-9001","ETM-9002"],"defects":[
+ {"key":"ETM-9301","type":"Defect","created":"2026-11-10","story":"ETM-9001","status":"Open"},
+ {"key":"ETM-9302","type":"Defect","created":"2026-11-11","story":"ETM-9001","status":"Open"},
+ {"key":"ETM-9303","type":"Defect","created":"2026-11-12","story":null,"status":"Open"}]}

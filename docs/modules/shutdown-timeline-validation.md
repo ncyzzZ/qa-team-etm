@@ -28,7 +28,10 @@
 | 13 | Edit Shutdown Timeline | Save Plan | Click Save | Save Fail | Toast - Fail | Save Failed | Save Shutdown Timeline Plan  Failed. | - | - | - |
 | 14 | Edit Shutdown Timeline | Save Plan | Click Save | Progress has Been Updated | Confirmation Modal - Style 1 | Progress has Been Updated | The shutdown timeline has already been updated. This action will reload the page and update some data. | OK | - | - |
 | 15 | Edit Shutdown Timeline | Leave Page | Click Back Button<br>or Change Page Using Side Menu | - | Confirmation Modal - Style 1 | Unsaved Change | Are you sure you want to leave this page? Changes you made will not be saved. | Continue Editing | Discard Change | - |
-| 16 | Edit Shutdown Timeline | Change Shutdown Type | Select New Shutdown Type in Dropdown | - | Confirmation Modal - Style 1 | Change Shutdown Type? | Are you sure you want to change the shutdown type? This action will update some data. | Confirm | Cancel | - |
+| 16 | Edit Shutdown Timeline | Change Shutdown Type | Select New Shutdown Type in Dropdown | - | Confirmation Modal - Style 1 | Change Shutdown Size? | Are you sure you want to change the shutdown size? This action will update some data. | Confirm | Cancel | - |
+| 17 | Edit Shutdown Timeline | Paste Weekly Plan | Paste into weekly Plan (%) cells | Invalid pasted value (negative / non-number) | Confirmation Modal - Style 1 | Paste Validation Failed | Some pasted values do not meet the validation rules and were not applied. | OK | - | Excel Confirmation&Result R20, confirmed by BA 17 Nov; no modal for clamp or truncate |
+
+> ℹ️ 17 Nov: แถว 16 ชื่อ modal แก้เป็น `Change Shutdown Size?` (ผู้ใช้ยืนยัน) และแถว Weekly Plan Progress ใน section 4 แก้ตาม ETM-8405 ซึ่งยังไม่อยู่ใน Excel ต้นฉบับ
 
 > ⚠️ ข้อสังเกตจากต้นฉบับ: แถว 13 ข้อความ "Save Shutdown Timeline Plan  Failed." มีช่องว่าง 2 ช่องระหว่าง "Plan" กับ "Failed" (คงไว้ตามต้นฉบับ อาจเป็น typo)
 
@@ -73,6 +76,6 @@
 | End Date | Date Picker | Yes | - | - | - | - | - | - | - |
 | Status | - | - | - | - | - | - | - | - | View Only |
 | Total Plan Progress | Free Text | Yes | - | [Float] 100 | - | - | - | - | - |
-| Weekly Plan Progress | Auto Field | Yes | - | - | Divide from Total Plan Progress | - | - | - | - |
+| Weekly Plan Progress | Free Text (Decimal, 1 decimal) | No (blank counts as 0.0; Excel R10 Required = No, 17 Nov) | - | [Float] 100.0 | Divide from Total Plan Progress when Start Date, End Date or Total Plan Progress changes; editable per week inside the date range | Above 100.0 becomes 100.0; blank counts as 0.0 | - | - | Updated per ETM-8405 (Excel not updated yet) |
 | Total Actual Progress | - | - | - | - | - | - | - | - | View Only |
 | Weekly Actual Progress | - | - | - | - | - | - | - | - | View Only |

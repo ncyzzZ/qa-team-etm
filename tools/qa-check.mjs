@@ -185,8 +185,12 @@ function checkSpec() {
       const key = (t.title.match(/^(ETM-\d+)\b/) || [])[1] || secKey;
       if (!key) err(`${name}: test "${t.title.slice(0, 50)}" - title must start with the Xray key (ETM-1234 - ...)`);
       else if (testsMd && !secKey && !testsMd.includes(key)) warn(`${name}: ${key} is not in the card's tests file`);
-      const steps = (body.match(/\btest\.step\(/g) || []).length;
-      const ev = (body.match(/\bevidence\(/g) || []).length;
+      // A step is a direct test.step(...) or a call of the shared steps() helper (`const S = steps(page, KEY)`, then `await S('...', ...)`):
+      // the helper runs one test.step and takes one evidence picture per call, so each call counts as a step and a picture.
+      const helperNames = [...body.matchAll(/\b(?:const|let)\s+(\w+)\s*=\s*steps\(/g)].map((m) => m[1]);
+      const helperCalls = helperNames.reduce((n, h) => n + (body.match(new RegExp('\\bawait\\s+' + h + '\\(', 'g')) || []).length, 0);
+      const steps = (body.match(/\btest\.step\(/g) || []).length + helperCalls;
+      const ev = (body.match(/\bevidence\(/g) || []).length + helperCalls;
       if (!steps && skipped) warn(`${name}: ${key || t.title.slice(0, 30)} is skipped (no test.step needed until it is enabled)`);
       else if (!steps) err(`${name}: ${key || t.title.slice(0, 30)} has no test.step (one test.step per Xray step)`);
       else if (ev < steps) warn(`${name}: ${key || t.title.slice(0, 30)} has ${steps} steps but ${ev} evidence() calls (a picture per step)`);

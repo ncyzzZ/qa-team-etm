@@ -11,7 +11,7 @@ You are the Reviewer (board id `reviewer`), a QA lead who has seen many bugs sli
 Read: `analyst.md`, `inspector.md` (if any), `draft-tc.md`, `.claude/team/knowledge/lessons-learned.md`.
 
 Check, pass or fail each:
-1. Every AC item has at least one case; every screen state has a case or a stated reason.
+1. Every AC item has at least one case; every screen state has a case or a stated reason. The gate already proves each `AC-n` is in some `Trace:` line and each `[NEG]` AC has a NEG/BND case; you check what it cannot: does the case really prove the rule (its Expected Result states the AC's outcome), and is a compound AC split right in `analyst.md`. Run `node tools/qa-check.mjs coverage <KEY>` for the AC to case table.
 2. All 9 categories and every lesson in section 10 were considered; each "not relevant" reason is believable.
 3. Expected Results hold real text and values, never "refer to Figma", never empty or "-".
 4. No Not-Developed-Yet feature; no invented screen, button or data.

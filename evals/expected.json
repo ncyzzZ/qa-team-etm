@@ -1,8 +1,19 @@
 [
-  { "name": "good draft with every AC covered",       "args": ["draft", "evals/draft-good.md", "--analyst", "evals/analyst-good.md"],       "errors": 0 },
-  { "name": "draft that forgets AC-2",                 "args": ["draft", "evals/draft-missing-ac.md", "--analyst", "evals/analyst-good.md"], "errors": 1, "contains": "AC-2" },
-  { "name": "bad draft (no Expected Result, refer to Figma, same as TC, no label)", "args": ["draft", "evals/draft-bad.md"],                    "errors": 6 },
-  { "name": "good spec",                               "args": ["spec", "evals/spec-good.spec.ts"],                                          "errors": 0 },
-  { "name": "bad spec (only, pause, timeout, credential, no steps, no key)", "args": ["spec", "evals/spec-bad.spec.ts"],                  "errors": 7 },
-  { "name": "missing analyst file",                    "args": ["work", "ETM-0", "analyst"],                                                 "errors": 1 }
+  {"name": "good draft with every AC covered", "args": ["draft", "evals/draft-good.md", "--analyst", "evals/analyst-good.md"], "errors": 0},
+  {"name": "draft that forgets AC-2", "args": ["draft", "evals/draft-missing-ac.md", "--analyst", "evals/analyst-good.md"], "errors": 1, "contains": "AC-2"},
+  {"name": "draft that names AC-2 only in the coverage map", "args": ["draft", "evals/draft-map-only.md", "--analyst", "evals/analyst-good.md"], "errors": 1, "contains": "AC-2 is listed"},
+  {"name": "draft with a [NEG] AC but POS cases only", "args": ["draft", "evals/draft-neg-missing.md", "--analyst", "evals/analyst-good.md"], "errors": 1, "contains": "marked [NEG]"},
+  {"name": "coverage table shows no gap for a good draft", "args": ["coverage", "evals/draft-good.md", "--analyst", "evals/analyst-good.md"], "errors": -1, "contains": "2 AC, 2 covered, 0 gap(s)"},
+  {"name": "bad draft (no Expected Result, refer to Figma, same as TC, no label, no Trace)", "args": ["draft", "evals/draft-bad.md"], "errors": 9},
+  {"name": "good spec", "args": ["spec", "evals/spec-good.spec.ts"], "errors": 0},
+  {"name": "bad spec (only, pause, timeout, credential, no steps, no key)", "args": ["spec", "evals/spec-bad.spec.ts"], "errors": 7},
+  {"name": "missing analyst file", "args": ["work", "ETM-0", "analyst"], "errors": 1},
+  {"name": "findings file matches the questions", "args": ["findings", "evals/findings-good"], "errors": 0},
+  {"name": "findings with a duplicate id, a bad outcome and a missing question", "args": ["findings", "evals/findings-bad"], "errors": 3, "contains": "question 3"},
+  {"name": "sprint report from mock data", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "sprints 24-27, 7 stories, 5 defects, 1 bugs, 3 stopped before code"},
+  {"name": "sprint report has no unassigned findings", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "unassigned: 0"},
+  {"name": "findings of a carried-over card stay in its first sprint", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "S26: 2 stories, defect/story 1.50, bugs 0, findings 4 (stopped 3"},
+  {"name": "headline tiles use the last closed sprint", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "headline sprint: S26"},
+  {"name": "question formats: bold Q, heading Q, dash, numbered heading; sub-items ignored", "args": ["findings", "evals/findings-formats"], "errors": 4, "contains": "question 7"},
+  {"name": "an English-only questions file is checked with its own prefix", "args": ["findings", "evals/findings-en-only"], "errors": 1, "contains": "question extra-1"}
 ]
