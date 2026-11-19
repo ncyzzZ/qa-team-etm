@@ -9,6 +9,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { summarize as healSummary } from './heal/heal-log.mjs';
+import { resolveRepos } from './heal/config.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BEFORE_DEV = ['open', 'refinement', 'ready', 'ready for development', 'to do', 'backlog'];
@@ -153,6 +155,10 @@ function main() {
   console.log(`[sprint-metrics] sprints ${sprints[0]?.sprint ?? '-'}-${last?.sprint ?? '-'}, ${sum('stories')} stories, ${sum('defects')} defects, ${sum('bugs')} bugs, ${sum('stopped')} stopped before code`);
   for (const r of rows) console.log(`  S${r.sprint}${r.active ? ' (in progress)' : ''}: ${r.stories} stories, defect/story ${fmt(r.defectsPerStory, 2)}, bugs ${r.bugs}, findings ${fmt(r.raised)} (stopped ${fmt(r.stopped)}, before dev ${fmt(r.before)})`);
   console.log(`  headline sprint: S${headline(rows).sprint ?? '-'}`);
+  try { // self-healing rate (tools/heal/heal-log.mjs): healed = approved + re-run passed, over locator failures in triage.json
+    const h = healSummary(resolveRepos().pwRepo, {});
+    console.log(`  self-healing: locator failures ${h.locatorFailures}, healed ${h.healed} (fe ${h.bySource.fe}, live ${h.bySource.live}), rate ${h.rate == null ? '-' : `${Math.round(h.rate * 100)}%`}`);
+  } catch (e) { console.log(`  self-healing: - (${e.message})`); }
   console.log(`  unassigned: ${unassigned.length}${unassigned.length ? ` (${unassigned.join(', ')})` : ''}`);
   if (sprints.length) console.log(`  report: ${path.relative(process.cwd(), out)}`);
   for (const e of errors) console.log(`  ERR  ${e}`);

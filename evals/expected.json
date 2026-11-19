@@ -15,5 +15,8 @@
   {"name": "findings of a carried-over card stay in its first sprint", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "S26: 2 stories, defect/story 1.50, bugs 0, findings 4 (stopped 3"},
   {"name": "headline tiles use the last closed sprint", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "headline sprint: S26"},
   {"name": "question formats: bold Q, heading Q, dash, numbered heading; sub-items ignored", "args": ["findings", "evals/findings-formats"], "errors": 4, "contains": "question 7"},
-  {"name": "an English-only questions file is checked with its own prefix", "args": ["findings", "evals/findings-en-only"], "errors": 1, "contains": "question extra-1"}
+  {"name": "an English-only questions file is checked with its own prefix", "args": ["findings", "evals/findings-en-only"], "errors": 1, "contains": "question extra-1"},
+  {"name": "heal guard: pure locator change passes", "cmd": "heal-guard", "args": ["evals/heal/heal-good.diff"], "errors": 0},
+  {"name": "heal guard: .first(), changed expect, force:true, widening selector are refused", "cmd": "heal-guard", "args": ["evals/heal/heal-bad.diff"], "errors": 4},
+  {"name": "sprint report prints the self-healing line", "cmd": "metrics", "args": ["--work", "evals/metrics/work", "--out", "evals/metrics/out.html"], "errors": 0, "contains": "self-healing:"}
 ]

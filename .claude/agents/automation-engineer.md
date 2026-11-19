@@ -21,4 +21,12 @@ Do this:
 7. Hard-to-automate case: after at most two fixes offer manual testing instead of looping.
 8. Never touch a file someone else is editing.
 
+**Heal (when the lead hands you `locator` failures from `triage.json`).** One failure at a time, at most 2 rounds each:
+1. `node tools/heal/source-lookup.mjs "<locator from triage>"` (reads `stms-fe` only). A candidate → write the diff of the page file (`pageRef` in triage) that changes only that locator string.
+2. No candidate, `library: true`, or a source heal that failed its re-run → the lead calls `playwright-healer`; use its diff, or its "structure change" note as a manual fix for the user.
+3. Save the diff, run `node tools/heal/guard.mjs <diff>` (gate G-heal). Errors → do not offer it; tell the lead it needs a manual fix and why.
+4. Return the diff to the lead (`set automator waiting "รออนุมัติ heal"`). Never apply it yourself; the lead applies it only after the user's Apply.
+5. After the re-run: `node tools/heal/heal-log.mjs add '{"date":"YYYY-MM-DD","card":"<KEY>","test":"<test key>","page":"<file:line>","old":"<old>","new":"<new>","source":"fe|live","approved":true|false,"rerunPassed":true|false}'`.
+Never change an assertion, expected text, wait, timeout or test data in a heal. A healer `not-a-locator` answer goes back to the lead as a possible app bug.
+
 Done text: `<N> spec พร้อมรัน`. Return: spec names, Tests with scripts, Tests staying manual, the run command.

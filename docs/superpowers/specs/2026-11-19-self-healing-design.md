@@ -44,7 +44,8 @@ locator that does break comes back as a ready diff the user approves on the boar
   without knowing it is the right element, removing an `expect`, widening a text match, raising timeouts.
   The heal may only change how an element is found, never what is checked.
 - A real app bug hidden as a "healed locator".
-- Touching `stms-fe` in any way: no `fetch`, `pull`, `checkout`, `reset`, no edits. Read only.
+- Editing anything in `stms-fe`: no file edits, `checkout`, `reset`, `merge`, `stash`, commit or push.
+  Only bringing code down (`git pull --ff-only` on a clean `develop`, else `git fetch`) and reading.
 - Code edits applied without the user's approval.
 
 ## Constraints
@@ -78,12 +79,13 @@ locator that does break comes back as a ready diff the user approves on the boar
 
 ### 1. Pre-flight (`node tools/heal/preflight.mjs [--card ETM-1234]`)
 
-1. **No write of any kind to `stms-fe`** (user's rule): no `fetch`, `pull`, `checkout`, `reset`, `status`,
-   no edits. The tools use only read commands on commits already in the clone (`git log`, `git diff`,
-   `git show`, `git grep`) plus plain file reads. The user keeps the clone up to date the way they do now;
-   the tool prints the date of the newest commit it sees so a stale clone is visible.
-   Diff `<baseline commit>..<target>` for `src/**/*.html` and `src/**/*.ts`, where `<target>` is the newest
-   of `origin/develop` and the checked-out `HEAD` already in the clone. `stms-fe` has no translation
+1. **Never edit anything in `stms-fe`** (user's rule): no file edits, `checkout`, `reset`, `merge`, `stash`,
+   commit or push. Allowed: bring the latest code down. `git pull --ff-only` only when the clone is on
+   `develop` and has no local changes (so it can only fast-forward, never conflict); otherwise just
+   `git fetch origin`. Plus read commands (`git log`, `git diff`, `git show`, `git grep`) and plain file
+   reads. If GitLab cannot be reached (offline, no VPN), use the `origin/develop` already there and print
+   how old it is.
+   Diff `<baseline commit>..origin/develop` for `src/**/*.html` and `src/**/*.ts`. `stms-fe` has no translation
    files: visible text is inline in templates and TS; text that comes from the API is left to the live step.
 2. Baseline is **per page object** (*our call*): `fe-baseline.json` maps each `pages/**` file to the
    `stms-fe` commit of the last run where every test that used that page passed (`run-card.mjs` writes it).

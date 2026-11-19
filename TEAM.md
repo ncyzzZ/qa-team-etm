@@ -88,13 +88,17 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 
 **Phase 5 - Scripts** (automator). One Yes / Partial / No table (with Security rows), WAIT for OK, write specs, `npx tsc --noEmit -p .`, give the run command. The user runs it with VPN on. Stop here.
 
+**Pre-flight (before "พร้อมรันไหม", every card with scripts).** `node tools/heal/preflight.mjs --card <KEY> <spec>`: brings `stms-fe` down (pull --ff-only on a clean `develop`, else fetch; never edits it) and lists locators of the card's pages that the latest `stms-fe` changes probably broke, with a proposed replacement. Show the rows in the same message as the run question. Skipped quietly when `FE_REPO` is not found.
+
 **Run command (every card).** Never a bare `npx playwright test`. From the repo root (`PW_REPO` = folder of `ep-etm-fe-qa`, default `../ep-etm-fe-qa`):
 `node tools/run-card.mjs <KEY> <spec> -g "<filter>"`
 Own result folder (`output/runs/<date_time>_<KEY>` in the Playwright repo), own report (`output/runs/<date_time>_<KEY>/evidence-report-<KEY>-<time>.html`, shortcuts `output/runs/latest-<KEY>.html` and `latest.html`), report built when the run ends, failures printed. Rebuild: `node tools/run-card.mjs <KEY> --build-only <folder>`. Several cards can run together, except cards touching the same QA data (same plan).
 
 **Phase 6 - After the run.** "รันเสร็จแล้ว": use the report `run-card.mjs` built; only if missing, reporter builds it with `etm-evidence-report`. Report before any new run.
 
-**Phase 7 - Failures.** Each failed step: ask the user script bug / wrong test wording / real app bug. Never decide alone. Real bug → logger with `log-defect-jira-etm`, only after an explicit go-ahead.
+**Phase 7 - Failures.** `run-card` writes `triage.json` / `triage.md` (cause per failed test: `locator`, `flaky`, `data`, `env`, `assertion`, `unknown`) and one retry per test (none for `@dailyreport`); a test that passed only on retry is `flaky`, never a pass.
+- `locator` → **heal loop** (automator, see `automation-engineer.md` "Heal"): source lookup in `stms-fe` first, `playwright-healer` agent (live page, Playwright test MCP) only when the source has no answer, the class is Bryntum/AG Grid, or a source heal failed its re-run. Every proposal passes gate G-heal, then `ask --approve --options "Apply,Skip,Manual"` + `wait`; apply only on Apply, re-run only the healed tests, log with `node tools/heal/heal-log.mjs add`. At most 2 rounds per test, then offer manual.
+- every other cause, and a healer answer `not-a-locator`: ask the user script bug / wrong test wording / real app bug. Never decide alone. Real bug → logger with `log-defect-jira-etm`, only after an explicit go-ahead.
 
 **Phase 8 - Closeout** (logger, with go-ahead): push results, close the tests linked to the Story, finish the Test Execution, move the Story as the rules say.
 
@@ -111,6 +115,7 @@ Every agent runs its own check before returning, and the lead runs the same comm
 | G5 | Xray push | logger saves `work/<KEY>/xray-readback.json` (`[{key, summary, steps}]`), then `node tools/qa-check.mjs diff <KEY> work/<KEY>/xray-readback.json`, plus the `linkedIssues` count | 0 errors: same number of Tests, same step count as the draft, link count correct |
 | G6 | scripts | `node tools/qa-check.mjs spec <spec files> --tests work/<KEY>/tests.md` and `npx tsc --noEmit -p .` (in `PW_REPO`) | 0 errors: key in every title, a `test.step` per step, no `waitForTimeout`, no credentials, compiles |
 | G7 | before the report | `node tools/qa-check.mjs manifest <manifest.json>` | 0 errors |
+| G-heal | before a heal is offered | the proposal saved as a diff, then `node tools/heal/guard.mjs <diff>` | 0 errors: only locator strings in existing `pages/*.ts` lines change; no added `.first()`/`.nth()`/`force`/timeouts, no changed or removed `expect`, no widening selector. A refused heal goes to the user as a manual fix |
 | G8 | after the run | the counts in the report equal the counts `run-card` printed | equal |
 
 After any change to `tools/qa-check.mjs` run `node tools/qa-check.mjs selftest` (fixtures in `evals/`); `node tools/qa-check.mjs stats` shows which gate fails most often.

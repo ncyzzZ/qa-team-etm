@@ -50,6 +50,12 @@ need(major >= 18, `Node ${process.versions.node}`, `Node ${process.versions.node
 need(fs.existsSync(repo), 'Playwright repo folder exists', `PW_REPO folder not found: run  node tools/setup.mjs <folder of ep-etm-fe-qa>`);
 need(fs.existsSync(path.join(repo, 'node_modules', '@playwright', 'test', 'cli.js')), 'Playwright is installed there', 'run "npm install" inside the Playwright repo');
 if (fs.existsSync(repo)) info(`Playwright repo has its own .env (logins): ${fs.existsSync(path.join(repo, '.env')) ? 'yes' : 'NO, create it before running tests'}`);
+{ // FE repo (stms-fe), used read-only by tools/heal/ (self-healing). A warning, not a hard fail.
+  const fe = process.env.FE_REPO || fromEnvFile('FE_REPO') || path.resolve(repo, '..', 'stms-fe');
+  info(`FE_REPO = ${fe}  (${process.env.FE_REPO ? 'from the environment' : fromEnvFile('FE_REPO') ? 'from .env' : 'default: stms-fe next to PW_REPO'})`);
+  if (fs.existsSync(path.join(fe, '.git'))) ok('FE repo (stms-fe) found, self-healing can read it');
+  else info('WARN  FE repo (stms-fe) not found: self-healing pre-flight is off. Add FE_REPO=<folder of stms-fe> to .env');
+}
 need(!!(process.env.XRAY_CLIENT_ID && process.env.XRAY_CLIENT_SECRET), 'XRAY_CLIENT_ID and XRAY_CLIENT_SECRET are set', 'set XRAY_CLIENT_ID and XRAY_CLIENT_SECRET as environment variables (never in a committed file)');
 const py = ['python3', 'python'].map((c) => ({ c, r: spawnSync(c, ['--version'], { encoding: 'utf8' }) })).find((x) => x.r.status === 0);
 info(py ? `${py.c} found (only the delete-test-executions skill needs it; on Mac the command is python3)` : 'Python not found (only the delete-test-executions skill needs it)');

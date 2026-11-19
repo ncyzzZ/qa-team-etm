@@ -13,6 +13,10 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { retriesFor, specFilesFrom, canAdvanceBaseline } from './heal/run-plan.mjs';
+import { triageRun, countByCause } from './heal/triage.mjs';
+import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
+import { git as feGit } from './heal/fe-git.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -47,6 +51,8 @@ function buildReport(resultsDir) {
   if (fs.existsSync(manifest)) args.push('--manifest', manifest);
   const review = path.join(resultsDir, `review-${key}.json`); // optional per-step verdicts, see evidence-report-v4.mjs
   if (fs.existsSync(review)) args.push('--review', review);
+  const triage = path.join(resultsDir, 'triage.json'); // cause per failed test (tools/heal/triage.mjs)
+  if (fs.existsSync(triage)) args.push('--triage', triage);
   const r = spawnSync(process.execPath, args, { cwd: ROOT, encoding: 'utf8' });
   if (r.status !== 0) { console.error(`Report generator failed:\n${r.stderr || r.stdout}`); return null; }
   const built = fs.readdirSync(tmpOut).find((f) => /^evidence-report-.*\.html$/.test(f));
@@ -69,13 +75,15 @@ function summarise(resultsDir) {
     (function walk(s) {
       (s.specs || []).forEach((sp) => sp.tests.forEach((t) => {
         const x = t.results[t.results.length - 1];
-        rows.push({ title: sp.title, status: x.status, msg: ((x.error && x.error.message) || '').replace(/\x1b\[[0-9;]*m/g, '').split('\n')[0].slice(0, 160) });
+        const flaky = x.status === 'passed' && t.results.some((y) => y.status === 'failed' || y.status === 'timedOut');
+        rows.push({ title: sp.title, status: flaky ? 'flaky' : x.status, msg: ((x.error && x.error.message) || '').replace(/\x1b\[[0-9;]*m/g, '').split('\n')[0].slice(0, 160) });
       }));
       (s.suites || []).forEach(walk);
     })(r);
     const n = (st) => rows.filter((x) => x.status === st).length;
-    counts = { ran: rows.length, pass: n('passed'), fail: n('failed') + n('timedOut') };
-    console.log(`\n== ${key}: ran ${rows.length} | passed ${n('passed')} | failed ${n('failed') + n('timedOut')} | skipped ${n('skipped')}`);
+    counts = { ran: rows.length, pass: n('passed'), fail: n('failed') + n('timedOut') + n('flaky') };
+    console.log(`\n== ${key}: ran ${rows.length} | passed ${n('passed')} | failed ${n('failed') + n('timedOut')} | flaky ${n('flaky')} | skipped ${n('skipped')}`);
+    rows.filter((x) => x.status === 'flaky').forEach((x) => console.log(`  FLAKY ${x.title.slice(0, 70)} (failed, then passed on retry: not a clean pass)`));
     rows.filter((x) => x.status === 'failed' || x.status === 'timedOut').forEach((x) => console.log(`  FAIL ${x.title.slice(0, 70)} :: ${x.msg}`));
   } catch (e) { console.error(`Could not read results.json: ${e.message}`); }
 }
@@ -93,6 +101,7 @@ function pushToBoard(report) {
 // ---- build-only mode
 if (rest[0] === '--build-only') {
   const dir = path.resolve(REPO, rest[1] || '');
+  try { if (fs.existsSync(path.join(dir, 'results.json'))) triageRun(dir); } catch (e) { console.log(`[triage] skipped: ${e.message}`); }
   summarise(dir);
   const out = buildReport(dir);
   console.log(out ? `Report: ${out}` : 'No report.');
@@ -107,7 +116,7 @@ const resultsDir = path.join(REPO, resultsDirName);
 // call Playwright's own CLI with node, no shell: a "|" in -g "A|B" must reach Playwright untouched
 const PW_CLI = path.join(REPO, 'node_modules', '@playwright', 'test', 'cli.js');
 if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}\nSet PW_REPO to the folder of ep-etm-fe-qa (now: ${REPO}) and run npm install there.`); process.exit(2); }
-const pwArgs = [PW_CLI, 'test', ...rest, '--output', resultsDirName, '--reporter=list,json'];
+const pwArgs = [PW_CLI, 'test', ...retriesFor(rest, REPO), '--output', resultsDirName, '--reporter=list,json'];
 if (!rest.some((a) => a.startsWith('--workers'))) pwArgs.push('--workers=1');
 console.log(`[run-card] ${key} -> ${resultsDirName}\n[run-card] playwright test ${rest.join(' ')}`);
 
@@ -116,7 +125,25 @@ const child = spawn(process.execPath, pwArgs, {
   stdio: 'inherit',
   env: { ...process.env, PLAYWRIGHT_JSON_OUTPUT_NAME: path.join(resultsDirName, 'results.json') },
 });
+// Self-healing: sort failures by cause; after an all-green run move the stms-fe baseline of the pages it used.
+function healAfterRun(dir, exitCode) {
+  if (!fs.existsSync(path.join(dir, 'results.json'))) return;
+  try {
+    const rows = triageRun(dir);
+    if (rows.length) console.log(`[triage] ${Object.entries(countByCause(rows)).map(([k, v]) => `${k} ${v}`).join(', ')}  (${path.join(dir, 'triage.md')})`);
+    const results = JSON.parse(fs.readFileSync(path.join(dir, 'results.json'), 'utf8'));
+    const fe = process.env.FE_REPO || envFileValue('FE_REPO') || path.resolve(REPO, '..', 'stms-fe');
+    if (canAdvanceBaseline(rest, exitCode, results) && fs.existsSync(path.join(fe, '.git'))) {
+      const units = pagesUsedBy(REPO, specFilesFrom(rest, REPO));
+      const commit = feGit(fe, ['rev-parse', '--verify', '-q', 'origin/develop']);
+      advanceBaseline(REPO, units, commit);
+      if (units.length) console.log(`[heal] all passed: stms-fe baseline ${commit.slice(0, 8)} recorded for ${units.join(', ')}`);
+    }
+  } catch (e) { console.log(`[heal] skipped: ${e.message}`); }
+}
+
 child.on('exit', (code) => {
+  healAfterRun(resultsDir, code);
   summarise(resultsDir);
   const out = buildReport(resultsDir);
   pushToBoard(out);

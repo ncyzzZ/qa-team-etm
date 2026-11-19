@@ -2,11 +2,19 @@
   "mcpServers": {
     "xray": {
       "command": "node",
-      "args": ["xray-toolkit/index.mjs"],
+      "args": [
+        "xray-toolkit/index.mjs"
+      ],
       "env": {
         "XRAY_CLIENT_ID": "${XRAY_CLIENT_ID}",
         "XRAY_CLIENT_SECRET": "${XRAY_CLIENT_SECRET}"
       }
+    },
+    "playwright-test": {
+      "command": "node",
+      "args": [
+        "tools/heal/pw-mcp.mjs"
+      ]
     }
   }
 }

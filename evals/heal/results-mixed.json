@@ -1,0 +1,221 @@
+{
+ "config": {},
+ "suites": [
+  {
+   "title": "x",
+   "specs": [
+    {
+     "title": "[ETM-1] timeout locator",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[31m  - waiting for locator('.save-btn')\u001b[39m",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-2] strict mode",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "Error: strict mode violation: locator('.row') resolved to 2 elements:\n    1) <div class=\"row\">",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-3] not found",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "Error: expect(locator).toBeVisible() failed\n\nLocator: locator('#plan-title')\nExpected: visible\nReceived: <element(s) not found>\nTimeout: 30000ms",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-4] wrong text",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "Error: expect(locator).toHaveText(expected) failed\n\nLocator: locator('.status')\nExpected string: \"Draft\"\nReceived string: \"Submitted\"",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-5] flaky",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "TimeoutError: locator.click: Timeout 30000ms exceeded.",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        },
+        {
+         "status": "passed",
+         "retry": 1
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-6] env refused",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at https://qa.example/",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-7] env sso",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "TimeoutError: page.waitForURL: Timeout 30000ms exceeded.\nwaiting for navigation to login.microsoftonline.com",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-8] env 500",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "Error: apiRequestContext.post: 500 Internal Server Error",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-9] data",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "Error: No test data for plan TA-2026 in QA",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-10] other",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "unexpected",
+       "results": [
+        {
+         "status": "failed",
+         "retry": 0,
+         "error": {
+          "message": "TypeError: Cannot read properties of undefined (reading 'x')",
+          "stack": "Error\n    at EditPlanPage.save (/repo/pages/timelinePage/editPlanPage.ts:42:18)\n    at /repo/tests/fe/x.spec.ts:10:5"
+         }
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "title": "[ETM-11] skipped",
+     "file": "fe/x.spec.ts",
+     "tests": [
+      {
+       "status": "skipped",
+       "results": [
+        {
+         "status": "skipped",
+         "retry": 0
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "errors": [],
+ "stats": {}
+}

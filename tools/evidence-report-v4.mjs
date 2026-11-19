@@ -19,6 +19,9 @@ const OUT_DIR = arg('--out', 'evidence-reports');
 const STORY_ARG = arg('--story');
 const TITLE = arg('--title');
 const JIRA = 'https://pttep.atlassian.net/browse/';
+// --triage <triage.json> (tools/heal/triage.mjs): cause per failed test key, shown next to FAIL
+const TRIAGE = (() => { try { return args.includes('--triage') ? Object.fromEntries(JSON.parse(fs.readFileSync(arg('--triage'), 'utf8')).map((x) => [x.key, x.cause])) : {}; } catch (e) { console.error('Cannot read --triage file: ' + e.message); return {}; } })();
+const CAUSE_TXT = { locator: 'locator พัง', flaky: 'ไม่เสถียร (ผ่านตอนรันซ้ำ)', data: 'ข้อมูลเทส', env: 'สภาพแวดล้อม', assertion: 'ค่าไม่ตรง (อาจเป็นบั๊ก)', unknown: 'ไม่ทราบสาเหตุ' };
 const REVIEW = (() => { try { return args.includes('--review') ? JSON.parse(fs.readFileSync(arg('--review'), 'utf8')) : {}; } catch (e) { console.error('Cannot read --review file: ' + e.message); return {}; } })();
 const VERDICT = { accepted: 'ยอมรับ (ไม่ถือว่าไม่ผ่าน)', defect: 'เป็น defect', 'tc-update': 'ต้องแก้ TC', script: 'สคริปต์ผิด', 'ba-pending': 'รอ BA ยืนยัน' };
 const NOTE = { 'app-finding': 'ระบบไม่ตรง AC (น่าจะเป็น defect)', 'tc-vs-ac': 'TC กับ AC/โค้ดไม่ตรงกัน', 'ba-confirm': 'ต้องถาม BA', partial: 'สคริปต์ตรวจได้ไม่ครบ - ดูรูปด้วยตา', 'check-by-eye': 'ต้องดูรูปด้วยตา', env: 'ปัญหาสภาพแวดล้อม (เช่น ไม่มีสิทธิ์)' };
@@ -151,8 +154,11 @@ function walk(suite, chain) {
   const nextChain = suite.title && !/\.(spec|test)\.[tj]s$/.test(suite.title) ? [...chain, suite.title] : chain;
   for (const spec of suite.specs ?? []) {
     for (const t of spec.tests ?? []) {
-      const r = t.results?.[t.results.length - 1];
-      if (!r) continue;
+      const last = t.results?.[t.results.length - 1];
+      if (!last) continue;
+      // flaky (failed, then passed on retry): show the failed attempt, its error and its step, not the clean retry
+      const firstFail = last.status === 'passed' ? t.results.find((x) => x.status === 'failed' || x.status === 'timedOut') : null;
+      const r = firstFail ?? last;
       const testKey = (spec.title.match(/ETM-\d+(\s+TC-\d+)?/) ?? [''])[0];
       const story = cardOf(nextChain, spec.title);
       const expectedFail = t.status === 'expected' && r.status === 'failed';
@@ -241,7 +247,7 @@ function rowsHtml(t) {
 
 const testHtml = (t) => `
 <details class="test ${t.status}" id="t-${esc(t.tcKey)}" data-status="${t.status}" ${t.status === 'failed' ? 'open' : ''}>
-  <summary><span class="badge ${t.status}">${t.status === 'passed' ? (t.expectedFail ? 'PASS (คาดว่าจะพัง)' : t.accepted ? 'PASS (ยอมรับ)' : 'PASS') : t.status === 'failed' ? 'FAIL' : 'SKIP'}</span>
+  <summary><span class="badge ${t.status}">${t.status === 'passed' ? (t.expectedFail ? 'PASS (คาดว่าจะพัง)' : t.accepted ? 'PASS (ยอมรับ)' : 'PASS') : t.status === 'failed' ? 'FAIL' : 'SKIP'}</span>${t.status === 'failed' && TRIAGE[t.tcKey] ? `<span class="cause cause-${esc(TRIAGE[t.tcKey])}">${esc(CAUSE_TXT[TRIAGE[t.tcKey]] || TRIAGE[t.tcKey])}</span>` : ''}
     <b>${esc(MTC[t.tcKey]?.summary ? t.tcKey + ' ' + MTC[t.tcKey].summary : t.title)}</b><span class="mut">${fmtMs(t.ms)}</span></summary>
   <div class="body">
     <div class="links">${/^ETM-\d+$/.test(t.tcKey) ? `TC: <a href="${JIRA}${t.tcKey}" target="_blank">${t.tcKey}</a>` : ''}
@@ -316,6 +322,7 @@ main{max-width:1100px;margin:0 auto;padding:20px 16px 60px}h1{margin:0 0 4px;fon
 .test>summary{cursor:pointer;padding:8px 10px;list-style:none}.body{padding:4px 12px 12px}
 .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;margin-right:8px}
 .badge.passed{background:var(--okbg);color:var(--ok)}.badge.failed{background:var(--badbg);color:var(--bad)}.badge.skipped{background:var(--skipbg);color:var(--skip)}
+.cause{font-size:12px;margin-left:6px;padding:1px 6px;border-radius:8px;border:1px solid currentColor;opacity:.85}
 .fb{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;margin:8px 0}.fb dt{font-weight:700;color:var(--mut)}.fb dd{margin:0;white-space:pre-line}.ask{background:var(--card);border:1px dashed var(--line);border-radius:8px;padding:8px 10px;margin-top:8px}.ask pre{white-space:pre-wrap;font:13px/1.5 inherit;margin:6px 0 0}.cp{font:inherit;font-size:12px;padding:2px 10px;margin-left:8px;cursor:pointer}.tabs{display:flex;gap:8px;margin:12px 0}.tabbtn{font:inherit;padding:6px 16px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:inherit;cursor:pointer}input[name=tab]{position:absolute;opacity:0;pointer-events:none}#tb-run:checked~.tabs label[for=tb-run],#tb-fwd:checked~.tabs label[for=tb-fwd]{background:var(--fg);color:var(--bg)}#tb-run:checked~#tab-fwd,#tb-fwd:checked~#tab-run{display:none}.why>summary{cursor:pointer;list-style:none}.why>summary::-webkit-details-marker{display:none}.why>summary::before{content:'▼ ';color:var(--mut)}.why:not([open])>summary::before{content:'▶ '}.ask>summary{cursor:pointer}.fbrow td{border-top:0!important;padding-top:0!important}.fbrow .why{margin:0 0 4px}.st{width:100%;border-collapse:collapse;margin:8px 0}.st th{background:#1f4e79;color:#fff;text-align:left;padding:8px;font-size:13px}.st th:nth-child(1){width:36px}.st th:nth-last-child(2){width:130px}.st th:last-child{width:230px}.st td{border-top:1px solid var(--line);padding:8px;vertical-align:top}.st td.tx{white-space:pre-line}.st td.im figure{max-width:220px;margin:0 0 8px}.st td.im figcaption{font-size:11px;font-weight:400;color:var(--mut)}.badge.accepted{background:#fff4cc;color:#8a6d00}.badge.notrun,.badge.none{background:var(--line);color:var(--mut)}.rf{font-size:12px;color:var(--bad);margin-top:4px}.tot{margin:6px 0 0;font-size:14px}.tot span{margin-left:12px;font-weight:700}.notes{background:#fff8e1;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:14px}.step.accepted .dot{color:#b7791f}.rv{background:#fff8e1;border-radius:6px;padding:4px 10px;margin:4px 0;font-size:14px}.why{background:var(--badbg);border-radius:8px;padding:10px 12px;margin:8px 0}.why div{margin-top:4px}.rhead{font-size:15px}.tech{margin-top:8px}.tech summary{cursor:pointer;color:var(--mut)}.verdict{border-radius:10px;padding:10px 14px;margin:14px 0;font-size:15px}.verdict.ok{background:var(--okbg)}.verdict.bad{background:var(--badbg)}.verdict ul{margin:6px 0 0;padding-left:20px;font-size:14px}
 pre.err{white-space:pre-wrap;word-break:break-word;font:12px/1.4 ui-monospace,Menlo,monospace;margin:6px 0 0;max-height:260px;overflow:auto}
 .stepfail{background:var(--badbg);border-left:4px solid var(--bad);border-radius:6px;padding:8px 12px;margin:6px 0 0 28px}.stepfail div{margin-top:3px}.tag{font-weight:700;color:var(--bad)}.step.failed{background:var(--badbg);border-radius:6px;padding:8px}

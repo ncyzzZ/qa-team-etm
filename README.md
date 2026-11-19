@@ -59,6 +59,14 @@ node tools/run-card.mjs ETM-1234 <spec> -g "ETM-1111|ETM-2222"
 - รายงานมี 2 แท็บ: ผลรายขั้น (ตารางพร้อมรูป) และสรุปส่งต่อ dev / BA
 - Step (Action) / Expected / Test Data ในรายงานมาจาก manifest ที่ดึงจาก Xray (ดู `.claude/skills/etm-evidence-report/SKILL.md`)
 
+## Self-healing (ซ่อม locator)
+
+- ก่อนรัน: `node tools/heal/preflight.mjs --card ETM-1234 <spec>` ดู locator ที่น่าจะพังจากโค้ดใหม่ใน stms-fe (pull เฉพาะตอน develop สะอาด ไม่แก้ไฟล์ใน stms-fe)
+- หลังรัน: `run-card` เขียน `triage.md` บอกสาเหตุที่พังแต่ละเคส และรายงานแสดงสาเหตุข้าง FAIL
+- ซ่อม: หาใน stms-fe ก่อน (`tools/heal/source-lookup.mjs`) ไม่เจอค่อยให้ agent `playwright-healer` ดูหน้าเว็บจริง ทุก diff ต้องผ่าน `node tools/heal/guard.mjs <diff>` และผู้ใช้กด Apply ก่อน
+- ตัวเลข: `node tools/heal/heal-log.mjs summary` (หรือบรรทัด self-healing ใน `tools/sprint-metrics.mjs`)
+- ตั้งค่า: `FE_REPO=<โฟลเดอร์ stms-fe>` ใน `.env` (ค่าเริ่มต้น `stms-fe` ข้าง `ep-etm-fe-qa`) เทสของเครื่องมือ: `node --test tools/heal/`
+
 ## บอร์ด
 
 `node .claude/team/team.mjs open` (เปิด), `stop` (ปิด), `status` (ดูสถานะ) เซิร์ฟเวอร์ฟังเฉพาะเครื่องคุณ (127.0.0.1)

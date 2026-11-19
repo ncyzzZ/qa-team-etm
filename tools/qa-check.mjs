@@ -356,7 +356,8 @@ function selftest() {
   if (cfg == null) { console.error('evals/expected.json not found'); process.exit(2); }
   let bad = 0;
   for (const t of JSON.parse(cfg)) {
-    const script = t.cmd === 'metrics' ? path.join(ROOT, 'tools', 'sprint-metrics.mjs') : fileURLToPath(import.meta.url);
+    const script = t.cmd === 'metrics' ? path.join(ROOT, 'tools', 'sprint-metrics.mjs')
+      : t.cmd === 'heal-guard' ? path.join(ROOT, 'tools', 'heal', 'guard.mjs') : fileURLToPath(import.meta.url);
     const r = spawnSync(process.execPath, [script, ...t.args.map((a) => (a.startsWith('evals/') ? path.join(ROOT, a) : a))], { encoding: 'utf8', env: { ...process.env, QA_CHECK_NO_METRICS: '1' } });
     const m = (r.stdout || '').match(/\] (\d+) error\(s\)/), got = m ? Number(m[1]) : -1;
     const ok = got === t.errors && (!t.contains || (r.stdout || '').includes(t.contains));

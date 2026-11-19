@@ -1,0 +1,12 @@
+diff --git a/pages/timelinePage/editPlanPage.ts b/pages/timelinePage/editPlanPage.ts
+--- a/pages/timelinePage/editPlanPage.ts
++++ b/pages/timelinePage/editPlanPage.ts
+@@ -10,4 +10,4 @@
+-    return this.page.locator('.save-btn');
+-    await expect(this.title).toHaveText('Draft');
+-    await this.save.click();
+-    return this.page.locator('li.a');
++    return this.page.locator('.plan-save-button').first();
++    await expect(this.title).toHaveText('Submitted');
++    await this.save.click({ force: true });
++    return this.page.locator('li:first-child');
