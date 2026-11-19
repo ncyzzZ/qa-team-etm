@@ -105,9 +105,9 @@
   "impact": "medium",
   "raised": "2026-11-18",
   "story_status": "In Development",
-  "outcome": "confirmed",
+  "outcome": "ac-changed",
   "outcome_date": "2026-11-18",
-  "note": "backfilled from ba-answers.md",
+  "note": "Story description changed 2026-11-18: Pasted Status blank or not Open/Close: activity keeps current Status, cell not cleared or red; modal once per paste. (checked against the Jira changelog 2026-11-19)",
   "later_defect": null,
   "backfilled": true
  },
