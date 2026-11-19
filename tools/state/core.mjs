@@ -48,6 +48,7 @@ export function validate(s, key) {
     for (const k of SINGLE_KINDS) if (s.files[k] !== undefined && !isStr(s.files[k])) e.push(`files.${k} must be one path`);
     for (const k of LIST_KINDS) if (!isArr(s.files[k]) || !s.files[k].every(isStr)) e.push(`files.${k} must be a list of paths`);
     if (!isObj(s.files.extra)) e.push('files.extra must be an object');
+    else for (const [k, v] of Object.entries(s.files.extra)) if (!isStr(v)) e.push(`files.extra.${k} must be a path`);
     for (const k of Object.keys(s.files)) if (![...SINGLE_KINDS, ...LIST_KINDS, 'extra'].includes(k)) e.push(`files.${k} is not a known kind (use files.extra)`);
   }
   for (const k of ['decisions', 'open', 'approvals', 'history']) if (!isArr(s[k])) e.push(`${k} must be a list`);
@@ -59,6 +60,8 @@ export function validate(s, key) {
     else if (a.source === 'board' && !a.evidence.includes('ANSWER:')) e.push(`approvals[${i}]: a board approval needs the ANSWER: line from team.mjs wait as evidence`);
   });
   if (!isObj(s.gates)) e.push('gates must be an object');
+  else for (const [k, g] of Object.entries(s.gates)) if (!isObj(g) || !['pass', 'fail'].includes(g.result)) e.push(`gates.${k} must be { result: pass|fail }`);
+  if (isArr(s.open)) s.open.forEach((q, i) => { if (!isStr(q?.text) || !isStr(q?.since) || !isStr(q?.id)) e.push(`open[${i}] needs id, text and since`); });
   return e;
 }
 
@@ -80,7 +83,8 @@ export function load(key, root = ROOT) {
 export function save(key, state, change, root = ROOT) {
   const s = structuredClone(withoutChecksum(state));
   s.updated = new Date().toISOString();
-  s.history = [...(s.history || []), { at: s.updated, by: 'lead', change }].slice(-HISTORY_MAX);
+  const h = [...(s.history || []), { at: s.updated, by: 'lead', change }];
+  s.history = h.length > HISTORY_MAX ? [h[0], ...h.slice(-(HISTORY_MAX - 1))] : h; // the first entry (init) is kept
   const errors = validate(s, key);
   if (errors.length) throw new Error(`state not saved: ${errors.join('; ')}`);
   s.checksum = computeChecksum(s);
@@ -97,17 +101,33 @@ export function save(key, state, change, root = ROOT) {
  * or "pw:<path>" inside the Playwright repo. Backslashes are stored as "/".
  * @returns {{ abs: string, allowed: boolean, stored: string }}
  */
+/** realpath that also works for a path that does not exist yet: resolve the nearest existing parent */
+function real(p) {
+  let cur = path.resolve(p), rest = [];
+  while (true) {
+    try { return path.join(fs.realpathSync(cur), ...rest); } catch { /* not there yet */ }
+    const up = path.dirname(cur);
+    if (up === cur) return path.resolve(p);
+    rest.unshift(path.basename(cur)); cur = up;
+  }
+}
+/** p inside dir, after following symlinks of both (a link out of the folder does not count as inside) */
+function within(dir, p) {
+  const r = path.relative(real(dir), real(p));
+  return !!r && r !== '..' && !r.startsWith('..' + path.sep) && !path.isAbsolute(r);
+}
 export function resolveFile(key, p, { root = ROOT, pwRepo } = {}) {
   const stored = String(p).trim().replace(/\\/g, '/');
   if (stored.startsWith('pw:')) {
     const rel = stored.slice(3);
-    const abs = pwRepo ? path.resolve(pwRepo, rel) : '';
-    const allowed = !!pwRepo && !path.isAbsolute(rel) && !path.relative(pwRepo, abs).startsWith('..');
-    return { abs, allowed, stored };
+    if (!pwRepo || !fs.existsSync(pwRepo) && !path.isAbsolute(pwRepo)) return { abs: '', allowed: false, stored, why: 'PW_REPO not found (node tools/setup.mjs <folder of ep-etm-fe-qa>)' };
+    const abs = path.resolve(pwRepo, rel);
+    const ok = !path.isAbsolute(rel) && within(pwRepo, abs);
+    return { abs, allowed: ok, stored, why: ok ? '' : 'outside the Playwright repo' };
   }
   const abs = path.resolve(root, stored);
-  const inside = (dir) => { const r = path.relative(path.join(root, dir), abs); return r && !r.startsWith('..') && !path.isAbsolute(r); };
-  return { abs, allowed: !path.isAbsolute(stored) && (inside(path.join('.claude', 'team', 'work', key)) || inside(path.join('work', key))), stored };
+  const ok = !path.isAbsolute(stored) && (within(path.join(root, '.claude', 'team', 'work', key), abs) || within(path.join(root, 'work', key), abs));
+  return { abs, allowed: ok, stored, why: ok ? '' : "outside this card's folders" };
 }
 
 /** AC items of analyst.md, same rules as qa-check.mjs parseAc (section "## AC items"; a parent listed with its sub-items is dropped). */

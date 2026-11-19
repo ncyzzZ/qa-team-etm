@@ -72,6 +72,7 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 - Right after each approval (chat reply or `ANSWER:` line): `state.mjs approve <KEY> "<what>" --kind <run-tests|xray-push|defect|jira-write|delete|heal-apply> --answer "..." --source chat|board --evidence "..."`. The record is not the approval; `phase push` and `phase closeout` refuse without the matching record.
 - After each gate: `state.mjs gate <KEY> <G-id> pass|fail`. Before each agent call: gate G0 `node tools/qa-check.mjs state <KEY>`; give the agent only the card key and the path of `state.json`.
 - After a summary of the conversation, or when unsure where the card stands: `state.mjs show <KEY>` first.
+- `state.json` and G0 keep the team consistent; they are not a security gate. A board approval is checked against the board's own record; a chat approval is the lead's quote, marked "not verified" and listed by G0 so the user can see it.
 
 **Phase 0 - Start.** `team.mjs start <KEY>`; the lead pulls the Story (description + latest comments) and every Test's Xray steps into `work/<KEY>/story.md` and `tests.md` once. Check the newest AC and comments now: later phases do not recheck.
 

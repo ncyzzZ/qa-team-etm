@@ -462,7 +462,7 @@ function checkState() {
   const paths = [...SINGLE_KINDS.filter((k) => s.files[k]).map((k) => [k, s.files[k]]), ...LIST_KINDS.flatMap((k) => (s.files[k] || []).map((p) => [k, p])), ...Object.entries(s.files.extra || {}).map(([k, p]) => [`extra.${k}`, p])];
   for (const [kind, p] of paths) {
     const r = resolveFile(key, p, { root, pwRepo });
-    if (!r.allowed) { err(`files.${kind}: ${p} is outside this card's folders`); continue; }
+    if (!r.allowed) { err(`files.${kind}: ${p}: ${r.why}`); continue; }
     const ok = kind === 'lastRun' ? fs.existsSync(path.join(r.abs, 'results.json')) : fs.existsSync(r.abs);
     if (!ok) err(`files.${kind}: ${p} does not exist (looked at ${r.abs})`);
   }
@@ -481,6 +481,8 @@ function checkState() {
   const team = path.join(root, '.claude', 'team', 'work', key);
   const baks = fs.existsSync(team) ? fs.readdirSync(team).filter((f) => /^draft-tc.*\.bak\.md$/.test(f)) : [];
   if (baks.length) warn(`${baks.length} old draft(s) (*.bak.md) in the card folder; the current one is ${s.files.draft || 'not recorded'}`);
+  if (s.history.some((h) => /^REBUILD/.test(h.change))) warn('state.json was rebuilt after a broken file: check its approvals and phase by hand');
+  for (const a of s.approvals.filter((x) => x.source === 'chat')) warn(`approval ${a.kind} "${a.what}" comes from chat and is not verified by a tool: "${String(a.evidence).slice(0, 60)}"`);
   for (const q of s.open) if (Date.now() - Date.parse(q.since) > 7 * 864e5) warn(`${q.id} has been open more than 7 days: ${q.text.slice(0, 60)}`);
   return finish(`state ${key}`);
 }

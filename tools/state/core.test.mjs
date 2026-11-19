@@ -76,3 +76,16 @@ test('resolveFile keeps paths inside the card folders, normalises backslashes an
   assert.equal(resolveFile(K, 'work/ETM-2/a.md', { root, pwRepo }).allowed, false);
   assert.equal(resolveFile(K, 'pw:../outside.txt', { root, pwRepo }).allowed, false);
 });
+
+test('pw: paths outside PW_REPO are refused, names starting with .. inside are fine, a missing PW_REPO is named', () => {
+  assert.equal(resolveFile(K, 'pw:../x.ts', { root: '/r', pwRepo: '/pw' }).allowed, false);
+  assert.equal(resolveFile(K, 'pw:..foo.ts', { root: '/r', pwRepo: '/pw' }).allowed, true);
+  assert.match(resolveFile(K, 'pw:a.ts', { root: '/r', pwRepo: '' }).why, /PW_REPO not found/);
+});
+
+test('validate checks extra paths, gate entries and open questions', () => {
+  const s = emptyState(K);
+  s.files.extra.x = 5; s.gates.G1 = null; s.open.push({ id: 'Q-1', text: 7, owner: 'BA', since: 'x' });
+  const e = validate(s, K).join('\n');
+  assert.match(e, /files\.extra\.x/); assert.match(e, /gates\.G1/); assert.match(e, /open\[0\]/);
+});

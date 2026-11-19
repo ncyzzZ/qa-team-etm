@@ -87,8 +87,9 @@ test('ac sync adds new AC and marks removed ones dropped', () => {
 });
 
 test('a board approval needs the ANSWER: line', () => {
-  const { opt } = card();
+  const { root, opt } = card();
   C.init(K, [], opt);
+  events(root, [{ t: 1, job: K, type: 'answer', askAt: 0, text: 'ใช่ push', sig: 'x' }]);
   assert.throws(() => C.approve(K, ['push', '--kind', 'xray-push', '--answer', 'yes', '--source', 'board', '--evidence', 'user said yes'], opt), /ANSWER:/);
   assert.equal(C.approve(K, ['push', '--kind', 'xray-push', '--answer', 'ใช่ push', '--source', 'board', '--evidence', 'ANSWER: ใช่ push'], opt).approvals.length, 1);
 });
@@ -124,4 +125,99 @@ test('a round saved in both card folders is listed once, the newer copy', () => 
   fs.utimesSync(path.join(root, 'work', K, 'questions-for-BA.md'), old, old);
   const s = C.init(K, [], opt);
   assert.deepEqual(s.files.questions, [`.claude/team/work/${K}/questions-for-BA.md`, `work/${K}/questions-for-BA-round2.md`]);
+});
+
+// ---- checkpoint review fixes
+const sf = (root) => path.join(root, '.claude', 'team', 'work', K, 'state.json');
+const events = (root, lines) => { fs.mkdirSync(path.join(root, '.claude', 'team'), { recursive: true }); fs.writeFileSync(path.join(root, '.claude', 'team', 'events.jsonl'), lines.map((l) => JSON.stringify(l)).join('\n') + '\n'); };
+
+test('init on a broken state.json refuses; --rebuild keeps a backup and says REBUILD', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  C.decide(K, ['keep me', '--source', 'BA'], opt);
+  fs.writeFileSync(sf(root), '{bad');
+  assert.throws(() => C.init(K, [], opt), /not valid JSON|--rebuild/);
+  const s = C.init(K, ['--rebuild'], opt);
+  assert.match(s.history.at(-1).change, /^REBUILD/);
+  assert.ok(fs.readdirSync(path.dirname(sf(root))).some((f) => /^state\.json\.bak-/.test(f)));
+});
+
+test('init on a state.json that fails validation refuses without --rebuild', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  const j = JSON.parse(fs.readFileSync(sf(root), 'utf8')); j.phase = 'bogus';
+  const { computeChecksum } = awaitImport();
+  j.checksum = computeChecksum(j); fs.writeFileSync(sf(root), JSON.stringify(j, null, 2));
+  assert.throws(() => C.init(K, [], opt), /--rebuild/);
+});
+function awaitImport() { return CORE; }
+import * as CORE from './core.mjs';
+
+test('a board approval must match an answer the board recorded for this card', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  events(root, [{ t: 1, job: K, type: 'answer', askAt: 0, text: 'ใช่ push', sig: 'x' }, { t: 2, job: 'ETM-9', type: 'answer', askAt: 0, text: 'ok', sig: 'y' }]);
+  assert.throws(() => C.approve(K, ['push', '--kind', 'xray-push', '--answer', 'ok', '--source', 'board', '--evidence', 'ANSWER: ok'], opt), /no answer "ok" on the board/);
+  assert.equal(C.approve(K, ['push', '--kind', 'xray-push', '--answer', 'ใช่ push', '--source', 'board', '--evidence', 'ANSWER: ใช่ push'], opt).approvals[0].verified, true);
+});
+
+test('a chat approval is marked unverified and show lists it for the user', () => {
+  const { opt } = card();
+  C.init(K, [], opt);
+  const s = C.approve(K, ['close card', '--kind', 'jira-write', '--answer', 'yes', '--source', 'chat', '--evidence', 'yes go'], opt);
+  assert.equal(s.approvals[0].verified, false);
+  assert.match(C.show(K, [], opt), /chat, not verified/);
+});
+
+test('phase run needs a run-tests approval', () => {
+  const { opt } = card();
+  C.init(K, [], opt);
+  assert.throws(() => C.phase(K, ['run', 'run specs'], opt), /run-tests approval/);
+});
+
+test('a flag never takes another flag as its value, and words after a flag value stay positional', () => {
+  const { opt } = card();
+  C.init(K, [], opt);
+  assert.throws(() => C.approve(K, ['x', '--kind', 'jira-write', '--source', 'chat', '--evidence', '--answer', 'y'], opt), /evidence/);
+  const s = C.decide(K, ['--source', 'BA', 'weekly', 'keeps', '1', 'decimal'], opt);
+  assert.equal(s.decisions.at(-1).text, 'weekly keeps 1 decimal');
+});
+
+test('a symlink out of the card folder is refused', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'outside-')); fs.writeFileSync(path.join(outside, 's.txt'), 'x');
+  fs.symlinkSync(outside, path.join(root, '.claude', 'team', 'work', K, 'link'));
+  assert.throws(() => C.file(K, ['tests', `.claude/team/work/${K}/link/s.txt`], opt), /outside/);
+});
+
+test('a folder is refused for a file kind', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  fs.mkdirSync(path.join(root, '.claude', 'team', 'work', K, 'dir'));
+  assert.throws(() => C.file(K, ['tests', `.claude/team/work/${K}/dir`], opt), /not a file/);
+});
+
+test('ac sync with a missing analyst file gives a plain message', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  fs.rmSync(path.join(root, '.claude', 'team', 'work', K, 'analyst.md'));
+  assert.throws(() => C.acSync(K, [], opt), /analyst file .* not found/);
+});
+
+test('the first history entry (init) survives the 50-entry cap', () => {
+  const { opt } = card();
+  C.init(K, [], opt);
+  let s; for (let i = 0; i < 60; i++) s = C.gate(K, ['G1', 'pass'], opt);
+  assert.equal(s.history.length, 50);
+  assert.match(s.history[0].change, /^init/);
+});
+
+test('a round re-discovered in the other folder replaces the old path instead of adding a second one', () => {
+  const { root, opt } = card();
+  C.init(K, [], opt);
+  const team = path.join(root, '.claude', 'team', 'work', K);
+  fs.writeFileSync(path.join(team, 'questions-for-BA-round2.md'), 'newer');
+  const s = C.init(K, [], opt);
+  assert.equal(s.files.questions.filter((p) => p.endsWith('questions-for-BA-round2.md')).length, 1);
 });
