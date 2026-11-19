@@ -9,6 +9,8 @@ import { isLibraryToken, extractTokens } from './selectors.mjs';
 import { resolveRepos } from './config.mjs';
 
 const TEXTISH = new Set(['text', 'role-name', 'label']);
+/** stms-fe files that make up the running app (pathspecs). .spec.ts files are dropped after the grep. */
+export const APP_FILES = [':(glob)src/**/*.html', ':(glob)src/**/*.ts', ':(glob)src/**/*.scss'];
 
 /** Tokens of one kind found in one line of stms-fe source (.html or .ts). */
 export function feTokens(line, kind) {
@@ -16,7 +18,7 @@ export function feTokens(line, kind) {
   const add = (v) => { v = (v || '').trim(); if (v) out.add(v); };
   const attrs = [...line.matchAll(/([\w.\-[\]()]+)\s*=\s*"([^"]*)"/g)];
   if (kind === 'class') {
-    for (const [, name, val] of attrs) if (name === 'class') val.split(/\s+/).forEach(add);
+    for (const [, name, val] of attrs) if (/^(class|\w*ClassName|panelClass|nzWrapClassName)$/i.test(name) && !/[{}()]/.test(val)) val.split(/\s+/).forEach(add);
     for (const m of line.matchAll(/\[class\.([\w-]+)\]/g)) add(m[1]);
   } else if (kind === 'id') {
     for (const [, name, val] of attrs) if (name === 'id') add(val);
@@ -30,10 +32,23 @@ export function feTokens(line, kind) {
     for (const m of line.matchAll(/>([^<>{}]+)</g)) add(m[1]);
     for (const m of line.matchAll(/>([^<>{}]+)$/g)) add(m[1]);
     for (const m of line.matchAll(/^\s*([^<>{}=]+)</g)) add(m[1]);
-    for (const [, name, val] of attrs) if (/^(aria-label|title|label|nzTitle|nzOkText|nzCancelText)$/i.test(name)) add(val);
+    for (const [, name, val] of attrs) if (/^(aria-label|\w*title|\w*label|nzOkText|nzCancelText|\w*header|placeholder)$/i.test(name) && !/[{}()]/.test(val)) add(val);
     for (const m of line.matchAll(/(?<![\w$])(['])((?:\\.|[^'\\])+)\1/g)) if (/\s|^[A-Z]/.test(m[2])) add(m[2]); // TS labels
   }
   return out;
+}
+
+const esc = (v) => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/**
+ * Does this stms-fe line (html, ts or scss) use the token? Wider than feTokens: a class or tag anywhere as a whole
+ * word (scss rules, ...ClassName attributes, selector: in a decorator), a text alone on its line.
+ */
+export function mentionsToken(line, kind, value) {
+  if (/^\s*(\*|\/\/|\/\*|<!--)/.test(line) || /^\s*(import|export)\s.*from\s/.test(line)) return false; // comments, imports
+  line = line.replace(/\/\/.*$|\/\*.*?\*\/|<!--.*?-->/g, ''); // trailing comments
+  if (feTokens(line, kind).has(value)) return true;
+  if (['class', 'id', 'tag', 'attr'].includes(kind)) return new RegExp(`(^|[^\\w\\-/])${esc(value)}($|(?![\\w-]|\\.(component|service|module|model|util|spec|routes)\\b))`).test(line);
+  return line.trim() === value;
 }
 
 const NONE = (extra = {}) => ({ present: false, library: false, removedIn: null, candidates: [], ...extra });
@@ -59,24 +74,25 @@ function changeBlocks(diff) {
  */
 export function lookup(feRepo, token, ref = 'origin/develop', { git = realGit } = {}) {
   const { kind, value } = token;
-  if (kind === 'class' && isLibraryToken(value)) return NONE({ library: true });
+  if ((kind === 'class' || kind === 'tag') && isLibraryToken(value)) return NONE({ library: true });
   // 1) still present at ref?
   let files = [];
-  try { files = git(feRepo, ['grep', '-F', '-l', '-e', value, ref, '--', 'src']).split('\n').filter(Boolean); } catch { files = []; } // grep exits 1 when nothing matches
+  try { files = git(feRepo, ['grep', '-F', '-l', '-e', value, ref, '--', ...APP_FILES]).split('\n').filter(Boolean).filter((f) => !/\.spec\.ts$/.test(f)); } catch { files = []; } // grep exits 1 when nothing matches
   for (const f of files) {
     const pathAtRef = f.slice(ref.length + 1);
     const content = git(feRepo, ['show', `${ref}:${pathAtRef}`]);
-    if (content.split('\n').some((l) => feTokens(l, kind).has(value))) return NONE({ present: true });
+    if (content.split('\n').some((l) => mentionsToken(l, kind, value))) return NONE({ present: true });
   }
   // 2) which commit removed it, and what replaced it?
   // -G (lines that mention it changed), not -S (count changed): "Save" -> "Save Plan" keeps the count the same
-  const re = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const log = git(feRepo, ['log', '-G', re, '--format=%H%x09%an%x09%cI', ref, '--', 'src']).split('\n').filter(Boolean);
+  const re = esc(value);
+  const log = git(feRepo, ['log', '-G', re, '--format=%H%x09%an%x09%cI', ref, '--', ...APP_FILES]).split('\n').filter(Boolean);
   for (const row of log) {
     const [commit, author, date] = row.split('\t');
-    const diff = git(feRepo, ['show', '--format=', '--unified=0', '--no-color', commit, '--', 'src']);
+    const diff = git(feRepo, ['show', '--format=', '--unified=0', '--no-color', commit, '--', ...APP_FILES]);
     for (const b of changeBlocks(diff)) {
-      const idx = b.minus.findIndex((l) => feTokens(l, kind).has(value));
+      if (/\.spec\.ts$/.test(b.file)) continue;
+      const idx = b.minus.findIndex((l) => mentionsToken(l, kind, value));
       if (idx < 0) continue;
       const removed = new Set(b.minus.flatMap((l) => [...feTokens(l, kind)]));
       const partner = b.minus.length === b.plus.length ? [b.plus[idx]] : b.plus;

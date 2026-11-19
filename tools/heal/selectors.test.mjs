@@ -49,3 +49,12 @@ test('resolveRepos defaults FE_REPO to stms-fe next to PW_REPO', () => {
     if (old.fe !== undefined) process.env.FE_REPO = old.fe;
   }
 });
+
+test('ARIA role values set by the UI library at runtime are generic', () => {
+  for (const w of ['dialog', 'alert', 'tooltip', 'menu', 'listbox', 'option', 'tab', 'tabpanel', 'status']) assert.ok(GENERIC_TOKENS.has(w), w);
+});
+
+test('ng-zorro (ant-, nz-) and Quill (ql-) classes and tags are library tokens', () => {
+  for (const w of ['ant-select-dropdown', 'nz-select-item', 'ql-editor']) assert.equal(isLibraryToken(w), true, w);
+  assert.equal(isLibraryToken('antenna-list'), false);
+});

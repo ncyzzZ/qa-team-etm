@@ -52,3 +52,54 @@ test('a removed class whose element got no new class gives no candidate', () => 
   assert.equal(r.present, false);
   assert.deepEqual(r.candidates, []);
 });
+
+// Real stms-fe shapes the first version missed (found by the back-test on 2026-11-19)
+const repo2 = path.join(tmp, 'fe2');
+fs.mkdirSync(path.join(repo2, 'src', 'app'), { recursive: true });
+sh(tmp, 'init', '-q', '-b', 'develop', repo2);
+const put2 = (f, t) => fs.writeFileSync(path.join(repo2, 'src', 'app', f), t);
+put2('menu.component.html', '<nz-dropdown-menu nzOverlayClassName="shared-popover-menu">\n  <span>\n    Save Shutdown Logic\n  </span>\n</nz-dropdown-menu>\n');
+put2('no-data.component.ts', "@Component({ selector: 'app-no-data', template: '' })\nexport class NoData {}\n");
+put2('modal.component.scss', '.shared-modal {\n  padding: 0;\n}\n');
+sh(repo2, 'add', '.'); sh(repo2, 'commit', '-qm', 'c1');
+
+test('a class set through an Angular/ng-zorro ...ClassName attribute is present', () => {
+  assert.equal(lookup(repo2, tok('class', 'shared-popover-menu'), 'HEAD').present, true);
+});
+test('a component selector in a .ts decorator is present as a tag', () => {
+  assert.equal(lookup(repo2, tok('tag', 'app-no-data'), 'HEAD').present, true);
+});
+test('a class defined only in .scss is present', () => {
+  assert.equal(lookup(repo2, tok('class', 'shared-modal'), 'HEAD').present, true);
+});
+test('text on its own line between tags is present', () => {
+  assert.equal(lookup(repo2, tok('text', 'Save Shutdown Logic'), 'HEAD').present, true);
+});
+test('a renamed ...ClassName value is found as removed with its replacement', () => {
+  put2('menu.component.html', '<nz-dropdown-menu nzOverlayClassName="status-popover-menu">\n  <span>\n    Save Shutdown Logic\n  </span>\n</nz-dropdown-menu>\n');
+  sh(repo2, 'commit', '-qam', 'rename menu class');
+  const r = lookup(repo2, tok('class', 'shared-popover-menu'), 'HEAD');
+  assert.equal(r.present, false);
+  assert.deepEqual(r.candidates, ['status-popover-menu']);
+});
+
+test('a name only in a comment, an import path, a .spec.ts or a .md file does not count as present', () => {
+  const r3 = path.join(tmp, 'fe3');
+  fs.mkdirSync(path.join(r3, 'src', 'app', 'filter'), { recursive: true });
+  sh(tmp, 'init', '-q', '-b', 'develop', r3);
+  const p3 = (f, t) => fs.writeFileSync(path.join(r3, 'src', 'app', f), t);
+  p3('filter/a.component.ts', "/**\n * `shutdown-filter-panel`: a header with a Reset action\n */\nimport { X } from './shutdown-filter-panel.component';\n// old .shutdown-filter-panel removed\n");
+  p3('filter/a.component.spec.ts', "it('shows .shutdown-filter-panel', () => { el.querySelector('.shutdown-filter-panel'); });\n");
+  p3('CLAUDE.md', 'The shutdown-filter-panel composes sections.\n');
+  sh(r3, 'add', '.'); sh(r3, 'commit', '-qm', 'c');
+  assert.equal(lookup(r3, tok('class', 'shutdown-filter-panel'), 'HEAD').present, false);
+});
+
+test('text in a title-like attribute (pageTitle="...") is present', () => {
+  const r4 = path.join(tmp, 'fe4');
+  fs.mkdirSync(path.join(r4, 'src', 'app'), { recursive: true });
+  sh(tmp, 'init', '-q', '-b', 'develop', r4);
+  fs.writeFileSync(path.join(r4, 'src', 'app', 'p.component.html'), '<app-page-container pageTitle="Edit Shutdown Timeline Plan" [extra]="x">\n');
+  sh(r4, 'add', '.'); sh(r4, 'commit', '-qm', 'c');
+  assert.equal(lookup(r4, tok('text', 'Edit Shutdown Timeline Plan'), 'HEAD').present, true);
+});

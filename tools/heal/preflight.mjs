@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { git, updateFe } from './fe-git.mjs';
 import { extractTokens, GENERIC_TOKENS, isLibraryToken } from './selectors.mjs';
-import { lookup, feTokens } from './source-lookup.mjs';
+import { lookup, mentionsToken, APP_FILES } from './source-lookup.mjs';
 import { readBaseline, advanceBaseline, pagesUsedBy, allUnits, pageUnit } from './baseline.mjs';
 import { resolveRepos } from './config.mjs';
 
@@ -41,14 +41,14 @@ export function preflight(pwRepo, feRepo, { specs, card } = {}) {
   for (const unit of units) {
     const from = base[unit];
     if (!from || !target || from === target) continue;
-    diffCache[from] ??= removedLines(git(feRepo, ['diff', '--unified=0', '--no-color', from, target, '--', 'src']));
+    diffCache[from] ??= removedLines(git(feRepo, ['diff', '--unified=0', '--no-color', from, target, '--', ...APP_FILES]));
     const minus = diffCache[from];
     if (!minus.length) continue;
     for (const f of filesOfUnit(pwRepo, unit)) {
       const rel = path.relative(pwRepo, f).replace(/\\/g, '/');
       for (const t of extractTokens(fs.readFileSync(f, 'utf8'), rel)) {
         if (GENERIC_TOKENS.has(t.value.toLowerCase()) || isLibraryToken(t.value)) continue;
-        if (!minus.some((l) => l.includes(t.value) && feTokens(l, t.kind).has(t.value))) continue;
+        if (!minus.some((l) => l.includes(t.value) && mentionsToken(l, t.kind, t.value))) continue;
         const r = lookup(feRepo, t, 'origin/develop');
         if (r.present || r.library) continue;
         atRisk.push({ page: rel, line: t.line, token: t, candidates: r.candidates, commit: r.removedIn?.commit || null, author: r.removedIn?.author || null });

@@ -6,10 +6,13 @@
 export const GENERIC_TOKENS = new Set([
   'active', 'disabled', 'btn', 'button', 'row', 'cell', 'icon', 'title', 'container', 'content', 'header', 'label',
   'text', 'selected', 'hidden', 'show', 'open', 'item', 'input', 'form', 'modal', 'body', 'footer', 'wrapper',
+  // ARIA role values: the UI library (ng-zorro) sets them at runtime, they are not in stms-fe source
+  'dialog', 'alert', 'alertdialog', 'tooltip', 'menu', 'menuitem', 'listbox', 'option', 'tab', 'tablist', 'tabpanel',
+  'status', 'grid', 'gridcell', 'columnheader', 'combobox', 'checkbox', 'radio', 'switch', 'toast', 'close', 'navigation',
 ]);
 
-/** Classes that come from a UI library (Bryntum `b-`, AG Grid `ag-`), not from stms-fe templates. */
-export const isLibraryToken = (value) => /^(b|ag)-/.test(value);
+/** Classes/tags from a UI library (Bryntum b-, AG Grid ag-, ng-zorro ant-/nz-, Quill ql-), not from stms-fe templates. */
+export const isLibraryToken = (value) => /^(b|ag|ant|nz|ql)-/.test(value);
 
 const STR = String.raw`(['"])((?:\\.|(?!\1).)*)\1`; // a '...' or "..." literal, group 2 = content
 const CALLS = [
