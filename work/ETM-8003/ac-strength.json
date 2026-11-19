@@ -1,0 +1,56 @@
+{
+ "card": "ETM-8003",
+ "date": "2026-11-19",
+ "verdict": "partly",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "Plan blue, dashed",
+   "tests": [
+    "ETM-8800",
+    "ETM-8808",
+    "ETM-8809"
+   ],
+   "rating": "strong",
+   "why": "stroke hex and dash asserted"
+  },
+  {
+   "id": "AC-2",
+   "rule": "Actual orange, solid",
+   "tests": [
+    "ETM-8801",
+    "ETM-8808"
+   ],
+   "rating": "strong",
+   "why": "stroke hex and dash asserted"
+  },
+  {
+   "id": "AC-3",
+   "rule": "dots, labels, legend",
+   "tests": [
+    "ETM-8802",
+    "ETM-8803",
+    "ETM-8804"
+   ],
+   "rating": "strong",
+   "why": "dot count checked; empty list now fails"
+  },
+  {
+   "id": "AC-4",
+   "rule": "PDF",
+   "tests": [],
+   "rating": "none",
+   "why": "8805 manual"
+  },
+  {
+   "id": "AC-5",
+   "rule": "Gantt and Actual % colours unchanged",
+   "tests": [
+    "ETM-8806"
+   ],
+   "rating": "weak",
+   "why": "'unchanged' only with ETM8003_OLD_* set"
+  }
+ ]
+}

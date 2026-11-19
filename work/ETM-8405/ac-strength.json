@@ -1,0 +1,89 @@
+{
+ "card": "ETM-8405",
+ "date": "2026-11-19",
+ "verdict": "partly",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "range, outside, no dates",
+   "tests": [
+    "ETM-8638",
+    "ETM-8642"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-4",
+   "rule": "Actual read-only",
+   "tests": [
+    "ETM-8638",
+    "ETM-8645"
+   ],
+   "rating": "weak",
+   "why": "value steps need TL_WEEKLY_ACTUAL_SEEDED"
+  },
+  {
+   "id": "AC-5",
+   "rule": "input rules",
+   "tests": [
+    "ETM-8639",
+    "ETM-8645"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-6",
+   "rule": "sum, red, Save, 130.0",
+   "tests": [
+    "ETM-8640",
+    "ETM-8641"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-7",
+   "rule": "Group + Total update",
+   "tests": [
+    "ETM-8640"
+   ],
+   "rating": "weak",
+   "why": "group summary asserted null from an undocumented decision"
+  },
+  {
+   "id": "AC-10",
+   "rule": "overwrite, no modal, clamp",
+   "tests": [
+    "ETM-8642"
+   ],
+   "rating": "blocked",
+   "why": "stops at open defects ETM-8671/8672"
+  },
+  {
+   "id": "AC-13",
+   "rule": "isDirty, Back modal",
+   "tests": [
+    "ETM-8645"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-14",
+   "rule": "Save persists, Main Timeline",
+   "tests": [],
+   "rating": "none",
+   "why": "8643 no script"
+  },
+  {
+   "id": "AC-15",
+   "rule": "Shutdown Size",
+   "tests": [],
+   "rating": "none",
+   "why": "8644 no script"
+  }
+ ]
+}

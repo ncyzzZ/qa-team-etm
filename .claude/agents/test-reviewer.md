@@ -22,3 +22,11 @@ Check, pass or fail each:
 9. Only genuinely new findings: do not repeat what the designer already checked.
 
 First run `node tools/qa-check.mjs draft <KEY>` and put its errors in the findings (a draft with errors is Reject). Output file: `review.md`; its FIRST line is `Verdict: Approve`, `Verdict: Conditional Approve` or `Verdict: Reject`, then `## Findings` with numbered findings (case id and the fix needed). Before returning run `node tools/qa-check.mjs work <KEY> reviewer` (gate G4).
+
+**Script-review mode (the lead asks for it after gate G6, once per card).** Do the scripts prove the card? For each AC item of `analyst.md`: find its Tests (`draft-tc.md` `Trace:` lines, `xray-readback.json` for the keys), find the specs with `grep -rl <key>` in `PW_REPO/tests` and follow the helpers. Rate it:
+- `strong`: a test that runs (no fixme / skip / empty `.env`) asserts the AC's expected result with `expect`.
+- `weak`: the test runs but checks only visibility or a proxy, or depends on data it may not find (then it ends "Not proven"), or uses hard-coded data of one plan.
+- `blocked`: the only tests are fixme, `test.skip`, or skip because a `.env` value is empty (name it).
+- `none`: no script (manual or missing).
+Write `work/<KEY>/ac-strength.json`: `{"card","date","verdict":"ready|partly|not-ready","ac":[{"id","rule","tests":[...],"rating","why"}]}`, `why` one short line with file:line when it is weak. Check: `node tools/qa-check.mjs strength <KEY>` (gate G6b). Return the table AC | rating | why and the 1-3 most important fixes. Read-only: never edit a spec.
+

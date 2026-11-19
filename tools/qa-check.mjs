@@ -7,6 +7,7 @@
 //   node tools/qa-check.mjs manifest <tc-manifest.json>
 //   node tools/qa-check.mjs diff     <KEY> <readback.json>     (Xray readback vs draft: [{key, summary, steps}])
 //   node tools/qa-check.mjs findings <KEY | folder>            (work/<KEY>/findings.json vs questions-for-BA*.md)
+//   node tools/qa-check.mjs strength <KEY>                     (work/<KEY>/ac-strength.json: AC -> script strength, Phase 5)
 //   node tools/qa-check.mjs coverage <KEY>                     (AC -> cases table from analyst.md and the Trace: lines)
 //   node tools/qa-check.mjs selftest                             (run the checker against evals/ fixtures)
 //   node tools/qa-check.mjs stats                                (how often each gate failed, from .claude/team/metrics.jsonl)
@@ -164,6 +165,36 @@ function checkDraft() {
 }
 
 // ---------------------------------------------------------------- spec
+// No false pass (rules file, "No false pass"): code shapes that let a test turn green without checking.
+// A line can opt out with a trailing `// qa-check: ok <why>` when a person has looked at it.
+const MARKS_UNCHECKED = /notChecked|annotations\.push|\bnote\(|\.skip\(|\.fixme\(|NOT_CHECKED|manual\(|skipNoSeed|notScripted|tooltipPending/;
+function falsePass(name, text) {
+  const lines = text.split('\n');
+  const ok = (l) => /\/\/\s*qa-check:\s*ok\b/.test(l);
+  const at = (i) => `${name}:${i + 1}`;
+  lines.forEach((raw, i) => {
+    if (ok(raw) || /^\s*(\/\/|\*)/.test(raw)) return;
+    const l = raw.replace(/\s\/\/\s.*$/, ''); // ignore a trailing comment
+    // 1. an action whose failure is swallowed, then an expect relies on it (visible check first is fine)
+    if (/\.(click|fill|press|check|selectOption|hover|dblclick|type)\([^;]*\)\s*\.catch\(\s*\(\)\s*=>/.test(l)) {
+      const next = lines.slice(i + 1, i + 3).join('\n'), prev = lines.slice(Math.max(0, i - 2), i).join('\n');
+      // only a false pass when the expect checks an absence (a failed action also gives "nothing there")
+      if (/\bexpect\([^;]*(toHaveCount\(0\)|toBeHidden|\.not\.|toBeFalsy|toBe\(false\)|toEqual\(\[\]\))/.test(next) && !/toBeVisible|toBeAttached|toHaveCount\(1\)/.test(prev)) err(`${at(i)}: action failure is swallowed by .catch() and the next expect checks an absence, so a wrong locator passes (assert the element is visible first, or remove .catch)`);
+    }
+    // 2. every() inside an expect: an empty list passes (advice only, an empty list can be the right answer)
+    if (/\bexpect\([^;]*\.every\(/.test(l) && !/toBeGreaterThan\(0\)|toHaveLength|toEqual\(/.test(lines.slice(Math.max(0, i - 3), i).join('\n'))) warn(`${at(i)}: .every() inside expect passes on an empty list: assert the length first, or use everyOf() from @fixtures/pageFixtures (fine when an empty list is a correct answer)`);
+    // 3. a conditional expect with no else branch
+    if (/^\s*if\s*\(.*\)\s*(await\s+)?expect(\.soft)?\(/.test(l) && !/\bfor\s*\(/.test(l) && !/^\s*else\b/.test(lines[i + 1] || '') && !MARKS_UNCHECKED.test(l)) {
+      err(`${at(i)}: "if (...) expect" with no else: when the condition is false nothing is checked (add "else notChecked('<why>')")`);
+    }
+    // 4. early return out of a step without marking it unchecked
+    if (/\bif\s*\(\s*!.*\)\s*\{?\s*return\b/.test(l) && !MARKS_UNCHECKED.test(l)) {
+      const before = lines.slice(Math.max(0, i - 12), i).join('\n');
+      if (!MARKS_UNCHECKED.test(before)) err(`${at(i)}: early return without notChecked(): the step ends green without checking (call notChecked('<why>') first)`);
+    }
+  });
+}
+
 function checkSpec() {
   const files = pos;
   if (!files.length) { console.error('Usage: qa-check spec <spec.ts ...> [--tests tests.md]'); process.exit(2); }
@@ -201,6 +232,7 @@ function checkSpec() {
     hits(/\bpage\.pause\(/g, 'page.pause() left in');
     hits(/\b(password|passwd|secret|token|api[_-]?key)\s*[:=]\s*(['"`])(?!\$\{)[^'"`\s]{4,}\2/gi, 'looks like a hard-coded credential (use .env)');
     hits(/data-testid/g, 'the ETM app has no data-testid: use data-id, data-column, roles, text', warn);
+    falsePass(name, text);
     const nExpect = (text.match(/\bexpect(?:\.soft)?\(/g) || []).length;
     const nMsg = (text.match(/\bexpect(?:\.soft)?\([^()]*(?:\([^()]*\)[^()]*)*,\s*(['"`])/g) || []).length;
     if (nExpect && nMsg < nExpect / 2) warn(`${name}: only ${nMsg} of ${nExpect} expect() have a plain-language message (the report shows it to non-testers)`);
@@ -368,6 +400,37 @@ function selftest() {
   process.exit(bad ? 1 : 0);
 }
 
+// ---------------------------------------------------------------- strength (work/<KEY>/ac-strength.json)
+// Written by the test-reviewer in script-review mode (Phase 5, after G6): does each AC have a running test that asserts it?
+// Shape: {"card":"ETM-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["ETM-2"],"rating":"strong|weak|blocked|none","why":"..."}]}
+const RATINGS = ['strong', 'weak', 'blocked', 'none'];
+function checkStrength() {
+  const key = pos[0];
+  if (!key) { console.error('Usage: qa-check strength <KEY | path/to/ac-strength.json>'); process.exit(2); }
+  const file = key.endsWith('.json') ? path.resolve(key) : path.join(ROOT, 'work', key, 'ac-strength.json');
+  const raw = read(file);
+  if (raw == null) { err(`not found: ${path.relative(ROOT, file)}`); return finish('strength'); }
+  let j; try { j = JSON.parse(raw); } catch (e) { err(`not valid JSON: ${e.message}`); return finish('strength'); }
+  if (!/^ETM-\d+$/.test(j.card || '')) err('card must be the Story key (ETM-1234)');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(j.date || '')) err('date must be YYYY-MM-DD');
+  if (!['ready', 'partly', 'not-ready'].includes(j.verdict)) err('verdict must be ready, partly or not-ready');
+  if (!Array.isArray(j.ac) || !j.ac.length) err('ac must list every AC item');
+  const seen = new Set(), n = Object.fromEntries(RATINGS.map((r) => [r, 0]));
+  for (const a of j.ac || []) {
+    const id = a.id || '?';
+    if (seen.has(id)) err(`${id}: listed twice`); seen.add(id);
+    if (!RATINGS.includes(a.rating)) err(`${id}: rating must be one of ${RATINGS.join(', ')}`); else n[a.rating]++;
+    if (!a.why || String(a.why).length < 5) err(`${id}: why is missing`);
+    if (a.rating !== 'none' && !(a.tests || []).length) err(`${id}: a ${a.rating} rating needs the Xray test keys`);
+  }
+  // every AC of analyst.md must be rated (when the analyst file lists AC-n ids)
+  const analyst = read(path.join(WORK(j.card || key), 'analyst.md')) || '';
+  for (const id of new Set(analyst.match(/\bAC-\d+(?:\.\d+)?\b/g) || [])) if (!seen.has(id)) warn(`${id} of analyst.md is not rated`);
+  if (j.verdict === 'ready' && (n.blocked || n.none)) err('verdict "ready" but some AC are blocked or have no test');
+  const total = (j.ac || []).length;
+  finish('strength', ` | strong ${n.strong}/${total}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}`);
+}
+
 // ---------------------------------------------------------------- stats (metrics.jsonl)
 function stats() {
   const raw = read(path.join(ROOT, '.claude', 'team', 'metrics.jsonl'));
@@ -385,6 +448,6 @@ function stats() {
   process.exit(0);
 }
 
-const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, selftest, stats }[cmd];
-if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff|coverage|findings|selftest|stats> ...'); process.exit(2); }
+const run = { draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, strength: checkStrength, selftest, stats }[cmd];
+if (!run) { console.error('Usage: node tools/qa-check.mjs <draft|spec|work|manifest|diff|coverage|findings|strength|selftest|stats> ...'); process.exit(2); }
 run();

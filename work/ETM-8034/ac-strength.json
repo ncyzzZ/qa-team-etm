@@ -1,0 +1,74 @@
+{
+ "card": "ETM-8034",
+ "date": "2026-11-19",
+ "verdict": "not-ready",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "menu, 13 colours, hidden without permission",
+   "tests": [
+    "ETM-8854",
+    "ETM-8855",
+    "ETM-8856"
+   ],
+   "rating": "blocked",
+   "why": "ETM8034_PATH empty; design strong"
+  },
+  {
+   "id": "AC-2",
+   "rule": "whole-row background / text",
+   "tests": [
+    "ETM-8858"
+   ],
+   "rating": "blocked",
+   "why": "env; design strong"
+  },
+  {
+   "id": "AC-4",
+   "rule": "condition colours on top of a highlight",
+   "tests": [],
+   "rating": "none",
+   "why": "8868, 8869 not scripted"
+  },
+  {
+   "id": "AC-5",
+   "rule": "save, other users, last save wins, duplicate",
+   "tests": [
+    "ETM-8862",
+    "ETM-8863",
+    "ETM-8864",
+    "ETM-8867",
+    "ETM-8871"
+   ],
+   "rating": "blocked",
+   "why": "env; 8871 filter steps not scripted"
+  },
+  {
+   "id": "AC-6",
+   "rule": "Undo/Redo",
+   "tests": [
+    "ETM-8865",
+    "ETM-8866"
+   ],
+   "rating": "blocked",
+   "why": "env; design strong"
+  },
+  {
+   "id": "AC-7",
+   "rule": "Export PDF",
+   "tests": [],
+   "rating": "none",
+   "why": "8870 manual"
+  },
+  {
+   "id": "AC-8",
+   "rule": "Duplicate copies colours; Copy & Paste does not",
+   "tests": [
+    "ETM-8861"
+   ],
+   "rating": "blocked",
+   "why": "env; Copy & Paste part not scripted"
+  }
+ ]
+}

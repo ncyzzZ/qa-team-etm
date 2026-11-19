@@ -1,0 +1,80 @@
+{
+ "card": "ETM-8521",
+ "date": "2026-11-19",
+ "verdict": "partly",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "faster",
+   "tests": [],
+   "rating": "none",
+   "why": "8738 manual stopwatch, no timing"
+  },
+  {
+   "id": "AC-1.1",
+   "rule": "NxN paste, clip, fill, edit mode",
+   "tests": [
+    "ETM-8736",
+    "ETM-8737",
+    "ETM-8739",
+    "ETM-8740",
+    "ETM-8741"
+   ],
+   "rating": "strong",
+   "why": "exact cell values"
+  },
+  {
+   "id": "AC-1.2",
+   "rule": "manpower rules",
+   "tests": [
+    "ETM-8750",
+    "ETM-8753",
+    "ETM-8759"
+   ],
+   "rating": "strong",
+   "why": "exact values"
+  },
+  {
+   "id": "AC-1.2b",
+   "rule": "master data",
+   "tests": [
+    "ETM-8760"
+   ],
+   "rating": "blocked",
+   "why": "ETM8521_EQUIPMENT / FUNC_LOC empty"
+  },
+  {
+   "id": "AC-1.3",
+   "rule": "recalculation",
+   "tests": [
+    "ETM-8743",
+    "ETM-8748",
+    "ETM-8749"
+   ],
+   "rating": "weak",
+   "why": "histogram / Work Header only 'changed'"
+  },
+  {
+   "id": "AC-2",
+   "rule": "draft, partial success, read-only, circular",
+   "tests": [
+    "ETM-8752",
+    "ETM-8761",
+    "ETM-8762",
+    "ETM-8763"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-2b",
+   "rule": "no Edit permission",
+   "tests": [
+    "ETM-8764"
+   ],
+   "rating": "blocked",
+   "why": "fixme"
+  }
+ ]
+}

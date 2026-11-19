@@ -1,0 +1,113 @@
+{
+ "card": "ETM-8388",
+ "date": "2026-11-19",
+ "verdict": "ready",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "copy TSV",
+   "tests": [
+    "ETM-8707",
+    "ETM-8708"
+   ],
+   "rating": "strong",
+   "why": "clipboard text checked; Cmd+C 8711 no script"
+  },
+  {
+   "id": "AC-2",
+   "rule": "Focus = Edit Mode",
+   "tests": [
+    "ETM-8715"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-3",
+   "rule": "group only, across groups",
+   "tests": [
+    "ETM-8707",
+    "ETM-8708"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-5",
+   "rule": "invalid -> cleared, red, Save off, modal",
+   "tests": [
+    "ETM-8714",
+    "ETM-8721",
+    "ETM-8727"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-6",
+   "rule": "isDirty",
+   "tests": [
+    "ETM-8713",
+    "ETM-8728"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-7",
+   "rule": "Status paste, extra rows ignored",
+   "tests": [
+    "ETM-8712",
+    "ETM-8713",
+    "ETM-8707"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-9",
+   "rule": "weekly copy one row",
+   "tests": [
+    "ETM-8709"
+   ],
+   "rating": "strong",
+   "why": "helper asserts"
+  },
+  {
+   "id": "AC-10",
+   "rule": "Actual only, rules, future cut-off",
+   "tests": [
+    "ETM-8716",
+    "ETM-8717"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-13",
+   "rule": "Edit Plan columns, limits, dates, recalc",
+   "tests": [
+    "ETM-8718",
+    "ETM-8719",
+    "ETM-8720",
+    "ETM-8721",
+    "ETM-8722",
+    "ETM-8731"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-18",
+   "rule": "weekly Plan paste",
+   "tests": [
+    "ETM-8710",
+    "ETM-8723",
+    "ETM-8727"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  }
+ ]
+}

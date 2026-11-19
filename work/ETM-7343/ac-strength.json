@@ -1,0 +1,104 @@
+{
+ "card": "ETM-7343",
+ "date": "2026-11-19",
+ "verdict": "partly",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "behind plan = red",
+   "tests": [
+    "ETM-8683",
+    "ETM-8691",
+    "ETM-8676"
+   ],
+   "rating": "strong",
+   "why": "expects red; only when matching data exists"
+  },
+  {
+   "id": "AC-2",
+   "rule": "ahead, not 100 = green",
+   "tests": [
+    "ETM-8685",
+    "ETM-8691"
+   ],
+   "rating": "strong",
+   "why": "expects green; data-dependent"
+  },
+  {
+   "id": "AC-3",
+   "rule": "100 = black",
+   "tests": [
+    "ETM-8689",
+    "ETM-8691"
+   ],
+   "rating": "strong",
+   "why": "needs a row at 100%"
+  },
+  {
+   "id": "AC-4",
+   "rule": "every level",
+   "tests": [
+    "ETM-8696",
+    "ETM-8697"
+   ],
+   "rating": "weak",
+   "why": "passed when one level matched; now not proven unless all levels checked"
+  },
+  {
+   "id": "AC-5",
+   "rule": "live change and date switch",
+   "tests": [
+    "ETM-8698",
+    "ETM-8699",
+    "ETM-8700"
+   ],
+   "rating": "weak",
+   "why": "8699/8700 need a row red on one date and green on another"
+  },
+  {
+   "id": "AC-6",
+   "rule": "no legend or filter",
+   "tests": [
+    "ETM-8701"
+   ],
+   "rating": "weak",
+   "why": "only checks the text is absent"
+  },
+  {
+   "id": "AC-7",
+   "rule": "PDF colours, Total row",
+   "tests": [],
+   "rating": "none",
+   "why": "8702 and 8726 manual, no script"
+  },
+  {
+   "id": "AC-8",
+   "rule": "equal = black incl. 0/0",
+   "tests": [
+    "ETM-8687",
+    "ETM-8691"
+   ],
+   "rating": "strong",
+   "why": "data-dependent"
+  },
+  {
+   "id": "AC-9",
+   "rule": "compare shown whole numbers",
+   "tests": [
+    "ETM-8725"
+   ],
+   "rating": "weak",
+   "why": "needs stored decimals in the data"
+  },
+  {
+   "id": "AC-10",
+   "rule": "empty = default",
+   "tests": [
+    "ETM-8724"
+   ],
+   "rating": "weak",
+   "why": "needs rows with an empty value"
+  }
+ ]
+}

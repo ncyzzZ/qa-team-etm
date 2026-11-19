@@ -1,0 +1,47 @@
+{
+ "card": "ETM-8449",
+ "date": "2026-11-19",
+ "verdict": "partly",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1a",
+   "rule": "one-row collapse/expand faster",
+   "tests": [
+    "ETM-8629"
+   ],
+   "rating": "weak",
+   "why": "fixed 20 s limit, no baseline"
+  },
+  {
+   "id": "AC-1b",
+   "rule": "Expand/Collapse All by level",
+   "tests": [
+    "ETM-8630"
+   ],
+   "rating": "weak",
+   "why": "fixed limit; skipped level now not proven"
+  },
+  {
+   "id": "AC-2",
+   "rule": "no regression",
+   "tests": [
+    "ETM-8631",
+    "ETM-8632",
+    "ETM-8633",
+    "ETM-8635"
+   ],
+   "rating": "strong",
+   "why": "exact row ids, signs, filters, scroll"
+  },
+  {
+   "id": "AC-2b",
+   "rule": "dependency lines",
+   "tests": [
+    "ETM-8634"
+   ],
+   "rating": "weak",
+   "why": "lines check-by-eye"
+  }
+ ]
+}

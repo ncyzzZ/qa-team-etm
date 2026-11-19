@@ -1,0 +1,96 @@
+{
+ "card": "ETM-8394",
+ "date": "2026-11-19",
+ "verdict": "partly",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "Job Owner ignored",
+   "tests": [
+    "ETM-8744",
+    "ETM-8745",
+    "ETM-8769"
+   ],
+   "rating": "strong",
+   "why": "DB status and no message"
+  },
+  {
+   "id": "AC-2",
+   "rule": "Add with status",
+   "tests": [
+    "ETM-8735"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-3",
+   "rule": "Add blank -> defaults",
+   "tests": [
+    "ETM-8742",
+    "ETM-8744"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-4",
+   "rule": "Revise with status",
+   "tests": [
+    "ETM-8746"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-5",
+   "rule": "automatic triggers",
+   "tests": [
+    "ETM-8745",
+    "ETM-8747",
+    "ETM-8754"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-6",
+   "rule": "any combination",
+   "tests": [
+    "ETM-8756"
+   ],
+   "rating": "strong",
+   "why": "DB asserted"
+  },
+  {
+   "id": "AC-7",
+   "rule": "Deleted not importable",
+   "tests": [
+    "ETM-8757",
+    "ETM-8765"
+   ],
+   "rating": "strong",
+   "why": "asserted"
+  },
+  {
+   "id": "AC-8",
+   "rule": "master data message",
+   "tests": [
+    "ETM-8757",
+    "ETM-8758"
+   ],
+   "rating": "strong",
+   "why": "exact text"
+  },
+  {
+   "id": "AC-9",
+   "rule": "frozen worklist",
+   "tests": [
+    "ETM-8768"
+   ],
+   "rating": "blocked",
+   "why": "FROZEN_* not set"
+  }
+ ]
+}

@@ -1,0 +1,5 @@
+{"card": "ETM-0001", "date": "2026-11-19", "verdict": "ready", "ac": [
+ {"id": "AC-1", "rule": "x", "tests": ["ETM-2"], "rating": "strong", "why": "asserted"},
+ {"id": "AC-2", "rule": "y", "tests": [], "rating": "weak", "why": "proxy only"},
+ {"id": "AC-3", "rule": "z", "tests": [], "rating": "none", "why": "manual only"}
+]}

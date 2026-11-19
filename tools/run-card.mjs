@@ -68,6 +68,29 @@ function buildReport(resultsDir) {
 }
 
 let counts = null;
+
+// ---- quality of the scripts (proven rate), one line per run in .claude/team/quality.jsonl ----
+// A skipped test is one of: "not-proven" (reached the end but a part was not checked, from notProvenGuard),
+// "fixme" (feature or decision missing), "precondition" (.env / test data missing before it started).
+function skipKind(ann) {
+  const s = ann.filter((a) => a.type === 'skip' || a.type === 'fixme');
+  if (s.some((a) => /^Not proven/.test(a.description || ''))) return 'not-proven';
+  if (s.some((a) => a.type === 'fixme')) return 'fixme';
+  return 'precondition';
+}
+function recordQuality(rows) {
+  const by = (f) => rows.filter(f).length;
+  const q = {
+    t: new Date().toISOString(), card: key, ran: rows.length,
+    passed: by((x) => x.status === 'passed'), failed: by((x) => x.status === 'failed' || x.status === 'timedOut'), flaky: by((x) => x.status === 'flaky'),
+    notProven: by((x) => x.status === 'skipped' && x.why === 'not-proven'), fixme: by((x) => x.status === 'skipped' && x.why === 'fixme'),
+    precondition: by((x) => x.status === 'skipped' && x.why === 'precondition'),
+  };
+  q.provenRate = q.ran ? Math.round((q.passed / q.ran) * 100) : 0;
+  console.log(`  proven ${q.passed}/${q.ran} (${q.provenRate}%) | not proven ${q.notProven} | fixme ${q.fixme} | precondition missing ${q.precondition}`);
+  try { fs.appendFileSync(path.join(ROOT, '.claude', 'team', 'quality.jsonl'), JSON.stringify(q) + '\n'); } catch { /* optional */ }
+  counts = { ...(counts || {}), proven: q.provenRate };
+}
 function summarise(resultsDir) {
   try {
     const r = JSON.parse(fs.readFileSync(path.join(resultsDir, 'results.json'), 'utf8'));
@@ -76,7 +99,7 @@ function summarise(resultsDir) {
       (s.specs || []).forEach((sp) => sp.tests.forEach((t) => {
         const x = t.results[t.results.length - 1];
         const flaky = x.status === 'passed' && t.results.some((y) => y.status === 'failed' || y.status === 'timedOut');
-        rows.push({ title: sp.title, status: flaky ? 'flaky' : x.status, msg: ((x.error && x.error.message) || '').replace(/\x1b\[[0-9;]*m/g, '').split('\n')[0].slice(0, 160) });
+        rows.push({ title: sp.title, status: flaky ? 'flaky' : x.status, why: skipKind(t.annotations || x.annotations || []), msg: ((x.error && x.error.message) || '').replace(/\x1b\[[0-9;]*m/g, '').split('\n')[0].slice(0, 160) });
       }));
       (s.suites || []).forEach(walk);
     })(r);
@@ -85,6 +108,7 @@ function summarise(resultsDir) {
     console.log(`\n== ${key}: ran ${rows.length} | passed ${n('passed')} | failed ${n('failed') + n('timedOut')} | flaky ${n('flaky')} | skipped ${n('skipped')}`);
     rows.filter((x) => x.status === 'flaky').forEach((x) => console.log(`  FLAKY ${x.title.slice(0, 70)} (failed, then passed on retry: not a clean pass)`));
     rows.filter((x) => x.status === 'failed' || x.status === 'timedOut').forEach((x) => console.log(`  FAIL ${x.title.slice(0, 70)} :: ${x.msg}`));
+    recordQuality(rows);
   } catch (e) { console.error(`Could not read results.json: ${e.message}`); }
 }
 
@@ -93,7 +117,7 @@ const TEAM_MJS = path.join(ROOT, '.claude', 'team', 'team.mjs');
 function pushToBoard(report) {
   if (!report || !fs.existsSync(TEAM_MJS)) return;
   const hhmm = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  const res = counts ? ` | ${counts.pass} pass / ${counts.fail} fail` : '';
+  const res = counts ? ` | ${counts.pass} pass / ${counts.fail} fail | proven ${counts.proven ?? '?'}%` : '';
   const r = spawnSync(process.execPath, [TEAM_MJS, 'link', `Evidence report ${key} (${hhmm})${res}`, report, '--kind', 'report', '--job', key], { cwd: path.dirname(TEAM_MJS), encoding: 'utf8' });
   console.log(r.status === 0 ? '[run-card] Report link sent to the board.' : '[run-card] Board link skipped.');
 }

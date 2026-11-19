@@ -1,0 +1,119 @@
+{
+ "card": "ETM-8042",
+ "date": "2026-11-19",
+ "verdict": "not-ready",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "Create modal field",
+   "tests": [
+    "ETM-8829",
+    "ETM-8848",
+    "ETM-8851"
+   ],
+   "rating": "blocked",
+   "why": "ETM8042_EVENT_ID empty"
+  },
+  {
+   "id": "AC-2",
+   "rule": "Edit, also when frozen",
+   "tests": [
+    "ETM-8830"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-3",
+   "rule": "validation Ramp Up >= Ramp Down",
+   "tests": [
+    "ETM-8832",
+    "ETM-8833",
+    "ETM-8834"
+   ],
+   "rating": "blocked",
+   "why": "env; 8833 Dev pending"
+  },
+  {
+   "id": "AC-4",
+   "rule": "badge",
+   "tests": [
+    "ETM-8830",
+    "ETM-8846"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-5",
+   "rule": "independence",
+   "tests": [
+    "ETM-8831",
+    "ETM-8840"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-6",
+   "rule": "migration",
+   "tests": [
+    "ETM-8835",
+    "ETM-8849"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-7",
+   "rule": "Duplicate Plan copies dates",
+   "tests": [
+    "ETM-8850"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-8.1",
+   "rule": "Shutdown Logic lines",
+   "tests": [
+    "ETM-8836",
+    "ETM-8837",
+    "ETM-8839"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-8.2",
+   "rule": "Daily Report snapshot",
+   "tests": [
+    "ETM-8840",
+    "ETM-8841",
+    "ETM-8842"
+   ],
+   "rating": "blocked",
+   "why": "env; PDF 8838 manual"
+  },
+  {
+   "id": "AC-8.3",
+   "rule": "Mob Plans date picker",
+   "tests": [
+    "ETM-8843",
+    "ETM-8837"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-9",
+   "rule": "Shutdown Timeline unchanged",
+   "tests": [
+    "ETM-8844"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  }
+ ]
+}

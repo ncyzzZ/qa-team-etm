@@ -7,6 +7,8 @@
   {"name": "bad draft (no Expected Result, refer to Figma, same as TC, no label, no Trace)", "args": ["draft", "evals/draft-bad.md"], "errors": 9},
   {"name": "good spec", "args": ["spec", "evals/spec-good.spec.ts"], "errors": 0},
   {"name": "bad spec (only, pause, timeout, credential, no steps, no key)", "args": ["spec", "evals/spec-bad.spec.ts"], "errors": 7},
+  {"name": "ac-strength: weak without tests, ready with an AC that has none", "args": ["strength", "evals/strength-bad.json"], "errors": 2},
+  {"name": "false-pass spec (swallowed action, if-expect, early return)", "args": ["spec", "evals/spec-falsepass.spec.ts"], "errors": 3, "contains": "early return without notChecked"},
   {"name": "missing analyst file", "args": ["work", "ETM-0", "analyst"], "errors": 1},
   {"name": "findings file matches the questions", "args": ["findings", "evals/findings-good"], "errors": 0},
   {"name": "findings with a duplicate id, a bad outcome and a missing question", "args": ["findings", "evals/findings-bad"], "errors": 3, "contains": "question 3"},

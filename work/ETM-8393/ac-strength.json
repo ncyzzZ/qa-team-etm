@@ -1,0 +1,54 @@
+{
+ "card": "ETM-8393",
+ "date": "2026-11-19",
+ "verdict": "not-ready",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "show and hide on hover",
+   "tests": [
+    "ETM-8810",
+    "ETM-8818",
+    "ETM-8819"
+   ],
+   "rating": "blocked",
+   "why": "tooltip ETM-8534 not in the build"
+  },
+  {
+   "id": "AC-2",
+   "rule": "Capacity and Consumption values and icons",
+   "tests": [
+    "ETM-8811",
+    "ETM-8812",
+    "ETM-8813",
+    "ETM-8814",
+    "ETM-8823"
+   ],
+   "rating": "blocked",
+   "why": "fixme"
+  },
+  {
+   "id": "AC-3",
+   "rule": "one tooltip per same-height section",
+   "tests": [
+    "ETM-8815",
+    "ETM-8817",
+    "ETM-8824",
+    "ETM-8826",
+    "ETM-8827"
+   ],
+   "rating": "blocked",
+   "why": "fixme"
+  },
+  {
+   "id": "AC-4",
+   "rule": "no Works list",
+   "tests": [
+    "ETM-8811"
+   ],
+   "rating": "blocked",
+   "why": "fixme"
+  }
+ ]
+}

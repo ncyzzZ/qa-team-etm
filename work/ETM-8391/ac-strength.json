@@ -1,0 +1,114 @@
+{
+ "card": "ETM-8391",
+ "date": "2026-11-19",
+ "verdict": "not-ready",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "checkbox list replaces old filter",
+   "tests": [
+    "ETM-8649",
+    "ETM-8663",
+    "ETM-8657"
+   ],
+   "rating": "blocked",
+   "why": "WL_REMARK_SET_PATH not set"
+  },
+  {
+   "id": "AC-2",
+   "rule": "case / space variants",
+   "tests": [
+    "ETM-8650",
+    "ETM-8649"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-3",
+   "rule": "'-' first, Blank merge",
+   "tests": [
+    "ETM-8650",
+    "ETM-8651",
+    "ETM-8652"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-4",
+   "rule": "localeCompare",
+   "tests": [
+    "ETM-8650"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-5",
+   "rule": "scroll / ellipsis in filter",
+   "tests": [
+    "ETM-8654",
+    "ETM-8650"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-6",
+   "rule": "table cell ellipsis",
+   "tests": [
+    "ETM-8654"
+   ],
+   "rating": "blocked",
+   "why": "WL_REMARK_MANY_PATH"
+  },
+  {
+   "id": "AC-7",
+   "rule": "selection filters",
+   "tests": [
+    "ETM-8655"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-8",
+   "rule": "Nualta",
+   "tests": [
+    "ETM-8657"
+   ],
+   "rating": "weak",
+   "why": "only compared with Job Description panel"
+  },
+  {
+   "id": "AC-9",
+   "rule": "permission / Plan Card entry",
+   "tests": [
+    "ETM-8648",
+    "ETM-8649"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-10",
+   "rule": "not mandatory",
+   "tests": [
+    "ETM-8651"
+   ],
+   "rating": "weak",
+   "why": "form labels guessed"
+  },
+  {
+   "id": "AC-11",
+   "rule": "old filter cleared",
+   "tests": [
+    "ETM-8663"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  }
+ ]
+}

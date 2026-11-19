@@ -1,0 +1,103 @@
+{
+ "card": "ETM-8049",
+ "date": "2026-11-19",
+ "verdict": "not-ready",
+ "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "ac": [
+  {
+   "id": "AC-1",
+   "rule": "options hidden, order, position, per user",
+   "tests": [
+    "ETM-8770",
+    "ETM-8775",
+    "ETM-8776",
+    "ETM-8777"
+   ],
+   "rating": "blocked",
+   "why": "WLOC_SCRATCH_PATH not set, file skips"
+  },
+  {
+   "id": "AC-3",
+   "rule": "', ' join, roll-up, order",
+   "tests": [
+    "ETM-8778"
+   ],
+   "rating": "blocked",
+   "why": "WLOC_CELLS_PATH"
+  },
+  {
+   "id": "AC-5",
+   "rule": "ellipsis / hover",
+   "tests": [
+    "ETM-8779"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-6",
+   "rule": "Deck filter",
+   "tests": [
+    "ETM-8781"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-8",
+   "rule": "any-value match",
+   "tests": [
+    "ETM-8782"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-11",
+   "rule": "case variants",
+   "tests": [
+    "ETM-8783"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-12",
+   "rule": "no sort",
+   "tests": [
+    "ETM-8780"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-13",
+   "rule": "export unchanged",
+   "tests": [
+    "ETM-8784"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  },
+  {
+   "id": "AC-14",
+   "rule": "Master Data conversion",
+   "tests": [
+    "ETM-8785",
+    "ETM-8788"
+   ],
+   "rating": "blocked",
+   "why": "forms env; 8786/8787 not scripted"
+  },
+  {
+   "id": "AC-18",
+   "rule": "mandatory, 30 chars",
+   "tests": [
+    "ETM-8790",
+    "ETM-8791"
+   ],
+   "rating": "blocked",
+   "why": ".env value empty, the test skips"
+  }
+ ]
+}

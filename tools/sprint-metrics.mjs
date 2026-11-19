@@ -97,9 +97,33 @@ function lineChart(rows, key, title, marker, digits) {
 }
 
 // headline tiles: the last finished sprint (an active sprint's numbers are not complete yet)
+// ---- quality of the AI agent's scripts: proven rate (tools/run-card.mjs -> .claude/team/quality.jsonl, latest run per card)
+// and AC strength (work/<KEY>/ac-strength.json, written by the test-reviewer at card close) ----
+export function scriptQuality(sprints, work, qualityFile) {
+  const latest = new Map();
+  try {
+    for (const l of fs.readFileSync(qualityFile, 'utf8').split('\n').filter(Boolean)) {
+      const q = JSON.parse(l); if (!latest.has(q.card) || latest.get(q.card).t < q.t) latest.set(q.card, q);
+    }
+  } catch { /* no runs yet */ }
+  return sprints.map((s) => {
+    const runs = s.stories.map((k) => latest.get(k)).filter(Boolean);
+    const sum = (f) => runs.reduce((n, q) => n + (q[f] || 0), 0);
+    const ac = { total: 0, strong: 0, weak: 0, blocked: 0, none: 0, cards: 0 };
+    for (const k of s.stories) {
+      try {
+        const j = JSON.parse(fs.readFileSync(path.join(work, k, 'ac-strength.json'), 'utf8')); ac.cards++;
+        for (const a of j.ac || []) { ac.total++; if (a.rating in ac) ac[a.rating]++; }
+      } catch { /* not reviewed */ }
+    }
+    const ran = sum('ran');
+    return { sprint: s.sprint, active: s.active, cardsRun: runs.length, ran, passed: sum('passed'), failed: sum('failed') + sum('flaky'), notProven: sum('notProven'), fixme: sum('fixme'), precondition: sum('precondition'), provenRate: ran ? sum('passed') / ran : null, ac };
+  });
+}
+
 export const headline = (rows) => [...rows].reverse().find((r) => !r.active) || rows[rows.length - 1] || {};
 
-function html(rows, marker, unassigned) {
+function html(rows, marker, unassigned, quality = []) {
   const last = headline(rows);
   const body = rows.map((r) => `<tr${r.sprint === marker ? ' class="first"' : ''}><td>Sprint ${r.sprint}${r.active ? ' *' : ''}</td><td>${r.stories}</td><td>${r.defects}</td><td>${fmt(r.defectsPerStory, 2)}</td><td>${r.bugs}</td><td>${fmt(r.raised)}</td><td>${fmt(r.before)} / ${fmt(r.after)}</td><td><b>${fmt(r.stopped)}</b></td><td>${fmt(r.confirmed)}</td><td>${fmt(r.ignored)}</td><td>${fmt(r.laterDefect)}</td><td>${fmt(r.backfilled)}</td></tr>`).join('');
   const kinds = count(rows.flatMap((r) => Object.entries(r.kinds).flatMap(([k, n]) => Array(n).fill(k))));
@@ -131,6 +155,11 @@ th:first-child,td:first-child{text-align:left}tr.first td{background:var(--hi)}.
 <div class="charts">${lineChart(rows, 'defectsPerStory', 'Defect ที่เจอใน QA ต่อ Story', marker, 2)}${lineChart(rows, 'bugs', 'Bug ที่หลุดไป UAT/PROD', marker, 0)}</div>
 <div class="tw"><table><thead><tr><th>Sprint</th><th>Story</th><th>Defect</th><th>Defect/Story</th><th>Bug</th><th>ข้อที่ยก</th><th>ก่อน / หลัง dev</th><th>กันได้</th><th>ยืนยันเดิม</th><th>ไม่มีคนตอบ</th><th>เตือนแล้วยังเกิด</th><th>เติมย้อนหลัง</th></tr></thead><tbody>${body}</tbody></table></div>
 <p class="sub" style="margin-top:8px">ประเภทข้อที่ยก: ${esc(kindTxt)}${unassigned.length ? ` · การ์ดที่ไม่อยู่ใน sprint ใด: ${esc(unassigned.join(', '))}` : ''}</p>
+${quality.some((q) => q.ran || q.ac.total) ? `<h2 style="font-size:17px;margin:24px 0 4px">คุณภาพ script ของ AI agent</h2>
+<p class="sub" style="margin:0">Proven = test ที่ผ่านจริงทุก step หารด้วย test ที่รัน (รอบล่าสุดของแต่ละการ์ด) · AC strong = AC ที่ script พิสูจน์ได้จริง (รีวิวตอนปิดการ์ด)</p>
+<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>การ์ดที่รัน</th><th>Test</th><th>ผ่าน</th><th>Fail</th><th>ไม่ได้พิสูจน์</th><th>Fixme</th><th>ขาด .env/data</th><th>Proven</th><th>AC strong / ทั้งหมด</th><th>weak / blocked / none</th></tr></thead><tbody>
+${quality.map((q) => `<tr><td>Sprint ${q.sprint}${q.active ? ' *' : ''}</td><td>${q.cardsRun}</td><td>${q.ran}</td><td>${q.passed}</td><td>${q.failed}</td><td>${q.notProven}</td><td>${q.fixme}</td><td>${q.precondition}</td><td><b>${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'}</b></td><td>${q.ac.total ? `${q.ac.strong} / ${q.ac.total}` : '-'}</td><td>${q.ac.total ? `${q.ac.weak} / ${q.ac.blocked} / ${q.ac.none}` : '-'}</td></tr>`).join('')}
+</tbody></table></div>` : ''}
 <div class="note"><b>วิธีอ่าน</b><ul>
 <li><b>Defect</b> = issue type Defect (เจอใน QA) · <b>Bug</b> = issue type Bug (หลุดไป UAT/PROD) · นับตาม Sprint ของ defect เอง หารด้วยจำนวน Story ใน sprint นั้น (Story ที่ยกข้าม sprint นับทุก sprint)</li>
 <li><b>กันได้</b> = BA แก้/เพิ่ม AC หรือ dev แก้ก่อนส่ง QA เพราะข้อที่ทีมยก · <b>ยืนยันเดิม</b> = BA ยืนยันพฤติกรรมเดิม ไม่นับว่ากันได้</li>
@@ -150,7 +179,8 @@ function main() {
   const marker = Number(opt('--marker', 27));
   const last = sprints[sprints.length - 1];
   const out = path.resolve(opt('--out', last ? path.join(work, `SPRINT${last.sprint}`, 'metrics.html') : path.join(work, 'metrics.html')));
-  if (sprints.length) fs.writeFileSync(out, html(rows, marker, unassigned));
+  const quality = scriptQuality(sprints, work, path.resolve(opt('--quality', path.join(ROOT, '.claude', 'team', 'quality.jsonl'))));
+  if (sprints.length) fs.writeFileSync(out, html(rows, marker, unassigned, quality));
   const sum = (k) => rows.reduce((s, r) => s + (r[k] || 0), 0);
   console.log(`[sprint-metrics] sprints ${sprints[0]?.sprint ?? '-'}-${last?.sprint ?? '-'}, ${sum('stories')} stories, ${sum('defects')} defects, ${sum('bugs')} bugs, ${sum('stopped')} stopped before code`);
   for (const r of rows) console.log(`  S${r.sprint}${r.active ? ' (in progress)' : ''}: ${r.stories} stories, defect/story ${fmt(r.defectsPerStory, 2)}, bugs ${r.bugs}, findings ${fmt(r.raised)} (stopped ${fmt(r.stopped)}, before dev ${fmt(r.before)})`);
@@ -159,6 +189,7 @@ function main() {
     const h = healSummary(resolveRepos().pwRepo, {});
     console.log(`  self-healing: locator failures ${h.locatorFailures}, healed ${h.healed} (fe ${h.bySource.fe}, live ${h.bySource.live}), rate ${h.rate == null ? '-' : `${Math.round(h.rate * 100)}%`}`);
   } catch (e) { console.log(`  self-healing: - (${e.message})`); }
+  for (const q of quality) if (q.ran || q.ac.total) console.log(`  script quality S${q.sprint}: proven ${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'} (${q.passed}/${q.ran}, not proven ${q.notProven}, fixme ${q.fixme}, precondition ${q.precondition}) | AC strong ${q.ac.total ? `${q.ac.strong}/${q.ac.total}` : '-'}`);
   console.log(`  unassigned: ${unassigned.length}${unassigned.length ? ` (${unassigned.join(', ')})` : ''}`);
   if (sprints.length) console.log(`  report: ${path.relative(process.cwd(), out)}`);
   for (const e of errors) console.log(`  ERR  ${e}`);
