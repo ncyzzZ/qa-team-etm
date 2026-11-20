@@ -1,0 +1,19 @@
+[
+  { "prefix": "pages/shutdown-logic", "specs": ["shutdownLogic"] },
+  { "prefix": "pages/daily-report", "specs": ["dailyReport"] },
+  { "prefix": "pages/timeline", "specs": ["shutdownTimeline"] },
+  { "prefix": "pages/shutdown-timeline", "specs": ["shutdownTimeline"] },
+  { "prefix": "pages/manpower-mob-plan", "specs": ["manpowerMobPlan"] },
+  { "prefix": "pages/mob-plan", "specs": ["manpowerMobPlan"] },
+  { "prefix": "pages/equipment-mob-plan", "specs": ["equipmentMobPlan"] },
+  { "prefix": "pages/worklist-import", "specs": ["importWork"] },
+  { "prefix": "pages/worklist-detail", "specs": ["worklist"] },
+  { "prefix": "pages/worklist", "specs": ["worklist"] },
+  { "prefix": "pages/edit-work-details", "specs": ["worklist"] },
+  { "prefix": "pages/edit-work-breakdown", "specs": ["worklist"] },
+  { "prefix": "pages/form-shutdown-event-work", "specs": ["worklist"] },
+  { "prefix": "pages/details", "specs": ["planning"] },
+  { "prefix": "components/planning-list", "specs": ["planning"] },
+  { "prefix": "pages/landing", "specs": ["shutdownEventList"] },
+  { "prefix": "pages/form-event", "specs": ["shutdownEventList"] }
+]
