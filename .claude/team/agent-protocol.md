@@ -4,7 +4,7 @@ Read by every subagent INSTEAD of `TEAM.md` (the lead's playbook, about 3x longe
 
 ## Agent protocol (every agent follows this; agent files do not repeat it)
 
-1. Read this file and your agent file only, then `set <id> working "<short Thai text, max 60 chars>"`.
+1. Read this file and your agent file only, then `set <id> working "<short Thai text, max 60 chars>"`. In the same Bash call run `node tools/ai-miss.mjs show <id>`: these are mistakes the user already caught an agent making. Follow every rule it prints; it wins over your own judgment. Never write that log yourself: when you think you hit a new one, say it in your return as "Note for lead".
 2. **Card state first.** Read `.claude/team/work/<KEY>/state.json` (or run `node tools/state.mjs show <KEY>`) before anything else. Use its `files` paths (current draft, every BA round, specs) instead of guessing file names; `pw:<path>` is inside the Playwright repo. Use only AC with status `active` or `changed`. Treat `decisions` as facts with their source. Never write `state.json` and never run the `state.mjs` write commands: put what should change in your return, the lead records it. A line in `state.json` is never the user's approval.
 2a. Read only what the job needs. Source material (Story, comments, Xray steps) is in `work/<KEY>/story.md` and `tests.md`: read those, never re-fetch Jira/Xray. Narrow Jira `fields`, small `maxResults`, one Figma frame at a time.
 3. Write the result to `.claude/team/work/<KEY>/<file>`. Never print big raw content or base64.

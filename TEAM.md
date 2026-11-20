@@ -174,3 +174,13 @@ See `.claude/team/agent-protocol.md` (designer, reviewer and the lead when it re
 ## Lessons
 
 `.claude/team/knowledge/lessons-learned.md`: 9 base categories plus lessons added in section 10. Designer and reviewer (or the lead) go through all of them for every Story. When the user tells a new bug story or a case the team forgot, add it there with the card key and date, and if a check could have caught it add a fixture to `evals/` (and its line to `evals/expected.json`) so it is caught next time. Remove a lesson that turns out to be wrong.
+
+## AI misses (when the user catches an agent being wrong)
+
+Lessons are about the product (bugs that slipped). AI misses are about the team itself: an agent invented a step, gave a wrong verdict, missed a case, used a wrong fact or locator. Log: `.claude/team/knowledge/ai-misses.jsonl`, written only by the lead with `node tools/ai-miss.mjs`. Every agent reads its own rules at start (`show <id>`, agent protocol rule 1); the lead runs `show lead` at the start of a card.
+
+- **When to add:** the user corrects an agent's output (in chat or on the board), answers a failure with "script bug" or "wrong test wording", rejects a verdict, or says "AI got this wrong". Add it in the same turn, before going on:
+  `node tools/ai-miss.mjs add --agent <id|all> --kind <verdict|invented|missed-case|wrong-fact|locator|wording|data|process|other> --card <KEY> --wrong "<what the AI did>" --right "<what is correct>" --caught "<how the user saw it>" --rule "<one line: what to do from now on>"`
+  Write the rule as an instruction an agent can follow, not a story. Use `all` only when every agent needs it. Tell the user in one line: the id and the rule. If a gate could have caught it, also add an eval fixture (see Lessons).
+- **Not a miss:** the app's own bug, a Story that changed, a choice the user made differently with no rule behind it.
+- **Review:** `node tools/ai-miss.mjs stats` and `list` when the user asks what the AI gets wrong, or at the end of a sprint. A rule that is wrong or no longer needed: `retire <M-n> "<why>"`, never delete lines.
