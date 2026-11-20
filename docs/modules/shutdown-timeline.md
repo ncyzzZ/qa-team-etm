@@ -49,7 +49,7 @@ Also read `shutdown-timeline-validation.md` (toast/modal texts, field limits) an
 - Bottom Total row: week blank only when every task is blank in that week; Plan and Actual separate; 0 is NOT blank (`0.0`). BA to add to Story. (ETM-7346, 4 Nov, confirmed by: user)
 - Minor optional tasks: Plan (%) shown, weekly cells blank (not `0.0`), no bar; Minor weekly total 55.0% until dates set, Total Plan 100.0. (ETM-7347, 4 Nov, confirmed by: BA)
 - Actual only up to Current Week; Actual > 0 widens the grid, 0 does not; grid contracts only after `Update Progress`; out-of-range notes deleted silently. (ETM-7346, 3 Nov, confirmed by: user "follow the AC")
-- Actual bar Green `#95DE64` when CumActual >= CumPlan (equal = green), Red `#F5222D` below, per task row. (ETM-7346, 3 Nov, confirmed by: user "follow the AC")
+- Actual bar Green `#95DE64` when CumActual >= CumPlan (equal = green), Red `#FF7875` below (user, 20 Nov: Red bar uses #FF7875, was #F5222D in the AC), per task row. (ETM-7346, 3 Nov, confirmed by: user "follow the AC")
 
 ### Edit plan and task planning (ETM-7348; user: "follow the AC first")
 - Add/Edit group is inline (no modal): title `New Activity Group`, row `No activity added.`; new activity Plan (%) `0.0`, Status `Open`. (ETM-7348, 3 Nov, confirmed by: user, "it is a new page")
