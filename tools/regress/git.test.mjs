@@ -54,3 +54,14 @@ test('commitBefore: last commit of a ref before a date', () => {
   assert.equal(commitBefore(r, 'develop', '2020-01-01T00:00:00Z'), null);
   void base;
 });
+
+test('merges: a merge whose diff fails is kept with an error, not dropped', () => {
+  const fake = (_r, args) => {
+    if (args[0] === 'log') return "m1\tp1 p2\tMerge branch 'feature/ETM-5' into 'develop'";
+    throw new Error('git diff timed out');
+  };
+  const m = merges('/fe', 'a', 'b', { git: fake });
+  assert.equal(m.length, 1);
+  assert.equal(m[0].branch, 'feature/ETM-5');
+  assert.match(m[0].error, /diff failed/);
+});

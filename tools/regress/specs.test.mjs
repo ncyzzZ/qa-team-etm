@@ -48,3 +48,12 @@ test('specIndex: plain common words are not tokens (true, empty, Date); distinct
   for (const w of ['true', 'empty', 'Date', 'Duration']) assert.ok(!t.has(w), `${w} should be dropped`);
   for (const w of ['Ramp Down/Up Date', 'weekly-cell']) assert.ok(t.has(w), `${w} should stay`);
 });
+
+test('specIndex: utility CSS classes (cursor-pointer, flex-1, text-sm) are not tokens', () => {
+  const { pw, team } = repos();
+  fs.writeFileSync(path.join(pw, 'tests/fe/e2e/shutdownTimeline/verifyUtil.spec.ts'),
+    "test('ETM-13 - u', async ({ page }) => { page.locator('.cursor-pointer'); page.locator('.flex-row-reverse'); page.locator('.text-red-500'); page.locator('.note-modal__body'); });\n");
+  const t = specIndex(pw, team).find((x) => x.file.endsWith('verifyUtil.spec.ts')).tokens;
+  for (const w of ['cursor-pointer', 'flex-row-reverse', 'text-red-500']) assert.ok(!t.has(w), `${w} should be dropped`);
+  assert.ok(t.has('note-modal__body'));
+});

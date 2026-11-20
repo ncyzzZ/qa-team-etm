@@ -3,7 +3,8 @@
 //
 // Spec  = { file, folder, keys: string[], tokens: Set<string>, owner: string|null }
 // Merge = { commit, branch, keys: string[], files: { path, lines: string[] }[] }
-// Row   = { file, tier: 'Must'|'Should'|'Warn', reasons: string[], owner: string|null }
+// Row   = { file, tier: 'Must'|'Should'|'Warn', reasons: string[], owner: string|null,
+//           byGroup: { [merge commit]: { tier, reasons: string[] } } }  (tier and reasons of one merge group)
 
 const FEATURE = 'src/app/features/shutdown-event-list/';
 const RANK = { Must: 3, Should: 2, Warn: 1 };
@@ -48,7 +49,8 @@ export function isListable(specPath) {
   const p = String(specPath).replace(/\\/g, '/');
   if (!/^tests\/fe\/e2e\/.+\.spec\.ts$/.test(p)) return false;
   if (/\/(setup|manual|explore)\//.test(p)) return false;
-  return !/^(setup|cleanup|probe)/i.test(p.split('/').pop());
+  const name = p.split('/').pop();
+  return !/^(setup|cleanup|probe)/i.test(name) && !/\.manual\.spec\.ts$/.test(name);
 }
 
 const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -60,10 +62,14 @@ export function tier({ specs, merges, map, importers }) {
   const rows = new Map();
   const notMapped = new Set();
   const wide = [];
+  let group = null; // commit of the merge being ranked
   const add = (s, t, reason) => {
-    const r = rows.get(s.file) || { file: s.file, tier: t, reasons: [], owner: s.owner };
+    const r = rows.get(s.file) || { file: s.file, tier: t, reasons: [], owner: s.owner, byGroup: {} };
     if (RANK[t] > RANK[r.tier]) r.tier = t;
     if (!r.reasons.includes(reason)) r.reasons.push(reason);
+    const g = r.byGroup[group] || (r.byGroup[group] = { tier: t, reasons: [] });
+    if (RANK[t] > RANK[g.tier]) g.tier = t;
+    if (!g.reasons.includes(reason)) g.reasons.push(reason);
     rows.set(s.file, r);
   };
   const uses = new Map();
@@ -71,6 +77,7 @@ export function tier({ specs, merges, map, importers }) {
   const inFolders = (folders) => specs.filter((s) => folders.includes(s.folder));
 
   for (const m of merges) {
+    group = m.commit;
     const name = m.keys.length ? `${m.branch} (${m.keys.join(', ')})` : `${m.branch} (no card)`;
     for (const s of specs) if (s.owner && m.keys.includes(s.owner)) add(s, 'Must', `${name}: tests of card ${s.owner}`);
 
@@ -106,18 +113,16 @@ export function tier({ specs, merges, map, importers }) {
   return { rows: out, notMapped: [...notMapped].sort(), wide };
 }
 
-/** Run commands: per owner card one run-card for Must, one for Should + Warn; specs with no owner in one plain playwright run. */
-export function commands(rows) {
+const byTier = (a, b) => RANK[b.tier] - RANK[a.tier] || a.file.localeCompare(b.file);
+/**
+ * Run commands: ONE run-card per owner card (Must files first; run-card's data gate allows one run per data reset);
+ * specs with no owner in one plain playwright run, from PW_REPO.
+ */
+export function commands(rows, { pwRepo = '<PW_REPO>' } = {}) {
   const out = [];
   const owners = [...new Set(rows.filter((r) => r.owner).map((r) => r.owner))].sort();
-  for (const o of owners) {
-    const mine = rows.filter((r) => r.owner === o);
-    const must = mine.filter((r) => r.tier === 'Must').map((r) => r.file);
-    const rest = mine.filter((r) => r.tier !== 'Must').map((r) => r.file);
-    if (must.length) out.push(`node tools/run-card.mjs ${o} ${must.join(' ')}`);
-    if (rest.length) out.push(`node tools/run-card.mjs ${o} ${rest.join(' ')}`);
-  }
-  const none = rows.filter((r) => !r.owner).sort((a, b) => RANK[b.tier] - RANK[a.tier]).map((r) => r.file);
-  if (none.length) out.push(`npx playwright test ${none.join(' ')} --workers=1 --reporter=line   # results not recorded per card`);
+  for (const o of owners) out.push(`node tools/run-card.mjs ${o} ${rows.filter((r) => r.owner === o).sort(byTier).map((r) => r.file).join(' ')}`);
+  const none = rows.filter((r) => !r.owner).sort(byTier).map((r) => r.file);
+  if (none.length) out.push(`cd "${pwRepo}" && npx playwright test ${none.join(' ')} --workers=1 --reporter=line   # results not recorded per card`);
   return out;
 }

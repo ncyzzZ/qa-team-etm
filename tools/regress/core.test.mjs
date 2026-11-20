@@ -103,17 +103,18 @@ test('tier: an app file no prefix maps is listed as not mapped', () => {
   assert.deepEqual(r.notMapped, [`${F}pages/edit-organic-crew/a.ts`]);
 });
 
-test('commands: one run-card per owner and tier (Must first); no owner goes to plain playwright', () => {
+test('commands: one run-card per owner (Must files first, the data gate allows one run per reset); no owner goes to plain playwright from PW_REPO', () => {
   const c = commands([
     { file: 'tests/fe/e2e/b.spec.ts', tier: 'Should', reasons: [], owner: 'ETM-8405' },
     { file: 'tests/fe/e2e/a.spec.ts', tier: 'Must', reasons: [], owner: 'ETM-8405' },
     { file: 'tests/fe/e2e/c.spec.ts', tier: 'Must', reasons: [], owner: null },
-  ]);
+  ], { pwRepo: '/pw repo' });
   const rc = c.filter((x) => x.includes('run-card.mjs ETM-8405'));
-  assert.equal(rc.length, 2);
-  assert.match(rc[0], /a\.spec\.ts/);
-  const plain = c.filter((x) => x.startsWith('npx playwright test'));
+  assert.equal(rc.length, 1);
+  assert.ok(rc[0].indexOf('a.spec.ts') < rc[0].indexOf('b.spec.ts'), 'Must files first');
+  const plain = c.filter((x) => x.includes('npx playwright test'));
   assert.equal(plain.length, 1);
+  assert.ok(plain[0].startsWith('cd "/pw repo" && npx playwright test'));
   assert.match(plain[0], /--workers=1 --reporter=line/);
 });
 
@@ -122,4 +123,23 @@ test('tier: a token matches as a whole word only (weekly-cell inside weekly-cell
   assert.equal(r.rows.filter((x) => x.file === 'a.spec.ts' && x.tier === 'Must').length, 0);
   const h = run([spec('a.spec.ts', 'dailyReport', { tokens: ['weekly-cell'] })], [merge('fix/x', [[`${F}pages/worklist/a.ts`, ['<td class="x weekly-cell">']]])]);
   assert.equal(h.rows.find((x) => x.file === 'a.spec.ts').tier, 'Must');
+});
+
+test('tier: reasons and tier are kept per merge group (ETM-1 does not get the reasons of ETM-12)', () => {
+  const a = spec('a.spec.ts', 'worklist', { tokens: ['work-row-x'] });
+  const b = spec('b.spec.ts', 'dailyReport');
+  const r = run([a, b], [
+    merge('feature/ETM-1', [[`${F}pages/worklist/a.ts`, ['work-row-x']]]),
+    merge('feature/ETM-12', [[`${F}pages/daily-report/b.ts`]]),
+    merge('fix/sonar', [[`${F}pages/worklist/c.ts`]]),
+  ]);
+  const ra = r.rows.find((x) => x.file === 'a.spec.ts'), rb = r.rows.find((x) => x.file === 'b.spec.ts');
+  assert.equal(ra.byGroup['c-feature/ETM-1'].tier, 'Must');
+  assert.equal(ra.byGroup['c-fix/sonar'].tier, 'Should', 'the group tier, not the overall Must');
+  assert.equal(rb.byGroup['c-feature/ETM-1'], undefined);
+  assert.equal(rb.byGroup['c-feature/ETM-12'].tier, 'Should');
+});
+
+test('isListable: *.manual.spec.ts specs are not run unattended', () => {
+  assert.equal(isListable('tests/fe/e2e/shutdownLogic/verifyX.manual.spec.ts'), false);
 });

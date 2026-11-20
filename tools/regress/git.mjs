@@ -8,7 +8,7 @@ const ONLY_VERSION = /^(package\.json|package-lock\.json)$/;
 
 function changedFiles(feRepo, from, to, git) {
   let out = '';
-  try { out = git(feRepo, ['diff', '--find-renames', '--unified=0', '--no-color', from, to, '--', ...APP_FILES], { timeout: 60_000 }); } catch { return []; }
+  out = git(feRepo, ['diff', '--find-renames', '--unified=0', '--no-color', from, to, '--', ...APP_FILES], { timeout: 60_000 }); // throws: the caller records it
   const files = [];
   let cur = null;
   for (const l of out.split('\n')) {
@@ -40,14 +40,18 @@ export function merges(feRepo, since, to, { git = feGit } = {}) {
     const [commit, parents, subject] = line.split('\t');
     const first = parents.split(' ')[0];
     const isMerge = parents.split(' ').length > 1;
-    if (!isMerge) {
-      const names = git(feRepo, ['diff', '--name-only', first, commit]).split('\n').filter(Boolean);
-      if (names.length && names.every((n) => ONLY_VERSION.test(n))) continue; // version bump
-    }
     const branch = isMerge ? ((subject.match(/^Merge branch '([^']+)'/) || [])[1] || subject) : `${subject} (direct commit ${commit.slice(0, 7)})`;
-    const files = changedFiles(feRepo, first, commit, git);
-    if (!files.length) continue;
-    out.push({ commit, branch, keys: cardKeys(branch), files });
+    try {
+      if (!isMerge) {
+        const names = git(feRepo, ['diff', '--name-only', first, commit]).split('\n').filter(Boolean);
+        if (names.length && names.every((n) => ONLY_VERSION.test(n))) continue; // version bump
+      }
+      const files = changedFiles(feRepo, first, commit, git);
+      if (!files.length) continue;
+      out.push({ commit, branch, keys: cardKeys(branch), files });
+    } catch (e) {
+      out.push({ commit, branch, keys: cardKeys(branch), files: [], error: `diff failed: ${e.message.split('\n')[0].slice(0, 160)}` });
+    }
   }
   return out;
 }

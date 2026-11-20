@@ -36,6 +36,7 @@ function unitFiles(pwRepo, unit) {
 }
 
 const TEXTISH = new Set(['text', 'role-name', 'label', 'placeholder']);
+const UTILITY = /^-?(cursor|flex|text|bg|font|border|rounded|shadow|opacity|overflow|whitespace|truncate|items|justify|content|self|place|gap|space|grid|col|row|order|w|h|min|max|p[trblxy]?|m[trblxy]?|top|left|right|bottom|inset|z|leading|tracking|align|select|pointer|transition|duration|ease|hidden|block|inline|visible|invisible|sr|outline|ring|divide|fill|stroke)-/;
 /**
  * Only distinctive tokens point at a spec: a plain word (Date, true, empty, chip) appears all over stms-fe.
  * Text: several words or 12+ characters. Class / id / attribute: 6+ characters with a dash, underscore or inner capital.
@@ -43,6 +44,7 @@ const TEXTISH = new Set(['text', 'role-name', 'label', 'placeholder']);
 function keep(v, kind) {
   if (!v || v.length < 4 || GENERIC_TOKENS.has(v) || isLibraryToken(v)) return false;
   if (TEXTISH.has(kind)) return /[\s/]/.test(v.trim()) || v.length >= 12;
+  if (UTILITY.test(v)) return false; // Tailwind-style utility class: used all over stms-fe
   return v.length >= 6 && /[-_]|[a-z][A-Z]/.test(v);
 }
 

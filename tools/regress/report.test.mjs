@@ -76,3 +76,16 @@ test('--card ETM-1 keeps only the merges of that card', async () => {
   assert.deepEqual(json.groups.map((g) => g.branch), ['feature/ETM-1']);
   assert.ok(!json.rows.some((r) => r.tier === 'Warn'));
 });
+
+test('report: a merge with a failed diff is shown, the group table uses the group tier', async () => {
+  const d = deps({ merges: () => [
+    { commit: 'm1', branch: 'feature/ETM-1', keys: ['ETM-1'], files: [{ path: `${F}pages/worklist/a.ts`, lines: ['work-row-x'] }] },
+    { commit: 'm3', branch: 'fix/sonar', keys: [], files: [{ path: `${F}pages/worklist/c.ts`, lines: [] }] },
+    { commit: 'm4', branch: 'feature/ETM-7', keys: ['ETM-7'], files: [], error: 'diff failed: timeout' },
+  ] });
+  await main([], d);
+  const md = fs.readFileSync(path.join(d.teamRoot, 'work', 'REGRESSION', reports(d).find((f) => f.endsWith('.md'))), 'utf8');
+  assert.match(md, /ETM-7.*\n[\s\S]*?diff failed: timeout/);
+  const sonar = md.slice(md.indexOf('fix/sonar'));
+  assert.match(sonar, /\| Should \| tests\/fe\/e2e\/worklist\/a\.spec\.ts/);
+});

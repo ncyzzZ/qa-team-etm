@@ -31,18 +31,23 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
   L.push(`# Regression from stms-fe changes ${range.since.slice(0, 7)}..${range.to.slice(0, 7)}`, '');
   L.push(`- Range: ${range.since} .. ${range.to} (${range.toRef}); start chosen by: ${how}.`);
   L.push("- QA's deployed commit is unknown: this compares develop, so a change may not be on QA yet.");
-  L.push(`- ${groups.length} merge group(s); specs: Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}.`, '');
+  L.push(`- ${groups.length} merge group(s)${groups.some((g) => g.error) ? ` (${groups.filter((g) => g.error).length} NOT checked: diff failed)` : ''}; specs: Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}.`, '');
   for (const g of groups) {
-    L.push(`## ${g.keys.length ? g.keys.join(', ') : 'no card'}: ${g.branch}`, '', `${g.files.length} changed app file(s): ${g.files.slice(0, 8).map((f) => `\`${f}\``).join(', ')}${g.files.length > 8 ? ' ...' : ''}`, '');
-    const mine = rows.filter((r) => r.reasons.some((x) => x.startsWith(g.branch)));
-    if (!mine.length) { L.push('No spec found for this group.', ''); continue; }
+    L.push(`## ${g.keys.length ? g.keys.join(', ') : 'no card'}: ${g.branch} (${g.commit.slice(0, 7)})`, '');
+    if (g.error) { L.push(`**Not checked: ${g.error}.** Look at this merge by hand or run again.`, ''); continue; }
+    L.push(`${g.files.length} changed app file(s): ${g.files.slice(0, 8).map((f) => `\`${f}\``).join(', ')}${g.files.length > 8 ? ' ...' : ''}`, '');
+    const mine = rows.filter((r) => r.byGroup[g.commit]).sort((a, b) => ({ Must: 3, Should: 2, Warn: 1 }[b.byGroup[g.commit].tier] - { Must: 3, Should: 2, Warn: 1 }[a.byGroup[g.commit].tier]) || a.file.localeCompare(b.file));
+    if (!mine.length) { L.push(g.keys.length ? 'No spec found for this group (the card has no scripts, and no page spec matched).' : 'No spec found for this group.', ''); continue; }
     L.push('| Tier | Spec | Reasons |', '|---|---|---|');
-    for (const r of mine) L.push(`| ${r.tier} | ${r.file} | ${r.reasons.filter((x) => x.startsWith(g.branch)).map((x) => x.slice(g.branch.length).replace(/^ \([^)]*\): /, '')).join('; ').replace(/\|/g, '\\|')} |`);
+    for (const r of mine) {
+      const own = r.byGroup[g.commit];
+      L.push(`| ${own.tier} | ${r.file} | ${own.reasons.map((x) => x.replace(/^[^:]*\): /, '')).join('; ').replace(/\|/g, '\\|')} |`);
+    }
     L.push('');
   }
   if (notMapped.length) L.push('## Not mapped (add them to tools/regress-map.json)', '', ...notMapped.map((f) => `- \`${f}\``), '');
   if (wide.length) L.push('## Wide changes: consider the full regression', '', ...wide.map((w) => `- ${w.merge}: \`${w.file}\` is used by ${w.folders.length} pages`), '');
-  L.push('## Run commands', '', 'Run only after "พร้อมรันไหม". A spec appears once, under the card that owns its tests.', '', '```', ...cmds, '```', '');
+  L.push('## Run commands', '', 'Run only after "พร้อมรันไหม", from the qa-team-etm folder. One run-card per card (its data is reset once before it). A spec appears once, under the card that owns its tests.', '', '```', ...cmds, '```', '');
   return L.join('\n');
 }
 
@@ -79,12 +84,12 @@ export async function main(args, d) {
   if (card) groups = groups.filter((g) => g.keys.includes(card));
   const map = readJson(MAP_FILE) || [];
   const { rows, notMapped, wide } = tier({ specs: d.specIndex(d.pwRepo, d.teamRoot), merges: groups, map, importers: (p) => d.importers(d.feRepo, p, to) });
-  const cmds = commands(rows);
+  const cmds = commands(rows, { pwRepo: d.pwRepo });
   const range = { since, to, toRef };
   const base = path.join(outDir(d.teamRoot), `${ymd(now())}_${since.slice(0, 7)}..${to.slice(0, 7)}`);
   fs.mkdirSync(outDir(d.teamRoot), { recursive: true });
   fs.writeFileSync(`${base}.md`, markdown({ range, how: start.how, groups: groups.map((g) => ({ ...g, files: g.files.map((f) => f.path) })), rows, notMapped, wide, cmds }));
-  fs.writeFileSync(`${base}.json`, JSON.stringify({ range, how: start.how, groups: groups.map((g) => ({ commit: g.commit, branch: g.branch, keys: g.keys, files: g.files.map((f) => f.path) })), rows, notMapped, wide, commands: cmds }, null, 1));
+  fs.writeFileSync(`${base}.json`, JSON.stringify({ range, how: start.how, groups: groups.map((g) => ({ commit: g.commit, branch: g.branch, keys: g.keys, files: g.files.map((f) => f.path), error: g.error })), rows, notMapped, wide, commands: cmds }, null, 1));
   d.log(`[regress] ${groups.length} merge group(s), Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}, not mapped ${notMapped.length}, wide ${wide.length}`);
   d.log(`[regress] report: ${base}.md`);
   return 0;
