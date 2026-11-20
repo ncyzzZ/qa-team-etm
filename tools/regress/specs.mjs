@@ -35,7 +35,16 @@ function unitFiles(pwRepo, unit) {
   return walk(path.join(pwRepo, 'pages', unit)).filter((f) => f.endsWith('.ts'));
 }
 
-const keep = (v) => v && v.length >= 4 && !GENERIC_TOKENS.has(v) && !isLibraryToken(v);
+const TEXTISH = new Set(['text', 'role-name', 'label', 'placeholder']);
+/**
+ * Only distinctive tokens point at a spec: a plain word (Date, true, empty, chip) appears all over stms-fe.
+ * Text: several words or 12+ characters. Class / id / attribute: 6+ characters with a dash, underscore or inner capital.
+ */
+function keep(v, kind) {
+  if (!v || v.length < 4 || GENERIC_TOKENS.has(v) || isLibraryToken(v)) return false;
+  if (TEXTISH.has(kind)) return /[\s/]/.test(v.trim()) || v.length >= 12;
+  return v.length >= 6 && /[-_]|[a-z][A-Z]/.test(v);
+}
 
 /** Story key -> its Xray Test keys, from work/<KEY>/run-results.json, else .claude/team/work/<KEY>/tests.md. */
 function storyTests(teamRoot) {
@@ -72,7 +81,7 @@ export function specIndex(pwRepo, teamRoot) {
     for (const f of new Set(files)) {
       let s = '';
       try { s = fs.readFileSync(f, 'utf8'); } catch { continue; }
-      for (const t of extractTokens(s, f)) if (keep(t.value)) tokens.add(t.value);
+      for (const t of extractTokens(s, f)) if (keep(t.value, t.kind)) tokens.add(t.value);
     }
     let owner = null;
     for (const [story, tests] of stories) if (keys.some((k) => tests.has(k))) { owner = story; break; }

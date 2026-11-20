@@ -39,3 +39,12 @@ test('specIndex: owner is the Story whose run-results list a test key; unknown k
   assert.equal(s.find((x) => x.file.endsWith('verifyGrid.spec.ts')).owner, 'ETM-9');
   assert.equal(s.find((x) => x.file.endsWith('verifyOther.spec.ts')).owner, null);
 });
+
+test('specIndex: plain common words are not tokens (true, empty, Date); distinctive ones stay', () => {
+  const { pw, team } = repos();
+  fs.writeFileSync(path.join(pw, 'tests/fe/e2e/shutdownTimeline/verifyWords.spec.ts'),
+    "test('ETM-12 - w', async ({ page }) => { page.locator('[aria-checked=\"true\"]'); page.locator('.empty'); page.getByText('Date'); page.getByText('Ramp Down/Up Date'); page.locator('.weekly-cell'); page.getByText('Duration'); });\n");
+  const t = specIndex(pw, team).find((x) => x.file.endsWith('verifyWords.spec.ts')).tokens;
+  for (const w of ['true', 'empty', 'Date', 'Duration']) assert.ok(!t.has(w), `${w} should be dropped`);
+  for (const w of ['Ramp Down/Up Date', 'weekly-cell']) assert.ok(t.has(w), `${w} should stay`);
+});

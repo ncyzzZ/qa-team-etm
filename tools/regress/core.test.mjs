@@ -116,3 +116,10 @@ test('commands: one run-card per owner and tier (Must first); no owner goes to p
   assert.equal(plain.length, 1);
   assert.match(plain[0], /--workers=1 --reporter=line/);
 });
+
+test('tier: a token matches as a whole word only (weekly-cell inside weekly-cells is not a hit)', () => {
+  const r = run([spec('a.spec.ts', 'dailyReport', { tokens: ['weekly-cell'] })], [merge('fix/x', [[`${F}pages/worklist/a.ts`, ['<td class="weekly-cells">']]])]);
+  assert.equal(r.rows.filter((x) => x.file === 'a.spec.ts' && x.tier === 'Must').length, 0);
+  const h = run([spec('a.spec.ts', 'dailyReport', { tokens: ['weekly-cell'] })], [merge('fix/x', [[`${F}pages/worklist/a.ts`, ['<td class="x weekly-cell">']]])]);
+  assert.equal(h.rows.find((x) => x.file === 'a.spec.ts').tier, 'Must');
+});

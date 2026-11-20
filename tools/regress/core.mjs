@@ -51,6 +51,10 @@ export function isListable(specPath) {
   return !/^(setup|cleanup|probe)/i.test(p.split('/').pop());
 }
 
+const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** A token as a whole word: not part of a longer class / id / word (weekly-cell is not in weekly-cells). */
+export const hasToken = (line, t) => new RegExp(`(?<![A-Za-z0-9_-])${esc(t)}(?![A-Za-z0-9_-])`).test(line);
+
 /** Rank the specs for the merges. Each spec once, in its highest tier, with every reason. */
 export function tier({ specs, merges, map, importers }) {
   const rows = new Map();
@@ -88,7 +92,7 @@ export function tier({ specs, merges, map, importers }) {
       const hits = new Map(); // token -> first file whose changed lines contain it
       for (const t of s.tokens) {
         if ((uses.get(t) || 0) > COMMON) continue;
-        const f = m.files.find((x) => x.lines.some((l) => l.includes(t)));
+        const f = m.files.find((x) => x.lines.some((l) => hasToken(l, t)));
         if (f) hits.set(t, f.path);
       }
       if (!hits.size) continue;
