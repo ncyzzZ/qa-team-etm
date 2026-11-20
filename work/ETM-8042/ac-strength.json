@@ -1,119 +1,127 @@
 {
  "card": "ETM-8042",
- "date": "2026-11-19",
- "verdict": "not-ready",
- "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "date": "2026-11-20",
+ "verdict": "partly",
+ "note": "Re-rated 2026-11-20 after the specs were calibrated on the live page and run (run-results.json, runs 152806 and 163201; ETM-8883 ran as ETM-8042-NEW in 163201 and passed). Strong = asserts the AC outcome with expect and passed.",
  "ac": [
   {
    "id": "AC-1",
-   "rule": "Create modal field",
+   "rule": "Create modal: mandatory Ramp Down/Up field, pre-fill, picker",
    "tests": [
-    "ETM-8829",
-    "ETM-8848",
-    "ETM-8851"
+    "ETM-8829"
    ],
-   "rating": "blocked",
-   "why": "ETM8042_EVENT_ID empty"
+   "rating": "strong",
+   "why": "8829 passed: asserts place, pre-fill with Planned Date, picker, Save state (verifyPlanRampDownUp.spec.ts:38). Half-filled Save (8848) and paste (8851) failed in run 152806, not counted."
   },
   {
    "id": "AC-2",
-   "rule": "Edit, also when frozen",
+   "rule": "Edit Plan pre-populated, editable also with Freeze",
    "tests": [
     "ETM-8830"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "8830 passed: Edit shows own dates, saves, works on the Freeze plan (spec:89, needs ETM8042_PLAN_F, which is set)."
   },
   {
    "id": "AC-3",
-   "rule": "validation Ramp Up >= Ramp Down",
+   "rule": "Ramp Up >= Ramp Down; equal and outside Planned Date allowed",
    "tests": [
     "ETM-8832",
     "ETM-8833",
     "ETM-8834"
    ],
-   "rating": "blocked",
-   "why": "env; 8833 Dev pending"
+   "rating": "weak",
+   "why": "Accept side proven (8832 passed, spec:173); the earlier-Ramp-Up rule 8833 failed (Dev pending) and 8834 skipped, not proven."
   },
   {
    "id": "AC-4",
-   "rule": "badge",
+   "rule": "Plan Card badge with date and time",
    "tests": [
-    "ETM-8830",
-    "ETM-8846"
+    "ETM-8830"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "8830 passed: expectBadge compares the full text with time. Long-range and narrow-card case 8846 failed, not counted."
   },
   {
    "id": "AC-5",
-   "rule": "independence",
+   "rule": "Own dates per Plan; Planned Date change does not move Plan",
    "tests": [
-    "ETM-8831",
-    "ETM-8840"
+    "ETM-8831"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "8831 asserts both badges, Edit Plan and Create pre-fill after the event date change (spec:142). run-results.json still says failed (run 152806) while the caller says it passed later: re-run to record it."
   },
   {
    "id": "AC-6",
-   "rule": "migration",
+   "rule": "Migration: old Plans show the Planned Date",
    "tests": [
     "ETM-8835",
     "ETM-8849"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "weak",
+   "why": ".env values are set (Mar S1 FSD SE 2027); 8835 skipped as not-proven (partial annotation, run 152806) and 8849 failed (run 152806); nothing proven."
   },
   {
    "id": "AC-7",
-   "rule": "Duplicate Plan copies dates",
+   "rule": "Duplicate Plan copies the dates",
    "tests": [
     "ETM-8850"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "8850 passed: asserts the copy badge equals the source and editing the copy leaves the source (spec:428)."
   },
   {
    "id": "AC-8.1",
-   "rule": "Shutdown Logic lines",
+   "rule": "Shutdown Logic lines, Start Date, Export, Optimization",
    "tests": [
     "ETM-8836",
     "ETM-8837",
-    "ETM-8839"
+    "ETM-8839",
+    "ETM-8845"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "weak",
+   "why": "8836/8837/8839 failed: the Shutdown Logic has 0 tasks (Export and Optimize disabled), nothing proven. 8845 passed but only shows the saved dates on the Logic page (proxy). Needs a Logic with tasks."
   },
   {
    "id": "AC-8.2",
-   "rule": "Daily Report snapshot",
+   "rule": "Daily Report snapshot, 18:00 rule, no-work day, Extension (DEC-062)",
    "tests": [
-    "ETM-8840",
     "ETM-8841",
+    "ETM-8883",
+    "ETM-8840",
     "ETM-8842"
    ],
-   "rating": "blocked",
-   "why": "env; PDF 8838 manual"
+   "rating": "weak",
+   "why": "Only the First Execution Date is proven: 8841 (18:00 rule, with a work) and 8883 (no work opens on Ramp Down, F-7) passed. Snapshot after a Plan edit (8840, frozen days are a manual step, failed) and Extension (8842 skipped, ETM8042_EXT_PLAN off) not proven."
   },
   {
    "id": "AC-8.3",
-   "rule": "Mob Plans date picker",
+   "rule": "Manpower Mob Plan: picker month, Excel labels",
    "tests": [
     "ETM-8843",
     "ETM-8837"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "weak",
+   "why": "8843 and 8837 need Mob Plan rows on the plan (empty, failed); nothing proven for the picker month or the export."
+  },
+  {
+   "id": "AC-8.4",
+   "rule": "Equipment Mob Plan: picker month, Excel labels",
+   "tests": [
+    "ETM-8843",
+    "ETM-8837"
+   ],
+   "rating": "weak",
+   "why": "Same loop as AC-8.3 for the Equipment page (spec:326, partial spec:73); failed on empty data, nothing proven."
   },
   {
    "id": "AC-9",
-   "rule": "Shutdown Timeline unchanged",
+   "rule": "Shutdown Timeline still uses the Planned Date",
    "tests": [
     "ETM-8844"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "8844 passed (run 165555): asserts Timeline header Ramp down date = event Planned Date 08 Feb 2026 and not 15 Feb, then Plan A badge 15 Feb 2026 09:00 - 25 Feb 2026 18:00 (spec:359; Shutdown Size steps dropped)."
   }
  ]
 }

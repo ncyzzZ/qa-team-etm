@@ -102,3 +102,12 @@ Legend: ✅ answered · 🟡 proposed, BA must confirm · ❓ open
 
 19. `3 Jun 2026` (one-digit day).
     **✅ Answer:** accepted (AC 3.1 allows `D Mon YYYY`) and **shown as `03 Jun 2026`** (ETM-7348 field table: Start/End Date format `DD Mmm YYYY`).
+
+# BA answer round 2 (2026-11-20, via the user in chat)
+- Q1 (multi-row weekly Plan (%) paste, AC 3.2 a): only the first row is pasted; the other rows must be ignored. The app pastes row 2 into the next activity (Valve Overhaul W2 17.5 -> 80.0): defect. ETM-8723 test case stays as is.
+
+# Date format on paste: ETM-7902 overrides (2026-11-20)
+- ETM-7902 (Done) "Cross-Module - Flexible Date and Time Input Auto-Conversion" covers Shutdown Timeline Preparation Task Start/End Date, typed and pasted (AC 4). 16 day-first formats (D/M/YY, DD/MM/YYYY, hyphen, space, compact 4/6/8 digits) convert to DD Mmm YYYY.
+- So `03/06/2026` -> `03 Jun 2026` is correct. Invalid (31/02/2026, text, dot delimiter, 5/7-digit numbers) -> cell blank + red, Save disabled (AC 5).
+- ETM-8388 AC 3.1 and round 1 Q4 ("only D Mon YYYY") are outdated. ETM-8720 TC must be rewritten; not a defect.
+- Q2 (8722, round 2): new activities created by a paste stay quiet (no red) on their empty Start/End Date until the user touches a date, same as Add Activity (ETM-7310 pattern); Save stays disabled. TC ETM-8722 step 4 must change; not a defect.

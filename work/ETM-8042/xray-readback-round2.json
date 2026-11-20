@@ -1,0 +1,700 @@
+[
+ {
+  "key": "ETM-8841",
+  "summary": "[FE][MT] Verify the First Execution Date follows the 18:00 rule on the snapshot Ramp Down time",
+  "steps": [
+   {
+    "action": "Open `Edit Plan` of the Plan.",
+    "data": "The Plan's worklist has at least one work before its Daily Report is created (BA 2026-11-20: a report made without a work opens on the Ramp Down date and is not on the snapshot range).",
+    "result": "The Edit Plan modal opens."
+   },
+   {
+    "action": "Set the Plan Ramp Down time to the value in the table.",
+    "data": "",
+    "result": "The Start part shows the new Ramp Down."
+   },
+   {
+    "action": "Click Save.",
+    "data": "",
+    "result": "The toast `Edit Success` appears and the badge shows the new Ramp Down."
+   },
+   {
+    "action": "Create the Daily Report of the Plan.",
+    "data": "",
+    "result": "The toast `Create Success` appears."
+   },
+   {
+    "action": "Open the Daily Report and press the previous-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It equals the Expected value in the table."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8846",
+  "summary": "[FE][BE][MT] Verify the very long range `15 Feb 2026 08:00 - 15 Feb 2029 20:15` on the badge, in the Daily Report and in the Excel export, and the badge and a long Plan Name on a narrow card",
+  "steps": [
+   {
+    "action": "Create a Plan named `Plan Scenario Long Name Plan Scenario Long Name 12` (50 characters) with `15 Feb 2026 08:00 - 15 Feb 2029 20:15` and read the badge.",
+    "data": "The Plan's worklist has at least one work before its Daily Report is created (BA 2026-11-20: a report made without a work opens on the Ramp Down date and is not on the snapshot range).",
+    "result": "The badge shows `Ramp Down/Up Date: 15 Feb 2026 08:00 - 15 Feb 2029 20:15`."
+   },
+   {
+    "action": "Create the Shutdown Logic of that Plan.",
+    "data": "",
+    "result": "The Shutdown Logic row shows as created."
+   },
+   {
+    "action": "Create the Daily Report for that Plan and open it.",
+    "data": "",
+    "result": "The Daily Report opens."
+   },
+   {
+    "action": "Note down the first and the last day of the Gantt chart.",
+    "data": "",
+    "result": "The two days are written down and the Gantt shows no wrong date format."
+   },
+   {
+    "action": "Open the Shutdown Logic of that Plan and export it to Excel.",
+    "data": "",
+    "result": "An Excel file is downloaded."
+   },
+   {
+    "action": "Read `Ramp Down Date` and `Ramp Up Date` in the metadata.",
+    "data": "",
+    "result": "They show `15 Feb 2026` and `15 Feb 2029`."
+   },
+   {
+    "action": "Set the browser window width to 600 px and look at the card header.",
+    "data": "",
+    "result": "The badge stays on one line with its full text."
+   },
+   {
+    "action": "Read the Plan Name in the card header.",
+    "data": "",
+    "result": "The Plan Name is cut with an ellipsis (`…`)."
+   },
+   {
+    "action": "Hover over the Plan Name.",
+    "data": "",
+    "result": "The full name `Plan Scenario Long Name Plan Scenario Long Name 12` is shown."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8849",
+  "summary": "[FE][BE][MT] Verify a Daily Report created before the release still shows the dates of its event Planned Date after the release (BND)",
+  "steps": [
+   {
+    "action": "Open the old Daily Report.",
+    "data": "",
+    "result": "The Daily Report opens and the page works without an error."
+   },
+   {
+    "action": "Open the Daily Report and press the previous-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `16 Jun 2026` (event Planned start `10:00` is before `18:00`, so the day before)."
+   },
+   {
+    "action": "Press the next-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `15 Jul 2026` (event Planned end)."
+   },
+   {
+    "action": "Note down the first and the last day of the Gantt chart.",
+    "data": "",
+    "result": "The two days are written down and the Gantt shows no error."
+   },
+   {
+    "action": "Look at the end of the Planned S-Curve.",
+    "data": "",
+    "result": "It ends on `15 Jul 2026`."
+   },
+   {
+    "action": "Export the Daily Report to PDF and read the Day numbering.",
+    "data": "",
+    "result": "Day 1 is `16 Jun 2026`."
+   },
+   {
+    "action": "Reload the old Daily Report, press the previous-day arrow next to the date until it is disabled and read the date shown, then press the next-day arrow until it is disabled and read the date shown.",
+    "data": "",
+    "result": "They are still `16 Jun 2026` and `15 Jul 2026`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8835",
+  "summary": "[FE][BE][MT] Verify a Plan created before the release shows the Shutdown Event Planned Date as Ramp Down/Up Date",
+  "steps": [
+   {
+    "action": "Open Edit Shutdown Event of that event and write down the Planned Date Start and End.",
+    "data": "Read only: the old event is shared, its Planned Date is not changed in this test (ETM-8831 covers a Planned Date change).",
+    "result": "The two values are written down."
+   },
+   {
+    "action": "Close the modal and read the badge of the oldest old Plan.",
+    "data": "",
+    "result": "The badge shows `Ramp Down/Up Date:` with the same Start and End as written down in step 1, with time."
+   },
+   {
+    "action": "Open `Edit Plan` of the oldest old Plan.",
+    "data": "",
+    "result": "The field shows the same Start and End."
+   },
+   {
+    "action": "Read the badges of the middle and the newest old Plan.",
+    "data": "",
+    "result": "Each shows the Planned Date of its own event."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8829",
+  "summary": "[FE][MT] Verify the Create Plan modal shows the mandatory Ramp Down/Up Date field, pre-filled with the Planned Date, with a working picker and Save state",
+  "steps": [
+   {
+    "action": "Open Edit Shutdown Event of `QA Event 8042` and write down the Planned Date Start and End.",
+    "data": "",
+    "result": "The two values are written down (sample `08 Feb 2026 08:00` and `22 Feb 2026 08:00`)."
+   },
+   {
+    "action": "Close the modal without saving.",
+    "data": "",
+    "result": "The modal closes and no value changes."
+   },
+   {
+    "action": "On the Planning tab click the button that creates a Plan.",
+    "data": "",
+    "result": "The `Create Plan` modal opens."
+   },
+   {
+    "action": "Read the fields from top to bottom.",
+    "data": "",
+    "result": "The fields are in this order: `Plan Name`, `Ramp Down/Up Date`, `Description`."
+   },
+   {
+    "action": "Look at the label of `Ramp Down/Up Date`.",
+    "data": "",
+    "result": "The label shows a red mandatory mark like `Plan Name`."
+   },
+   {
+    "action": "Look at the field type.",
+    "data": "",
+    "result": "The field is a date-time range picker with a Start part and an End part."
+   },
+   {
+    "action": "Look at the right end of the field.",
+    "data": "",
+    "result": "A calendar icon is shown."
+   },
+   {
+    "action": "Read the Start part.",
+    "data": "",
+    "result": "Start shows the Planned Date Start written down in step 1, in the format `DD Mmm YYYY HH:mm`."
+   },
+   {
+    "action": "Read the End part.",
+    "data": "",
+    "result": "End shows the Planned Date End written down in step 1, in the format `DD Mmm YYYY HH:mm`."
+   },
+   {
+    "action": "Look at the Save button while Plan Name is empty.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "action": "Type `Plan Scenario Save` in Plan Name.",
+    "data": "",
+    "result": "Save is enabled because both mandatory fields are filled."
+   },
+   {
+    "action": "Click the clear (x) icon of the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is empty with the placeholders `Ramp Down Date` and `Ramp Up Date`."
+   },
+   {
+    "action": "Click the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The picker opens with a calendar and a time column."
+   },
+   {
+    "action": "Look at the minutes in the time column.",
+    "data": "",
+    "result": "The minutes are offered in steps of 15: 00, 15, 30, 45."
+   },
+   {
+    "action": "Pick Start `15 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "action": "Look at the `OK` button before an End time is picked.",
+    "data": "",
+    "result": "`OK` is disabled."
+   },
+   {
+    "action": "Pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "`OK` is enabled."
+   },
+   {
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The field shows `15 Feb 2026 09:00 - 25 Feb 2026 18:00` in the format `DD Mmm YYYY HH:mm`."
+   },
+   {
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and no new card appears."
+   },
+   {
+    "action": "Open the `Create Plan` modal again.",
+    "data": "",
+    "result": "The field shows the Planned Date again as in steps 8 and 9, not `15 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   },
+   {
+    "action": "Close the modal.",
+    "data": "",
+    "result": "The modal closes."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8851",
+  "summary": "[FE][MT] Verify pasting values into the Ramp Down/Up Date picker accepts a valid date and rejects invalid ones",
+  "steps": [
+   {
+    "action": "Open the `Create Plan` modal and type `Plan Scenario Paste` in Plan Name.",
+    "data": "",
+    "result": "The Plan Name field shows `Plan Scenario Paste`."
+   },
+   {
+    "action": "Paste `15 Feb 2026 09:00` into the Start input.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "action": "Paste `31 Feb 2026 08:00` into the Start input.",
+    "data": "",
+    "result": "The pasted text is not accepted: after the focus leaves the field, that part (Start) is empty and `Save` is disabled."
+   },
+   {
+    "action": "Paste `2026-02-08 08:00` into the Start input.",
+    "data": "",
+    "result": "The pasted text is not accepted: after the focus leaves the field, that part (Start) is empty and `Save` is disabled."
+   },
+   {
+    "action": "Paste `15 Feb 2026 09:00` again into the Start input.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "action": "Paste `25 Feb 2026 18:00` into the End input.",
+    "data": "",
+    "result": "The End part shows `25 Feb 2026 18:00`."
+   },
+   {
+    "action": "Paste `31 Feb 2026 08:00` into the End input.",
+    "data": "",
+    "result": "The pasted text is not accepted: after the focus leaves the field, that part (End) is empty and `Save` is disabled."
+   },
+   {
+    "action": "Paste `2026-02-08 08:00` into the End input.",
+    "data": "",
+    "result": "The pasted text is not accepted: after the focus leaves the field, that part (End) is empty and `Save` is disabled."
+   },
+   {
+    "action": "Paste `25 Feb 2026 18:00` again into the End input.",
+    "data": "",
+    "result": "The End part shows `25 Feb 2026 18:00`."
+   },
+   {
+    "action": "Paste `14 Feb 2026 09:00` (earlier than Start) into the End input.",
+    "data": "",
+    "result": "No error message appears and the End is not earlier than the Start (the exact value is Dev pending, see the facts)."
+   },
+   {
+    "action": "Clear the End part.",
+    "data": "",
+    "result": "The End part is empty."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and no card `Plan Scenario Paste` appears."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8848",
+  "summary": "[FE][MT] Verify Save is disabled in Create Plan and Edit Plan when the Ramp Down/Up Date or the Plan Name is empty, and for only Start or only End",
+  "steps": [
+   {
+    "action": "Open the `Create Plan` modal.",
+    "data": "",
+    "result": "The modal opens."
+   },
+   {
+    "action": "Type `Plan Scenario Empty` in Plan Name.",
+    "data": "",
+    "result": "The Plan Name field shows `Plan Scenario Empty`."
+   },
+   {
+    "action": "Read the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is pre-filled with the Planned Date."
+   },
+   {
+    "action": "Click the clear (x) icon of the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is empty with the placeholders `Ramp Down Date` and `Ramp Up Date`."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "action": "Pick Start `15 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "action": "Click `OK` at the Start.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "action": "Click the End input and pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "action": "Click `OK` if it is enabled.",
+    "data": "",
+    "result": "The picker closes, or the `OK` state is noted down."
+   },
+   {
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "action": "Pick Start `15 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "action": "Pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The field shows `15 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is enabled because both mandatory fields are filled."
+   },
+   {
+    "action": "Clear Plan Name.",
+    "data": "",
+    "result": "The Plan Name field is empty."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled while Plan Name is empty."
+   },
+   {
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and no card `Plan Scenario Empty` appears."
+   },
+   {
+    "action": "Open `Edit Plan` of `Plan Scenario A` (`15 Feb 2026 09:00 - 25 Feb 2026 18:00`).",
+    "data": "",
+    "result": "The Edit Plan modal opens with the dates filled."
+   },
+   {
+    "action": "Note down whether Save is enabled before anything is changed.",
+    "data": "",
+    "result": "The Save state is written down (no answer covers it, nothing is assumed)."
+   },
+   {
+    "action": "Click the clear (x) icon of the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "action": "Pick Start `16 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `16 Feb 2026 09:00`."
+   },
+   {
+    "action": "Click `OK` at the Start.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "action": "Click the End input and pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "action": "Pick Start `16 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `16 Feb 2026 09:00`."
+   },
+   {
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "action": "Pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The field shows `16 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is enabled because a value was changed and both mandatory fields are filled."
+   },
+   {
+    "action": "Clear Plan Name.",
+    "data": "",
+    "result": "The Plan Name field is empty."
+   },
+   {
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled while Plan Name is empty."
+   },
+   {
+    "action": "Type `Plan Scenario A` in Plan Name.",
+    "data": "",
+    "result": "Save is enabled again."
+   },
+   {
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and the badge of `Plan Scenario A` still shows `15 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8840",
+  "summary": "[FE][BE][MT] Verify a Daily Report keeps its own snapshot of the Plan dates when the Plan is edited later, and each Plan has its own report values",
+  "steps": [
+   {
+    "action": "Press `Create` on the Daily Report row of `Plan Scenario A`.",
+    "data": "The Plan's worklist has at least one work before its Daily Report is created (BA 2026-11-20: a report made without a work opens on the Ramp Down date and is not on the snapshot range).",
+    "result": "The toast `Create Success` with `Create Daily Report Successfully` appears."
+   },
+   {
+    "action": "Open the Daily Report and press the previous-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "The First Execution Date is `14 Feb 2026` (Ramp Down 09:00 is before 18:00)."
+   },
+   {
+    "action": "Note down the first and the last day of the Gantt chart (ETM-4122).",
+    "data": "",
+    "result": "The two days are written down; Dev pending: the calculated range is not confirmed."
+   },
+   {
+    "action": "Note down the first and the last tick mark of the scale.",
+    "data": "",
+    "result": "The two tick dates are written down; the Story gives no scale value to check."
+   },
+   {
+    "action": "Freeze every execution day up to the last one as the existing flow requires (ETM-4125).",
+    "data": "",
+    "result": "The last execution day is reached."
+   },
+   {
+    "action": "Press the next-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `25 Feb 2026`."
+   },
+   {
+    "action": "Look at the end of the yellow dashed Planned S-Curve (ETM-4127).",
+    "data": "",
+    "result": "The curve ends on `25 Feb 2026`, not on `22 Feb 2026`."
+   },
+   {
+    "action": "Open `Edit Plan` of `Plan Scenario A`.",
+    "data": "",
+    "result": "The Edit Plan modal opens."
+   },
+   {
+    "action": "Set Start `18 Feb 2026 09:00`.",
+    "data": "",
+    "result": "The Start part shows `18 Feb 2026 09:00`."
+   },
+   {
+    "action": "Set End `20 Feb 2026 09:00`.",
+    "data": "",
+    "result": "The End part shows `20 Feb 2026 09:00`."
+   },
+   {
+    "action": "Click Save.",
+    "data": "",
+    "result": "The toast `Edit Success` appears and the badge shows `18 Feb 2026 09:00 - 20 Feb 2026 09:00`."
+   },
+   {
+    "action": "Open the Daily Report again and press the previous-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `14 Feb 2026`."
+   },
+   {
+    "action": "Read the first and the last day of the Gantt chart.",
+    "data": "",
+    "result": "They are the same as written down in step 3."
+   },
+   {
+    "action": "Press the next-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `25 Feb 2026`."
+   },
+   {
+    "action": "Look at the end of the Planned S-Curve.",
+    "data": "",
+    "result": "The curve ends on `25 Feb 2026`."
+   },
+   {
+    "action": "Turn `Plan Scenario B` on and click `Confirm` in the pop-up `Change Active Plan`.",
+    "data": "",
+    "result": "`Plan Scenario B` is Active."
+   },
+   {
+    "action": "Press `Create` on the Daily Report row of `Plan Scenario B`.",
+    "data": "",
+    "result": "The toast `Create Success` appears."
+   },
+   {
+    "action": "Open the Daily Report of Plan B and press the previous-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `09 Feb 2026`."
+   },
+   {
+    "action": "In the Daily Report of Plan B, press the next-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is `20 Feb 2026`."
+   },
+   {
+    "action": "Open the Daily Report of Plan A again and press the previous-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is still `14 Feb 2026`, not the value of Plan B."
+   },
+   {
+    "action": "In the Daily Report of Plan A, press the next-day arrow next to the date until it is disabled; read the date shown.",
+    "data": "",
+    "result": "It is still `25 Feb 2026`, not the value of Plan B."
+   }
+  ]
+ }
+]

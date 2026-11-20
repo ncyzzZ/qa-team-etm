@@ -1,0 +1,26 @@
+[
+ {
+  "id": "b97bcfca-d9b7-49f1-92f7-aed4056688b8",
+  "action": "Open the Daily Report Gantt.",
+  "data": "",
+  "result": "The 'Ramp Down' and 'Ramp Up' lines are shown."
+ },
+ {
+  "id": "8c735252-f327-459e-97e9-e65eb4329259",
+  "action": "Switch to the S-Curve.",
+  "data": "",
+  "result": "The S-Curve chart is shown."
+ },
+ {
+  "id": "fd285c4f-c999-4623-a44d-674b39be0dc3",
+  "action": "Look for 'Ramp Down' and 'Ramp Up' vertical lines.",
+  "data": "",
+  "result": "No 'Ramp Down' line and no 'Ramp Up' line is shown on the S-Curve."
+ },
+ {
+  "id": "deed6d82-ba3a-44e2-bda5-2c86e622b7e9",
+  "action": "Switch back to the Gantt.",
+  "data": "",
+  "result": "The 'Ramp Down' and 'Ramp Up' lines are shown again."
+ }
+]

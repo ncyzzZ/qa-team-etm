@@ -1,0 +1,8 @@
+{"key":"ETM-8844","issueId":"2300320","steps":[
+{"id":"63898068-8a9d-4ff8-bfee-ab991cf8d99b","action":"Open the Shutdown Timeline tab of `QA Event 8042`.","data":"","result":"The Shutdown Timeline opens."},
+{"id":"1069aff6-2345-44f4-9c6e-490dfa5172b2","action":"Read the Ramp down/up date in the header.","data":"","result":"It shows the event Planned Date `08 Feb 2026` and `22 Feb 2026`, not `15 Feb 2026` and `25 Feb 2026`."},
+{"id":"3edcc6db-a4a8-43d1-ada9-8310692f5063","action":"Write down the current Shutdown Size.","data":"","result":"The current Shutdown Size is written down."},
+{"id":"45e9a0fc-af92-41e0-95fa-c91745bcf5a3","action":"Change the Shutdown Size to `Minor`.","data":"","result":"The Shutdown Size shows `Minor`."},
+{"id":"13d1205b-5ee5-496a-a94e-851254b24919","action":"Confirm the change.","data":"","result":"The change is saved."},
+{"id":"c6efc12f-f527-4ab6-86f3-c935a568ea61","action":"Read the Ramp Down anchor of the timeline.","data":"","result":"The anchor is the event Planned Date Start `08 Feb 2026`, not the Plan Ramp Down `15 Feb 2026`."},
+{"id":"d2151920-cca1-4697-8ce5-6b3c2ce282f4","action":"Set the Shutdown Size back to the value written down.","data":"","result":"The old Shutdown Size is shown."}]}

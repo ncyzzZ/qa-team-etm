@@ -1,0 +1,836 @@
+{
+ "ETM-8849": {
+  "issueId": "2300325",
+  "summary": "[FE][BE][MT] Verify a Daily Report created before the release still shows the dates of its event Planned Date after the release (BND)",
+  "steps": [
+   {
+    "id": "2de7fd5a-75c9-4753-a514-6f78ffece9cd",
+    "action": "Open the old Daily Report.",
+    "data": "",
+    "result": "The Daily Report opens and the page works without an error."
+   },
+   {
+    "id": "87197819-532f-419b-a632-f20e1d31fe4e",
+    "action": "Read the First Execution Date.",
+    "data": "",
+    "result": "It is `16 Jun 2026` (event Planned start `10:00` is before `18:00`, so the day before)."
+   },
+   {
+    "id": "880e0e0a-23b8-4ac5-aa2d-0a667b839cb1",
+    "action": "Read the last execution day.",
+    "data": "",
+    "result": "It is `15 Jul 2026` (event Planned end)."
+   },
+   {
+    "id": "3d74cc42-a146-419f-bcdb-347f8f281e8e",
+    "action": "Note down the first and the last day of the Gantt chart.",
+    "data": "",
+    "result": "The two days are written down and the Gantt shows no error."
+   },
+   {
+    "id": "daa3b371-5622-401f-8c85-d684d3570685",
+    "action": "Look at the end of the Planned S-Curve.",
+    "data": "",
+    "result": "It ends on `15 Jul 2026`."
+   },
+   {
+    "id": "25edf513-0181-4f0b-98de-7494e1348ef7",
+    "action": "Export the Daily Report to PDF and read the Day numbering.",
+    "data": "",
+    "result": "Day 1 is `16 Jun 2026`."
+   },
+   {
+    "id": "0dd3a49a-a564-4d7d-b2d5-e9ccc0e75502",
+    "action": "Reload the old Daily Report and read the First Execution Date and the last execution day.",
+    "data": "",
+    "result": "They are still `16 Jun 2026` and `15 Jul 2026`."
+   }
+  ]
+ },
+ "ETM-8835": {
+  "issueId": "2300310",
+  "summary": "[FE][BE][MT] Verify a Plan created before the release shows the Shutdown Event Planned Date as Ramp Down/Up Date",
+  "steps": [
+   {
+    "id": "68f3d173-386b-449f-a814-c5a6eb347696",
+    "action": "Open Edit Shutdown Event of that event and write down the Planned Date Start and End.",
+    "data": "",
+    "result": "The two values are written down."
+   },
+   {
+    "id": "11cd057e-5588-42b1-b03e-36fd996b15c9",
+    "action": "Close the modal and read the badge of the oldest old Plan.",
+    "data": "",
+    "result": "The badge shows `Ramp Down/Up Date:` with the same Start and End as written down in step 1, with time."
+   },
+   {
+    "id": "fa0f8e5e-10d7-4999-8601-a29f02da8879",
+    "action": "Open `Edit Plan` of the oldest old Plan.",
+    "data": "",
+    "result": "The field shows the same Start and End."
+   },
+   {
+    "id": "5bafbc38-9c25-43ca-92d1-c3308268c59b",
+    "action": "Read the badges of the middle and the newest old Plan.",
+    "data": "",
+    "result": "Each shows the Planned Date of its own event."
+   },
+   {
+    "id": "e5d55836-1ada-472e-a3ef-c4f543d8e8cd",
+    "action": "Change the Planned Date of the event and save.",
+    "data": "",
+    "result": "The event shows the new Planned Date."
+   },
+   {
+    "id": "9a3ef354-1d4b-4ee8-910b-c5c064cc8165",
+    "action": "Read the badge of an old Plan again.",
+    "data": "",
+    "result": "The badge still shows the value from step 2."
+   },
+   {
+    "id": "d0a0077b-81fa-4ce4-8322-6b638047b73a",
+    "action": "Restore the Planned Date written down in step 1 and save.",
+    "data": "",
+    "result": "The event shows the original Planned Date."
+   }
+  ]
+ },
+ "ETM-8846": {
+  "issueId": "2300322",
+  "summary": "[FE][BE][MT] Verify the very long range `15 Feb 2026 08:00 - 15 Feb 2029 20:15` on the badge, in the Daily Report and in the Excel export, and the badge and a long Plan Name on a narrow card",
+  "steps": [
+   {
+    "id": "aa7b7ce8-b00a-4b1f-aa70-540d0a9a7327",
+    "action": "Create a Plan named `Plan Scenario Long Name Plan Scenario Long Name 12` (50 characters) with `15 Feb 2026 08:00 - 15 Feb 2029 20:15` and read the badge.",
+    "data": "",
+    "result": "The badge shows `Ramp Down/Up Date: 15 Feb 2026 08:00 - 15 Feb 2029 20:15`."
+   },
+   {
+    "id": "35f8e6ab-06f5-4b3a-8ceb-1189541c91e6",
+    "action": "Create the Shutdown Logic of that Plan.",
+    "data": "",
+    "result": "The Shutdown Logic row shows as created."
+   },
+   {
+    "id": "24d76346-d630-4cc5-87db-71697f73b676",
+    "action": "Create the Daily Report for that Plan and open it.",
+    "data": "",
+    "result": "The Daily Report opens."
+   },
+   {
+    "id": "62a961f9-1fa4-4556-83a8-721fecc7bfa8",
+    "action": "Note down the first and the last day of the Gantt chart.",
+    "data": "",
+    "result": "The two days are written down and the Gantt shows no wrong date format."
+   },
+   {
+    "id": "106c4d34-cd8f-4c8b-8e02-9ceb030d5588",
+    "action": "Open the Shutdown Logic of that Plan and export it to Excel.",
+    "data": "",
+    "result": "An Excel file is downloaded."
+   },
+   {
+    "id": "5e2ba4ec-461f-437e-9372-19475846ddc2",
+    "action": "Read `Ramp Down Date` and `Ramp Up Date` in the metadata.",
+    "data": "",
+    "result": "They show `15 Feb 2026` and `15 Feb 2029`."
+   },
+   {
+    "id": "d8a9906f-d970-4001-ab89-1f2a1240c885",
+    "action": "Set the browser window width to 600 px and look at the card header.",
+    "data": "",
+    "result": "The badge stays on one line with its full text."
+   },
+   {
+    "id": "73403731-83e3-494a-9a70-d9caa0a316e2",
+    "action": "Read the Plan Name in the card header.",
+    "data": "",
+    "result": "The Plan Name is cut with an ellipsis (`…`)."
+   },
+   {
+    "id": "272bfe46-59e0-429d-b2d1-f627024a8c43",
+    "action": "Hover over the Plan Name.",
+    "data": "",
+    "result": "The full name `Plan Scenario Long Name Plan Scenario Long Name 12` is shown."
+   }
+  ]
+ },
+ "ETM-8840": {
+  "issueId": "2300316",
+  "summary": "[FE][BE][MT] Verify a Daily Report keeps its own snapshot of the Plan dates when the Plan is edited later, and each Plan has its own report values",
+  "steps": [
+   {
+    "id": "bd1508c5-b596-42e7-ba1f-dc256f83a8db",
+    "action": "Press `Create` on the Daily Report row of `Plan Scenario A`.",
+    "data": "",
+    "result": "The toast `Create Success` with `Create Daily Report Successfully` appears."
+   },
+   {
+    "id": "ad4f8459-d971-4dc1-9d42-07792933b616",
+    "action": "Open the Daily Report and read the First Execution Date (ETM-4120).",
+    "data": "",
+    "result": "The First Execution Date is `14 Feb 2026` (Ramp Down 09:00 is before 18:00)."
+   },
+   {
+    "id": "bfcff154-f862-4783-8ad2-baff58b344eb",
+    "action": "Note down the first and the last day of the Gantt chart (ETM-4122).",
+    "data": "",
+    "result": "The two days are written down; Dev pending: the calculated range is not confirmed."
+   },
+   {
+    "id": "ec4c6a3e-9f11-49b7-a271-ec516d511c92",
+    "action": "Note down the first and the last tick mark of the scale.",
+    "data": "",
+    "result": "The two tick dates are written down; the Story gives no scale value to check."
+   },
+   {
+    "id": "8331b372-242d-42c4-9435-5f80f1670a38",
+    "action": "Freeze every execution day up to the last one as the existing flow requires (ETM-4125).",
+    "data": "",
+    "result": "The last execution day is reached."
+   },
+   {
+    "id": "69358d3a-56a5-4808-8165-ac9c5f2a609d",
+    "action": "Read the last execution day.",
+    "data": "",
+    "result": "It is `25 Feb 2026`."
+   },
+   {
+    "id": "5cdce39b-f71a-40e4-ba95-3243d288874d",
+    "action": "Look at the end of the yellow dashed Planned S-Curve (ETM-4127).",
+    "data": "",
+    "result": "The curve ends on `25 Feb 2026`, not on `22 Feb 2026`."
+   },
+   {
+    "id": "523a573d-9f1d-4566-b876-069b8f4b8e5a",
+    "action": "Open `Edit Plan` of `Plan Scenario A`.",
+    "data": "",
+    "result": "The Edit Plan modal opens."
+   },
+   {
+    "id": "1a9839d0-086f-404a-8dc1-971e056808ac",
+    "action": "Set Start `18 Feb 2026 09:00`.",
+    "data": "",
+    "result": "The Start part shows `18 Feb 2026 09:00`."
+   },
+   {
+    "id": "e72b7116-5f6c-4e53-8372-6d1c517b4681",
+    "action": "Set End `20 Feb 2026 09:00`.",
+    "data": "",
+    "result": "The End part shows `20 Feb 2026 09:00`."
+   },
+   {
+    "id": "4ea50460-6eb4-47ad-a4b1-36fb143de4fb",
+    "action": "Click Save.",
+    "data": "",
+    "result": "The toast `Edit Success` appears and the badge shows `18 Feb 2026 09:00 - 20 Feb 2026 09:00`."
+   },
+   {
+    "id": "cd7cbc23-ad3f-46c7-af60-eff24279ed15",
+    "action": "Open the Daily Report again and read the First Execution Date.",
+    "data": "",
+    "result": "It is `14 Feb 2026`."
+   },
+   {
+    "id": "0717a3ad-bcce-43fe-b0f2-f86463d138b8",
+    "action": "Read the first and the last day of the Gantt chart.",
+    "data": "",
+    "result": "They are the same as written down in step 3."
+   },
+   {
+    "id": "fb20f7ca-d3b7-4817-9312-fddbca48d340",
+    "action": "Read the last execution day.",
+    "data": "",
+    "result": "It is `25 Feb 2026`."
+   },
+   {
+    "id": "70bbcb13-846d-4f4e-bcf8-bf910141c922",
+    "action": "Look at the end of the Planned S-Curve.",
+    "data": "",
+    "result": "The curve ends on `25 Feb 2026`."
+   },
+   {
+    "id": "baf436a9-8a12-43e0-99c0-73c9c3b75d65",
+    "action": "Turn `Plan Scenario B` on and click `Confirm` in the pop-up `Change Active Plan`.",
+    "data": "",
+    "result": "`Plan Scenario B` is Active."
+   },
+   {
+    "id": "e34712f1-ea2d-4b4f-aa0b-67182b3cb059",
+    "action": "Press `Create` on the Daily Report row of `Plan Scenario B`.",
+    "data": "",
+    "result": "The toast `Create Success` appears."
+   },
+   {
+    "id": "206f01f3-2fb1-46ed-b948-be5bd7c98d69",
+    "action": "Open the Daily Report of Plan B and read the First Execution Date.",
+    "data": "",
+    "result": "It is `09 Feb 2026`."
+   },
+   {
+    "id": "b6d52a48-8df4-4951-bdf0-e328f8991ae2",
+    "action": "Read the last execution day of Plan B.",
+    "data": "",
+    "result": "It is `20 Feb 2026`."
+   },
+   {
+    "id": "748c5104-a0a0-49b1-b819-37b2d474ac2d",
+    "action": "Open the Daily Report of Plan A again and read the First Execution Date.",
+    "data": "",
+    "result": "It is still `14 Feb 2026`, not the value of Plan B."
+   },
+   {
+    "id": "93d405c6-9799-4e9c-993f-5cef06676b92",
+    "action": "Read the last execution day of Plan A.",
+    "data": "",
+    "result": "It is still `25 Feb 2026`, not the value of Plan B."
+   }
+  ]
+ },
+ "ETM-8841": {
+  "issueId": "2300317",
+  "summary": "[FE][MT] Verify the First Execution Date follows the 18:00 rule on the snapshot Ramp Down time",
+  "steps": [
+   {
+    "id": "07cc27b5-6b97-4f00-a818-2634754a9358",
+    "action": "Open `Edit Plan` of the Plan.",
+    "data": "",
+    "result": "The Edit Plan modal opens."
+   },
+   {
+    "id": "0954bee9-9254-49c0-86b6-78a570b94ad5",
+    "action": "Set the Plan Ramp Down time to the value in the table.",
+    "data": "",
+    "result": "The Start part shows the new Ramp Down."
+   },
+   {
+    "id": "c6e70784-d44f-4f14-bb1a-38bb15e5c972",
+    "action": "Click Save.",
+    "data": "",
+    "result": "The toast `Edit Success` appears and the badge shows the new Ramp Down."
+   },
+   {
+    "id": "374cac7e-f28e-48f2-99fd-0e202d78ad47",
+    "action": "Create the Daily Report of the Plan.",
+    "data": "",
+    "result": "The toast `Create Success` appears."
+   },
+   {
+    "id": "891a2fbc-b789-4734-852e-8237c9381099",
+    "action": "Read the First Execution Date in the Daily Report (ETM-4120).",
+    "data": "",
+    "result": "It equals the Expected value in the table."
+   }
+  ]
+ },
+ "ETM-8848": {
+  "issueId": "2300324",
+  "summary": "[FE][MT] Verify Save is disabled in Create Plan and Edit Plan when the Ramp Down/Up Date or the Plan Name is empty, and for only Start or only End",
+  "steps": [
+   {
+    "id": "7c1d60f7-0847-4241-acc2-758c5633ca5b",
+    "action": "Open the `Create Plan` modal.",
+    "data": "",
+    "result": "The modal opens."
+   },
+   {
+    "id": "b0d3a6cc-3213-4ca0-84d7-8f7d942dc301",
+    "action": "Type `Plan Scenario Empty` in Plan Name.",
+    "data": "",
+    "result": "The Plan Name field shows `Plan Scenario Empty`."
+   },
+   {
+    "id": "02437ef4-bbf3-4b07-acae-26114e922f19",
+    "action": "Read the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is pre-filled with the Planned Date."
+   },
+   {
+    "id": "d523d5ec-6000-4c2e-b5af-84605743b3e1",
+    "action": "Click the clear (x) icon of the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is empty with the placeholders `Start date` and `End date`."
+   },
+   {
+    "id": "a9823092-253e-426d-b1c5-85f00f582568",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "id": "3c20d8ec-4641-4b06-b453-b7bd5e6026b3",
+    "action": "Pick Start `15 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "id": "ebb892a6-e100-494e-a306-5bf5922f45cb",
+    "action": "Click `OK` at the Start.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "id": "907cf49c-0c4c-4601-8ac1-49469a2d852b",
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "id": "46bb67ad-3c06-4145-bcb3-d70a9d1cc098",
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "id": "cd2785a5-966f-48d9-b636-88c50f0386d9",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "id": "189e3e17-7fe3-442d-a67f-a44c097f82dd",
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "id": "45185994-e51e-4c44-b45b-173176834d52",
+    "action": "Click the End input and pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "id": "4ce16e74-9852-4bdd-8cc9-a56c544155bd",
+    "action": "Click `OK` if it is enabled.",
+    "data": "",
+    "result": "The picker closes, or the `OK` state is noted down."
+   },
+   {
+    "id": "c7a4c35c-2a6d-4504-841a-3251803a148f",
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "id": "32ea81f5-c493-48f6-8cd5-bc4aeb95bec9",
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "id": "6029cf3b-3c82-41d9-859b-4d8ae18d5427",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "id": "021b3d9e-7200-4f8a-a2cf-b609e28530ed",
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "id": "74094429-e517-42fd-af42-cd1482eca453",
+    "action": "Pick Start `15 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "id": "71239134-393b-4dc0-aa85-ed47bb7c9a8f",
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "id": "1b4563f8-03ff-4ca2-ab70-eeb5f74acc98",
+    "action": "Pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "id": "5b63b5c3-3f11-45c3-8670-48765525722e",
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The field shows `15 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   },
+   {
+    "id": "5a152210-0fc5-4e73-b80b-64b735eb54da",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is enabled because both mandatory fields are filled."
+   },
+   {
+    "id": "20e5b8e0-7211-4559-ac6e-a8288b7c2d9d",
+    "action": "Clear Plan Name.",
+    "data": "",
+    "result": "The Plan Name field is empty."
+   },
+   {
+    "id": "8e3cbce9-acd8-496c-83a0-f7cfc4e7b49b",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled while Plan Name is empty."
+   },
+   {
+    "id": "c7d85d88-241e-461a-9aee-f17ceef61ed6",
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and no card `Plan Scenario Empty` appears."
+   },
+   {
+    "id": "1b81c2f7-631f-46ab-9108-eb55b05307a8",
+    "action": "Open `Edit Plan` of `Plan Scenario A` (`15 Feb 2026 09:00 - 25 Feb 2026 18:00`).",
+    "data": "",
+    "result": "The Edit Plan modal opens with the dates filled."
+   },
+   {
+    "id": "adbeba30-68ea-454b-b4c1-d638d7eac1d8",
+    "action": "Note down whether Save is enabled before anything is changed.",
+    "data": "",
+    "result": "The Save state is written down (no answer covers it, nothing is assumed)."
+   },
+   {
+    "id": "8ed0b6d5-c538-497b-bf1c-c7481fc60591",
+    "action": "Click the clear (x) icon of the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "id": "018d780f-079e-429a-8150-0915288308d7",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "id": "3bc9105c-4e03-4b8d-8de9-c06509e9905f",
+    "action": "Pick Start `16 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `16 Feb 2026 09:00`."
+   },
+   {
+    "id": "423dc25a-b646-4fc3-8110-8f877e225c33",
+    "action": "Click `OK` at the Start.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "id": "196dd953-59b3-4ee7-9522-5b3de99e94e0",
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "id": "76f61a5a-e291-4686-bd7d-8bf944da2b75",
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "id": "8dc63dd9-e19c-4a80-866b-96290ef5afc5",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "id": "f3c0b444-e866-4c55-886c-6c49ffd2180e",
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "id": "1d9dea93-9253-4347-9451-138d276dac01",
+    "action": "Click the End input and pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "id": "56a00fc4-98bc-4d33-bb6f-0ca0a430eee3",
+    "action": "Click the Description field.",
+    "data": "",
+    "result": "The picker closes."
+   },
+   {
+    "id": "30c1aba7-a9d7-4a22-a7ae-7aaad4fca059",
+    "action": "Note down what the Ramp Down/Up Date field shows.",
+    "data": "",
+    "result": "The values left in the field are written down."
+   },
+   {
+    "id": "291c942b-df21-4fb8-864e-f74979f71f05",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled because the range is not complete."
+   },
+   {
+    "id": "ab79459d-7297-4e2e-927a-c7157c78bfe4",
+    "action": "Click the clear (x) icon.",
+    "data": "",
+    "result": "The field is empty."
+   },
+   {
+    "id": "64d8b9ed-c217-4e11-9914-10de26f1e353",
+    "action": "Pick Start `16 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `16 Feb 2026 09:00`."
+   },
+   {
+    "id": "4abc3fc9-891c-4ec4-9477-ac0c9d7333ac",
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "id": "58d8f9e5-4027-4665-aa32-c66d9ac814c9",
+    "action": "Pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "The End is picked in the picker."
+   },
+   {
+    "id": "c76597b5-da4c-4eb2-b232-9677369a5055",
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The field shows `16 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   },
+   {
+    "id": "4e15d212-43a7-4684-a1ff-47e9cd4cec04",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is enabled because a value was changed and both mandatory fields are filled."
+   },
+   {
+    "id": "cfad007f-20e6-46b7-b7a2-5797227c0bbe",
+    "action": "Clear Plan Name.",
+    "data": "",
+    "result": "The Plan Name field is empty."
+   },
+   {
+    "id": "c04a9035-8d0a-446d-9ff8-cc266361159c",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled while Plan Name is empty."
+   },
+   {
+    "id": "dea333ca-593b-4a05-b8fd-d1867afff5b2",
+    "action": "Type `Plan Scenario A` in Plan Name.",
+    "data": "",
+    "result": "Save is enabled again."
+   },
+   {
+    "id": "803406d0-8c61-4b13-89ee-6d25323f99cd",
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and the badge of `Plan Scenario A` still shows `15 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   }
+  ]
+ },
+ "ETM-8851": {
+  "issueId": "2300327",
+  "summary": "[FE][MT] Verify pasting values into the Ramp Down/Up Date picker accepts a valid date and rejects invalid ones",
+  "steps": [
+   {
+    "id": "1279f9d0-16b5-447b-8c6d-091d42f0006c",
+    "action": "Open the `Create Plan` modal and type `Plan Scenario Paste` in Plan Name.",
+    "data": "",
+    "result": "The Plan Name field shows `Plan Scenario Paste`."
+   },
+   {
+    "id": "f9438086-6c96-41d6-ba02-c798f04a5a2c",
+    "action": "Paste `15 Feb 2026 09:00` into the Start input.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "id": "3bec7a0d-2e61-489f-b3c0-e6b271dad587",
+    "action": "Paste `31 Feb 2026 08:00` into the Start input.",
+    "data": "",
+    "result": "The value is not accepted and the Start part keeps `15 Feb 2026 09:00`."
+   },
+   {
+    "id": "3c026d3c-439e-4681-b6e1-27d0d2845d4e",
+    "action": "Paste `2026-02-08 08:00` into the Start input.",
+    "data": "",
+    "result": "The value is not accepted and the Start part keeps `15 Feb 2026 09:00`."
+   },
+   {
+    "id": "3934d55c-72fb-4360-b6e1-97712be8d7e0",
+    "action": "Paste `25 Feb 2026 18:00` into the End input.",
+    "data": "",
+    "result": "The End part shows `25 Feb 2026 18:00`."
+   },
+   {
+    "id": "098fe6ef-2660-454f-ae7e-0d5d48cb3347",
+    "action": "Paste `31 Feb 2026 08:00` into the End input.",
+    "data": "",
+    "result": "The value is not accepted and the End part keeps `25 Feb 2026 18:00`."
+   },
+   {
+    "id": "ff020d51-be17-46c4-95ef-c7b1cdec20ff",
+    "action": "Paste `2026-02-08 08:00` into the End input.",
+    "data": "",
+    "result": "The value is not accepted and the End part keeps `25 Feb 2026 18:00`."
+   },
+   {
+    "id": "cbb0ad1f-0290-47e4-8607-0f70b0948250",
+    "action": "Paste `14 Feb 2026 09:00` (earlier than Start) into the End input.",
+    "data": "",
+    "result": "No error message appears and the End is not earlier than the Start (the exact value is Dev pending, see the facts)."
+   },
+   {
+    "id": "38cb0c10-7667-4b3c-8fad-4335bf26af3a",
+    "action": "Clear the End part.",
+    "data": "",
+    "result": "The End part is empty."
+   },
+   {
+    "id": "5f219cc9-5a63-46d2-a365-2a76156ce914",
+    "action": "Look at the Save button.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "id": "0e3c7751-eb9d-45ef-afdf-a8bbd0ed7b84",
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and no card `Plan Scenario Paste` appears."
+   }
+  ]
+ },
+ "ETM-8829": {
+  "issueId": "2300304",
+  "summary": "[FE][MT] Verify the Create Plan modal shows the mandatory Ramp Down/Up Date field, pre-filled with the Planned Date, with a working picker and Save state",
+  "steps": [
+   {
+    "id": "eb5d598c-5e59-4267-afa2-0c84a38def6e",
+    "action": "Open Edit Shutdown Event of `QA Event 8042` and write down the Planned Date Start and End.",
+    "data": "",
+    "result": "The two values are written down (sample `08 Feb 2026 08:00` and `22 Feb 2026 08:00`)."
+   },
+   {
+    "id": "2d705b0f-37d9-4765-9e4f-b55b5fb33ee9",
+    "action": "Close the modal without saving.",
+    "data": "",
+    "result": "The modal closes and no value changes."
+   },
+   {
+    "id": "8e157b70-aa6a-4b3a-b547-721ecfabc8a2",
+    "action": "On the Planning tab click the button that creates a Plan.",
+    "data": "",
+    "result": "The `Create Plan` modal opens."
+   },
+   {
+    "id": "3746501d-71ea-4f04-92b6-66179f3f0610",
+    "action": "Read the fields from top to bottom.",
+    "data": "",
+    "result": "The fields are in this order: `Plan Name`, `Ramp Down/Up Date`, `Description`."
+   },
+   {
+    "id": "35097b32-7ff8-49fd-96a0-a8ae4869a54b",
+    "action": "Look at the label of `Ramp Down/Up Date`.",
+    "data": "",
+    "result": "The label shows a red mandatory mark like `Plan Name`."
+   },
+   {
+    "id": "095643f5-c300-4a55-9bdc-f13a30e83d17",
+    "action": "Look at the field type.",
+    "data": "",
+    "result": "The field is a date-time range picker with a Start part and an End part."
+   },
+   {
+    "id": "fb6d32a7-4c2a-47cf-b0c4-cc7fcc4544c5",
+    "action": "Look at the right end of the field.",
+    "data": "",
+    "result": "A calendar icon is shown."
+   },
+   {
+    "id": "47a34c8d-c2a4-4d09-bbbd-5f15ea92e367",
+    "action": "Read the Start part.",
+    "data": "",
+    "result": "Start shows the Planned Date Start written down in step 1, in the format `DD Mmm YYYY HH:mm`."
+   },
+   {
+    "id": "71c94b01-c24c-41fd-b895-3b2c019453a2",
+    "action": "Read the End part.",
+    "data": "",
+    "result": "End shows the Planned Date End written down in step 1, in the format `DD Mmm YYYY HH:mm`."
+   },
+   {
+    "id": "7f1f1c72-acc0-4c0c-bca7-f8bee5b495f3",
+    "action": "Look at the Save button while Plan Name is empty.",
+    "data": "",
+    "result": "Save is disabled."
+   },
+   {
+    "id": "8bb82255-57f6-489f-aae6-7f8b653bcf4f",
+    "action": "Type `Plan Scenario Save` in Plan Name.",
+    "data": "",
+    "result": "Save is enabled because both mandatory fields are filled."
+   },
+   {
+    "id": "d4676453-ba6d-4923-9955-10fce408f0a8",
+    "action": "Click the clear (x) icon of the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The field is empty with the placeholders `Start date` and `End date`."
+   },
+   {
+    "id": "75d2f08d-8e78-4ba6-816f-6b6612884732",
+    "action": "Click the Ramp Down/Up Date field.",
+    "data": "",
+    "result": "The picker opens with a calendar and a time column."
+   },
+   {
+    "id": "2d33549e-08ee-4c8a-80ca-3b84c01469a9",
+    "action": "Look at the minutes in the time column.",
+    "data": "",
+    "result": "The minutes are offered in steps of 15: 00, 15, 30, 45."
+   },
+   {
+    "id": "c8f03c82-5c6c-4e03-9449-cf09c5149a9b",
+    "action": "Pick Start `15 Feb 2026` and time `09:00`.",
+    "data": "",
+    "result": "The Start part shows `15 Feb 2026 09:00`."
+   },
+   {
+    "id": "e73deb3f-b35e-4db9-8eca-558e58ef097c",
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The focus moves to the End part."
+   },
+   {
+    "id": "b29f0705-0d25-4a90-9b8a-a86e1c8397bc",
+    "action": "Look at the `OK` button before an End time is picked.",
+    "data": "",
+    "result": "`OK` is disabled."
+   },
+   {
+    "id": "b720a1fe-a800-451e-802b-46fbc909d68d",
+    "action": "Pick End `25 Feb 2026` and time `18:00`.",
+    "data": "",
+    "result": "`OK` is enabled."
+   },
+   {
+    "id": "9d9182eb-df3a-41fb-951b-f7d21d389087",
+    "action": "Click `OK`.",
+    "data": "",
+    "result": "The field shows `15 Feb 2026 09:00 - 25 Feb 2026 18:00` in the format `DD Mmm YYYY HH:mm`."
+   },
+   {
+    "id": "3f41acae-cf75-469c-8bc1-34758a3f1e20",
+    "action": "Click Cancel.",
+    "data": "",
+    "result": "The modal closes and no new card appears."
+   },
+   {
+    "id": "4cb2c2ad-3ecd-47ea-94bc-2c17fc5861ec",
+    "action": "Open the `Create Plan` modal again.",
+    "data": "",
+    "result": "The field shows the Planned Date again as in steps 8 and 9, not `15 Feb 2026 09:00 - 25 Feb 2026 18:00`."
+   },
+   {
+    "id": "17afa91c-05f2-4465-b9e6-8e77c46ce238",
+    "action": "Close the modal.",
+    "data": "",
+    "result": "The modal closes."
+   }
+  ]
+ }
+}

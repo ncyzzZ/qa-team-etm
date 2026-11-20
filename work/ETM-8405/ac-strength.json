@@ -50,8 +50,8 @@
    "tests": [
     "ETM-8640"
    ],
-   "rating": "weak",
-   "why": "group summary asserted null from an undocumented decision"
+   "rating": "strong",
+   "why": "ETM-8640 asserts Plan (%) and Total Progress Plan (%) update after weekly edits, and the Activity Group row shows no summary (user decision 18 Nov, confirmed by the user in chat 2026-11-20). ETM-8640 passed in run 2026-11-19_235422. Re-rated by lead 2026-11-20."
   },
   {
    "id": "AC-10",
@@ -59,8 +59,8 @@
    "tests": [
     "ETM-8642"
    ],
-   "rating": "blocked",
-   "why": "stops at open defects ETM-8671/8672"
+   "rating": "strong",
+   "why": "ETM-8642 asserts manual weekly values are overwritten after a Plan (%) edit (sum kept), after Start/End Date changes (out-of-range weeks empty, read-only), no modal each time, and Plan (%) 130 clamped to 100.0 with weeks summing 100.0; the spec no longer stops at ETM-8671/8672 and ETM-8642 passed in run 2026-11-19_235422. Gap: exact Day-Weighted pro-rata split not asserted, only the sum. Re-rated by lead 2026-11-20."
   },
   {
    "id": "AC-13",

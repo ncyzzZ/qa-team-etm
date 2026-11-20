@@ -1,0 +1,41 @@
+{
+ "ETM-8849": {"issueId":"2300325","summary":"[FE][BE][MT] Verify a Daily Report created before the release shows no visible change after the release","steps":[
+ {"id":"2de7fd5a-75c9-4753-a514-6f78ffece9cd","action":"Open the old Daily Report.","data":"","result":"The Daily Report opens and the page works without an error."},
+ {"id":"87197819-532f-419b-a632-f20e1d31fe4e","action":"Read the First Execution Date.","data":"","result":"It is the same as the value written down before the release."},
+ {"id":"880e0e0a-23b8-4ac5-aa2d-0a667b839cb1","action":"Read the last execution day.","data":"","result":"It is the same as the value written down before the release."},
+ {"id":"3d74cc42-a146-419f-bcdb-347f8f281e8e","action":"Read the first and the last day of the Gantt chart.","data":"","result":"They are the same as the values written down before the release."},
+ {"id":"daa3b371-5622-401f-8c85-d684d3570685","action":"Read the end of the Planned S-Curve.","data":"","result":"It is the same as the value written down before the release."},
+ {"id":"25edf513-0181-4f0b-98de-7494e1348ef7","action":"Export the Daily Report to PDF and read the Day numbering.","data":"","result":"Day 1 and the Day numbering are the same as the values written down before the release."},
+ {"id":"0dd3a49a-a564-4d7d-b2d5-e9ccc0e75502","action":"Edit the Plan to `18 Feb 2026 09:00 - 20 Feb 2026 09:00` and open the old Daily Report again.","data":"","result":"All values from steps 2 to 5 are still the same."}]},
+ "ETM-8837": {"issueId":"2300313","summary":"[FE][MT] Verify the Excel export of Shutdown Logic, Manpower Mob Plan and Equipment Mob Plan shows Ramp Down Date and Ramp Up Date with the Plan values","steps":[
+ {"id":"f36bfc33-8f32-494c-9a6b-181a5f145295","action":"Open the page from the table row.","data":"","result":"The page opens."},
+ {"id":"382c0e67-cf2b-4f1d-b877-3f14da9efadd","action":"Click Export and choose Excel.","data":"","result":"An Excel file is downloaded."},
+ {"id":"02b32314-5889-41cb-aed9-766f05aaf3b5","action":"Open the metadata part of the file and note down the sheet name and the cell range of the labels.","data":"","result":"The sheet and the cells are written down and the labels `Ramp Down Date` and `Ramp Up Date` are shown."},
+ {"id":"de3403dc-b750-4801-add2-c1836d3d5ff7","action":"Look for the old labels.","data":"","result":"The labels `Start Event Date` and `End Event Date` do not appear."},
+ {"id":"9100cfe6-70db-4ef9-9c2e-8127e4b83a91","action":"Read the values next to the two labels.","data":"","result":"`Ramp Down Date` shows the Plan Ramp Down `15 Mar 2026` and `Ramp Up Date` shows the Plan Ramp Up `25 Mar 2026` (not the event Planned Date), in the same cell format as the old `Start Event Date` and `End Event Date` cells had in the current export (baseline: date only stays date only; the time `09:00` and `18:00` appears only if the current export shows time)."},
+ {"id":"2e03c08f-deb9-46b5-8756-380532594f71","action":"For the Shutdown Logic row only, read the date of `Day1` (ETM-5492).","data":"","result":"`Day1` is `15 Mar 2026`, not the event Planned Date Start."}]},
+ "ETM-8846": {"issueId":"2300322","summary":"[FE][BE][MT] Verify the very long range `15 Feb 2026 08:00 - 15 Feb 2029 20:15` on the badge, in the Daily Report and in the Excel export, and the badge and a long Plan Name on a narrow card","steps":[
+ {"id":"aa7b7ce8-b00a-4b1f-aa70-540d0a9a7327","action":"Read the badge of the card with the 50 character name.","data":"","result":"The badge shows `Ramp Down/Up Date: 15 Feb 2026 08:00 - 15 Feb 2029 20:15`."},
+ {"id":"35f8e6ab-06f5-4b3a-8ceb-1189541c91e6","action":"Create the Daily Report for that Plan and open it.","data":"","result":"The Daily Report opens."},
+ {"id":"24d76346-d630-4cc5-87db-71697f73b676","action":"Note down the first and the last day of the Gantt chart.","data":"","result":"The two days are written down; Dev pending: the calculated range is not confirmed. The Gantt shows no wrong date format."},
+ {"id":"62a961f9-1fa4-4556-83a8-721fecc7bfa8","action":"Export the Shutdown Logic of that Plan to Excel.","data":"","result":"An Excel file is downloaded."},
+ {"id":"106c4d34-cd8f-4c8b-8e02-9ceb030d5588","action":"Read the `Ramp Down Date` and `Ramp Up Date` in the metadata.","data":"","result":"They show `15 Feb 2026` and `15 Feb 2029` in the same cell format as the old `Start Event Date` cell had in the current export (baseline)."},
+ {"id":"5e2ba4ec-461f-437e-9372-19475846ddc2","action":"Set the browser window width to 600 px and look at the card header.","data":"","result":"The badge stays on one line with its full text."},
+ {"id":"d8a9906f-d970-4001-ab89-1f2a1240c885","action":"Read the Plan Name in the card header.","data":"","result":"The Plan Name is cut with an ellipsis (`…`)."},
+ {"id":"73403731-83e3-494a-9a70-d9caa0a316e2","action":"Hover over the Plan Name.","data":"","result":"The full name `Plan Scenario Long Name Plan Scenario Long Name 12` is shown."}]},
+ "ETM-8842": {"issueId":"2300318","summary":"[FE][BE][MT] Verify Confirm on `Extend Daily Report` moves the Plan Ramp Up and the Daily Report snapshot Ramp Up together, and never the Shutdown Event Planned Date","steps":[
+ {"id":"412c5376-57b5-4d30-bb76-055d2aef4f60","action":"Freeze the last execution day of the Daily Report (ETM-4125).","data":"","result":"The confirmation `Extend Daily Report` appears with `Confirm` and `Cancel`."},
+ {"id":"2d0fff74-96f4-4249-a240-525c3e4bf961","action":"Click `Cancel`.","data":"","result":"The confirmation closes."},
+ {"id":"946c2c73-7d2f-477a-bfa0-c98ace83d25c","action":"Note down whether the last execution day is still frozen.","data":"","result":"The state is written down and used in step 5."},
+ {"id":"c83789a1-db35-4258-acaa-5ffc914ff425","action":"Open `Edit Plan` and read the End.","data":"","result":"The End still shows `25 Feb 2026 18:00`."},
+ {"id":"33953b96-a42d-4bad-bc25-8cdcb220736f","action":"Close the modal.","data":"","result":"The modal closes."},
+ {"id":"9ecade50-8c3c-44d4-81b0-12c3a9131948","action":"Freeze the last execution day again as noted in step 3 and click `Confirm`.","data":"","result":"The Daily Report is extended as today (no date is chosen by the user); note down by how many days."},
+ {"id":"0e9b452c-14f0-42e5-b6aa-980053afcc08","action":"Write down the new last execution day of the Daily Report.","data":"","result":"The new last execution day is written down and is later than `25 Feb 2026`."},
+ {"id":"23f6a396-1877-4eb2-8dda-72ffbdad2649","action":"Open `Edit Plan` and read the End.","data":"","result":"The End date equals the new last execution day from step 7 and is later than `25 Feb 2026`; Start is still `15 Feb 2026 09:00`. Note down the Ramp Up time (Dev pending: Plan and snapshot are saved both or neither)."},
+ {"id":"6bcd3593-76ec-4843-98d7-4c1604ef42ca","action":"Read the badge of the Plan on the Planning tab.","data":"","result":"The badge shows the same End as the Edit Plan modal."},
+ {"id":"52b98d75-22eb-4509-a831-b380068ec734","action":"Open the Daily Report and read the end of the Planned S-Curve.","data":"","result":"The curve ends on the new last execution day from step 7."},
+ {"id":"efcd2d9d-922e-4c1e-95c1-01e0a63f5b82","action":"Open Edit Shutdown Event and read the Planned Date.","data":"","result":"It is still `08 Feb 2026 08:00` - `22 Feb 2026 08:00`; the event Planned Date did not change."},
+ {"id":"cc212f96-3909-4248-b93d-910aafb5e1ae","action":"Freeze the new last execution day and click `Confirm`.","data":"","result":"A second extension is saved."},
+ {"id":"b7f9c324-4ad1-4c82-b3a4-b703de979a3a","action":"Compare the Plan End in `Edit Plan` with the Daily Report last execution day.","data":"","result":"Both show the same date, later than the first extension."},
+ {"id":"93a2792e-0d32-4ec1-b21a-dadc12b801d2","action":"Open Edit Shutdown Event and read the Planned Date.","data":"","result":"It is still `08 Feb 2026 08:00` - `22 Feb 2026 08:00`."}]}
+}

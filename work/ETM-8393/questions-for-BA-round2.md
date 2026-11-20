@@ -23,3 +23,6 @@ Figma shows the card above the cursor. What happens near the right edge of the c
 
 ## Q5. Build availability
 [FE] Implement UI (ETM-8534) is still Open and the Story is "Ready For Development". Which environment and plan will have this change when QA starts, and which resource rows have both a red and a green bar for testing?
+
+## 2026-11-20 status (via the user in chat)
+- ETM-8534 ([FE] Implement UI) is not on QA yet: ETM-8393 runs stay on hold.

@@ -1,0 +1,41 @@
+[
+{"key":"ETM-8842","summary":"[FE][BE][MT] Verify Extend Daily Report adds days after the last execution day and does not change the Plan Ramp Down/Up Date, the snapshot or the event Planned Date, also after a second Extension and after deleting the extended days (POS/NEG)","steps":[
+{"action":"Freeze the last execution day of the Daily Report.","result":"The confirmation `Extend Daily Report` appears with `Confirm` and `Cancel`."},
+{"action":"Click `Cancel`.","result":"The confirmation closes and no day is added."},
+{"action":"Freeze the last execution day again and click `Confirm`.","result":"One or more execution days are added after the old last execution day."},
+{"action":"Read the last execution day.","result":"It is later than `22 Feb 2026`."},
+{"action":"Open `Edit Plan` of `Plan Scenario Ext` and read the dates.","result":"They are still `20 Feb 2026 18:00 - 22 Feb 2026 07:00`."},
+{"action":"Read the badge on the Plan Card.","result":"It shows `Ramp Down/Up Date: 20 Feb 2026 18:00 - 22 Feb 2026 07:00`."},
+{"action":"Open the Daily Report Gantt and look at the `Ramp Down` and `Ramp Up` lines.","result":"One `Ramp Down` line on the snapshot Ramp Down date and one `Ramp Up` line on `22 Feb 2026`; the added days are after the `Ramp Up` line."},
+{"action":"Look at the end of the Planned S-Curve.","result":"It ends on the new last execution day (snapshot Ramp Up plus the added days)."},
+{"action":"Open Edit Shutdown Event and read the Planned Date.","result":"It is still `08 Feb 2026 08:00 - 22 Feb 2026 08:00`."},
+{"action":"Freeze the new last execution day and click `Confirm`.","result":"More days are added after the last one."},
+{"action":"Read the badge and the `Ramp Up` line again.","result":"The badge is unchanged and there is still exactly one `Ramp Up` line on `22 Feb 2026`."},
+{"action":"Delete the extended days.","result":"The extended days are removed."},
+{"action":"Read the badge, `Edit Plan` and the `Ramp Down` / `Ramp Up` lines.","result":"All are unchanged: `20 Feb 2026 18:00 - 22 Feb 2026 07:00`, one line each on the snapshot dates."}]},
+{"key":"ETM-8837","summary":"[FE][MT] Verify the Excel export of Shutdown Logic, Manpower Mob Plan and Equipment Mob Plan shows Ramp Down Date and Ramp Up Date with the Plan values","steps":[
+{"action":"Open the Shutdown Logic, Manpower Mob Plan or Equipment Mob Plan page of `Plan Scenario A`.","result":"The page opens with the `Export` button."},
+{"action":"Click `Export` and choose Excel.","result":"An Excel file is downloaded."},
+{"action":"Open the file and look for the labels in the metadata part.","result":"The labels `Ramp Down Date` and `Ramp Up Date` are shown."},
+{"action":"Look for the old labels.","result":"The labels `Start Event Date` and `End Event Date` do not appear."},
+{"action":"Read the values next to the two labels.","result":"`Ramp Down Date` shows `15 Feb 2026` and `Ramp Up Date` shows `25 Feb 2026` (the Plan values), not the event Planned Date `08 Feb 2026`."},
+{"action":"For the Shutdown Logic file only, read the date of `Day1` (ETM-5492).","result":"`Day1` is `15 Feb 2026`."}]},
+{"key":"ETM-8846","summary":"[FE][BE][MT] Verify the very long range `15 Feb 2026 08:00 - 15 Feb 2029 20:15` on the badge, in the Daily Report and in the Excel export, and the badge and a long Plan Name on a narrow card","steps":[
+{"action":"Create a Plan named `Plan Scenario Long Name Plan Scenario Long Name 12` (50 characters) with `15 Feb 2026 08:00 - 15 Feb 2029 20:15` and read the badge.","result":"The badge shows `Ramp Down/Up Date: 15 Feb 2026 08:00 - 15 Feb 2029 20:15`."},
+{"action":"Create the Shutdown Logic of that Plan.","result":"The Shutdown Logic row shows as created."},
+{"action":"Create the Daily Report for that Plan and open it.","result":"The Daily Report opens."},
+{"action":"Note down the first and the last day of the Gantt chart.","result":"The two days are written down and the Gantt shows no wrong date format."},
+{"action":"Open the Shutdown Logic of that Plan and export it to Excel.","result":"An Excel file is downloaded."},
+{"action":"Read `Ramp Down Date` and `Ramp Up Date` in the metadata.","result":"They show `15 Feb 2026` and `15 Feb 2029`."},
+{"action":"Set the browser window width to 600 px and look at the card header.","result":"The badge stays on one line with its full text."},
+{"action":"Read the Plan Name in the card header.","result":"The Plan Name is cut with an ellipsis (`…`)."},
+{"action":"Hover over the Plan Name.","result":"The full name `Plan Scenario Long Name Plan Scenario Long Name 12` is shown."}]},
+{"key":"ETM-8849","summary":"[FE][BE][MT] Verify a Daily Report created before the release still shows the dates of its event Planned Date after the release (BND)","steps":[
+{"action":"Open the old Daily Report.","result":"The Daily Report opens and the page works without an error."},
+{"action":"Read the First Execution Date.","result":"It is `16 Jun 2026` (event Planned start `10:00` is before `18:00`, so the day before)."},
+{"action":"Read the last execution day.","result":"It is `15 Jul 2026` (event Planned end)."},
+{"action":"Note down the first and the last day of the Gantt chart.","result":"The two days are written down and the Gantt shows no error."},
+{"action":"Look at the end of the Planned S-Curve.","result":"It ends on `15 Jul 2026`."},
+{"action":"Export the Daily Report to PDF and read the Day numbering.","result":"Day 1 is `16 Jun 2026`."},
+{"action":"Reload the old Daily Report and read the First Execution Date and the last execution day.","result":"They are still `16 Jun 2026` and `15 Jul 2026`."}]}
+]

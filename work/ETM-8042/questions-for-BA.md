@@ -32,3 +32,7 @@ Test cases are drafted (23). Only the points below are still waiting.
 - S2: Do other roles (for example Job Owner) still see the badge on the Plan Card?
 - S3: If the Extension updates the Plan but the Daily Report snapshot update fails (or the other way round), what does the user see and what is stored?
 - S4: If two users save different Ramp Down/Up values for the same Plan at the same moment, which one wins, and does the other user get a message?
+
+## Raised during the QA run, 2026-11-20 (answered by BA through the user the same day)
+7. (AC-8.2) A Daily Report created while the Plan's worklist has no work opens on the Ramp Down date itself (Ramp Down 15 Feb 2026 09:00 -> first day 15 Feb), not by the 18:00 rule (14 Feb). Is that intended? — BA: yes, correct behaviour.
+8. (AC-8.2) In the same case the Daily Report Gantt shows Jan 2026 instead of the snapshot Ramp Down/Up range. Is that intended? — BA: not an issue while there is no work from the worklist.
