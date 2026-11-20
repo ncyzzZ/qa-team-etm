@@ -190,9 +190,9 @@ function main() {
   console.log(`[sprint-metrics] sprints ${sprints[0]?.sprint ?? '-'}-${last?.sprint ?? '-'}, ${sum('stories')} stories, ${sum('defects')} defects, ${sum('bugs')} bugs, ${sum('stopped')} stopped before code`);
   for (const r of rows) console.log(`  S${r.sprint}${r.active ? ' (in progress)' : ''}: ${r.stories} stories, defect/story ${fmt(r.defectsPerStory, 2)}, bugs ${r.bugs}, findings ${fmt(r.raised)} (stopped ${fmt(r.stopped)}, before dev ${fmt(r.before)})`);
   console.log(`  headline sprint: S${headline(rows).sprint ?? '-'}`);
-  try { // self-healing rate (tools/heal/heal-log.mjs): healed = approved + re-run passed, over locator failures in triage.json
+  try { // self-healing rate (tools/heal/heal-log.mjs): healed = approved + re-run passed, over locator failures of tests that passed before
     const h = healSummary(resolveRepos().pwRepo, {});
-    console.log(`  self-healing: locator failures ${h.locatorFailures}, healed ${h.healed} (fe ${h.bySource.fe}, live ${h.bySource.live}), rate ${h.rate == null ? '-' : `${Math.round(h.rate * 100)}%`}`);
+    console.log(`  self-healing: locator failures ${h.locatorFailures} (new scripts ${h.newScriptFailures}, not counted), healed ${h.healed} (fe ${h.bySource.fe}, live ${h.bySource.live}), rate ${h.rate == null ? '-' : `${Math.round(h.rate * 100)}%`}`);
   } catch (e) { console.log(`  self-healing: - (${e.message})`); }
   for (const q of quality) if (q.ran || q.ac.total) console.log(`  script quality S${q.sprint}: proven ${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'} (${q.passed}/${q.ran}, not proven ${q.notProven}, fixme ${q.fixme}, precondition ${q.precondition}) | AC proven ${q.ac.total ? `${q.ac.proven}/${q.ac.total}` : '-'} (strong on paper ${q.ac.strong})`);
   console.log(`  unassigned: ${unassigned.length}${unassigned.length ? ` (${unassigned.join(', ')})` : ''}`);

@@ -3,7 +3,8 @@
 //   node tools/heal/heal-log.mjs add '<json>'          append one heal (the automation agent does this after each heal)
 //   node tools/heal/heal-log.mjs summary [from] [to]   locator failures, healed, by source, rate
 // Healed = approved by the user AND the re-run passed (deduped by date+card+test+page).
-// Rate = healed / locator failures (from triage.json of each run folder; a test failing in several runs counts each time).
+// Rate = healed / locator failures of tests that passed before (once per locator until the test passes again);
+// failures of scripts that never passed are new-script work, shown apart, not in the rate.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -32,24 +33,51 @@ export function readHeals(pwRepo) {
   return out;
 }
 
-/** Locator failures counted from triage.json of run folders named <YYYY-MM-DD>_... */
-function locatorFailures(pwRepo, from, to) {
-  const runs = path.join(pwRepo, 'output', 'runs');
-  let n = 0;
-  let dirs = [];
-  try { dirs = fs.readdirSync(runs); } catch { return 0; }
-  for (const d of dirs) {
-    const date = (d.match(/^(\d{4}-\d{2}-\d{2})/) || [])[1];
-    if (!date || !inRange(date, from, to)) continue;
-    try {
-      const rows = JSON.parse(fs.readFileSync(path.join(runs, d, 'triage.json'), 'utf8'));
-      if (Array.isArray(rows)) n += rows.filter((r) => r && r.cause === 'locator').length;
-    } catch { /* no triage for this run */ }
-  }
-  return n;
+const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
+const testId = (file, title) => `${file}|${title}`;
+
+/** ids (file|title) of the tests that passed at least once in a run's results.json (a flaky pass counts) */
+function passedIn(results) {
+  const ids = [];
+  (function walk(s) {
+    if (!s) return;
+    for (const sp of s.specs || []) for (const t of sp.tests || []) if ((t.results || []).some((r) => r.status === 'passed')) ids.push(testId(sp.file, sp.title));
+    (s.suites || []).forEach(walk);
+  })(results);
+  return ids;
 }
 
-/** @returns {{ locatorFailures: number, healed: number, bySource: { fe: number, live: number }, rate: number|null }} */
+/**
+ * Locator failures from the run folders <YYYY-MM-DD>_..., oldest first.
+ * A heal case is a test that passed in an earlier run and now fails on a locator (the page changed under a working
+ * script). It counts once per locator until the test passes again. A test that never passed is a new script being
+ * written: counted apart (newScript), not in the rate. Passes before the date range still count as "passed before".
+ */
+function locatorFailures(pwRepo, from, to) {
+  const runs = path.join(pwRepo, 'output', 'runs');
+  let dirs = [];
+  try { dirs = fs.readdirSync(runs).filter((d) => /^\d{4}-\d{2}-\d{2}/.test(d)).sort(); } catch { return { breaks: 0, newScript: 0 }; }
+  const passed = new Set();
+  const open = new Map(); // test id -> locators already counted in its current break
+  const seenNew = new Set();
+  let breaks = 0, newScript = 0;
+  for (const d of dirs) {
+    const counts = inRange(d.slice(0, 10), from, to);
+    const rows = readJson(path.join(runs, d, 'triage.json'));
+    for (const r of Array.isArray(rows) ? rows : []) {
+      if (!r || r.cause !== 'locator') continue;
+      const id = testId(r.file, r.title ?? r.key), loc = String(r.locator ?? '');
+      if (passed.has(id)) {
+        const done = open.get(id) || new Set();
+        if (!done.has(loc)) { done.add(loc); open.set(id, done); if (counts) breaks++; }
+      } else if (!seenNew.has(`${id}|${loc}`)) { seenNew.add(`${id}|${loc}`); if (counts) newScript++; }
+    }
+    for (const id of passedIn(readJson(path.join(runs, d, 'results.json')))) { passed.add(id); open.delete(id); }
+  }
+  return { breaks, newScript };
+}
+
+/** @returns {{ locatorFailures: number, newScriptFailures: number, healed: number, bySource: { fe: number, live: number }, rate: number|null }} */
 export function summarize(pwRepo, { from, to } = {}) {
   const seen = new Set();
   const heals = readHeals(pwRepo).filter((h) => {
@@ -59,9 +87,9 @@ export function summarize(pwRepo, { from, to } = {}) {
     seen.add(k);
     return true;
   });
-  const lf = locatorFailures(pwRepo, from, to);
+  const { breaks: lf, newScript } = locatorFailures(pwRepo, from, to);
   const bySource = { fe: heals.filter((h) => h.source === 'fe').length, live: heals.filter((h) => h.source === 'live').length };
-  return { locatorFailures: lf, healed: heals.length, bySource, rate: lf ? heals.length / lf : null };
+  return { locatorFailures: lf, newScriptFailures: newScript, healed: heals.length, bySource, rate: lf ? Math.min(1, heals.length / lf) : null };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -70,6 +98,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (cmd === 'add') { appendHeal(pwRepo, JSON.parse(a)); console.log(`[heal-log] added to ${logFile(pwRepo)}`); }
   else if (cmd === 'summary') {
     const s = summarize(pwRepo, { from: a, to: b });
-    console.log(`[heal-log] locator failures ${s.locatorFailures}, healed ${s.healed} (fe ${s.bySource.fe}, live ${s.bySource.live}), rate ${s.rate == null ? '-' : `${Math.round(s.rate * 100)}%`}`);
+    console.log(`[heal-log] locator failures ${s.locatorFailures} (new scripts ${s.newScriptFailures}, not counted), healed ${s.healed} (fe ${s.bySource.fe}, live ${s.bySource.live}), rate ${s.rate == null ? '-' : `${Math.round(s.rate * 100)}%`}`);
   } else { console.error("Usage: node tools/heal/heal-log.mjs add '<json>' | summary [from] [to]"); process.exit(2); }
 }
