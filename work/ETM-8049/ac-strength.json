@@ -1,8 +1,8 @@
 {
  "card": "ETM-8049",
- "date": "2026-11-19",
- "verdict": "not-ready",
- "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "date": "2026-11-20",
+ "verdict": "partly",
+ "note": "2026-11-20: scripts fixed against the real app after run 2026-11-20_182730 (read from stms-fe and the error-context files); nothing re-run yet. WLOC_* env values are all set. Ratings are a reading of the code, not proof.",
  "ac": [
   {
    "id": "AC-1",
@@ -13,8 +13,8 @@
     "ETM-8776",
     "ETM-8777"
    ],
-   "rating": "blocked",
-   "why": "WLOC_SCRATCH_PATH not set, file skips"
+   "rating": "weak",
+   "why": "TC-004 step 5 cannot be checked: the second user (Job Owner) gets Access Denied on the inactive-plan worklist (notChecked); TC-001..003 check hidden default, order (from the Column Customization list), Reset, per-user layout"
   },
   {
    "id": "AC-3",
@@ -22,8 +22,8 @@
    "tests": [
     "ETM-8778"
    ],
-   "rating": "blocked",
-   "why": "WLOC_CELLS_PATH"
+   "rating": "strong",
+   "why": "exact Deck/X/Y cell text per work, row found by Work Number after the table has loaded"
   },
   {
    "id": "AC-5",
@@ -31,8 +31,8 @@
    "tests": [
     "ETM-8779"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "weak",
+   "why": "ellipsis CSS and tooltip text are measured; how the cut LOOKS is for a person"
   },
   {
    "id": "AC-6",
@@ -40,8 +40,8 @@
    "tests": [
     "ETM-8781"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "Deck filter controls, option list and order, search, Select All compared with the Job Description filter"
   },
   {
    "id": "AC-8",
@@ -49,8 +49,8 @@
    "tests": [
     "ETM-8782"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "any-value match, filters together with the search box, empty worklist"
   },
   {
    "id": "AC-11",
@@ -58,8 +58,8 @@
    "tests": [
     "ETM-8783"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "case variants are separate options and match exactly"
   },
   {
    "id": "AC-12",
@@ -67,8 +67,8 @@
    "tests": [
     "ETM-8780"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "strong",
+   "why": "no sort arrow, same row order"
   },
   {
    "id": "AC-13",
@@ -76,8 +76,8 @@
    "tests": [
     "ETM-8784"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "weak",
+   "why": "file read by script; look in Excel and the cell-vs-file comparison need a person (partial)"
   },
   {
    "id": "AC-14",
@@ -86,8 +86,8 @@
     "ETM-8785",
     "ETM-8788"
    ],
-   "rating": "blocked",
-   "why": "forms env; 8786/8787 not scripted"
+   "rating": "weak",
+   "why": "Edit Work Breakdown half and Create Work are scripted; the Edit Work Details half cannot be checked (that page has no Working Location field, notChecked)"
   },
   {
    "id": "AC-18",
@@ -96,8 +96,26 @@
     "ETM-8790",
     "ETM-8791"
    ],
-   "rating": "blocked",
-   "why": ".env value empty, the test skips"
+   "rating": "weak",
+   "why": "TC-017 mandatory fields and Back are scripted; TC-018 30-character limit is scripted in Create Work and in Edit Work Breakdown (not Edit Work Details); Excel steps manual"
+  },
+  {
+   "id": "AC-15",
+   "rule": "free text kept as entered",
+   "tests": [
+    "ETM-8788"
+   ],
+   "rating": "weak",
+   "why": "Create Work has one row per work, so the roll-up of several spellings in one cell is not checked (notChecked)"
+  },
+  {
+   "id": "AC-17",
+   "rule": "old stored case variant not converted unless removed and entered again",
+   "tests": [
+    "ETM-8793"
+   ],
+   "rating": "weak",
+   "why": "Remark is changed in Edit Work Details; the Deck tag is removed and entered again in Edit Work Breakdown (Edit Work Details has no Deck field)"
   }
  ]
 }

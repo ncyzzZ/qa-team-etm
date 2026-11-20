@@ -59,3 +59,17 @@
 {"t":"2026-11-20T09:53:56.736Z","card":"ETM-8042","ran":2,"passed":1,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":50}
 {"t":"2026-11-20T09:56:26.451Z","card":"ETM-8042","ran":1,"passed":1,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":100}
 {"t":"2026-11-20T10:08:05.927Z","card":"ETM-8042","ran":2,"passed":1,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":50}
+{"t":"2026-11-20T10:09:47.501Z","card":"ETM-8042","ran":1,"passed":0,"failed":0,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-20T10:10:01.556Z","card":"ETM-8405","ran":6,"passed":6,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":100}
+{"t":"2026-11-20T10:16:00.937Z","card":"ETM-8405","ran":6,"passed":6,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":100}
+{"t":"2026-11-20T10:23:52.564Z","card":"ETM-8392","ran":1,"passed":0,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":1,"provenRate":0,"source":"manual-agent"}
+{"t":"2026-11-20T10:32:06.420Z","card":"ETM-8392","ran":2,"passed":1,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":1,"provenRate":50,"source":"manual-agent"}
+{"t":"2026-11-20T10:32:46.690Z","card":"ETM-8042","ran":2,"passed":0,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-20T10:33:18.991Z","card":"ETM-8392","ran":2,"passed":1,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":1,"provenRate":50,"source":"manual-agent"}
+{"t":"2026-11-20T10:39:36.407Z","card":"ETM-8042","ran":2,"passed":0,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-20T10:41:54.813Z","card":"ETM-8042","ran":2,"passed":1,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":50}
+{"t":"2026-11-20T10:42:28.155Z","card":"ETM-8049","ran":19,"passed":0,"failed":19,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-20T10:46:00.737Z","card":"ETM-8392","ran":1,"passed":0,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":1,"provenRate":0,"source":"manual-agent"}
+{"t":"2026-11-20T11:07:31.976Z","card":"ETM-8049","ran":1,"passed":0,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-20T11:26:03.345Z","card":"ETM-8049","ran":1,"passed":0,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-20T11:37:11.809Z","card":"ETM-8049","ran":19,"passed":1,"failed":17,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":5}

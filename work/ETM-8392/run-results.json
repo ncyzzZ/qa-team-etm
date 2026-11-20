@@ -52,15 +52,16 @@
   },
   "ETM-8692": {
    "status": "skipped",
-   "why": "fixme",
-   "t": "2026-11-20T06:29:29.137Z",
-   "run": "2026-11-20_132703_ETM-8392"
+   "why": "precondition",
+   "t": "2026-11-20T10:46:00.737Z",
+   "run": "2026-11-20_174125_ETM-8392_manual",
+   "source": "manual-agent"
   },
   "ETM-8693": {
-   "status": "skipped",
-   "why": "fixme",
-   "t": "2026-11-20T06:29:29.137Z",
-   "run": "2026-11-20_132703_ETM-8392"
+   "status": "passed",
+   "t": "2026-11-20T10:33:18.991Z",
+   "run": "2026-11-20_171914_ETM-8392_manual",
+   "source": "manual-agent"
   },
   "ETM-8694": {
    "status": "passed",
@@ -99,5 +100,5 @@
    "run": "2026-11-20_132703_ETM-8392"
   }
  },
- "updated": "2026-11-20T08:32:57.412Z"
+ "updated": "2026-11-20T10:46:00.737Z"
 }

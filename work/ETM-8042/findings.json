@@ -108,5 +108,18 @@
     "q": "8",
     "ac": "AC-8.2",
     "note": "Daily Report Gantt showed Jan 2026 (14-30) instead of the snapshot range in Feb 2026 while there was no work from the worklist. BA (via user, 2026-11-20): not an issue; with a work it shows Feb 2026 with the Ramp Down/Up lines."
+  },
+  {
+    "id": "F-9",
+    "q": "9",
+    "ac": "AC-8.2",
+    "kind": "question",
+    "impact": "medium",
+    "raised": "2026-11-20",
+    "story_status": "Deployed to QA",
+    "outcome": "open",
+    "outcome_date": null,
+    "note": "Old report (Export 5000) Planned S-Curve ends ~12 Apr 2027 (last task) instead of the event Planned end 15 Jul 2026; ETM-8849 step 5 kept by eye until BA answers.",
+    "later_defect": null
   }
 ]
