@@ -18,7 +18,7 @@ import { triageRun, countByCause } from './heal/triage.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
 import { dataGate, holdLock } from './data-gate.mjs';
-import { recordRunResults, sourceOf } from './run-results.mjs';
+import { recordRunResults, sourceOf, rowsFromResults } from './run-results.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -100,15 +100,7 @@ function recordQuality(rows, resultsDir) {
 function summarise(resultsDir) {
   try {
     const r = JSON.parse(fs.readFileSync(path.join(resultsDir, 'results.json'), 'utf8'));
-    const rows = [];
-    (function walk(s) {
-      (s.specs || []).forEach((sp) => sp.tests.forEach((t) => {
-        const x = t.results[t.results.length - 1];
-        const flaky = x.status === 'passed' && t.results.some((y) => y.status === 'failed' || y.status === 'timedOut');
-        rows.push({ title: sp.title, status: flaky ? 'flaky' : x.status, why: skipKind(t.annotations || x.annotations || []), msg: ((x.error && x.error.message) || '').replace(/\x1b\[[0-9;]*m/g, '').split('\n')[0].slice(0, 160) });
-      }));
-      (s.suites || []).forEach(walk);
-    })(r);
+    const rows = rowsFromResults(r, skipKind);
     const n = (st) => rows.filter((x) => x.status === st).length;
     counts = { ran: rows.length, pass: n('passed'), fail: n('failed') + n('timedOut') + n('flaky') };
     console.log(`\n== ${key}: ran ${rows.length} | passed ${n('passed')} | failed ${n('failed') + n('timedOut')} | flaky ${n('flaky')} | skipped ${n('skipped')}`);

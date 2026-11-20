@@ -12,7 +12,7 @@ function runDir(test = 'ETM-2', n = 6) {
   for (let i = 1; i <= n; i++) fs.writeFileSync(path.join(dir, 'evidence', test, `step-${i}.png`), PNG);
   return dir;
 }
-const verdict = (verdicts, test = 'ETM-2') => ({ key: 'ETM-1', test, title: 't', role: 'turnaroundManager', actions: [],
+const verdict = (verdicts, test = 'ETM-2') => ({ key: 'ETM-1', test, title: 't', role: 'turnaroundManager', actions: [], confirmedBy: 'user',
   steps: verdicts.map((v, i) => ({ n: i + 1, do: 'd', expected: 'e', verdict: v, why: 'w', picture: `evidence/${test}/step-${i + 1}.png` })) });
 
 // fake Xray GraphQL: records every call, answers lookups, keeps step statuses for the read back
@@ -127,4 +127,13 @@ test('CLI with --apply and --only pushes only the named Test and prints why the 
   const g = fakeGql(6);
   await main([dir, '--exec', 'ETM-9', '--apply', '--only', 'ETM-3'], { gql: g.gql, log: () => {} });
   assert.equal(count(g.calls, /mutation/), 0);
+});
+
+test('a Test the person has not confirmed is not pushed', () => {
+  const dir = runDir();
+  const v = verdict(['pass', 'pass', 'pass', 'pass', 'pass', 'pass']);
+  delete v.confirmedBy;
+  const p = planPush([v], dir);
+  assert.equal(p.push.length, 0);
+  assert.deepEqual(p.skip, [{ test: 'ETM-2', why: 'not confirmed by a person (results.mjs --confirm / --decide)' }]);
 });

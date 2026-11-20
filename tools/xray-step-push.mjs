@@ -33,6 +33,7 @@ export function planPush(verdicts, runDir) {
     const open = (v.steps || []).filter((s) => s.verdict === 'needs-human').map((s) => s.n);
     if (open.length) { skip.push({ test: v.test, why: `undecided step ${open.join(', ')}` }); continue; }
     if (st !== 'passed' && st !== 'failed') { skip.push({ test: v.test, why: `status ${st}` }); continue; }
+    if (v.confirmedBy !== 'user') { skip.push({ test: v.test, why: 'not confirmed by a person (results.mjs --confirm / --decide)' }); continue; }
     const steps = [];
     let why = null;
     for (const s of v.steps) {

@@ -130,3 +130,67 @@ test('the evidence report built from a manual run folder shows the step pictures
   assert.equal((t2.slice(0, t2.indexOf('</details>')).match(/data:image\/png;base64/g) || []).length, 2, 'two step pictures of ETM-2');
   assert.match(html, /id="t-ETM-3"[^]*?badge skipped/);
 });
+
+// ---- final review fixes: nothing counts before a person confirmed it; the report shows each step's own verdict
+import { rowsFromResults } from '../run-results.mjs';
+import { confirm } from './results.mjs';
+
+test('an unconfirmed Test carries the awaiting-confirmation annotation; confirm() and applyDecisions() mark it confirmed', () => {
+  const v = verdict(['pass', 'pass']);
+  assert.ok(specOf(toResults([v], '/run')).tests[0].annotations.some((a) => a.type === 'awaiting-confirmation'));
+  const c = confirm(v);
+  assert.equal(c.confirmedBy, 'user');
+  assert.ok(!specOf(toResults([c], '/run')).tests[0].annotations.some((a) => a.type === 'awaiting-confirmation'));
+  assert.equal(applyDecisions(verdict(['pass', 'needs-human']), [{ n: 2, verdict: 'pass' }]).confirmedBy, 'user');
+  assert.equal(v.confirmedBy, undefined, 'the input is not changed');
+});
+
+test('confirm() refuses a Test with a needs-human step still open', () => {
+  assert.throws(() => confirm(verdict(['pass', 'needs-human'])), /step 2/);
+});
+
+test('rowsFromResults + recordRunResults: an unconfirmed manual pass is recorded skipped awaiting-confirmation, a confirmed one passed', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'rr2-'));
+  const a = verdict(['pass', 'pass']);
+  const b = confirm({ ...verdict(['pass', 'pass']), test: 'ETM-3' });
+  const rows = rowsFromResults(toResults([a, b], '/run'), () => 'precondition');
+  recordRunResults({ root, key: 'ETM-1', rows, resultsDir: '/x/2026-11-20_101500_ETM-1_manual', log: () => {} });
+  const j = JSON.parse(fs.readFileSync(path.join(root, 'work', 'ETM-1', 'run-results.json'), 'utf8'));
+  assert.equal(j.tests['ETM-2'].status, 'skipped');
+  assert.equal(j.tests['ETM-2'].why, 'awaiting-confirmation');
+  assert.equal(j.tests['ETM-3'].status, 'passed');
+});
+
+test('CLI --confirm writes confirmedBy into the verdict file', () => {
+  const run = fs.mkdtempSync(path.join(os.tmpdir(), 'mr-c-'));
+  fs.writeFileSync(path.join(run, 'verdict-ETM-2.json'), JSON.stringify(verdict(['pass', 'pass'])));
+  const r = spawnSync(process.execPath, [path.join(HERE, 'results.mjs'), run, '--confirm', 'ETM-2'], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(JSON.parse(fs.readFileSync(path.join(run, 'verdict-ETM-2.json'), 'utf8')).confirmedBy, 'user');
+});
+
+test('the report shows each manual step by its own verdict: needs-human is not "ผ่าน", a step after a fail is not "ไม่ได้รัน"', () => {
+  const run = fs.mkdtempSync(path.join(os.tmpdir(), 'mr-rep2-'));
+  const v = verdict(['pass', 'fail', 'pass', 'needs-human']);
+  fs.writeFileSync(path.join(run, 'results.json'), JSON.stringify(toResults([v], run)));
+  const out = fs.mkdtempSync(path.join(os.tmpdir(), 'mr-out2-'));
+  const r = spawnSync(process.execPath, [path.join(HERE, '..', 'evidence-report-v4.mjs'), '--input', path.join(run, 'results.json'), '--out', out, '--title', 't'], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  const html = fs.readFileSync(path.join(out, fs.readdirSync(out).find((f) => f.endsWith('.html'))), 'utf8');
+  const badges = [...html.matchAll(/<span class="badge (\w+)">([^<]*)<\/span><\/td>|<td><span class="badge (\w+)">/g)].map((m) => m[1] || m[3]);
+  const rowBadges = [...html.matchAll(/<td><span class="badge (\w+)">/g)].map((m) => m[1]);
+  assert.deepEqual(rowBadges, ['passed', 'failed', 'passed', 'needshuman'], badges.join(','));
+  assert.match(html, /รอคนตัดสิน/);
+});
+
+test('scriptQuality: a manual-agent line in quality.jsonl does not replace the card\'s latest script run', () => {
+  const work = fs.mkdtempSync(path.join(os.tmpdir(), 'sq2-'));
+  const q = path.join(work, 'quality.jsonl');
+  fs.writeFileSync(q, [
+    JSON.stringify({ t: '2026-11-20T08:00:00Z', card: 'ETM-1', ran: 20, passed: 18 }),
+    JSON.stringify({ t: '2026-11-20T09:00:00Z', card: 'ETM-1', ran: 2, passed: 2, source: 'manual-agent' }),
+  ].join('\n') + '\n');
+  const [r] = scriptQuality([{ sprint: 26, active: true, stories: ['ETM-1'] }], work, q);
+  assert.equal(r.ran, 20);
+  assert.equal(r.passed, 18);
+});

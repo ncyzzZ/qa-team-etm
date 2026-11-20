@@ -1,12 +1,14 @@
 // results.mjs - the manual runner's verdict files -> a Playwright-JSON results.json the existing tools read
 // (run-card --build-only, evidence-report-v4.mjs). Spec: docs/superpowers/specs/2026-11-20-manual-runner-design.md (5, 6).
 //
-//   node tools/manual/results.mjs <runDir> [--decide <TEST> <n>=pass|fail[:answer text] ...]
+//   node tools/manual/results.mjs <runDir> [--decide <TEST> <n>=pass|fail[:answer text] ...] [--confirm <TEST> ...]
 //
 // <runDir>/verdict-<TEST>.json (written by the agent):
 //   { key, test, title, role, skipped?, steps: [{ n, do, expected, verdict: pass|fail|needs-human, why, picture, decidedBy?, answer? }], actions: [] }
 // `picture` is a path relative to the run folder (evidence/<TEST>/step-<n>.png).
-// --decide writes the person's answers into the verdict file (decidedBy: "user"), then results.json is rebuilt from all verdict files.
+// --decide writes the person's answers into the verdict file (decidedBy: "user", and the Test confirmedBy: "user"); --confirm marks a Test
+// confirmed as proposed ("ยืนยันผลทั้งหมด", refused while a step is needs-human). Then results.json is rebuilt from all verdict files.
+// Only a confirmed Test counts as a result (run-results.json) and can be pushed (xray-step-push.mjs).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,8 +38,10 @@ function specFor(v, runDir) {
       ? undecided(v).map((s) => `step ${s.n} needs a person: ${s.why || ''}`.trim()).join(' | ')
       : 'no steps were done' }]
       : [];
+  // proposed by the agent, not yet confirmed by a person: run-results.json records it as skipped, the push leaves it out
+  if (status !== 'skipped' && v.confirmedBy !== 'user') annotations.push({ type: 'awaiting-confirmation', description: 'proposed by the browser agent, not yet confirmed by a person' });
   const steps = (v.steps || []).map((s) => ({
-    title: `${s.n}. ${s.do || ''}`.trim(), duration: 0,
+    title: `${s.n}. ${s.do || ''}`.trim(), duration: 0, manualVerdict: s.verdict, ...(s.verdict === 'needs-human' ? { why: s.why || '' } : {}),
     ...(s.verdict === 'fail' ? { error: { message: s.why || 'failed' } } : {}),
   }));
   const attachments = (v.steps || []).filter((s) => s.picture).map((s) => ({
@@ -77,7 +81,15 @@ export function applyDecisions(v, answers) {
     if (!s) throw new Error(`${v.test} has no step ${a.n} (it has ${out.steps.length})`);
     s.verdict = a.verdict; s.decidedBy = 'user'; s.answer = a.answer ?? a.verdict;
   }
+  out.confirmedBy = 'user'; // the person looked at this Test and answered
   return out;
+}
+
+/** The person confirmed the Test as proposed ("ยืนยันผลทั้งหมด"). Refused while a step is still needs-human. */
+export function confirm(v) {
+  const open = undecided(v).map((s) => s.n);
+  if (open.length) throw new Error(`${v.test}: step ${open.join(', ')} still needs-human: answer it with --decide first`);
+  return { ...structuredClone(v), confirmedBy: 'user' };
 }
 
 export function readVerdicts(runDir) {
@@ -107,6 +119,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   try {
     const [runDir, ...rest] = process.argv.slice(2);
     if (!runDir || !fs.existsSync(runDir)) throw new Error('usage: node tools/manual/results.mjs <runDir> [--decide <TEST> <n>=pass|fail ...]');
+    for (const test of rest.flatMap((a, i) => (a === '--confirm' ? [rest[i + 1]] : []))) {
+      const f = path.join(runDir, `verdict-${test}.json`);
+      if (!/^ETM-\d+$/.test(test || '') || !fs.existsSync(f)) throw new Error(`--confirm ${test}: no ${f}`);
+      fs.writeFileSync(f, JSON.stringify(confirm(JSON.parse(fs.readFileSync(f, 'utf8'))), null, 1) + '\n');
+    }
     for (const [test, answers] of parseDecide(rest)) {
       const f = path.join(runDir, `verdict-${test}.json`);
       if (!fs.existsSync(f)) throw new Error(`no ${f}`);

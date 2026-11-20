@@ -104,7 +104,8 @@ export function scriptQuality(sprints, work, qualityFile) {
   const latest = new Map();
   try {
     for (const l of fs.readFileSync(qualityFile, 'utf8').split('\n').filter(Boolean)) {
-      const q = JSON.parse(l); if (!latest.has(q.card) || latest.get(q.card).t < q.t) latest.set(q.card, q);
+      const q = JSON.parse(l); if (q.source === 'manual-agent') continue; // manual runner runs are counted apart (provenManual), not as the card's script run
+      if (!latest.has(q.card) || latest.get(q.card).t < q.t) latest.set(q.card, q);
     }
   } catch { /* no runs yet */ }
   return sprints.map((s) => {
