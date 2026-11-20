@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { dataGate, lastRunTime, takeLock, releaseLock } from './data-gate.mjs';
+import { dataGate, lastRunTime, takeLock, releaseLock, holdLock } from './data-gate.mjs';
 
 const NOW = new Date('2026-11-20T10:00:00Z');
 const KEY = 'ETM-8405';
@@ -73,4 +73,17 @@ test('takeLock / releaseLock use the same file as card-data.cjs', () => {
   assert.equal(takeLock(r, KEY, 'run-card', NOW).ok, false);
   releaseLock(r, KEY);
   assert.equal(fs.existsSync(path.join(r, 'output', 'seed', `${KEY}.lock`)), false);
+});
+
+test('holdLock: the run lock is freed on exit, SIGTERM, SIGHUP and a spawn error (review: lock left behind)', async () => {
+  const { EventEmitter } = await import('node:events');
+  for (const ev of ['exit', 'SIGTERM', 'SIGHUP', 'SIGINT', 'child-error']) {
+    const r = pw();
+    const proc = new EventEmitter(); proc.exit = () => {};
+    const child = new EventEmitter();
+    assert.equal(holdLock(r, KEY, { proc, child, now: NOW }).ok, true);
+    assert.equal(fs.existsSync(path.join(r, 'output', 'seed', `${KEY}.lock`)), true);
+    if (ev === 'child-error') child.emit('error', new Error('spawn ENOENT')); else proc.emit(ev);
+    assert.equal(fs.existsSync(path.join(r, 'output', 'seed', `${KEY}.lock`)), false, `lock freed on ${ev}`);
+  }
 });

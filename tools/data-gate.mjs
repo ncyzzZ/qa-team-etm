@@ -31,6 +31,23 @@ export function takeLock(pwRepo, key, owner, now = new Date()) {
 }
 export function releaseLock(pwRepo, key) { try { fs.unlinkSync(lockFile(pwRepo, key)); } catch { /* gone */ } }
 
+/**
+ * Take the card lock for a run and free it however the run ends: process exit, Ctrl+C, SIGTERM, SIGHUP (terminal closed),
+ * or a child (Playwright) that fails to start. `attach(child)` adds the child's 'error' after it is spawned.
+ * @returns {{ ok: boolean, lock?: object, release: () => void, attach: (child: import('node:events').EventEmitter) => void }}
+ */
+export function holdLock(pwRepo, key, { proc = process, child = null, now = new Date(), owner = 'run-card' } = {}) {
+  const t = takeLock(pwRepo, key, owner, now);
+  let held = t.ok;
+  const release = () => { if (held) { held = false; releaseLock(pwRepo, key); } };
+  if (!t.ok) return { ok: false, lock: t.lock, release: () => {}, attach: () => {} };
+  proc.on('exit', release);
+  for (const [sig, code] of [['SIGINT', 130], ['SIGTERM', 143], ['SIGHUP', 129]]) proc.on(sig, () => { release(); proc.exit(code); });
+  const attach = (c) => c.on('error', (err) => { release(); console.error(`[run-card] Playwright did not start: ${err.message}`); proc.exit(1); });
+  if (child) attach(child);
+  return { ok: true, release, attach };
+}
+
 function defaultCheck(pwRepo, key) {
   const r = spawnSync(process.execPath, [path.join('scripts', 'seed', 'card-data.cjs'), key, 'check'], { cwd: pwRepo, encoding: 'utf8' });
   return { code: r.status ?? 1, out: `${r.stdout || ''}${r.stderr || ''}` };

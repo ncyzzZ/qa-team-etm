@@ -17,7 +17,7 @@ import { retriesFor, specFilesFrom, canAdvanceBaseline } from './heal/run-plan.m
 import { triageRun, countByCause } from './heal/triage.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
-import { dataGate, takeLock, releaseLock } from './data-gate.mjs';
+import { dataGate, holdLock } from './data-gate.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -170,10 +170,10 @@ if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}
 const gate = await dataGate({ pwRepo: REPO, key, skip: NO_DATA_CHECK });
 console.log(`[data] ${gate.message}`);
 if (!gate.ok) process.exit(2);
-const locked = gate.check ? takeLock(REPO, key, 'run-card') : { ok: true };
+// the lock is freed on exit, Ctrl+C, SIGTERM, SIGHUP and when Playwright fails to start (data-gate.mjs holdLock)
+const locked = gate.check ? holdLock(REPO, key) : { ok: true, release: () => {}, attach: () => {} };
 if (!locked.ok) { console.error(`[data] ${key} is locked by ${locked.lock?.owner ?? '?'} since ${locked.lock?.at ?? '?'}: wait for it to finish`); process.exit(2); }
-const unlock = () => { if (gate.check) releaseLock(REPO, key); };
-process.on('SIGINT', () => { unlock(); process.exit(130); });
+const unlock = locked.release;
 if (gate.check) { fs.mkdirSync(resultsDir, { recursive: true }); fs.writeFileSync(path.join(resultsDir, 'data-check.json'), JSON.stringify({ key, ...gate.check, message: gate.message }, null, 1)); }
 const pwArgs = [PW_CLI, 'test', ...retriesFor(rest, REPO), '--output', resultsDirName, '--reporter=list,json'];
 if (!rest.some((a) => a.startsWith('--workers'))) pwArgs.push('--workers=1');
@@ -184,6 +184,7 @@ const child = spawn(process.execPath, pwArgs, {
   stdio: 'inherit',
   env: { ...process.env, PLAYWRIGHT_JSON_OUTPUT_NAME: path.join(resultsDirName, 'results.json') },
 });
+locked.attach(child);
 // Self-healing: sort failures by cause; after an all-green run move the stms-fe baseline of the pages it used.
 function healAfterRun(dir, exitCode) {
   if (!fs.existsSync(path.join(dir, 'results.json'))) return;
