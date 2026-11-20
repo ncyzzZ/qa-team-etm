@@ -32,3 +32,6 @@ evals/metrics/out.html
 
 # personal Claude Code overrides
 .claude/settings.local.json
+
+# Playwright MCP working files (overlay scripts, downloads, snapshots)
+.playwright-mcp/

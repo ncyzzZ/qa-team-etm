@@ -21,7 +21,7 @@ const EVENTS = path.join(dir, 'events.jsonl');
 const PIDFILE = path.join(dir, 'server.pid');
 const PORT = Number(process.env.TEAM_PORT || 4777);
 const URL_BASE = 'http://localhost:' + PORT;
-const AGENTS = ['lead', 'analyst', 'inspector', 'designer', 'reviewer', 'automator', 'reporter', 'logger'];
+const AGENTS = ['lead', 'analyst', 'inspector', 'designer', 'reviewer', 'automator', 'reporter', 'logger', 'manual'];
 const STATES = ['idle', 'working', 'waiting', 'done', 'blocked'];
 
 const cmd = process.argv[2];

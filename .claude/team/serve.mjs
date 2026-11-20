@@ -10,7 +10,7 @@ const ROOT_REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const EVENTS = path.join(dir, 'events.jsonl');
 const PORT = Number(process.env.TEAM_PORT || 4777);
-const AGENTS = ['lead', 'analyst', 'inspector', 'designer', 'reviewer', 'automator', 'reporter', 'logger'];
+const AGENTS = ['lead', 'analyst', 'inspector', 'designer', 'reviewer', 'automator', 'reporter', 'logger', 'manual'];
 
 // Answers typed on the board. TOKEN is put into the board page only (other web sites cannot read it), SECRET never leaves
 // this process: an "answer" line in events.jsonl counts only when this server signed it, so nothing else can write a yes.

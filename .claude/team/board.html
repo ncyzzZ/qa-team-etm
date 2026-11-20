@@ -200,7 +200,8 @@ const TEAM = [
   { id:'reviewer',  name:'REVIEWER',  job:'Checks every case',      ch:4, hue:0 },
   { id:'automator', name:'AUTOMATOR', job:'Playwright scripts',     ch:5, hue:0 },
   { id:'reporter',  name:'REPORTER',  job:'Builds the evidence',    ch:0, hue:-35 },
-  { id:'logger',    name:'LOGGER',    job:'Jira, Xray and defects', ch:0, hue:0, zombie:true }
+  { id:'logger',    name:'LOGGER',    job:'Jira, Xray and defects', ch:0, hue:0, zombie:true },
+  { id:'manual',    name:'MANUAL',    job:'Manual tests in a browser', ch:2, hue:120 }
 ];
 const LABEL = { idle:'IDLE', working:'WORKING', waiting:'WAITING', done:'DONE', blocked:'BLOCKED' };
 const STATES = ['idle','working','waiting','done','blocked'];
@@ -223,7 +224,7 @@ const AISLE_TOP = 118, ROWH = 40, SIT = 0;   // ROWH: height of one seat row; SI
 const TABLES = [
   { x: 50,  y: 72,  w: 48, seats: [['lead', 'N', 0]] },
   { x: 162, y: 72,  w: 48, n: 1, side: true, seats: [['analyst', 'L', 0], ['inspector', 'R', 0]] },
-  { x: 107, y: 148, w: 48, n: 3, side: true, seats: [['designer', 'L', 0], ['reviewer', 'L', 1], ['automator', 'L', 2], ['reporter', 'R', 0], ['logger', 'R', 1]] },
+  { x: 107, y: 148, w: 48, n: 3, side: true, seats: [['designer', 'L', 0], ['reviewer', 'L', 1], ['automator', 'L', 2], ['reporter', 'R', 0], ['logger', 'R', 1], ['manual', 'R', 2]] },
 ];
 for (const T of TABLES) {
   for (const [id, side, row] of T.seats) {
