@@ -11,6 +11,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { summarize as healSummary } from './heal/heal-log.mjs';
 import { resolveRepos } from './heal/config.mjs';
+import { defectChange, readAssessment, readEvents, boardTime, effort, readAgents } from './sprint-report.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BEFORE_DEV = ['open', 'refinement', 'ready', 'ready for development', 'to do', 'backlog'];
@@ -128,7 +129,45 @@ export function scriptQuality(sprints, work, qualityFile) {
 
 export const headline = (rows) => [...rows].reverse().find((r) => !r.active) || rows[rows.length - 1] || {};
 
-function html(rows, marker, unassigned, quality = []) {
+const sign = (v) => (v == null ? '-' : `${v > 0 ? '+' : ''}${Math.round(v)}%`);
+
+/** AI value section: AC coverage, defect change, effort (method A), what the AI team does. */
+function valueHtml({ rows, quality, change, eff, effSprint, agents }) {
+  const q = [...quality].reverse().find((x) => x.ac.total) || null;
+  const cov = q ? { total: q.ac.total, covered: q.ac.total - q.ac.none, strong: q.ac.strong, proven: q.ac.proven, sprint: q.sprint } : null;
+  const pc = (n, d) => (d ? `${Math.round((n / d) * 100)}%` : '-');
+  const ch = change.map((c) => `<tr><td>Sprint ${c.sprint}${c.provisional ? ' *' : ''}</td><td>${c.prevSprint ? `Sprint ${c.prevSprint}` : '-'}</td><td><b>${sign(c.defectPct)}</b></td><td><b>${sign(c.bugPct)}</b></td></tr>`).join('');
+  const effRows = eff ? eff.cards.map((c) => `<tr><td>${esc(c.key)}</td><td>${fmt(c.tc)}</td><td>${fmt(c.manualH, 1)}</td><td>${c.partial ? 'board ไม่ครบ' : fmt(c.aiH, 1)}</td><td>${c.manualH != null && c.aiH != null ? fmt(c.manualH - c.aiH, 1) : '-'}</td><td>${fmt(c.asks)}</td></tr>`).join('') : '';
+  return `<h2 style="font-size:17px;margin:28px 0 4px">AI ช่วยได้แค่ไหน</h2>
+<div class="kpis" style="margin-top:8px">
+<div class="kpi"><b>${cov ? pc(cov.covered, cov.total) : '-'}</b><span>AC ที่มี TC ครอบคลุม · Sprint ${cov?.sprint ?? '-'} (${cov ? `${cov.covered}/${cov.total}` : '-'})</span></div>
+<div class="kpi"><b>${cov ? pc(cov.proven, cov.total) : '-'}</b><span>AC ที่พิสูจน์แล้วด้วยการรันจริง (${cov ? `${cov.proven}/${cov.total}` : '-'})</span></div>
+<div class="kpi"><b>${eff && eff.total.cards ? `${fmt(eff.total.savedH, 1)} ชม.` : '-'}</b><span>เวลาที่ลดได้ (ประมาณ) · ${eff ? `${eff.total.cards} การ์ด, Sprint ${effSprint}` : '-'}</span></div>
+<div class="kpi"><b>${eff && eff.total.manualH ? pc(eff.total.savedH, eff.total.manualH) : '-'}</b><span>งานทำมือที่ลดลง เทียบกับประมาณการทำมือ</span></div>
+</div>
+<h3 style="font-size:15px;margin:16px 0 4px">1. Coverage: TC ของ AI ครอบคลุม AC เท่าไร</h3>
+<p class="sub" style="margin:0">ครอบคลุม = AC ที่มี TC อย่างน้อย 1 ข้อ (จาก ac-strength.json ของแต่ละการ์ด) · strong = TC ตรวจสิ่งที่ AC บอกครบ (อ่านจากโค้ด) · พิสูจน์แล้ว = strong และ test ผ่านในการรันล่าสุด</p>
+<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>AC ทั้งหมด</th><th>มี TC</th><th>strong</th><th>พิสูจน์แล้ว</th><th>% มี TC</th><th>% พิสูจน์แล้ว</th></tr></thead><tbody>
+${quality.filter((x) => x.ac.total).map((x) => `<tr><td>Sprint ${x.sprint}${x.active ? ' *' : ''}</td><td>${x.ac.total}</td><td>${x.ac.total - x.ac.none}</td><td>${x.ac.strong}</td><td>${x.ac.proven}</td><td><b>${pc(x.ac.total - x.ac.none, x.ac.total)}</b></td><td><b>${pc(x.ac.proven, x.ac.total)}</b></td></tr>`).join('') || '<tr><td colspan="7">ยังไม่มี ac-strength.json</td></tr>'}
+</tbody></table></div>
+<h3 style="font-size:15px;margin:16px 0 4px">2. Defect เทียบ sprint ก่อน</h3>
+<p class="sub" style="margin:0">เทียบกับ sprint ก่อนหน้าที่ปิดแล้ว · ติดลบ = ลดลง · Defect = เจอตอน QA test · Bug = หลุดไป UAT/Prod</p>
+<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>เทียบกับ</th><th>Defect/Story</th><th>Bug UAT/Prod</th></tr></thead><tbody>${ch}</tbody></table></div>
+<h3 style="font-size:15px;margin:16px 0 4px">3. เวลาและงานทำมือ (Sprint ${effSprint ?? '-'})</h3>
+<p class="sub" style="margin:0">ทำมือ = ชั่วโมงที่ lead ประมาณไว้ใน assessment.md (ออกแบบ + รัน โดยคนเดียว ไม่ใช้ AI) · AI = เวลาที่ board แสดงว่า agent กำลังทำงานกับการ์ดนั้น (ช่วงที่ค้างสถานะนานเกิน 45 นาทีตัดเหลือ 45) · ลดได้ = ทำมือ - AI โดยนับว่าคนคุมงานตลอดเวลาที่ AI ทำ จึงเป็นตัวเลขฝั่งระวัง · ถามคน = จำนวนครั้งที่ต้องให้คนตัดสินใจ · <b>board ไม่ครบ</b> = การ์ดที่ทำในแชทที่ไม่ได้อัปเดต board จึงไม่นับรวม (นับเฉพาะการ์ดที่มี agent ส่งงานคืนอย่างน้อย 2 ครั้ง)</p>
+${eff ? `<div class="tw" style="margin-top:8px"><table><thead><tr><th>การ์ด</th><th>~TC</th><th>ทำมือ (ชม.)</th><th>AI (ชม.)</th><th>ลดได้ (ชม.)</th><th>ถามคน</th></tr></thead><tbody>${effRows}
+<tr><td><b>รวม (การ์ดที่มีครบ ${eff.total.cards})</b></td><td></td><td><b>${fmt(eff.total.manualH, 1)}</b></td><td><b>${fmt(eff.total.aiH, 1)}</b></td><td><b>${fmt(eff.total.savedH, 1)}</b></td><td><b>${eff.total.asks}</b></td></tr></tbody></table></div>` : '<p class="sub">ยังไม่มี assessment.md ของ sprint นี้</p>'}
+<h3 style="font-size:15px;margin:16px 0 4px">4. AI team ทำอะไรได้บ้าง</h3>
+<div class="note" style="margin-top:8px"><ul>
+${agents.map((a) => `<li><b>${esc(a.name)}</b>: ${esc(a.what.split('. ').slice(0, 2).join('. '))}</li>`).join('')}
+<li><b>Quality gates</b> (tools/qa-check.mjs): ตรวจ draft TC, spec, coverage, AC strength, state.json ทุก phase · กัน test ที่ขึ้นเขียวโดยไม่ได้ตรวจ (false pass) · push ขึ้น Xray เฉพาะผลที่ผ่านในการรันจริงพร้อมรูปทุก step</li>
+<li><b>Self-healing</b> (tools/heal/): อ่านโค้ด FE ของ dev หา locator ที่เปลี่ยน ก่อนรันและหลัง fail · คนอนุมัติทุกครั้งก่อนแก้</li>
+<li><b>Evidence report</b> (tools/run-card.mjs): สร้าง report พร้อมรูปทุก step อัตโนมัติหลังรัน · แยกสาเหตุ fail (locator / data / env / assertion / flaky)</li>
+<li><b>Human in the loop</b>: ทุกการเขียนลง Jira / Xray / ข้อมูล QA ต้องมีคนอนุมัติบน board หรือในแชท และบันทึกไว้ใน state.json</li>
+</ul></div>`;
+}
+
+function html(rows, marker, unassigned, quality = [], value = null) {
   const last = headline(rows);
   const body = rows.map((r) => `<tr${r.sprint === marker ? ' class="first"' : ''}><td>Sprint ${r.sprint}${r.active ? ' *' : ''}</td><td>${r.stories}</td><td>${r.defects}</td><td>${fmt(r.defectsPerStory, 2)}</td><td>${r.bugs}</td><td>${fmt(r.raised)}</td><td>${fmt(r.before)} / ${fmt(r.after)}</td><td><b>${fmt(r.stopped)}</b></td><td>${fmt(r.confirmed)}</td><td>${fmt(r.ignored)}</td><td>${fmt(r.laterDefect)}</td><td>${fmt(r.backfilled)}</td></tr>`).join('');
   const kinds = count(rows.flatMap((r) => Object.entries(r.kinds).flatMap(([k, n]) => Array(n).fill(k))));
@@ -160,6 +199,7 @@ th:first-child,td:first-child{text-align:left}tr.first td{background:var(--hi)}.
 <div class="charts">${lineChart(rows, 'defectsPerStory', 'Defect ที่เจอใน QA ต่อ Story', marker, 2)}${lineChart(rows, 'bugs', 'Bug ที่หลุดไป UAT/PROD', marker, 0)}</div>
 <div class="tw"><table><thead><tr><th>Sprint</th><th>Story</th><th>Defect</th><th>Defect/Story</th><th>Bug</th><th>ข้อที่ยก</th><th>ก่อน / หลัง dev</th><th>กันได้</th><th>ยืนยันเดิม</th><th>ไม่มีคนตอบ</th><th>เตือนแล้วยังเกิด</th><th>เติมย้อนหลัง</th></tr></thead><tbody>${body}</tbody></table></div>
 <p class="sub" style="margin-top:8px">ประเภทข้อที่ยก: ${esc(kindTxt)}${unassigned.length ? ` · การ์ดที่ไม่อยู่ใน sprint ใด: ${esc(unassigned.join(', '))}` : ''}</p>
+${value ? valueHtml({ rows, quality, ...value }) : ''}
 ${quality.some((q) => q.ran || q.ac.total) ? `<h2 style="font-size:17px;margin:24px 0 4px">คุณภาพ script ของ AI agent</h2>
 <p class="sub" style="margin:0">Proven = test ที่ผ่านจริงทุก step หารด้วย test ที่รัน (รอบล่าสุดของแต่ละการ์ด) · AC proven = AC ที่ strong และ test ของมันผ่านในการรันล่าสุด (ตัวเลข coverage หลัก) · strong = อ่านจากโค้ดเท่านั้น ยังไม่ใช่หลักฐาน</p>
 <div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>การ์ดที่รัน</th><th>Test</th><th>ผ่าน</th><th>Fail</th><th>ไม่ได้พิสูจน์</th><th>Fixme</th><th>ขาด .env/data</th><th>Proven</th><th>AC proven / ทั้งหมด</th><th>strong (อ่านโค้ด)</th><th>weak / blocked / none</th></tr></thead><tbody>
@@ -185,7 +225,11 @@ function main() {
   const last = sprints[sprints.length - 1];
   const out = path.resolve(opt('--out', last ? path.join(work, `SPRINT${last.sprint}`, 'metrics.html') : path.join(work, 'metrics.html')));
   const quality = scriptQuality(sprints, work, path.resolve(opt('--quality', path.join(ROOT, '.claude', 'team', 'quality.jsonl'))));
-  if (sprints.length) fs.writeFileSync(out, html(rows, marker, unassigned, quality));
+  const effSprint = [...sprints].reverse().find((s) => readAssessment(work, s.sprint).length)?.sprint ?? null;
+  const eff = effSprint == null ? null : effort(sprints.find((s) => s.sprint === effSprint).stories, readAssessment(work, effSprint),
+    boardTime(readEvents(path.resolve(opt('--events', path.join(ROOT, '.claude', 'team', 'events.jsonl')))), { capMin: 45 }));
+  const value = { change: defectChange(rows), eff, effSprint, agents: readAgents(path.join(ROOT, '.claude', 'agents')) };
+  if (sprints.length) fs.writeFileSync(out, html(rows, marker, unassigned, quality, value));
   const sum = (k) => rows.reduce((s, r) => s + (r[k] || 0), 0);
   console.log(`[sprint-metrics] sprints ${sprints[0]?.sprint ?? '-'}-${last?.sprint ?? '-'}, ${sum('stories')} stories, ${sum('defects')} defects, ${sum('bugs')} bugs, ${sum('stopped')} stopped before code`);
   for (const r of rows) console.log(`  S${r.sprint}${r.active ? ' (in progress)' : ''}: ${r.stories} stories, defect/story ${fmt(r.defectsPerStory, 2)}, bugs ${r.bugs}, findings ${fmt(r.raised)} (stopped ${fmt(r.stopped)}, before dev ${fmt(r.before)})`);
@@ -195,6 +239,8 @@ function main() {
     console.log(`  self-healing: locator failures ${h.locatorFailures} (new scripts ${h.newScriptFailures}, not counted), healed ${h.healed} (fe ${h.bySource.fe}, live ${h.bySource.live}), rate ${h.rate == null ? '-' : `${Math.round(h.rate * 100)}%`}`);
   } catch (e) { console.log(`  self-healing: - (${e.message})`); }
   for (const q of quality) if (q.ran || q.ac.total) console.log(`  script quality S${q.sprint}: proven ${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'} (${q.passed}/${q.ran}, not proven ${q.notProven}, fixme ${q.fixme}, precondition ${q.precondition}) | AC proven ${q.ac.total ? `${q.ac.proven}/${q.ac.total}` : '-'} (strong on paper ${q.ac.strong})`);
+  for (const c of value.change) if (c.prevSprint) console.log(`  S${c.sprint}${c.provisional ? ' (in progress)' : ''} vs S${c.prevSprint}: defect/story ${sign(c.defectPct)}, bugs ${sign(c.bugPct)}`);
+  if (eff) console.log(`  effort S${effSprint} (method A): ${eff.total.cards} cards, manual ~${eff.total.manualH} h, AI ${eff.total.aiH} h, saved ~${eff.total.savedH} h, ${eff.total.asks} questions to the user`);
   console.log(`  unassigned: ${unassigned.length}${unassigned.length ? ` (${unassigned.join(', ')})` : ''}`);
   if (sprints.length) console.log(`  report: ${path.relative(process.cwd(), out)}`);
   for (const e of errors) console.log(`  ERR  ${e}`);
