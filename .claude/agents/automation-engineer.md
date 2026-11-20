@@ -20,6 +20,7 @@ Do this:
 5. Check it (gate G6): `node tools/qa-check.mjs spec <spec files> --tests .claude/team/work/<KEY>/tests.md` must show 0 errors, and `npx tsc --noEmit -p .` (in `PW_REPO`) must compile. Fix what they report before returning.
 6. You cannot reach the STMS web app and must not run the specs. Give this run command, from the repo root: `node tools/run-card.mjs <KEY> <spec> -g "<filter>"` (add `--headed` to watch; never a bare `npx playwright test`; details in `.claude/skills/etm-evidence-report/SKILL.md` section 2). Quote paths with spaces.
 7. Hard-to-automate case: after at most two fixes offer manual testing instead of looping.
+8. Manual steps (a Test staying manual or partly manual): write `work/<KEY>/manual-steps-<tests>.md` in the fixed shape the `manual-runner` agent reads. One section per Test: heading `## ETM-<n> - <title> (<N> steps)`; optional lines right under it: `role: jobOwner` (default turnaroundManager), `writes data: yes` (a step saves to QA), `needs: excel` (desktop app, the agent skips it), `start: <URL path or .env key>`; then the table `| # | Do | Expected | Picture |` with one row per Xray step, same count and order as `tests.md`, Do and Expected never empty. "Before you start" stays free text above the sections. Check: `node tools/qa-check.mjs manual <KEY>` (0 errors).
 8. Never touch a file someone else is editing.
 
 **Heal (when the lead hands you `locator` failures from `triage.json`).** One failure at a time, at most 2 rounds each:

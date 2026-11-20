@@ -22,7 +22,8 @@ A line at 08 Jun / 16 Jun = the Event date (wrong); a line at another plan's dat
 | Snap C | 10 Jun → 18 Jun 2026 | 10-17 Jun (8 days) | **18 Jun 2026** |
 Open the Daily Report and use the right arrow to reach 18 Jun (the arrow opens only after a day is frozen). The first extended day will be **19 Jun 2026** (E1), the second **20 Jun 2026** (E2).
 
-## ETM-8688 - Ramp lines do not move after the last execution day is extended (Snap B, 5 steps)
+## ETM-8688 - Ramp lines do not move after the last execution day is extended (Snap B) (5 steps)
+writes data: yes
 | # | Do | Expected | Picture |
 |---|---|---|---|
 | 1 | Open the Daily Report of Snap B on the last execution day. Hover both badges, write down date and place | `Ramp Down: 09 Jun 2026` at 1/2 of the column; `Ramp Up: 15 Jun 2026` at 3/8 of the column | Gantt + both tooltips |
@@ -31,7 +32,8 @@ Open the Daily Report and use the right arrow to reach 18 Jun (the arrow opens o
 | 4 | Hover both badges, compare with step 1 | `Ramp Down` still 09 Jun 2026 at 1/2; `Ramp Up` still 15 Jun 2026 at 3/8; one line each | Gantt + tooltips |
 | 5 | Go to the new extended day (right arrow) and look at its column on the Gantt | the extended day is to the right of the `Ramp Up` line | Gantt with the extended day |
 
-## ETM-8797 - repeated Extensions and deleting extended days (Snap C, 7 steps)
+## ETM-8797 - repeated Extensions and deleting extended days (Snap C) (7 steps)
+writes data: yes
 | # | Do | Expected | Picture |
 |---|---|---|---|
 | 1 | Open the Daily Report of Snap C on the last execution day. Hover both badges, write down date and place | `Ramp Down: 11 Jun 2026` at 1/3; `Ramp Up: 13 Jun 2026` at 5/6 | Gantt + tooltips |

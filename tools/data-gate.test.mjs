@@ -87,3 +87,8 @@ test('holdLock: the run lock is freed on exit, SIGTERM, SIGHUP and a spawn error
     assert.equal(fs.existsSync(path.join(r, 'output', 'seed', `${KEY}.lock`)), false, `lock freed on ${ev}`);
   }
 });
+
+test('a manual runner run folder (_<KEY>_manual) counts as the last run of the card', () => {
+  const r = pw({ runs: ['2026-11-19_080000_ETM-8405', '2026-11-20_090000_ETM-8405_manual'] });
+  assert.equal(lastRunTime(r, KEY).getDate(), 20);
+});

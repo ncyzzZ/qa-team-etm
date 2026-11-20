@@ -16,7 +16,8 @@ Log in as Turnaround Manager (needs Edit Plan and View Daily Report).
 ## Note on the test wording
 Step 2 of the Test says "Change the Plan Ramp Down Date and Ramp Up Date in Shutdown Logic". On QA the Plan's Ramp dates are changed with **Planning tab → Plan Card ⋮ → Edit Plan → field `Ramp Down/Up Date`** (ETM-8042). The steps below use Edit Plan. If you agree, the Xray step wording can be fixed after the run (Xray write, ask first).
 
-## ETM-8677 (6 steps)
+## ETM-8677 - lines do not follow later changes of the Plan Ramp dates (6 steps)
+writes data: yes
 | # | Do | Expected | Picture |
 |---|---|---|---|
 | 1 | Open the Daily Report of **QA 8392 Snap A** (URL above, or Plan Card → Daily Report ⋮ → View Daily Report). Hover the `Ramp Down` badge, then the `Ramp Up` badge, and write down the date and the place in the column | `Ramp Down: 10 Jun 2026`, line 1/4 into the 10 Jun column. `Ramp Up: 14 Jun 2026`, line 3/4 into the 14 Jun column. No line at 08 Jun or 16 Jun | Gantt with both lines + each tooltip |

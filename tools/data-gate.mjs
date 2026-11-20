@@ -13,12 +13,12 @@ const STALE_MIN = 120; // same as ep-etm-fe-qa scripts/seed/card/lock.cjs
 const lockFile = (pwRepo, key) => path.join(pwRepo, 'output', 'seed', `${key}.lock`);
 const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
 
-/** Start time of the card's last run folder (output/runs/<YYYY-MM-DD>_<HHMMSS>_<KEY>, local time), or null. */
-export function lastRunTime(pwRepo, key) {
+/** `exclude`: a run folder name not to count (the manual runner's own folder, made before its gate). Start time of the card's last run folder (output/runs/<YYYY-MM-DD>_<HHMMSS>_<KEY>, or ..._<KEY>_manual of the manual runner; local time), or null. */
+export function lastRunTime(pwRepo, key, { exclude = null } = {}) {
   let dirs = [];
   try { dirs = fs.readdirSync(path.join(pwRepo, 'output', 'runs')); } catch { return null; }
-  const re = new RegExp(`^(\\d{4})-(\\d{2})-(\\d{2})_(\\d{2})(\\d{2})(\\d{2})_${key}$`);
-  const times = dirs.map((d) => d.match(re)).filter(Boolean).map((m) => new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]));
+  const re = new RegExp(`^(\\d{4})-(\\d{2})-(\\d{2})_(\\d{2})(\\d{2})(\\d{2})_${key}(?:_manual)?$`);
+  const times = dirs.filter((d) => d !== exclude).map((d) => d.match(re)).filter(Boolean).map((m) => new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]));
   return times.length ? new Date(Math.max(...times.map((t) => t.getTime()))) : null;
 }
 

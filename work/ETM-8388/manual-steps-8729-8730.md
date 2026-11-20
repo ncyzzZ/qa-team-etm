@@ -9,6 +9,7 @@ On a Mac use Cmd instead of Ctrl. Use Excel (desktop), not Google Sheets.
 - If the automated runs left other values, reload the Timeline first and check the three Status cells show `Open`.
 
 ## ETM-8729 - Timeline (6 steps)
+needs: excel
 Excel sheet: A1 `close`, A2 `OPEN`, A3 `Close`; C1 `10`, D1 `20.5`, E1 `30` (plain numbers, General format).
 
 | # | Do | Expected | Picture |
@@ -23,6 +24,7 @@ Excel sheet: A1 `close`, A2 `OPEN`, A3 `Close`; C1 `10`, D1 `20.5`, E1 `30` (pla
 After: do NOT click Update Progress; reload the page (or leave without saving) so the data stays clean.
 
 ## ETM-8730 - Edit Plan (4 steps)
+needs: excel
 Excel sheet, one row: A1 `Pipe Test`, B1 `Team A`, C1 `Anan`, D1 date 05/06/2026, E1 date 12/06/2026. Format D1:E1 as custom `dd mmm yyyy`, so the cells show `05 Jun 2026` and `12 Jun 2026`.
 
 | # | Do | Expected | Picture |
