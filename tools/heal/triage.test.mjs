@@ -50,3 +50,13 @@ test('an element that was found but blocked (disabled, covered) is not a locator
   assert.notEqual(f("TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.save')\n  - locator resolved to <button disabled class=\"save\">\n  - element is not enabled"), 'locator');
   assert.notEqual(f("TimeoutError: locator.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator('.save')\n  - <div class=\"overlay\"></div> intercepts pointer events"), 'locator');
 });
+
+test('a data failure in a run whose data was reset and READY says so in its reason', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'triage-ready-'));
+  fs.copyFileSync(path.join(ROOT, 'evals', 'heal', 'results-mixed.json'), path.join(dir, 'results.json'));
+  fs.writeFileSync(path.join(dir, 'data-check.json'), JSON.stringify({ status: 'READY' }));
+  const r = Object.fromEntries(triageRun(dir, { write: false }).map((x) => [x.key, x]));
+  assert.equal(r['ETM-9'].cause, 'data');
+  assert.match(r['ETM-9'].firstLine, /data was reset and READY before the run: check the test, not the setup/);
+  assert.doesNotMatch(r['ETM-4'].firstLine, /READY before the run/);
+});

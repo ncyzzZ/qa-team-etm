@@ -44,13 +44,18 @@ export function classify(test) {
 export function triageRun(runDir, { write = true } = {}) {
   const r = JSON.parse(fs.readFileSync(path.join(runDir, 'results.json'), 'utf8'));
   const rows = [];
+  // card test data (tools/data-gate.mjs): reset and READY before the run, so a data failure is not missing setup data
+  let dataReady = false;
+  try { dataReady = JSON.parse(fs.readFileSync(path.join(runDir, 'data-check.json'), 'utf8')).status === 'READY'; } catch { /* no data gate */ }
   (function walk(s) {
     for (const sp of s.specs || []) for (const t of sp.tests || []) {
       const res = t.results || [];
       const bad = res.some((x) => x.status === 'failed' || x.status === 'timedOut');
       if (!bad) continue;
       const key = (sp.title.match(/ETM-\d+/) || [])[0] || sp.title.slice(0, 40); // same rule as the evidence report's tcKey
-      rows.push({ key, title: sp.title, file: sp.file, ...classify(t) });
+      const c = classify(t);
+      if (dataReady && c.cause === 'data') c.firstLine = `${c.firstLine} (data was reset and READY before the run: check the test, not the setup)`;
+      rows.push({ key, title: sp.title, file: sp.file, ...c });
     }
     (s.suites || []).forEach(walk);
   })(r);

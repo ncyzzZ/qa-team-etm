@@ -17,6 +17,7 @@ import { retriesFor, specFilesFrom, canAdvanceBaseline } from './heal/run-plan.m
 import { triageRun, countByCause } from './heal/triage.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
+import { dataGate, takeLock, releaseLock } from './data-gate.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -30,9 +31,12 @@ function envFileValue(name) {
 }
 const REPO = process.env.PW_REPO || envFileValue('PW_REPO') || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
 
-const [key, ...rest] = process.argv.slice(2);
+const [key, ...argsIn] = process.argv.slice(2);
+// --no-data-check: run without the card data gate (the user asked for it on purpose); not passed to Playwright
+const NO_DATA_CHECK = argsIn.includes('--no-data-check');
+const rest = argsIn.filter((a) => a !== '--no-data-check');
 if (!key || !/^ETM-\d+$/.test(key)) {
-  console.error('Usage: node tools/run-card.mjs ETM-1234 <spec> [-g "ETM-1|ETM-2"] [playwright flags]\n   or: node tools/run-card.mjs ETM-1234 --build-only <result-folder>');
+  console.error('Usage: node tools/run-card.mjs ETM-1234 <spec> [-g "ETM-1|ETM-2"] [--no-data-check] [playwright flags]\n   or: node tools/run-card.mjs ETM-1234 --build-only <result-folder>');
   process.exit(2);
 }
 if (!fs.existsSync(GEN)) { console.error(`Generator not found: ${GEN}`); process.exit(2); }
@@ -162,6 +166,15 @@ const resultsDir = path.join(REPO, resultsDirName);
 // call Playwright's own CLI with node, no shell: a "|" in -g "A|B" must reach Playwright untouched
 const PW_CLI = path.join(REPO, 'node_modules', '@playwright', 'test', 'cli.js');
 if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}\nSet PW_REPO to the folder of ep-etm-fe-qa (now: ${REPO}) and run npm install there.`); process.exit(2); }
+// Card test data (scripts/seed/cards/<KEY>.data.cjs): reset and READY before every run, card locked while it runs
+const gate = await dataGate({ pwRepo: REPO, key, skip: NO_DATA_CHECK });
+console.log(`[data] ${gate.message}`);
+if (!gate.ok) process.exit(2);
+const locked = gate.check ? takeLock(REPO, key, 'run-card') : { ok: true };
+if (!locked.ok) { console.error(`[data] ${key} is locked by ${locked.lock?.owner ?? '?'} since ${locked.lock?.at ?? '?'}: wait for it to finish`); process.exit(2); }
+const unlock = () => { if (gate.check) releaseLock(REPO, key); };
+process.on('SIGINT', () => { unlock(); process.exit(130); });
+if (gate.check) { fs.mkdirSync(resultsDir, { recursive: true }); fs.writeFileSync(path.join(resultsDir, 'data-check.json'), JSON.stringify({ key, ...gate.check, message: gate.message }, null, 1)); }
 const pwArgs = [PW_CLI, 'test', ...retriesFor(rest, REPO), '--output', resultsDirName, '--reporter=list,json'];
 if (!rest.some((a) => a.startsWith('--workers'))) pwArgs.push('--workers=1');
 console.log(`[run-card] ${key} -> ${resultsDirName}\n[run-card] playwright test ${rest.join(' ')}`);
@@ -189,6 +202,7 @@ function healAfterRun(dir, exitCode) {
 }
 
 child.on('exit', (code) => {
+  unlock();
   healAfterRun(resultsDir, code);
   summarise(resultsDir);
   const out = buildReport(resultsDir);

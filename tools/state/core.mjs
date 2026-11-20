@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 export const PHASES = ['start', 'read', 'quick-scan', 'design', 'review', 'tc-review', 'xray-approval', 'push', 'scripts', 'run', 'failures', 'heal', 'closeout', 'done'];
-export const APPROVAL_KINDS = ['run-tests', 'xray-push', 'defect', 'jira-write', 'delete', 'heal-apply'];
+export const APPROVAL_KINDS = ['run-tests', 'xray-push', 'defect', 'jira-write', 'delete', 'heal-apply', 'data-reset'];
 export const SINGLE_KINDS = ['story', 'analyst', 'inspector', 'draft', 'review', 'tests', 'findings', 'lastRun'];
 export const LIST_KINDS = ['questions', 'answers', 'specs'];
 export const AC_ID = /^AC-\d+(?:\.\d+)*$/;

@@ -10,7 +10,7 @@ const tmpRoot = () => { const r = fs.mkdtempSync(path.join(os.tmpdir(), 'state-'
 
 test('the enums hold the agreed values', () => {
   assert.ok(PHASES.includes('heal') && PHASES.includes('done') && PHASES.length === 14);
-  assert.deepEqual(APPROVAL_KINDS, ['run-tests', 'xray-push', 'defect', 'jira-write', 'delete', 'heal-apply']);
+  assert.deepEqual(APPROVAL_KINDS, ['run-tests', 'xray-push', 'defect', 'jira-write', 'delete', 'heal-apply', 'data-reset']);
 });
 
 test('save then load round-trips with a checksum', () => {
