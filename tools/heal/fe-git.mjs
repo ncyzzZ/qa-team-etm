@@ -10,9 +10,9 @@ import { spawnSync } from 'node:child_process';
 // per subcommand: allowed flags. "=" suffix = prefix match (--format=...), "+" suffix = takes the next arg as its value
 const FLAGS = {
   grep: ['-F', '-l', '-n', '-i', '-e+'],
-  log: ['-1', '--format=', '-G+', '-S+', '--no-color', '--reverse'],
+  log: ['-1', '--format=', '-G+', '-S+', '--no-color', '--reverse', '--first-parent', '--before='],
   show: ['--format=', '--unified=', '--no-color', '--name-only'],
-  diff: ['--unified=', '--no-color', '--name-only', '--name-status'],
+  diff: ['--unified=', '--no-color', '--name-only', '--name-status', '--find-renames'],
   'rev-parse': ['--show-toplevel', '--verify', '-q', '--short'],
   'symbolic-ref': ['--short', '-q'],
   status: ['--porcelain', '--untracked-files=no'],

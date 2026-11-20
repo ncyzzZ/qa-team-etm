@@ -133,3 +133,10 @@ test('unreachable origin falls back to the existing origin/develop without throw
   assert.equal(r.newest.commit, known);
   assert.match(r.newest.date, /^\d{4}-\d{2}-\d{2}/);
 });
+
+test('read-only flags for regress.mjs are allowed: log --first-parent / --before=, diff --find-renames', () => {
+  const { clone } = makeRepos();
+  assert.doesNotThrow(() => git(clone, ['log', '--first-parent', '--format=%H', 'HEAD']));
+  assert.doesNotThrow(() => git(clone, ['log', '-1', '--format=%H', '--before=2030-01-01', 'HEAD']));
+  assert.doesNotThrow(() => git(clone, ['diff', '--find-renames', '--unified=0', 'HEAD', 'HEAD']));
+});
