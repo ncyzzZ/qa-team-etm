@@ -110,7 +110,7 @@ export function scriptQuality(sprints, work, qualityFile) {
   return sprints.map((s) => {
     const runs = s.stories.map((k) => latest.get(k)).filter(Boolean);
     const sum = (f) => runs.reduce((n, q) => n + (q[f] || 0), 0);
-    const ac = { total: 0, proven: 0, strong: 0, weak: 0, blocked: 0, none: 0, cards: 0 };
+    const ac = { total: 0, proven: 0, provenManual: 0, strong: 0, weak: 0, blocked: 0, none: 0, cards: 0 };
     for (const k of s.stories) {
       try {
         const j = JSON.parse(fs.readFileSync(path.join(work, k, 'ac-strength.json'), 'utf8')); ac.cards++;
@@ -118,7 +118,11 @@ export function scriptQuality(sprints, work, qualityFile) {
         for (const a of j.ac || []) {
           ac.total++; if (a.rating in ac) ac[a.rating]++;
           // proven = strong AND every test passed in the latest run (same rule as qa-check strength)
-          if (a.rating === 'strong' && rr && (a.tests || []).length && a.tests.every((t) => rr[t]?.status === 'passed')) ac.proven++;
+          if (a.rating === 'strong' && rr && (a.tests || []).length && a.tests.every((t) => rr[t]?.status === 'passed')) {
+            ac.proven++;
+            // proven with a run of the manual runner (browser agent, every step confirmed by a person): shown apart
+            if (a.tests.some((t) => rr[t]?.source === 'manual-agent')) ac.provenManual++;
+          }
         }
       } catch { /* not reviewed */ }
     }
@@ -217,8 +221,8 @@ th:first-child,td:first-child{text-align:left}tr.first td{background:var(--hi)}.
 ${value ? valueHtml({ rows, quality, ...value }) : ''}
 ${quality.some((q) => q.ran || q.ac.total) ? `<h2 style="font-size:17px;margin:24px 0 4px">${tx(`คุณภาพ script ของ AI agent`, `Quality of the AI agent's scripts`)}</h2>
 <p class="sub" style="margin:0">${tx(`Proven = test ที่ผ่านจริงทุก step หารด้วย test ที่รัน (รอบล่าสุดของแต่ละการ์ด) · AC proven = AC ที่ strong และ test ของมันผ่านในการรันล่าสุด (ตัวเลข coverage หลัก) · strong = อ่านจากโค้ดเท่านั้น ยังไม่ใช่หลักฐาน`, `Proven = tests that really passed every step, over tests run (latest run of each card) · AC proven = AC that is strong and whose tests passed in the latest run (the main coverage number) · strong = read from the code only, not yet evidence`)}</p>
-<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>${tx(`การ์ดที่รัน`, `Cards run`)}</th><th>Test</th><th>${tx(`ผ่าน`, `Passed`)}</th><th>Fail</th><th>${tx(`ไม่ได้พิสูจน์`, `Not proven`)}</th><th>Fixme</th><th>${tx(`ขาด .env/data`, `Missing .env/data`)}</th><th>Proven</th><th>${tx(`AC proven / ทั้งหมด`, `AC proven / total`)}</th><th>${tx(`strong (อ่านโค้ด)`, `strong (read from code)`)}</th><th>weak / blocked / none</th></tr></thead><tbody>
-${quality.map((q) => `<tr><td>Sprint ${q.sprint}${q.active ? ' *' : ''}</td><td>${q.cardsRun}</td><td>${q.ran}</td><td>${q.passed}</td><td>${q.failed}</td><td>${q.notProven}</td><td>${q.fixme}</td><td>${q.precondition}</td><td><b>${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'}</b></td><td><b>${q.ac.total ? `${q.ac.proven} / ${q.ac.total}` : '-'}</b></td><td>${q.ac.total ? q.ac.strong : '-'}</td><td>${q.ac.total ? `${q.ac.weak} / ${q.ac.blocked} / ${q.ac.none}` : '-'}</td></tr>`).join('')}
+<div class="tw" style="margin-top:8px"><table><thead><tr><th>Sprint</th><th>${tx(`การ์ดที่รัน`, `Cards run`)}</th><th>Test</th><th>${tx(`ผ่าน`, `Passed`)}</th><th>Fail</th><th>${tx(`ไม่ได้พิสูจน์`, `Not proven`)}</th><th>Fixme</th><th>${tx(`ขาด .env/data`, `Missing .env/data`)}</th><th>Proven</th><th>${tx(`AC proven / ทั้งหมด`, `AC proven / total`)}</th><th>${tx(`พิสูจน์ด้วย browser agent`, `proven by browser agent`)}</th><th>${tx(`strong (อ่านโค้ด)`, `strong (read from code)`)}</th><th>weak / blocked / none</th></tr></thead><tbody>
+${quality.map((q) => `<tr><td>Sprint ${q.sprint}${q.active ? ' *' : ''}</td><td>${q.cardsRun}</td><td>${q.ran}</td><td>${q.passed}</td><td>${q.failed}</td><td>${q.notProven}</td><td>${q.fixme}</td><td>${q.precondition}</td><td><b>${q.provenRate == null ? '-' : Math.round(q.provenRate * 100) + '%'}</b></td><td><b>${q.ac.total ? `${q.ac.proven} / ${q.ac.total}` : '-'}</b></td><td>${q.ac.total ? q.ac.provenManual : '-'}</td><td>${q.ac.total ? q.ac.strong : '-'}</td><td>${q.ac.total ? `${q.ac.weak} / ${q.ac.blocked} / ${q.ac.none}` : '-'}</td></tr>`).join('')}
 </tbody></table></div>` : ''}
 <div class="note"><b>${tx(`วิธีอ่าน`, `How to read`)}</b><ul>
 <li>${tx(`<b>Defect</b> = issue type Defect (เจอใน QA) · <b>Bug</b> = issue type Bug (หลุดไป UAT/PROD) · นับตาม Sprint ของ defect เอง หารด้วยจำนวน Story ใน sprint นั้น (Story ที่ยกข้าม sprint นับทุก sprint)`, `<b>Defect</b> = issue type Defect (found in QA) · <b>Bug</b> = issue type Bug (escaped to UAT/PROD) · counted by the defect's own sprint, divided by the Stories of that sprint (a carried-over Story counts in every sprint)`)}</li>
