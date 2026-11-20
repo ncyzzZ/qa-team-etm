@@ -50,3 +50,20 @@ permission, too much data, too little data.
 ## Combinations
 When many options can be chosen together, do not test every combination.
 Pick: each option alone, all together, and the pairs most likely to clash.
+
+## Field interaction
+For every field the Story adds or changes (text, number, date, dropdown, grid
+cell), walk this list. Write a case for each group that applies, or one line
+in the Coverage Map saying why the group does not apply to this field.
+- Typing: replace the whole value; edit in the middle (delete one character,
+  the cursor stays where it was); select part of the text and type over it;
+  type a value in the wrong format.
+- Deleting: Backspace and Delete at the start, middle and end; delete
+  everything; the clear (×) button, if the field has one.
+- Pasting: a value in the right format, a value in the wrong format, a value
+  with spaces before and after it.
+- Date picker: open it (click or double-click, as the screen does), pick a
+  date, close it without picking (the old value stays).
+- Keyboard: Tab to the next field, Enter, Esc (cancels the edit), Ctrl+Z.
+- After entry: click somewhere else, Save, then Refresh: the saved value is
+  still right.
