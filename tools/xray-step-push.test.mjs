@@ -25,9 +25,9 @@ function fakeGql(stepCount = 6) {
     if (/getTests\(/.test(query)) return { getTests: { results: [{ issueId: '200' }] } };
     if (/getTestRuns\(/.test(query)) return { getTestRuns: { results: [{ id: run.id, steps: run.steps.map((s) => ({ id: s.id })) }] } };
     if (/updateTestRunStepStatus/.test(query)) { run.steps.find((s) => s.id === vars.stepId).status = vars.status; return { updateTestRunStepStatus: { warnings: [] } }; }
-    if (/addEvidenceToTestRunStep/.test(query)) { run.steps.find((s) => s.id === vars.stepId).evidence.push({ id: 'e' }); return { addEvidenceToTestRunStep: { addedEvidence: ['e'], warnings: [] } }; }
+    if (/addEvidenceToTestRunStep/.test(query)) { const st = run.steps.find((s) => s.id === vars.stepId); for (const e of vars.evidence) st.evidence.push({ id: `e${st.evidence.length + 1}`, filename: e.filename }); return { addEvidenceToTestRunStep: { addedEvidence: ['e'], warnings: [] } }; }
     if (/updateTestRunStatus/.test(query)) { run.status = vars.status; return { updateTestRunStatus: null }; }
-    if (/getTestRunById/.test(query)) return { getTestRunById: { status: { name: run.status }, steps: run.steps.map((s) => ({ id: s.id, status: { name: s.status }, evidence: s.evidence })) } };
+    if (/getTestRunById/.test(query)) return { getTestRunById: { status: { name: run.status }, steps: run.steps.map((s) => ({ id: s.id, status: { name: s.status }, evidence: s.evidence.map((e) => ({ ...e })) })) } };
     throw new Error(`unexpected query ${query}`);
   };
   return { gql, calls, run };
@@ -136,4 +136,61 @@ test('a Test the person has not confirmed is not pushed', () => {
   const p = planPush([v], dir);
   assert.equal(p.push.length, 0);
   assert.deepEqual(p.skip, [{ test: 'ETM-2', why: 'not confirmed by a person (results.mjs --confirm / --decide)' }]);
+});
+
+test('CLI --apply: Xray step count differs at push time -> exit 1 and the Test is named with the reason', async () => {
+  const dir = runDir();
+  fs.writeFileSync(path.join(dir, 'verdict-ETM-2.json'), JSON.stringify(verdict(['pass', 'pass', 'pass', 'pass', 'pass', 'pass'])));
+  const f = fakeGql(5), lines = [];
+  const code = await main([dir, '--exec', 'ETM-9', '--apply'], { gql: f.gql, log: (m) => lines.push(m) });
+  assert.equal(code, 1);
+  assert.match(lines.join('\n'), /NOT PUSHED.*ETM-2.*Xray has 5 steps, verdict has 6/s);
+});
+
+test('CLI --apply: a Test that errors -> exit 1 and listed as not pushed', async () => {
+  const dir = runDir();
+  fs.writeFileSync(path.join(dir, 'verdict-ETM-2.json'), JSON.stringify(verdict(['pass', 'pass', 'pass', 'pass', 'pass', 'pass'])));
+  const lines = [];
+  const code = await main([dir, '--exec', 'ETM-9', '--apply'], { gql: async () => { throw new Error('boom'); }, log: (m) => lines.push(m) });
+  assert.equal(code, 1);
+  assert.match(lines.join('\n'), /NOT PUSHED.*ETM-2.*boom/s);
+});
+
+test('CLI dry run lists the Tests left out and still exits 0', async () => {
+  const dir = runDir();
+  fs.writeFileSync(path.join(dir, 'verdict-ETM-2.json'), JSON.stringify(verdict(['pass', 'pass', 'pass', 'needs-human', 'pass', 'pass'])));
+  const lines = [];
+  const code = await main([dir, '--exec', 'ETM-9'], { gql: fakeGql(6).gql, log: (m) => lines.push(m) });
+  assert.equal(code, 0);
+  assert.match(lines.join('\n'), /ETM-2 not pushed: undecided step 4/);
+});
+
+test('pushOne run twice: the second run adds no picture again and reports "already there"', async () => {
+  const item = planPush([verdict(['pass', 'pass', 'pass', 'pass', 'pass', 'pass'])], runDir()).push[0];
+  const f = fakeGql(6);
+  await pushOne(f.gql, 'ETM-9', item);
+  const before = count(f.calls, /addEvidenceToTestRunStep/);
+  const r = await pushOne(f.gql, 'ETM-9', item);
+  assert.equal(count(f.calls, /addEvidenceToTestRunStep/), before, 'no evidence added on the second run');
+  assert.deepEqual(f.run.steps.map((s) => s.evidence.length), [1, 1, 1, 1, 1, 1]);
+  assert.deepEqual(r.already, [1, 2, 3, 4, 5, 6]);
+});
+
+test('read-back compares the file names of this run, not a count: an old picture with another name does not pass', async () => {
+  const dir = runDir();
+  fs.writeFileSync(path.join(dir, 'verdict-ETM-2.json'), JSON.stringify(verdict(['pass', 'pass', 'pass', 'pass', 'pass', 'pass'])));
+  const f = fakeGql(6);
+  for (const s of f.run.steps) s.evidence.push({ id: 'old', filename: 'old-picture.png' });
+  // Xray accepts the call but the picture never shows up
+  const gql = async (q, v) => (/addEvidenceToTestRunStep/.test(q) ? { addEvidenceToTestRunStep: { addedEvidence: [], warnings: [] } } : f.gql(q, v));
+  const lines = [];
+  const code = await main([dir, '--exec', 'ETM-9', '--apply'], { gql, log: (m) => lines.push(m) });
+  assert.equal(code, 1);
+  assert.match(lines.join('\n'), /DIFFERENT/);
+});
+
+test('pushOne reads back the evidence file names per step', async () => {
+  const item = planPush([verdict(['pass', 'pass', 'pass', 'pass', 'pass', 'pass'])], runDir()).push[0];
+  const r = await pushOne(fakeGql(6).gql, 'ETM-9', item);
+  assert.deepEqual(r.readback.steps[0].files, ['ETM-2-step-1.png']);
 });
