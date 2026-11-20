@@ -9,6 +9,7 @@
 //   node tools/qa-check.mjs findings <KEY | folder>            (work/<KEY>/findings.json vs questions-for-BA*.md)
 //   node tools/qa-check.mjs strength <KEY>                     (work/<KEY>/ac-strength.json: AC -> script strength, Phase 5)
 //   node tools/qa-check.mjs coverage <KEY>                     (AC -> cases table from analyst.md and the Trace: lines)
+//   node tools/qa-check.mjs manual   <KEY> [--root <dir>]          (work/<KEY>/manual-steps-*.md: shape and step count vs Xray, manual runner)
 //   node tools/qa-check.mjs selftest                             (run the checker against evals/ fixtures)
 //   node tools/qa-check.mjs stats                                (how often each gate failed, from .claude/team/metrics.jsonl)
 //
@@ -20,6 +21,7 @@ import { fileURLToPath } from 'node:url';
 
 import { load as loadState, resolveFile, SINGLE_KINDS, LIST_KINDS } from './state/core.mjs';
 import { resolveRepos } from './heal/config.mjs';
+import { parseManualSteps, checkManual, xrayStepCounts } from './manual/steps.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const WORK = (key) => path.join(ROOT, '.claude', 'team', 'work', key);
 const [cmd, ...rest] = process.argv.slice(2);
@@ -500,6 +502,29 @@ function checkState() {
   return finish(`state ${key}`);
 }
 
-const run = { state: checkState, draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, strength: checkStrength, selftest, stats }[cmd];
+// ---------------------------------------------------------------- manual (work/<KEY>/manual-steps-*.md, the manual runner's input)
+function checkManualSteps() {
+  const key = pos[0];
+  if (!/^ETM-\d+$/.test(key || '')) { console.error('Usage: qa-check manual <KEY> [--root <dir>]'); process.exit(2); }
+  const root = arg('--root') || ROOT, dir = path.join(root, 'work', key);
+  const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /^manual-steps-.*\.md$/.test(f)).sort() : [];
+  if (!files.length) { err(`no work/${key}/manual-steps-*.md`); return finish(`manual ${key}`); }
+  const testsMd = read(path.join(root, '.claude', 'team', 'work', key, 'tests.md'));
+  if (testsMd == null) warn(`no .claude/team/work/${key}/tests.md: step counts not compared with Xray`);
+  const xray = testsMd ? xrayStepCounts(testsMd) : {};
+  let n = 0;
+  const seen = new Map();
+  for (const f of files) {
+    const tests = parseManualSteps(read(path.join(dir, f)));
+    if (!tests.length) err(`${f}: no "## ETM-<n> - <title> (<N> steps)" section`);
+    for (const t of tests) { if (seen.has(t.key)) err(`${t.key} is in ${seen.get(t.key)} and in ${f}`); seen.set(t.key, f); }
+    for (const e of checkManual(tests, xray)) err(`${f}: ${e}`);
+    for (const t of tests) if (testsMd && xray[t.key] == null) warn(`${f}: ${t.key} is not in tests.md`);
+    n += tests.length;
+  }
+  return finish(`manual ${key}`, ` | ${n} Test(s) in ${files.length} file(s)`);
+}
+
+const run = { manual: checkManualSteps, state: checkState, draft: checkDraft, spec: checkSpec, work: checkWork, manifest: checkManifest, diff: checkDiff, coverage, findings: checkFindings, strength: checkStrength, selftest, stats }[cmd];
 if (!run) { console.error('Usage: node tools/qa-check.mjs <state|draft|spec|work|manifest|diff|coverage|findings|strength|selftest|stats> ...'); process.exit(2); }
 run();
