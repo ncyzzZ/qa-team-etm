@@ -43,3 +43,12 @@ test('stepCommand: setup specs through the Playwright CLI with CARD, reset throu
   assert.deepEqual(stepCommand('/pw', 'ETM-1', 'reset').args, [path.join('scripts', 'seed', 'card-data.cjs'), 'ETM-1', 'reset', '--apply']);
   assert.throws(() => stepCommand('/pw', 'ETM-1', 'run'), /not a data step/);
 });
+
+test('review #1: lockHeld reports a card lock (a run of this card is going), so run-card must not sweep', async () => {
+  const { lockHeld } = await import('./card-data-flow.mjs');
+  const r = repo(null);
+  assert.equal(lockHeld(r, 'ETM-1'), null);
+  fs.mkdirSync(path.join(r, 'output', 'seed'), { recursive: true });
+  fs.writeFileSync(path.join(r, 'output', 'seed', 'ETM-1.lock'), JSON.stringify({ owner: 'run-card', pid: 1, at: '2026-11-23T07:00:00Z' }));
+  assert.equal(lockHeld(r, 'ETM-1').owner, 'run-card');
+});

@@ -8,6 +8,11 @@ import { spawnSync } from 'node:child_process';
 const dataFile = (pwRepo, key) => path.join(pwRepo, 'scripts', 'seed', 'cards', `${key}.data.cjs`);
 const ledgerFile = (pwRepo, key) => path.join(pwRepo, 'output', 'seed', `${key}.ledger.json`);
 
+/** The card lock (output/seed/<KEY>.lock, same file as data-gate.mjs and lock.cjs) when held, else null. */
+export function lockHeld(pwRepo, key) {
+  try { return JSON.parse(fs.readFileSync(path.join(pwRepo, 'output', 'seed', `${key}.lock`), 'utf8')); } catch { return null; }
+}
+
 /** The data file has a `create: true` line (read as text: loading it needs the Playwright repo's .env). */
 export function hasCreate(pwRepo, key) {
   try { return /^\s*create:\s*true\s*,?\s*$/m.test(fs.readFileSync(dataFile(pwRepo, key), 'utf8')); } catch { return false; }

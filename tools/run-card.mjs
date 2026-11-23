@@ -19,7 +19,7 @@ import { propose as proposeHeals, summaryLine } from './heal/auto-heal.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
 import { dataGate, holdLock } from './data-gate.mjs';
-import { hasCreate, ledgerEmpty, planFlow, runStep } from './card-data-flow.mjs';
+import { hasCreate, ledgerEmpty, planFlow, runStep, lockHeld } from './card-data-flow.mjs';
 import { recordRunResults, sourceOf, rowsFromResults } from './run-results.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -153,15 +153,19 @@ const cleanupOnce = () => {
   console.log(c === 0 ? `[card-data] ${key}: data of this run deleted` : `[card-data] ${key}: cleanup FAILED (exit ${c}): ids stay in output/seed/${key}.ledger.json, the next run's sweep deletes them`);
 };
 if (FLOW.includes('create')) {
+  // another run of this card holds the lock: its data must not be swept from under it
+  const held = lockHeld(REPO, key);
+  if (held) { console.error(`[card-data] ${key} is locked by ${held.owner ?? '?'} since ${held.at ?? '?'}: wait for that run to finish`); process.exit(2); }
+  process.on('exit', cleanupOnce);   // also when a step fails, the gate refuses or the lock is held
+  for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP']) process.on(sig, () => process.exit(130));   // Ctrl+C before Playwright starts: exit -> cleanupOnce
   for (const step of FLOW.filter((s) => ['sweep', 'create', 'reset'].includes(s))) {
     const c = runStep(REPO, key, step);
     if (c !== 0) {
       console.error(`[card-data] ${key}: ${step} failed (exit ${c}); tests not run`);
-      if (step !== 'sweep') cleanupOnce();
+      if (step === 'sweep') cleaned = true;   // the sweep itself failed: do not try the same delete again on exit
       process.exit(2);
     }
   }
-  process.on('exit', cleanupOnce);   // Ctrl+C / kill between here and the end still deletes what was made
   if (KEEP_DATA) console.log(`[card-data] ${key}: --keep-data: the data stays after the run (output/seed/${key}.ledger.json)`);
 }
 // Card test data (scripts/seed/cards/<KEY>.data.cjs): reset and READY before every run, card locked while it runs
