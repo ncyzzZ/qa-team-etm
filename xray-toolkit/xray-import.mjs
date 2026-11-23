@@ -85,6 +85,14 @@ async function main() {
   const tests = collectTests();
   if (!tests.length) { console.error('no tests found'); process.exit(1); }
 
+  // AI-miss M-1: never PASSED when the latest run result says otherwise (tools/push-guard.mjs in the QA repo)
+  const guardFile = new URL('../tools/push-guard.mjs', import.meta.url);
+  if (fs.existsSync(guardFile)) {
+    const { checkPush, blockMessage } = await import(guardFile.href);
+    const { blocked } = checkPush(tests);
+    if (blocked.length) { console.error(blockMessage(blocked)); process.exit(1); }
+  }
+
   const payload = { testExecutionKey: EXECUTION_KEY, tests };
   const size = Buffer.byteLength(JSON.stringify(payload));
   console.log(`\npayload: ${tests.length} tests, ${(size / 1048576).toFixed(1)} MB`);

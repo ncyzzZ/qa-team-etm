@@ -208,6 +208,15 @@ async function callTool(name, args = {}) {
 
   if (name === 'xray_import_results') {
     const { executionKey, tests } = args;
+    // AI-miss M-1: never PASSED when the latest run result says otherwise (tools/push-guard.mjs in the QA repo)
+    let guardNote = '';
+    const guardFile = new URL('../tools/push-guard.mjs', import.meta.url);
+    if (fs.existsSync(guardFile)) {
+      const { checkPush, blockMessage } = await import(guardFile.href);
+      const { blocked, noResult } = checkPush(tests);
+      if (blocked.length) throw new Error(blockMessage(blocked));
+      if (noResult.length) guardNote = `\nNo run result for ${noResult.join(', ')}: PASSED sent as a manual check, say so to the user.`;
+    }
     const payload = {
       testExecutionKey: executionKey,
       tests: tests.map(t => {
@@ -226,7 +235,7 @@ async function callTool(name, args = {}) {
     });
     const body = await r.text();
     if (!r.ok) throw new Error(`import ${r.status} (payload ${sizeMB} MB): ${body}`);
-    return `Imported ${payload.tests.length} tests into ${executionKey} (payload ${sizeMB} MB)\n${body}`;
+    return `Imported ${payload.tests.length} tests into ${executionKey} (payload ${sizeMB} MB)\n${body}${guardNote}`;
   }
 
   throw new Error(`unknown tool: ${name}`);

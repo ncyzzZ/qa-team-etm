@@ -75,6 +75,11 @@ if (cmd === 'start') {
   const started = await ensureServer(true);
   add({ type: 'set', agent: 'lead', state: 'working', text: 'เริ่มงาน ' + key });
   console.log('Board: ' + URL_BASE + (started ? ' (opened)' : ' (already running)'));
+  // the lead's AI-miss rules, printed at every card start so they cannot be skipped (TEAM.md "AI misses")
+  try {
+    const { show } = await import(new URL('../../tools/ai-miss.mjs', import.meta.url).href);
+    console.log(show('lead'));
+  } catch (e) { console.log('AI-miss rules not read: ' + e.message + ' (run node tools/ai-miss.mjs show lead)'); }
 } else if (cmd === 'set') {
   const [agent, state, ...rest] = args;
   if (!AGENTS.includes(agent) || !STATES.includes(state)) {
