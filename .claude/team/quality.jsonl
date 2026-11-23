@@ -94,3 +94,16 @@
 {"t":"2026-11-23T02:25:24.454Z","card":"ETM-7343","ran":14,"passed":0,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":13,"provenRate":0}
 {"t":"2026-11-23T02:25:38.241Z","card":"ETM-8003","ran":0,"passed":0,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
 {"t":"2026-11-23T02:27:29.949Z","card":"ETM-8391","ran":2,"passed":0,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T02:31:13.429Z","card":"ETM-8003","ran":3,"passed":0,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":2,"provenRate":0}
+{"t":"2026-11-23T02:33:57.924Z","card":"ETM-7343","ran":14,"passed":1,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":12,"provenRate":7}
+{"t":"2026-11-23T02:34:38.591Z","card":"ETM-8003","ran":3,"passed":1,"failed":1,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":33}
+{"t":"2026-11-23T02:37:02.755Z","card":"ETM-8391","ran":1,"passed":1,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":100}
+{"t":"2026-11-23T02:39:53.088Z","card":"ETM-8391","ran":0,"passed":0,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T02:41:43.475Z","card":"ETM-8391","ran":1,"passed":1,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":100}
+{"t":"2026-11-23T02:43:53.521Z","card":"ETM-8391","ran":0,"passed":0,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T02:56:30.459Z","card":"ETM-8003","ran":2,"passed":0,"failed":1,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T02:58:33.004Z","card":"ETM-8003","ran":2,"passed":0,"failed":1,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T03:01:23.047Z","card":"ETM-7343","ran":0,"passed":0,"failed":0,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T03:04:20.497Z","card":"ETM-8003","ran":2,"passed":0,"failed":1,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T03:08:04.919Z","card":"ETM-7343","ran":14,"passed":2,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":10,"provenRate":14}
+{"t":"2026-11-23T03:09:17.845Z","card":"ETM-8003","ran":2,"passed":0,"failed":0,"flaky":0,"notProven":2,"fixme":0,"precondition":0,"provenRate":0}
