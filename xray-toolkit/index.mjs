@@ -11,10 +11,30 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import readline from 'node:readline';
+import { execFileSync } from 'node:child_process';
+
+// Some hosts (the Claude desktop app) pass "${XRAY_CLIENT_ID}" from .mcp.json
+// through unexpanded, and an app started from the Dock does not see variables
+// exported in ~/.zshrc. Treat an unexpanded value as unset and, on Mac/Linux,
+// read the variable from the user's login shell.
+function envVar(name) {
+  const v = process.env[name];
+  if (v && !v.startsWith('${')) return v;
+  if (process.platform === 'win32') return undefined;
+  try {
+    const shell = process.env.SHELL || '/bin/zsh';
+    const out = execFileSync(shell, ['-ilc', `printf '%s' "$${name}"`], {
+      encoding: 'utf8', timeout: 10000, stdio: ['ignore', 'pipe', 'ignore'],
+    });
+    return out.trim() || undefined;
+  } catch {
+    return undefined;
+  }
+}
 
 const XRAY_BASE = process.env.XRAY_BASE || 'https://xray.cloud.getxray.app/api/v2';
-const CLIENT_ID = process.env.XRAY_CLIENT_ID;
-const CLIENT_SECRET = process.env.XRAY_CLIENT_SECRET;
+const CLIENT_ID = envVar('XRAY_CLIENT_ID');
+const CLIENT_SECRET = envVar('XRAY_CLIENT_SECRET');
 
 let cachedToken = null;
 let cachedAt = 0;
