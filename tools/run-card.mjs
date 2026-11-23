@@ -19,6 +19,7 @@ import { propose as proposeHeals, summaryLine } from './heal/auto-heal.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
 import { dataGate, holdLock } from './data-gate.mjs';
+import { hasCreate, ledgerEmpty, planFlow, runStep } from './card-data-flow.mjs';
 import { recordRunResults, sourceOf, rowsFromResults } from './run-results.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -36,9 +37,11 @@ const REPO = process.env.PW_REPO || envFileValue('PW_REPO') || path.resolve(ROOT
 const [key, ...argsIn] = process.argv.slice(2);
 // --no-data-check: run without the card data gate (the user asked for it on purpose); not passed to Playwright
 const NO_DATA_CHECK = argsIn.includes('--no-data-check');
-const rest = argsIn.filter((a) => a !== '--no-data-check');
+// --keep-data: a `create: true` card keeps the data this run made (to look at it); the next run's sweep deletes it
+const KEEP_DATA = argsIn.includes('--keep-data');
+const rest = argsIn.filter((a) => a !== '--no-data-check' && a !== '--keep-data');
 if (!key || !/^ETM-\d+$/.test(key)) {
-  console.error('Usage: node tools/run-card.mjs ETM-1234 <spec> [-g "ETM-1|ETM-2"] [--no-data-check] [playwright flags]\n   or: node tools/run-card.mjs ETM-1234 --build-only <result-folder>');
+  console.error('Usage: node tools/run-card.mjs ETM-1234 <spec> [-g "ETM-1|ETM-2"] [--no-data-check] [--keep-data] [playwright flags]\n   or: node tools/run-card.mjs ETM-1234 --build-only <result-folder>');
   process.exit(2);
 }
 if (!fs.existsSync(GEN)) { console.error(`Generator not found: ${GEN}`); process.exit(2); }
@@ -140,6 +143,27 @@ const resultsDir = path.join(REPO, resultsDirName);
 // call Playwright's own CLI with node, no shell: a "|" in -g "A|B" must reach Playwright untouched
 const PW_CLI = path.join(REPO, 'node_modules', '@playwright', 'test', 'cli.js');
 if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}\nSet PW_REPO to the folder of ep-etm-fe-qa (now: ${REPO}) and run npm install there.`); process.exit(2); }
+// Cards with `create: true`: the data is made by script for this run and deleted after it (card-data-flow.mjs)
+const FLOW = NO_DATA_CHECK ? ['run'] : planFlow({ hasCreate: hasCreate(REPO, key), ledgerEmpty: ledgerEmpty(REPO, key), keepData: KEEP_DATA });
+let cleaned = !FLOW.includes('cleanup');
+const cleanupOnce = () => {
+  if (cleaned) return;
+  cleaned = true;
+  const c = runStep(REPO, key, 'cleanup');
+  console.log(c === 0 ? `[card-data] ${key}: data of this run deleted` : `[card-data] ${key}: cleanup FAILED (exit ${c}): ids stay in output/seed/${key}.ledger.json, the next run's sweep deletes them`);
+};
+if (FLOW.includes('create')) {
+  for (const step of FLOW.filter((s) => ['sweep', 'create', 'reset'].includes(s))) {
+    const c = runStep(REPO, key, step);
+    if (c !== 0) {
+      console.error(`[card-data] ${key}: ${step} failed (exit ${c}); tests not run`);
+      if (step !== 'sweep') cleanupOnce();
+      process.exit(2);
+    }
+  }
+  process.on('exit', cleanupOnce);   // Ctrl+C / kill between here and the end still deletes what was made
+  if (KEEP_DATA) console.log(`[card-data] ${key}: --keep-data: the data stays after the run (output/seed/${key}.ledger.json)`);
+}
 // Card test data (scripts/seed/cards/<KEY>.data.cjs): reset and READY before every run, card locked while it runs
 const gate = await dataGate({ pwRepo: REPO, key, skip: NO_DATA_CHECK });
 console.log(`[data] ${gate.message}`);
@@ -184,6 +208,7 @@ function healAfterRun(dir, exitCode) {
 
 child.on('exit', (code) => {
   unlock();
+  cleanupOnce();
   healAfterRun(resultsDir, code);
   summarise(resultsDir);
   const out = buildReport(resultsDir);
