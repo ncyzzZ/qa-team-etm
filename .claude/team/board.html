@@ -201,7 +201,9 @@ const TEAM = [
   { id:'automator', name:'AUTOMATOR', job:'Playwright scripts',     ch:5, hue:0 },
   { id:'reporter',  name:'REPORTER',  job:'Builds the evidence',    ch:0, hue:-35 },
   { id:'logger',    name:'LOGGER',    job:'Jira, Xray and defects', ch:0, hue:0, zombie:true },
-  { id:'manual',    name:'MANUAL',    job:'Manual tests in a browser', ch:2, hue:120 }
+  { id:'manual',    name:'MANUAL',    job:'Manual tests in a browser', ch:2, hue:120 },
+  { id:'healer',    name:'HEALER',    job:'Fixes broken locators',  ch:4, hue:150 },
+  { id:'dev',       name:'DEV',       job:'Just sits there',        ch:1, hue:-90, npc:true }   // board only: never set by team.mjs, never leaves his seat
 ];
 const LABEL = { idle:'IDLE', working:'WORKING', waiting:'WAITING', done:'DONE', blocked:'BLOCKED' };
 const STATES = ['idle','working','waiting','done','blocked'];
@@ -224,7 +226,7 @@ const AISLE_TOP = 118, ROWH = 40, SIT = 0;   // ROWH: height of one seat row; SI
 const TABLES = [
   { x: 50,  y: 72,  w: 48, seats: [['lead', 'N', 0]] },
   { x: 162, y: 72,  w: 48, n: 1, side: true, seats: [['analyst', 'L', 0], ['inspector', 'R', 0]] },
-  { x: 107, y: 148, w: 48, n: 3, side: true, seats: [['designer', 'L', 0], ['reviewer', 'L', 1], ['automator', 'L', 2], ['reporter', 'R', 0], ['logger', 'R', 1], ['manual', 'R', 2]] },
+  { x: 107, y: 148, w: 48, n: 4, side: true, seats: [['designer', 'L', 0], ['reviewer', 'L', 1], ['automator', 'L', 2], ['healer', 'L', 3], ['reporter', 'R', 0], ['logger', 'R', 1], ['manual', 'R', 2], ['dev', 'R', 3]] },
 ];
 for (const T of TABLES) {
   for (const [id, side, row] of T.seats) {
@@ -410,6 +412,17 @@ function draw(t) {
       else ctx.drawImage(s, c * 16, r * 32, 16, 32, Math.round(a.x), Math.round(a.y), 16, 32);
       if (a.carry) { const px = Math.round(a.x) + (a.dir === 'side' ? (a.flip ? -3 : 13) : 11), py = Math.round(a.y) + 15;
         ctx.fillStyle = '#1B1B3A'; ctx.fillRect(px - 1, py - 1, 7, 8); ctx.fillStyle = '#fff'; ctx.fillRect(px, py, 5, 6); ctx.fillStyle = '#8A93BD'; ctx.fillRect(px + 1, py + 1, 3, 1); ctx.fillRect(px + 1, py + 3, 3, 1); }
+      if (a.swing) {   // rolled-up paper: raised, or down on DEV's head
+        const hx = Math.round(a.x) + 1, hy = Math.round(a.y) + 15, R = (c, x0, y0, w, h) => { ctx.fillStyle = c; ctx.fillRect(x0, y0, w, h); };
+        if (a.swing === 'up') { R('#1B1B3A', hx - 1, hy - 13, 4, 14); R('#F4F1E8', hx, hy - 12, 2, 12); R('#8A93BD', hx, hy - 9, 2, 1); }
+        else { R('#1B1B3A', hx - 13, hy - 9, 14, 4); R('#F4F1E8', hx - 12, hy - 8, 12, 2); R('#8A93BD', hx - 8, hy - 8, 1, 2); }
+      }
+      if (a.ouch && performance.now() < a.ouch) {   // dizzy: stars spinning round his head, and a bump
+        const cx = Math.round(a.x) + 8, cy = Math.round(a.y) + 3;
+        for (let k = 0; k < 3; k++) { const ang = t * 5 + k * 2.09, sx = Math.round(cx + Math.cos(ang) * 7), sy = Math.round(cy + Math.sin(ang) * 2.5);
+          ctx.fillStyle = '#FFD23F'; ctx.fillRect(sx - 1, sy, 3, 1); ctx.fillRect(sx, sy - 1, 1, 3); }
+        ctx.fillStyle = '#FF8A80'; ctx.fillRect(cx - 1, cy - 2, 3, 2);
+      }
       if (a.mug) { const mx = Math.round(a.x) + (a.fx && a.fx.type === 'sitR' ? -2 : a.dir === 'side' ? (a.flip ? -2 : 13) : 12), my = Math.round(a.y) + 17;
         ctx.fillStyle = '#1B1B3A'; ctx.fillRect(mx - 1, my - 1, 6, 7); ctx.fillStyle = '#fff'; ctx.fillRect(mx, my, 4, 5); ctx.fillStyle = '#8B5A33'; ctx.fillRect(mx, my, 4, 2); }
       if (a.book) { const bx = Math.round(a.x) + 5, by = Math.round(a.y) + 14, pg = Math.floor(t * 0.8) % 2;   // a book held up in front of him
@@ -465,6 +478,37 @@ async function handoff(fromId, toId) {
   a.carry = false; a.face = null;
   for (const [x, y] of [...b.out.slice(1), [a.ax, AISLE_TOP], ...back(a), [a.hx, a.hy]]) await goto(a, x, y);
   a.away = false; a.dir = 'down';
+}
+// ---- a defect or bug: the lead walks over to DEV and bonks him on the head with a rolled-up paper ----
+const BUG = /defect|\bbugs?\b|บั๊ก|บัก/i;
+let seenLog = null, seenDefects = null;
+function bonkCheck(s) {
+  const logs = (s.log || []).filter((l) => BUG.test(l.text || '')).map((l) => l.t + '|' + l.text);
+  const defs = (s.links || []).filter((l) => l.kind === 'defect').map((l) => l.href);
+  if (seenLog === null) { seenLog = new Set(logs); seenDefects = new Set(defs); return; }   // first look: old lines do not count
+  const fresh = logs.some((k) => !seenLog.has(k)) || defs.some((k) => !seenDefects.has(k));
+  logs.forEach((k) => seenLog.add(k)); defs.forEach((k) => seenDefects.add(k));
+  if (fresh) bonk();
+}
+let bonking = false;
+function bonk() {
+  if (bonking) return; bonking = true;
+  chain = chain.then(async () => {
+    const a = TEAM.find((t) => t.id === 'lead'), d = TEAM.find((t) => t.id === 'dev');
+    a.cancel = true; for (let i = 0; i < 100 && a.act; i++) await sleep(200); a.cancel = false;
+    a.away = true; a.say = '🐞 เจอบั๊กอีกแล้ว!';
+    for (const [x, y] of [...a.out, [d.ax, AISLE_TOP], ...back(d)]) await goto(a, x, y);   // ends in the lane beside DEV's chair
+    a.face = 'l';
+    for (let k = 0; k < 3; k++) {
+      a.swing = 'up'; await sleep(260);
+      a.swing = 'down'; d.ouch = performance.now() + 2600; d.say = pick(['😵 โอ๊ย!', '😵 ขอโทษครับ', '😵 จะแก้เดี๋ยวนี้']); await sleep(240);
+    }
+    a.swing = null; a.say = '😤 แก้ด่วน!'; await sleep(1200);
+    a.say = ''; a.face = null;
+    for (const [x, y] of [...d.out.slice(1), [a.ax, AISLE_TOP], ...back(a), [a.hx, a.hy]]) await goto(a, x, y);
+    a.away = false; a.dir = 'down';
+    setTimeout(() => { if (performance.now() > d.ouch - 100) d.say = ''; }, Math.max(0, d.ouch - performance.now()));
+  }).catch(() => {}).finally(() => { bonking = false; });
 }
 // ---- idle life: free agents wander off for coffee, football, acrobatics ... then go back to their seat ----
 // ---- idle life: a free agent's only pastime is taking the chicken for a walk ----
@@ -554,7 +598,7 @@ function schedule(now) {
   if (TEAM.some(a => a.act)) return;   // one at a time: nobody walks the same lanes together
   let best = null;
   for (const a of TEAM) {
-    if (!idle(a) || a.away || now < a.nextAct) continue;
+    if (a.npc || !idle(a) || a.away || now < a.nextAct) continue;
     for (const k of Object.keys(URGES)) {
       if (k === 'hen' && hen.owner) continue;
       const over = a.urge[k] / a.bar[k];
@@ -570,6 +614,7 @@ function track(s) {
   if (pendWork && now - pendWork.t > 10000) pendWork = null;
   if (prev) {
     for (const a of TEAM) {
+      if (a.npc) continue;
       const was = prev[a.id], is = s.agents[a.id].state;
       if (was === 'working' && is === 'done') pendDone = { id: a.id, t: now };
       if (was !== 'working' && is === 'working') pendWork = { id: a.id, t: now };
@@ -580,7 +625,8 @@ function track(s) {
       chain = chain.then(() => handoff(f, to)).catch(() => {});
     }
   }
-  prev = {}; for (const a of TEAM) prev[a.id] = s.agents[a.id].state;
+  prev = {}; for (const a of TEAM) prev[a.id] = (s.agents[a.id] || { state: 'idle' }).state;
+  bonkCheck(s);
 }
 
 // ---- html overlay (names, bubbles) ----
@@ -738,7 +784,7 @@ function render(s) {
   el('wallcard').innerHTML = '<small>CARD</small><b>' + esc(s.ticket || '-') + '</b>';
   let online = 0;
   for (const a of TEAM) {
-    const st = s.agents[a.id];
+    const st = s.agents[a.id] || { state: 'idle', task: '', at: s.startedAt };   // DEV: not on the server, always idle
     a.state = st.state; a.task = st.task || ''; a.pct = st.pct == null ? null : st.pct; a.since = st.at;
     const pb = el('pb-' + a.id); pb.classList.toggle('ind', a.pct == null); pb.firstChild.style.width = a.pct == null ? '' : a.pct + '%';
     for (const k of STATES) { el('m-'+a.id).classList.toggle(k, k === st.state); }
