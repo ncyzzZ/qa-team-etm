@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // guard.mjs - a heal may only change HOW an element is found, never WHAT is checked.
 //   node tools/heal/guard.mjs <diff-file>      prints "[heal-guard] N error(s)", exit 1 on errors
-// Allow-list, not deny-list: every changed line must be paired with exactly one new line in a pages/*.ts file,
+// Allow-list, not deny-list: every changed line must be paired with exactly one new line in a pages/*.ts or tests/**/*.ts file,
 // the pair must be a locator line (locator(, getBy*(, hasText:, name:), and the two lines must be identical
 // except for the text inside string literals. The new strings may not widen the match (nth=, :first-child, *).
 // Anything else (new/removed lines, other code, expect lines, renames, binary, modes) is refused and left to a person.
@@ -19,7 +19,7 @@ function validPath(p) {
   p = String(p).replace(/\t.*$/, '').trim().replace(/\\/g, '/');
   if (!p || p.startsWith('"') || p.startsWith('/') || /^[A-Za-z]:/.test(p)) return false;
   if (p.split('/').some((s) => s === '..' || s === '.')) return false;
-  return path.posix.normalize(p) === p && /^pages\/[\w\-./]+\.ts$/.test(p);
+  return path.posix.normalize(p) === p && /^(pages|tests)\/[\w\-./]+\.ts$/.test(p);
 }
 
 const strings = (line) => [...line.matchAll(STRING)].map((m) => m[2] ?? m[3] ?? '');
@@ -58,13 +58,13 @@ export function checkHealDiff(unifiedDiff) {
     let m;
     if ((m = l.match(/^diff --git a\/(.+) b\/(.+)$/))) {
       file = m[2];
-      if (m[1] !== m[2] || !validPath(m[1])) errors.push(`${m[1]} -> ${m[2]}: a heal may change only existing pages/*.ts files, in place`);
+      if (m[1] !== m[2] || !validPath(m[1])) errors.push(`${m[1]} -> ${m[2]}: a heal may change only existing pages/*.ts or tests/**/*.ts files, in place`);
     } else if (BAD_HEADER.test(l)) {
       errors.push(`${file ?? '?'}: ${l.trim()}: renames, copies, mode or binary changes are not heals`);
     } else if ((m = l.match(/^(---|\+\+\+) (.+)$/))) {
       const p = m[2].replace(/^[ab]\//, '');
       if (m[1] === '+++') file = p.replace(/\t.*$/, '').trim();
-      if (!validPath(p)) errors.push(`${p}: a heal may change only existing pages/*.ts files`);
+      if (!validPath(p)) errors.push(`${p}: a heal may change only existing pages/*.ts or tests/**/*.ts files`);
     } else if ((m = l.match(/^@@ -\d+(?:,(\d+))? \+\d+(?:,(\d+))? @@/))) {
       oldLeft = m[1] === undefined ? 1 : Number(m[1]);
       newLeft = m[2] === undefined ? 1 : Number(m[2]);

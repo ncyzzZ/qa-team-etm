@@ -23,7 +23,15 @@ test('CRLF line endings are fine', () => {
   assert.equal(checkHealDiff(diff([loc('.a')], [loc('.b')]).replace(/\n/g, '\r\n')).ok, true);
 });
 
-test('a file outside pages/ is refused', () => refused(diff([loc('.a')], [loc('.b')], { file: 'tests/fe/e2e/x.spec.ts' }), /pages\//));
+test('a locator change in tests/ (spec or helper) passes', () => {
+  assert.equal(checkHealDiff(diff([loc('.a')], [loc('.b')], { file: 'tests/fe/e2e/x.spec.ts' })).ok, true);
+  assert.equal(checkHealDiff(diff(["  await page.getByText('Save').click();"], ["  await page.getByText('Save Plan').click();"], { file: 'tests/fe/e2e/a.helpers.ts' })).ok, true);
+});
+test('a file outside pages/ and tests/ is refused', () => {
+  refused(diff([loc('.a')], [loc('.b')], { file: 'utils/x.ts' }), /pages\//);
+  refused(diff([loc('.a')], [loc('.b')], { file: 'playwright.config.ts' }), /pages\//);
+});
+test('an expect line in tests/ is still refused', () => refused(diff(["  await expect(page.locator('.a')).toBeVisible();"], ["  await expect(page.locator('.b')).toBeVisible();"], { file: 'tests/fe/x.spec.ts' }), /assertion/));
 test('path traversal out of pages/ is refused', () => refused(diff([loc('.a')], [loc('.b')], { file: 'pages/../tests/fe/x.spec.ts' }), /pages\//));
 test('a rename to another file is refused', () => {
   const d = diff([loc('.a')], [loc('.b')]).replace(`diff --git a/${P} b/${P}`, `diff --git a/${P} b/tests/x.spec.ts\nrename from ${P}\nrename to tests/x.spec.ts`);

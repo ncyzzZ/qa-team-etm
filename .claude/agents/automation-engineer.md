@@ -24,7 +24,7 @@ Do this:
 8. Never touch a file someone else is editing.
 
 **Heal (when the lead hands you `locator` failures from `triage.json`).** One failure at a time, at most 2 rounds each:
-1. `node tools/heal/source-lookup.mjs "<locator from triage>"` (reads `stms-fe` only). A candidate → write the diff of the page file (`pageRef` in triage) that changes only that locator string.
+1. Start from `heal-proposals.md` in the run folder (written by `run-card` through `tools/heal/auto-heal.mjs`): `ready` rows already have a guarded diff. For a row it could not settle, `node tools/heal/source-lookup.mjs "<locator from triage>"` (reads `stms-fe` only). A candidate → write the diff of the file that holds the locator (`pageRef` in triage, or the `tests/**` spec/helper line) that changes only that locator string.
 2. No candidate, `library: true`, or a source heal that failed its re-run → the lead calls `playwright-healer`; use its diff, or its "structure change" note as a manual fix for the user.
 3. Save the diff, run `node tools/heal/guard.mjs <diff>` (gate G-heal). Errors → do not offer it; tell the lead it needs a manual fix and why.
 4. Return the diff to the lead (`set automator waiting "รออนุมัติ heal"`). Never apply it yourself; the lead applies it only after the user's Apply.

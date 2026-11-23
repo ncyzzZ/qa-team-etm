@@ -15,6 +15,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { retriesFor, specFilesFrom, canAdvanceBaseline } from './heal/run-plan.mjs';
 import { triageRun, countByCause } from './heal/triage.mjs';
+import { propose as proposeHeals, summaryLine } from './heal/auto-heal.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
 import { dataGate, holdLock } from './data-gate.mjs';
@@ -164,6 +165,12 @@ function healAfterRun(dir, exitCode) {
   try {
     const rows = triageRun(dir);
     if (rows.length) console.log(`[triage] ${Object.entries(countByCause(rows)).map(([k, v]) => `${k} ${v}`).join(', ')}  (${path.join(dir, 'triage.md')})`);
+    if (rows.some((r) => r.cause === 'locator')) {
+      try {
+        const d = proposeHeals(dir);
+        console.log(`[auto-heal] ${summaryLine(d)}  (${path.join(dir, 'heal-proposals.md')})\n[auto-heal] NEXT: lead starts the heal loop now (TEAM.md Phase 7), no need to be asked`);
+      } catch (e) { console.log(`[auto-heal] skipped: ${e.message}`); }
+    }
     const results = JSON.parse(fs.readFileSync(path.join(dir, 'results.json'), 'utf8'));
     const fe = process.env.FE_REPO || envFileValue('FE_REPO') || path.resolve(REPO, '..', 'stms-fe');
     if (canAdvanceBaseline(rest, exitCode, results) && fs.existsSync(path.join(fe, '.git'))) {
