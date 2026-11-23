@@ -2,11 +2,20 @@
  "card": "ETM-8049",
  "date": "2026-11-20",
  "verdict": "partly",
- "note": "2026-11-20: scripts fixed against the real app after run 2026-11-20_182730 (read from stms-fe and the error-context files); nothing re-run yet. WLOC_* env values are all set. Ratings are a reading of the code, not proof.",
+ "note": "Re-rated by the reviewer from code only (nothing re-run since the rewrite; selectors never run on the app). Rules as of the 18 Nov Story: AC 6.2 free text saved as typed, 6.4 only changed Deck values converted. Tests with a partial / check-by-eye / not-checked annotation always end skipped (notProvenGuard), so they cannot be PASSED in Xray.",
  "ac": [
   {
    "id": "AC-1",
-   "rule": "options hidden, order, position, per user",
+   "rule": "options hidden by default, order Deck X Y",
+   "tests": [
+    "ETM-8770"
+   ],
+   "rating": "strong",
+   "why": "TC-001 steps 1-3 assert hidden by default and option order Deck,X,Y from the list (Worklist.spec Columns:44-52)"
+  },
+  {
+   "id": "AC-2",
+   "rule": "position default/reset/saved layout, saved per user",
    "tests": [
     "ETM-8770",
     "ETM-8775",
@@ -14,108 +23,163 @@
     "ETM-8777"
    ],
    "rating": "weak",
-   "why": "TC-004 step 5 cannot be checked: the second user (Job Owner) gets Access Denied on the inactive-plan worklist (notChecked); TC-001..003 check hidden default, order (from the Column Customization list), Reset, per-user layout"
+   "why": "Default position proven in TC-001:61; TC-002/003/004 end skipped (partial/check-by-eye); TC-004 step 5 notChecked (Job Owner gets Access Denied); TC-003 only Department-hidden row"
   },
   {
    "id": "AC-3",
-   "rule": "', ' join, roll-up, order",
+   "rule": "', ' join, roll-up, identical once, as stored",
    "tests": [
     "ETM-8778"
    ],
    "rating": "strong",
-   "why": "exact Deck/X/Y cell text per work, row found by Work Number after the table has loaded"
+   "why": "exact Deck/X/Y cell text of WK-1,2,5,6,9 (Cells:56-63); needs seeded WLOC_CELLS_PATH data, fails (not skipped) if missing"
+  },
+  {
+   "id": "AC-4",
+   "rule": "cell order Master Data then free text A-Z numeric",
+   "tests": [
+    "ETM-8778"
+   ],
+   "rating": "strong",
+   "why": "WK-7 (Deck 2 before Deck 10), WK-9, WK-8 N/A last asserted exactly (Cells:60-63)"
   },
   {
    "id": "AC-5",
-   "rule": "ellipsis / hover",
+   "rule": "ellipsis and hover full text",
    "tests": [
     "ETM-8779"
    ],
    "rating": "weak",
-   "why": "ellipsis CSS and tooltip text are measured; how the cut LOOKS is for a person"
+   "why": "CSS overflow + tooltip text asserted (Cells:88-94) but test carries 'partial' so it always ends skipped; last run failed"
   },
   {
    "id": "AC-6",
-   "rule": "Deck filter",
+   "rule": "checkbox filter with search and Select All on 3 columns",
    "tests": [
-    "ETM-8781"
+    "ETM-8781",
+    "ETM-8794"
    ],
    "rating": "strong",
-   "why": "Deck filter controls, option list and order, search, Select All compared with the Job Description filter"
+   "why": "controls asserted for Deck (Cells:129-131) and X, Y (Cells:296-300); Select All vs Job Description only compares booleans (Cells:167,173) - weak proxy but not the AC core"
+  },
+  {
+   "id": "AC-7",
+   "rule": "filter options each value once, split by cell",
+   "tests": [
+    "ETM-8781",
+    "ETM-8794"
+   ],
+   "rating": "strong",
+   "why": "exact option lists of Deck/X/Y with shared values listed once (Cells:136,306,309)"
   },
   {
    "id": "AC-8",
-   "rule": "any-value match",
+   "rule": "ANY-value match",
    "tests": [
     "ETM-8782"
    ],
    "rating": "strong",
-   "why": "any-value match, filters together with the search box, empty worklist"
+   "why": "Deck/X/Y multi-select against WK-1..3, Total Results checked, combined with search (Cells:188-200)"
+  },
+  {
+   "id": "AC-9",
+   "rule": "filter option order same as cell",
+   "tests": [
+    "ETM-8781",
+    "ETM-8794"
+   ],
+   "rating": "strong",
+   "why": "exact order asserted (Cells:136,306,309); X/Y order cannot tell sheet order from numeric order (digits 1,2,3)"
+  },
+  {
+   "id": "AC-10",
+   "rule": "no Blank option",
+   "tests": [
+    "ETM-8781",
+    "ETM-8794"
+   ],
+   "rating": "strong",
+   "why": "regex on option texts blank or - (Cells:140,303); list proven non-empty earlier in the same test"
   },
   {
    "id": "AC-11",
-   "rule": "case variants",
+   "rule": "case variants as stored, separate options, exact match",
    "tests": [
     "ETM-8783"
    ],
    "rating": "strong",
-   "why": "case variants are separate options and match exactly"
+   "why": "options ['Main Deck','main deck'], filter main deck shows only WK-6b (Cells:225,231,236); needs seeded old data"
   },
   {
    "id": "AC-12",
-   "rule": "no sort",
+   "rule": "no sorting, default order unchanged",
    "tests": [
     "ETM-8780"
    ],
    "rating": "strong",
-   "why": "no sort arrow, same row order"
+   "why": "row order equal to reference after clicking each header and hiding/showing (Columns:230-250); sortMark selector is only a negative check, never run on the app"
   },
   {
    "id": "AC-13",
-   "rule": "export unchanged",
+   "rule": "Export unchanged, R S T",
    "tests": [
     "ETM-8784"
    ],
    "rating": "weak",
-   "why": "file read by script; look in Excel and the cell-vs-file comparison need a person (partial)"
+   "why": "reads xlsx and asserts R,S,T (Cells:273-277) but hard-coded to one work BATEST8049A of one plan, comma-splitting hack ',(?! B)' (Cells:282), 'partial' so always skipped; last run skipped"
   },
   {
    "id": "AC-14",
-   "rule": "Master Data conversion",
+   "rule": "AC 6.1 convert to Master Data on every entry point; 6.4 only changed values",
    "tests": [
     "ETM-8785",
-    "ETM-8788"
-   ],
-   "rating": "weak",
-   "why": "Edit Work Breakdown half and Create Work are scripted; the Edit Work Details half cannot be checked (that page has no Working Location field, notChecked)"
-  },
-  {
-   "id": "AC-18",
-   "rule": "mandatory, 30 chars",
-   "tests": [
-    "ETM-8790",
+    "ETM-8788",
+    "ETM-8792",
+    "ETM-8793",
     "ETM-8791"
    ],
    "rating": "weak",
-   "why": "TC-017 mandatory fields and Back are scripted; TC-018 30-character limit is scripted in Create Work and in Edit Work Breakdown (not Edit Work Details); Excel steps manual"
+   "why": "Scripts only for Create Work (Entry:82-129) and Work Breakdown edit (Entry:44-66,291-300). Edit Work (no Deck field), both Excel imports and 3 Shutdown Logic points have no script; 6.4 proof in TC-020 is weak (see findings)"
   },
   {
    "id": "AC-15",
-   "rule": "free text kept as entered",
+   "rule": "free text saved exactly as typed (replaces 'earliest work wins')",
+   "tests": [
+    "ETM-8788",
+    "ETM-8792"
+   ],
+   "rating": "weak",
+   "why": "DOCK AREA stays DOCK AREA although Dock Area exists in other works (Entry:104,129) but only Create Work, and TC-015 ends skipped; Excel / Gantt paste (TC-016) not scripted"
+  },
+  {
+   "id": "AC-16",
+   "rule": "converted spelling shown when entered",
+   "tests": [
+    "ETM-8788",
+    "ETM-8785"
+   ],
+   "rating": "weak",
+   "why": "typed+Enter, paste, MAIN DECK asserted in tags (Entry:89,94,99; 54) but both tests end skipped; Excel saved value and Shutdown Logic not scripted"
+  },
+  {
+   "id": "AC-17",
+   "rule": "several spellings in one save all stored as typed (replaces 'first entered wins')",
    "tests": [
     "ETM-8788"
    ],
    "rating": "weak",
-   "why": "Create Work has one row per work, so the roll-up of several spellings in one cell is not checked (notChecked)"
+   "why": "two spellings saved in one Create Work save (Entry:129-130) but the one-work roll-up is notChecked (Entry:131) so test ends skipped; TC-016 not scripted"
   },
   {
-   "id": "AC-17",
-   "rule": "old stored case variant not converted unless removed and entered again",
+   "id": "AC-18",
+   "rule": "Deck 30 chars, mandatory, X/Y Master Data",
    "tests": [
-    "ETM-8793"
+    "ETM-8790",
+    "ETM-8791",
+    "ETM-8792"
    ],
    "rating": "weak",
-   "why": "Remark is changed in Edit Work Details; the Deck tag is removed and entered again in Edit Work Breakdown (Edit Work Details has no Deck field)"
+   "why": "Save disabled without Deck/X/Y (Entry:146,151,157) and 29/30/31 boundary (Entry:195-228) are asserted, but both tests always end skipped (check-by-eye at Entry:170, 232); Excel 31-char not scripted"
   }
  ]
 }

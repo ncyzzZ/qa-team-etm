@@ -73,3 +73,7 @@
 {"t":"2026-11-20T11:07:31.976Z","card":"ETM-8049","ran":1,"passed":0,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
 {"t":"2026-11-20T11:26:03.345Z","card":"ETM-8049","ran":1,"passed":0,"failed":1,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
 {"t":"2026-11-20T11:37:11.809Z","card":"ETM-8049","ran":19,"passed":1,"failed":17,"flaky":0,"notProven":1,"fixme":0,"precondition":0,"provenRate":5}
+{"t":"2026-11-23T01:34:06.045Z","card":"ETM-8391","ran":2,"passed":0,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T01:37:27.096Z","card":"ETM-8391","ran":2,"passed":0,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
+{"t":"2026-11-23T01:39:51.027Z","card":"ETM-8049","ran":19,"passed":5,"failed":11,"flaky":0,"notProven":3,"fixme":0,"precondition":0,"provenRate":26}
+{"t":"2026-11-23T01:42:48.602Z","card":"ETM-8391","ran":2,"passed":0,"failed":2,"flaky":0,"notProven":0,"fixme":0,"precondition":0,"provenRate":0}
