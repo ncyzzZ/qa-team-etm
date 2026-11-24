@@ -709,7 +709,12 @@ function draw(t) {
     }
     items.push({ z: a.y + 32 + (a.moving ? 0.2 : 0.1), f: () => {
       const [r, c, fl] = frame(a, t), s = sheets[i];
-      if (a.fx && a.fx.type === 'sitR') { ctx.save(); ctx.translate(Math.round(a.x) + 16, Math.round(a.y)); ctx.scale(-1, 1); ctx.drawImage(s, 16 * (5 + Math.floor(t * 1.4) % 2), 64, 16, 32, 0, 0, 16, 32); ctx.restore(); }   // the whole seated figure, like at the tables
+      if (a.fx && a.fx.type === 'warm') {   // sitting on a cushion, his back to us, hands out to the fire
+        const X = Math.round(a.x), Y = Math.round(a.y);
+        ctx.fillStyle = '#1A0F0A'; ctx.fillRect(X, Y + 26, 16, 6); ctx.fillStyle = '#B0303A'; ctx.fillRect(X + 1, Y + 27, 14, 4); ctx.fillStyle = '#E0606A'; ctx.fillRect(X + 2, Y + 27, 12, 1);
+        ctx.drawImage(s, 16 * (3 + Math.floor(t * 2) % 2), 32, 16, 22, X, Y + 6, 16, 22);
+      }
+      else if (a.fx && a.fx.type === 'sitR') { ctx.save(); ctx.translate(Math.round(a.x) + 16, Math.round(a.y)); ctx.scale(-1, 1); ctx.drawImage(s, 16 * (5 + Math.floor(t * 1.4) % 2), 64, 16, 32, 0, 0, 16, 32); ctx.restore(); }   // the whole seated figure, like at the tables
       else if (fl) { ctx.save(); ctx.translate(Math.round(a.x) + 16, Math.round(a.y)); ctx.scale(-1, 1); ctx.drawImage(s, c * 16, r * 32, 16, 32, 0, 0, 16, 32); ctx.restore(); }
       else ctx.drawImage(s, c * 16, r * 32, 16, 32, Math.round(a.x), Math.round(a.y), 16, 32);
       if (a.carry) { const px = Math.round(a.x) + (a.dir === 'side' ? (a.flip ? -3 : 13) : 11), py = Math.round(a.y) + 15;
@@ -923,7 +928,7 @@ async function goHome(a) {
 }
 // what a free agent does: take the chicken to the lounge to eat, fetch a coffee (and take it back to his seat or drink it on the lounge sofa),
 // or read in the reading corner. Everything in the lounge is reached through the lane down its right side, so nobody crosses furniture.
-const COFFEE_SPOT = [CFX + 34, 232], SOFA_SEAT = [LX + 32, LY], READ_SPOT = [322, 94];
+const COFFEE_SPOT = [CFX + 34, 232], SOFA_SEAT = [LX + 32, LY], READ_SPOT = [322, 94], FIRE_SPOT = [FP + 16, 72];   // FIRE_SPOT: on a cushion in front of the fireplace (Christmas)
 const ACT = {
   async eat(a) {
     a.say = '🐔 พาไก่ไปกินข้าว';
@@ -952,6 +957,14 @@ const ACT = {
     a.say = ''; await goto(a, LOUNGE_R, SOFA_SEAT[1]); a.fx = null;   // slide back out in the seated pose, then stand up in the lane
     await walk(a, [[LOUNGE_R, AISLE_TOP]]);
   },
+  async fire(a) {   // Christmas: sit on a cushion in front of the fireplace and warm his hands
+    a.say = '🔥 ไปผิงไฟ';
+    if (!await leave(a) || !await walk(a, [[FIRE_SPOT[0], AISLE_TOP], FIRE_SPOT])) return;
+    a.face = 'u'; a.fx = { type: 'warm' }; a.say = pick(['🔥 อุ่นจัง~', '🔥 ฟินมาก', '🔥 มืออุ่นแล้ว พิมพ์ต่อได้']);
+    await nap(a, 9000);
+    a.fx = null; a.face = null; a.say = '';
+    await walk(a, [[FIRE_SPOT[0], AISLE_TOP]]);
+  },
   async read(a) {   // stand in front of the bookshelf with an open book
     a.say = '📖 ไปอ่านหนังสือ';
     if (!await leave(a) || !await walk(a, [[READ_SPOT[0], AISLE_TOP], READ_SPOT])) return;
@@ -965,12 +978,13 @@ const ACT = {
 const URGES = {
   coffee: { acts: ['coffee', 'coffeeSit'], thoughts: ['💭 ง่วงจัง อยากกินกาแฟ', '💭 ขอกาแฟสักแก้วก่อน', '💭 สมองเริ่มตื้อ ไปชงกาแฟดีกว่า'] },
   hen:    { acts: ['eat'], thoughts: ['💭 ไก่คงหิวแล้ว', '💭 ถึงเวลาข้าวของไก่แล้ว', '💭 พาไก่ไปกินข้าวดีกว่า'] },
+  fire:   { acts: ['fire'], thoughts: ['💭 หนาวจัง ไปผิงไฟดีกว่า', '💭 หิมะตกในห้องอีกแล้ว ไปผิงไฟ', '💭 ขอมืออุ่นๆ ก่อนพิมพ์ต่อ'] },
   read:   { acts: ['read'], thoughts: ['💭 ว่างๆ ไปอ่านหนังสือดีกว่า', '💭 อยากอ่านอะไรสักหน่อย', '💭 ไปดูหนังสือที่ชั้นหน่อยดีกว่า'] },
 };
 TEAM.forEach((a) => {   // his own temperament: how fast each urge builds (per second) and how strong it must be before he acts
-  a.urge = { coffee: rnd(0, 0.5), hen: rnd(0, 0.5), read: rnd(0, 0.5) };
-  a.rate = { coffee: 1 / rnd(60, 140), hen: 1 / rnd(90, 200), read: 1 / rnd(100, 220) };
-  a.bar = { coffee: rnd(0.85, 1.1), hen: rnd(0.85, 1.1), read: rnd(0.85, 1.1) };
+  a.urge = { coffee: rnd(0, 0.5), hen: rnd(0, 0.5), read: rnd(0, 0.5), fire: rnd(0.3, 0.8) };
+  a.rate = { coffee: 1 / rnd(60, 140), hen: 1 / rnd(90, 200), read: 1 / rnd(100, 220), fire: 1 / rnd(50, 120) };
+  a.bar = { coffee: rnd(0.85, 1.1), hen: rnd(0.85, 1.1), read: rnd(0.85, 1.1), fire: rnd(0.85, 1.1) };
 });
 async function runActivity(a, urge) {
   const U = URGES[urge]; a.act = pick(U.acts); a.away = false;
@@ -990,6 +1004,7 @@ function schedule(now) {
     a.urge.coffee += dt * a.rate.coffee * (working ? 2.2 : 1);
     a.urge.hen += dt * a.rate.hen * (working ? 0.4 : 1.4);
     a.urge.read += dt * a.rate.read * (working ? 0.3 : 1.6);
+    if (XMAS) a.urge.fire += dt * a.rate.fire * (working ? 0.6 : 1.5);
   }
   if (TEAM.some(a => a.act)) return;   // one at a time: nobody walks the same lanes together
   let best = null;
@@ -997,6 +1012,7 @@ function schedule(now) {
     if (a.npc || !idle(a) || a.away || now < a.nextAct) continue;
     for (const k of Object.keys(URGES)) {
       if (k === 'hen' && hen.owner) continue;
+      if (k === 'fire' && !XMAS) continue;   // the fireplace is only there at Christmas
       const over = a.urge[k] / a.bar[k];
       if (over >= 1 && (!best || over > best.over)) best = { a, k, over };
     }
