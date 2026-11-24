@@ -33,6 +33,7 @@ These came from corrections by the QA lead. They are here so everyone who pulls 
 
 - `JIRA_SITE`: pttep.atlassian.net. `PROJECT_KEY`: ETM (project id 14436). `BOARD_ID`: 4014.
 - `PW_REPO`: folder of the Playwright repo `ep-etm-fe-qa`: environment variable, else `PW_REPO=` in the git-ignored `.env`, else `../ep-etm-fe-qa` next to this repo. Set it with `node tools/setup.mjs <folder>` (same on Windows and Mac); `node tools/setup.mjs` alone checks the whole setup. Needed by `tools/run-card.mjs`.
+- Figma pictures: optional env variable `FIGMA_TOKEN` (personal access token, never in a committed file) for `node tools/figma-spec.mjs images <KEY>`; without it the user exports the frames as PNG.
 - Xray credentials: env variables `XRAY_CLIENT_ID` and `XRAY_CLIENT_SECRET` (never in a file that is committed). The Xray MCP server is `xray-toolkit/index.mjs` (see `.mcp.json`).
 - Workflow doc: `docs/etm-qa-workflow.md`. UI facts: `docs/UI_Map_ETM.md`. Templates: `docs/ETM_Templates/`. Project skills: `.claude/skills/`.
 
