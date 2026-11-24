@@ -466,7 +466,7 @@ const ROUNDS = [   // [x, y, look around here?]: only along the free lanes, like
 ];
 function bakeGuard() {   // a navy uniform (never a zombie), and where the top of his head is in each frame, for the cap
   const c = document.createElement('canvas'); c.width = 112; c.height = 96;
-  const x = c.getContext('2d'); x.filter = 'hue-rotate(200deg) saturate(0.7) brightness(0.85)'; x.drawImage(IMG.ch5, 0, 0); x.filter = 'none';
+  const x = c.getContext('2d'); x.filter = 'saturate(1.1) brightness(0.85)'; x.drawImage(IMG.ch0, 0, 0); x.filter = 'none';   // ch0: blue jacket, white shirt, tie
   const p = x.getImageData(0, 0, 112, 96).data, op = (px, py) => p[(py * 112 + px) * 4 + 3] > 0, caps = {};
   for (let r = 0; r < 3; r++) for (let k = 0; k < 7; k++) {
     let top = -1, l = 16, rr = -1;
@@ -485,15 +485,20 @@ function drawGuard(t) {
   const cap = g.caps[r + ',' + c];   // the guard's cap: navy crown, dark peak, gold badge in front
   if (cap && cap.top >= 0) {
     const w = cap.r - cap.l + 1;
-    R('#2E3D7A', cap.l, cap.top - 1, w, 1); R('#1F2A5A', cap.l, cap.top, w, 2);
-    if (r === 0) { R('#0F1530', cap.l, cap.top + 2, w, 1); R('#FFD23F', cap.l + (w >> 1) - 1, cap.top, 2, 1); }
-    else if (r === 2) { R('#0F1530', cap.l + (w >> 1), cap.top + 2, (w >> 1) + 3, 1); R('#FFD23F', cap.r - 1, cap.top, 1, 1); }
+    R('#0B1022', cap.l - 1, cap.top - 2, w + 2, 1); R('#4A6BD0', cap.l, cap.top - 1, w, 1); R('#2E4AA8', cap.l, cap.top, w, 2);   // outline, crown
+    if (r === 0) { R('#0B1022', cap.l - 1, cap.top + 2, w + 2, 1); R('#FFD23F', cap.l + (w >> 1) - 1, cap.top - 1, 2, 2); }   // peak and badge in front
+    else if (r === 2) { R('#0B1022', cap.l + (w >> 1), cap.top + 2, (w >> 1) + 3, 1); R('#FFD23F', cap.r - 2, cap.top - 1, 2, 2); }
+    else R('#0B1022', cap.l - 1, cap.top + 2, w + 2, 1);
   }
-  if (g.baton) {   // red light baton held up, pulsing
-    const side = g.moving ? g.dir === 'side' : !!g.face, hx = side ? 13 : 12, hy = 16, lit = 0.5 + 0.5 * Math.sin(t * 9);
-    ctx.globalAlpha = 0.18 + 0.22 * lit; R('#FF2A2A', hx - 3, hy - 13, 8, 15); ctx.globalAlpha = 0.35 + 0.3 * lit; R('#FF2A2A', hx - 1, hy - 11, 4, 11); ctx.globalAlpha = 1;
-    R('#1B1B3A', hx - 1, hy - 1, 4, 5); R('#3A3A3A', hx, hy, 2, 3);   // grip in his hand
-    R('#C81E1E', hx, hy - 9, 2, 9); R(lit > 0.5 ? '#FFD0D0' : '#FF6B6B', hx, hy - 9, 1, 8);   // the light tube, bright core
+  if (g.baton) {   // red light baton in his hand, slanting up and out from the body, pulsing
+    const back = r === 1, hx = back ? 1 : 13, dx = back ? -1 : 1, hy = 20, lit = 0.5 + 0.5 * Math.sin(t * 9);
+    const at = (k) => [hx + dx * Math.floor(k / 2), hy - k];   // k = 0 at the grip, up along the baton
+    ctx.globalAlpha = 0.2 + 0.25 * lit;
+    for (let k = 2; k < 11; k++) { const [px, py] = at(k); R('#FF2A2A', px - 2, py - 1, 6, 3); }   // red glow round the tube
+    ctx.globalAlpha = 1;
+    for (let k = 0; k < 3; k++) { const [px, py] = at(k); R('#1B1B3A', px, py, 2, 1); }   // black grip in his fist
+    for (let k = 3; k < 11; k++) { const [px, py] = at(k); R('#E01F1F', px, py, 2, 1); R(lit > 0.5 ? '#FFE0E0' : '#FF8A8A', px + (dx > 0 ? 0 : 1), py, 1, 1); }   // the light tube, bright core
+    { const [px, py] = at(11); R('#FFFFFF', px, py, 2, 1); }   // the tip
   }
 }
 const gWait = (ms) => sleep(ms);
@@ -909,7 +914,7 @@ async function poll() {
   for (const f of FURN) jobs.push(loadImg(f.split('/')[1], 'assets/furniture/' + f + '.png'));
   await Promise.all(jobs);
   TEAM.forEach((a, i) => { sheets[i] = bake(i); });
-  if (IMG.ch5) { bakeGuard(); guardLoop(); }
+  if (IMG.ch0) { bakeGuard(); guardLoop(); }
   bg = buildBackground();
   buildPanels(); buildOverlay(); layout();
   TEAM.forEach(a => { for (const h of [lbl[a.id], el('rn-' + a.id)]) { h.title = 'คลิกเพื่อเปลี่ยนชื่อ'; h.addEventListener('click', () => { if (!h.querySelector('input')) editName(a, h); }); } });
