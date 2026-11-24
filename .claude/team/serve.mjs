@@ -15,7 +15,14 @@ const AGENTS = ['lead', 'analyst', 'inspector', 'designer', 'reviewer', 'automat
 // Answers typed on the board. TOKEN is put into the board page only (other web sites cannot read it), SECRET never leaves
 // this process: an "answer" line in events.jsonl counts only when this server signed it, so nothing else can write a yes.
 const TOKEN = crypto.randomBytes(16).toString('hex');
-const SECRET = crypto.randomBytes(32);
+// SECRET is kept in a git-ignored file readable only by this user, so a server restart (reboot, git pull) keeps every board answer valid.
+const SECRET_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), '.board-secret');
+const SECRET = (() => {
+  try { const b = Buffer.from(fs.readFileSync(SECRET_FILE, 'utf8').trim(), 'hex'); if (b.length === 32) return b; } catch {}
+  const b = crypto.randomBytes(32);
+  try { fs.writeFileSync(SECRET_FILE, b.toString('hex') + '\n', { mode: 0o600 }); } catch {}
+  return b;
+})();
 const sign = (job, askAt, text) => crypto.createHmac('sha256', SECRET).update(`${job}\n${askAt}\n${text}`).digest('hex');
 const HOSTS = new Set([`localhost:${PORT}`, `127.0.0.1:${PORT}`]);
 
