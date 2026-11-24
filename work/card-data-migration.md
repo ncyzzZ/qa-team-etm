@@ -17,7 +17,7 @@ Made 2026-11-24 by `qa-check spec` (gate G6: a test that writes data needs its c
 | ETM-6845 | 5 | verifyEquipmentMobPlanItem.spec.ts |
 | ETM-7898 | 4 | verifyShutdownLogicUsedResource.manual.spec.ts verifyShutdownLogicUsedResource.spec.ts |
 | ETM-7310 | 4 | verifyEquipmentMobPlanAddEquipment.security.spec.ts verifyEquipmentMobPlanAddEquipment.spec.ts |
-| ETM-8391 | 3 | verifyWorklistRemarkFilter.spec.ts |
+| ETM-8391 | 0 (moved 24 Nov: create: true, 8 own Plans) | verifyWorklistRemarkFilter.spec.ts |
 | ETM-8388 | 3 | verifyTablePaste.editPlan.spec.ts verifyTablePaste.timeline.spec.ts |
 | ETM-7984 | 3 | verifyShutdownTypeChange.spec.ts |
 | ETM-8394 | 2 | verifyImportWorkStatus.spec.ts |
