@@ -348,5 +348,44 @@
   "note": "answered (user said all BA questions were answered, 2026-11-19); whether the AC changed is not recorded",
   "later_defect": null,
   "backfilled": true
+ },
+ {
+  "id": "F-26",
+  "q": "26",
+  "ac": "AC-6.1",
+  "impact": "high",
+  "kind": "question",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "open",
+  "outcome_date": null,
+  "later_defect": null,
+  "note": "Edit Work Details has no Working Location field; Xray steps of TC-012/015/018/020 depend on the answer"
+ },
+ {
+  "id": "F-27",
+  "q": "27",
+  "ac": "AC-6.2",
+  "impact": "high",
+  "kind": "question",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "open",
+  "outcome_date": null,
+  "later_defect": null,
+  "note": "Import Excel rejects Helipad,helipad as duplicates; AC 6.2 says case variants are stored separately"
+ },
+ {
+  "id": "F-28",
+  "q": "28",
+  "ac": "AC-6.3",
+  "impact": "medium",
+  "kind": "question",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "open",
+  "outcome_date": null,
+  "later_defect": null,
+  "note": "Create Work Deck typed then blur without Enter; follow-up to Q16"
  }
 ]

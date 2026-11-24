@@ -38,3 +38,6 @@ Test cases are drafted (23). Only the points below are still waiting.
 8. (AC-8.2) In the same case the Daily Report Gantt shows Jan 2026 instead of the snapshot Ramp Down/Up range. Is that intended? — BA: not an issue while there is no work from the worklist.
 
 9. (AC-8.2, ETM-4127 AC 3) Old Daily Report without a snapshot (QA: Export 5000 / "Optimize Pass", event Planned Date 17 Jun 2026 10:00 - 15 Jul 2026 06:00): the Planned S-Curve on screen and in the PDF ends around 12 Apr 2027, the end of the last task, not on the event Planned end 15 Jul 2026. For a report made before ETM-8042, should the Planned S-Curve end on the event Planned end (15 Jul 2026) or on the last task end? Was this already the behaviour before the ETM-8042 release? — open
+
+## Raised during the QA run, 2026-11-23
+10. (AC-8.1, ETM-5492, AC 6 "no upper limit on the range") On a Plan with a 3-year Ramp Down/Up Date (15 Feb 2026 08:00 - 15 Feb 2029 20:15, QA event "QA S26 Ramp", Plan "Plan Scenario Long Name Plan Scenario Long Name 12"), the Shutdown Logic `Export` dialog shows `Excel File` disabled; only `PDF File` can be chosen. On a 10-day Plan (Plan Scenario A, 15 - 25 Feb 2026) `Excel File` is enabled. Is there a maximum timeframe for the Excel export (if yes, what is it, and should the user see a reason)? Or should Excel be available for any Ramp Down/Up range? — open

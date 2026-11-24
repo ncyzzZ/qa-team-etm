@@ -121,5 +121,18 @@
     "outcome_date": null,
     "note": "Old report (Export 5000) Planned S-Curve ends ~12 Apr 2027 (last task) instead of the event Planned end 15 Jul 2026; ETM-8849 step 5 kept by eye until BA answers.",
     "later_defect": null
+  },
+  {
+    "id": "F-10",
+    "q": "10",
+    "ac": "AC-8.1",
+    "kind": "question",
+    "impact": "medium",
+    "raised": "2026-11-23",
+    "story_status": "Deployed to QA",
+    "outcome": "open",
+    "outcome_date": null,
+    "note": "Export Shutdown Logic: Excel File disabled on the 3-year Plan (15 Feb 2026 - 15 Feb 2029); enabled on Plan A (10 days). ETM-8846 Excel step waits on it (Q-5).",
+    "later_defect": null
   }
 ]

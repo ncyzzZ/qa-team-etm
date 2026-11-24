@@ -38,7 +38,7 @@
   "outcome": "ac-changed",
   "outcome_date": "2026-11-18",
   "note": "Story description changed 2026-11-18: Progress Summary Total row has no color: default white background, black font, also at 100%. (checked against the Jira changelog 2026-11-19)",
-  "later_defect": null,
+  "later_defect": "ETM-8891",
   "backfilled": true
  },
  {
