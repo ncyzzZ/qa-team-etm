@@ -17,6 +17,18 @@ ETM QA work means: a card key such as ETM-1234, "เริ่มเขียน 
 6. Save tokens: start with one card, run Playwright with `--reporter=line`, never read screenshots, let `tools/run-card.mjs` (or the reporter, only if the report is missing) build the evidence from files, use Figma only when needed.
 7. Reply in Thai, short.
 
+## Team rules from the lead (apply on every card)
+
+These came from corrections by the QA lead. They are here so everyone who pulls the repo gets the same rules.
+
+- **Skipped is never PASSED.** A test whose latest Playwright result is `skipped` (fixme, partial, Not proven, anything) never gets PASSED in Xray, not even with a "checked by hand" comment. Before any Xray status push compare with `work/<KEY>/run-results.json`; a skipped test stays TO DO or goes to the user as manual. Ask before changing a status already pushed.
+- **Test data must be reachable from the UI.** Never seed or report values the screen cannot make (e.g. a Remark with leading/trailing spaces or spaces only). Before seeding or writing a defect, check each value can be entered on the screen (or through a real import/API path the BA confirms). Re-prove a defect with UI-made data before logging it; tests that need non-UI data are marked "data not reachable from UI" and go to the BA, not to a defect.
+- **Only two roles on QA: TM and JO.** TM (Turnaround Manager) can do everything and has "View All Daily Report Item"; JO (Job Owner) is view only, has "View Active Daily Report Item", and cannot open a plan that is not Active. There is no third account: do not ask for one. Only one Plan per event can be Active; turning one on sets the old one Inactive and affects other testers, so ask first.
+- **Shutdown Logic: collapse the histogram first.** Before testing the Shutdown Logic page (scripts and manual runs) collapse the Manpower Resource histogram (button `aria-label="Hide histogram"` inside `data-testid="sl-splitter-horizontal"`, shown on hover). It is not remembered: collapse it after every load or reload. Open it only for steps that need it. In specs put it in the page-ready helper; in manual-steps files write it in the intro.
+- **Questions for the BA** are English, saved as `work/<KEY>/questions-for-BA.md` and sent as a file; chat replies stay short Thai.
+- **Retest passed:** embed the evidence pictures in the "Retest: Passed" comment on the Defect itself, not only in Xray (details in `log-defect-jira-etm`).
+- New rule from the lead: add it here (or to the skill it belongs to) and commit, so the team gets it on `git pull`. Not only in personal memory.
+
 ## Settings (for every ETM QA task)
 
 - `JIRA_SITE`: pttep.atlassian.net. `PROJECT_KEY`: ETM (project id 14436). `BOARD_ID`: 4014.
