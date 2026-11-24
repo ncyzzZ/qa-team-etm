@@ -1,77 +1,77 @@
 {
- "card": "ETM-8392",
- "date": "2026-11-19",
- "verdict": "not-ready",
- "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
- "ac": [
-  {
-   "id": "AC-1.1",
-   "rule": "lines at snapshot date and time",
-   "tests": [
-    "ETM-8675",
-    "ETM-8798"
-   ],
-   "rating": "blocked",
-   "why": "ETM8392_RAMP_* empty"
-  },
-  {
-   "id": "AC-1.2",
-   "rule": "same style as Shutdown Logic",
-   "tests": [
-    "ETM-8679",
-    "ETM-8799"
-   ],
-   "rating": "blocked",
-   "why": "env skip; dashed look only a note"
-  },
-  {
-   "id": "AC-1.3",
-   "rule": "exactly one of each",
-   "tests": [
-    "ETM-8680"
-   ],
-   "rating": "strong",
-   "why": "store count and chip count = 1"
-  },
-  {
-   "id": "AC-1.4",
-   "rule": "no lines on the S-Curve",
-   "tests": [
-    "ETM-8682"
-   ],
-   "rating": "strong",
-   "why": "0 line elements and no Ramp text"
-  },
-  {
-   "id": "AC-2",
-   "rule": "every execution date",
-   "tests": [
-    "ETM-8684",
-    "ETM-8686"
-   ],
-   "rating": "blocked",
-   "why": "needEnv skip"
-  },
-  {
-   "id": "AC-3",
-   "rule": "Ramp Up moves after extension",
-   "tests": [
-    "ETM-8688",
-    "ETM-8797"
-   ],
-   "rating": "blocked",
-   "why": "fixme, manual"
-  },
-  {
-   "id": "AC-4",
-   "rule": "PDF",
-   "tests": [
-    "ETM-8690",
-    "ETM-8692",
-    "ETM-8693"
-   ],
-   "rating": "blocked",
-   "why": "fixme, manual"
-  }
- ]
+  "card": "ETM-8392",
+  "date": "2026-11-24",
+  "verdict": "not-ready",
+  "note": "Re-rated 2026-11-24 after the re-run of 8675/8684/8686/8798 on Snap A / Snap D (snapshot differs from the Event). Earlier note: read-only review 2026-11-19.",
+  "ac": [
+    {
+      "id": "AC-1.1",
+      "rule": "lines at snapshot date and time",
+      "tests": [
+        "ETM-8675",
+        "ETM-8798"
+      ],
+      "rating": "strong",
+      "why": "Snap A snapshot (10 Jun 06:00 / 14 Jun 18:00) differs from the Event (08 Jun 18:00 / 16 Jun 07:00); line instant and share of day equal the snapshot; passed 2026-11-24_104153"
+    },
+    {
+      "id": "AC-1.2",
+      "rule": "same style as Shutdown Logic",
+      "tests": [
+        "ETM-8679",
+        "ETM-8799"
+      ],
+      "rating": "blocked",
+      "why": "env skip; dashed look only a note"
+    },
+    {
+      "id": "AC-1.3",
+      "rule": "exactly one of each",
+      "tests": [
+        "ETM-8680"
+      ],
+      "rating": "strong",
+      "why": "store count and chip count = 1"
+    },
+    {
+      "id": "AC-1.4",
+      "rule": "no lines on the S-Curve",
+      "tests": [
+        "ETM-8682"
+      ],
+      "rating": "strong",
+      "why": "0 line elements and no Ramp text"
+    },
+    {
+      "id": "AC-2",
+      "rule": "every execution date",
+      "tests": [
+        "ETM-8684",
+        "ETM-8686"
+      ],
+      "rating": "strong",
+      "why": "frozen day Snap D 12 Jun and not-frozen day Snap A 09 Jun, each line at its own snapshot (differs from the Event); passed 2026-11-24_104153 / _104447"
+    },
+    {
+      "id": "AC-3",
+      "rule": "Extension does not move the lines (DEC-062, 20 Nov 2026)",
+      "tests": [
+        "ETM-8688",
+        "ETM-8797"
+      ],
+      "rating": "blocked",
+      "why": "fixme, manual (Extension cannot be undone)"
+    },
+    {
+      "id": "AC-4",
+      "rule": "PDF",
+      "tests": [
+        "ETM-8690",
+        "ETM-8692",
+        "ETM-8693"
+      ],
+      "rating": "blocked",
+      "why": "fixme, manual"
+    }
+  ]
 }
