@@ -323,16 +323,55 @@ function dress(c, a) {
     x.restore();
   }
 }
+// polish every sprite: the black outer outline becomes a dark shade of the colour it wraps (softer, like hand-made pixel art),
+// and the edges get light from the top left (the windows) and shade on the bottom right, so the figures look rounder
+function polish(c) {
+  const x = c.getContext('2d'), W2 = c.width, H2 = c.height, d = x.getImageData(0, 0, W2, H2), p = d.data, src = new Uint8ClampedArray(p);
+  const idx = (px, py) => (py * W2 + px) * 4, cell = (px, py) => (px >> 4) + ',' + (py >> 5);
+  const op = (px, py, ox, oy) => px >= 0 && py >= 0 && px < W2 && py < H2 && cell(px, py) === cell(ox, oy) && src[idx(px, py) + 3] > 0;
+  const dark = (i) => src[i] + src[i + 1] + src[i + 2] < 180;
+  const outer = new Uint8Array(W2 * H2);
+  for (let y = 0; y < H2; y++) for (let xx = 0; xx < W2; xx++) { const i = idx(xx, y); if (!src[i + 3] || !dark(i)) continue; if (!op(xx - 1, y, xx, y) || !op(xx + 1, y, xx, y) || !op(xx, y - 1, xx, y) || !op(xx, y + 1, xx, y)) outer[y * W2 + xx] = 1; }
+  for (let y = 0; y < H2; y++) for (let xx = 0; xx < W2; xx++) {
+    const i = idx(xx, y); if (!src[i + 3]) continue;
+    if (outer[y * W2 + xx]) {   // sel-out: a dark shade of the neighbouring fill
+      let r = 0, g = 0, b = 0, n = 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { if (!op(xx + dx, y + dy, xx, y)) continue; const j = idx(xx + dx, y + dy); if (dark(j)) continue; r += src[j]; g += src[j + 1]; b += src[j + 2]; n++; }
+      if (n) { p[i] = r / n * 0.42; p[i + 1] = g / n * 0.4; p[i + 2] = b / n * 0.46 + 8; }
+      continue;
+    }
+    if (dark(i)) continue;
+    const o = (dx, dy) => { const px = xx + dx, py = y + dy; return px >= 0 && py >= 0 && px < W2 && py < H2 && outer[py * W2 + px] && cell(px, py) === cell(xx, y); };
+    const shadeSide = o(1, 0) || o(0, 1), lightSide = o(-1, 0) || o(0, -1);
+    const k = shadeSide && !lightSide ? 0.86 : lightSide && !shadeSide ? 1.12 : 1;
+    if (k !== 1) { p[i] = Math.min(255, src[i] * k); p[i + 1] = Math.min(255, src[i + 1] * k); p[i + 2] = Math.min(255, src[i + 2] * k); }
+  }
+  x.putImageData(d, 0, 0);
+}
+// the cheeks under each eye in the front frames (found on the clean sprite, painted pink after the colour changes)
+function cheeks(c) {
+  const d = c.getContext('2d').getImageData(0, 0, 112, 32).data, out = [];
+  const px = (xx, y) => { const i = (y * 112 + xx) * 4; return [d[i], d[i + 1], d[i + 2], d[i + 3]]; };
+  for (let col = 0; col < 7; col++) for (let xx = col * 16 + 2; xx < col * 16 + 14; xx++) for (let y = 10; y < 22; y++) {
+    const [r, g, b, a] = px(xx, y); if (!a || r < 240 || g < 240 || b < 240) continue;
+    const [r2, g2, b2, a2] = px(xx, y + 1); if (a2 && r2 > 240 && g2 > 240 && b2 > 240) continue;   // the lowest white pixel of the eye
+    const [r3, g3, b3, a3] = px(xx, y + 2); if (a3 && r3 > g3 && g3 > b3 && r3 > 180) out.push([xx, y + 2]);
+  }
+  return out;
+}
 function bake(i) {
   const a = TEAM[i], src = IMG['ch' + a.ch];
   let c = document.createElement('canvas'); c.width = 112; c.height = 96;
   c.getContext('2d').drawImage(src, 0, 0);
+  const ck = cheeks(c);
   const hueShift = (k, deg) => { const d = document.createElement('canvas'); d.width = 112; d.height = 96; const x = d.getContext('2d'); x.filter = 'hue-rotate(' + deg + 'deg)'; x.drawImage(k, 0, 0); x.filter = 'none'; return d; };
   if (a.zombie) zombify(c, 8, 50, true);   // a zombie even with the switch off: grey-green skin, rotted dark clothes, his own hair
   else {
     if (ZOMBIE) zombify(c);
     if (a.hue) c = hueShift(c, a.hue);
   }
+  polish(c);
+  if (!a.zombie && !ZOMBIE) { const x = c.getContext('2d'); x.fillStyle = 'rgba(255,120,140,.55)'; for (const [cx, cy] of ck) x.fillRect(cx, cy, 1, 1); }   // a little blush
   dress(c, a);
   return c;
 }
@@ -641,6 +680,7 @@ const ROUNDS = [   // [x, y, look around here?]: only along the free lanes, like
 function bakeGuard() {   // a navy uniform (never a zombie), and where the top of his head is in each frame, for the cap
   const c = document.createElement('canvas'); c.width = 112; c.height = 96;
   const x = c.getContext('2d'); x.filter = 'saturate(1.1) brightness(0.85)'; x.drawImage(IMG.ch0, 0, 0); x.filter = 'none';   // ch0: blue jacket, white shirt, tie
+  polish(c);
   const p = x.getImageData(0, 0, 112, 96).data, op = (px, py) => p[(py * 112 + px) * 4 + 3] > 0, caps = {};
   for (let r = 0; r < 3; r++) for (let k = 0; k < 7; k++) {
     let top = -1, l = 16, rr = -1;
