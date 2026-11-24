@@ -462,7 +462,17 @@ function drawTree(x) {
     R(O, bx - 1, by - 1, 4, 4); R(c, bx, by, 2, 2); R('#FFFFFF', bx, by, 1, 1); }   // baubles
   // presents under the tree
   const box = (bx, by, w, h, c, rib) => { R(O, bx - 1, by - 1, w + 2, h + 2); R(c, bx, by, w, h); R(rib, bx + (w >> 1) - 1, by, 2, h); R(rib, bx, by + (h >> 1), w, 1); R(rib, bx + (w >> 1) - 2, by - 2, 2, 2); R(rib, bx + (w >> 1), by - 2, 2, 2); };
-  box(cx + 13, B - 9, 10, 8, '#D7263D', '#FFD23F'); box(cx + 24, B - 7, 7, 6, '#2E9E4F', '#F4F1E8'); box(cx - 16, B - 7, 7, 6, '#3F7FD9', '#FFD23F');
+  // a big pile: a back row, a front row, then smaller ones stacked on top (kept left of the walking lane at x 71)
+  x.fillStyle = 'rgba(30,15,0,.25)'; x.beginPath(); x.ellipse(32, B, 32, 3, 0, 0, 6.29); x.fill();
+  const dots = (bx, by, w, h, c) => { for (let yy = by + 1; yy < by + h - 1; yy += 3) for (let xx = bx + 1 + ((yy - by) % 2); xx < bx + w - 1; xx += 3) R(c, xx, yy, 1, 1); };
+  const P = (bx, by, w, h, c, rib, dot) => { if (dot) { R(O, bx - 1, by - 1, w + 2, h + 2); R(c, bx, by, w, h); dots(bx, by, w, h, dot); R(rib, bx + (w >> 1) - 1, by, 2, h); R(rib, bx, by + (h >> 1), w, 1); R(rib, bx + (w >> 1) - 2, by - 2, 2, 2); R(rib, bx + (w >> 1), by - 2, 2, 2); } else box(bx, by, w, h, c, rib); R('rgba(255,255,255,.25)', bx, by, w, 1); };
+  P(24, B - 20, 12, 10, '#7B3FB8', '#FFD23F', '#A77BE0'); P(1, B - 18, 10, 9, '#2E9E4F', '#D7263D');                       // back row
+  P(6, B - 11, 11, 10, '#D7263D', '#FFD23F', '#FF8A8A'); P(18, B - 9, 9, 8, '#F2A900', '#D7263D'); P(28, B - 13, 13, 12, '#3F7FD9', '#F4F1E8', '#8DB8F2');
+  P(42, B - 10, 10, 9, '#2E9E4F', '#FFD23F'); P(54, B - 8, 9, 7, '#C2307A', '#F4F1E8', '#F07AB4');                           // front row
+  P(31, B - 21, 8, 7, '#E53935', '#FFD23F'); P(44, B - 17, 7, 6, '#F4F1E8', '#D7263D', '#D7263D'); P(8, B - 18, 8, 6, '#3F7FD9', '#FFD23F');   // stacked on top
+  P(33, B - 27, 5, 5, '#FFD23F', '#D7263D');
+  for (let k = 0; k < 11; k++) R(k % 4 < 2 ? '#D7263D' : '#FFFFFF', 64, B - 12 + k, 2, 1);   // a candy cane leaning on the pile
+  R('#D7263D', 62, B - 14, 3, 2); R('#FFFFFF', 61, B - 13, 1, 2);
 }
 function drawFireplace(x) {
   const R = (c, x0, y0, w, h) => { x.fillStyle = c; x.fillRect(x0, y0, w, h); }, X = FP, O = '#1A0F0A';
