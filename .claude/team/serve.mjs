@@ -80,10 +80,17 @@ function reduce(want) {
       s.answer = null;
     } else if (e.type === 'answer') {
       if (s.ask && s.ask.at === e.askAt && e.sig === sign(k, e.askAt, e.text)) {
-        s.answer = { text: e.text, at: e.t, askAt: e.askAt, question: s.ask.text, kind: s.ask.kind };
+        s.answer = { text: e.text, at: e.t, askAt: e.askAt, question: s.ask.text, kind: s.ask.kind, read: false };
         s.ask = null;
         s.log.push({ t: e.t, agent: 'lead', state: 'info', text: 'ตอบจากบอร์ด: ' + e.text.replace(/\s+/g, ' ').slice(0, 120) });
       }
+    } else if (e.type === 'read') {
+      // `team.mjs wait` printed this board answer to the chat: the hook stops reminding about it
+      if (s.answer && s.answer.askAt === e.askAt) s.answer.read = true;
+    } else if (e.type === 'chat') {
+      // the user answered in the chat (`team.mjs answered`): close the open question on the board and show the answer in the log
+      if (s.ask) s.log.push({ t: e.t, agent: 'lead', state: 'info', text: 'ตอบในแชท: ' + String(e.text || '').replace(/\s+/g, ' ').slice(0, 120) });
+      s.ask = null; s.answer = null;
     } else if (e.type === 'link') {
       const i = s.links.findIndex((x) => x.target === e.target);
       const L = { label: e.label, kind: e.kind || 'other', target: e.target, t: e.t };
@@ -95,7 +102,7 @@ function reduce(want) {
     }
   }
   const list = [...jobs.entries()].map(([key, j]) => ({
-    key, ticket: j.ticket, startedAt: j.startedAt, ask: !!j.ask,
+    key, ticket: j.ticket, startedAt: j.startedAt, ask: !!j.ask, answered: !!(j.answer && !j.answer.read),
     active: Object.values(j.agents).filter((a) => a.state !== 'idle').length,
     state: jobState(j),
     ...phaseOf(key, ROOT_REPO), // card phase from .claude/team/work/<KEY>/state.json (read only)
