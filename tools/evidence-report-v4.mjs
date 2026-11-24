@@ -24,7 +24,7 @@ const TRIAGE = (() => { try { return args.includes('--triage') ? Object.fromEntr
 const CAUSE_TXT = { locator: 'locator พัง', flaky: 'ไม่เสถียร (ผ่านตอนรันซ้ำ)', data: 'ข้อมูลเทส', env: 'สภาพแวดล้อม', assertion: 'ค่าไม่ตรง (อาจเป็นบั๊ก)', unknown: 'ไม่ทราบสาเหตุ' };
 const REVIEW = (() => { try { return args.includes('--review') ? JSON.parse(fs.readFileSync(arg('--review'), 'utf8')) : {}; } catch (e) { console.error('Cannot read --review file: ' + e.message); return {}; } })();
 const VERDICT = { accepted: 'ยอมรับ (ไม่ถือว่าไม่ผ่าน)', defect: 'เป็น defect', 'tc-update': 'ต้องแก้ TC', script: 'สคริปต์ผิด', 'ba-pending': 'รอ BA ยืนยัน' };
-const NOTE = { 'app-finding': 'ระบบไม่ตรง AC (น่าจะเป็น defect)', 'tc-vs-ac': 'TC กับ AC/โค้ดไม่ตรงกัน', 'ba-confirm': 'ต้องถาม BA', partial: 'สคริปต์ตรวจได้ไม่ครบ - ดูรูปด้วยตา', 'check-by-eye': 'ต้องดูรูปด้วยตา', env: 'ปัญหาสภาพแวดล้อม (เช่น ไม่มีสิทธิ์)' };
+const NOTE = { 'app-finding': 'ระบบไม่ตรง AC (น่าจะเป็น defect)', 'tc-vs-ac': 'TC กับ AC/โค้ดไม่ตรงกัน', 'ba-confirm': 'ต้องถาม BA', partial: 'สคริปต์ตรวจได้ไม่ครบ - ดูรูปด้วยตา', 'check-by-eye': 'ต้องดูรูปด้วยตา', 'design-look': 'เทียบหน้าตากับ Figma ด้วยตา (รูปแอปคู่ Figma ใต้ step)', env: 'ปัญหาสภาพแวดล้อม (เช่น ไม่มีสิทธิ์)' };
 
 const missing = INPUTS.filter((p) => !fs.existsSync(p));
 if (missing.length) {

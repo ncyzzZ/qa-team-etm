@@ -4,6 +4,8 @@
 //   node .claude/team/team.mjs set <agent> <working|waiting|done|blocked|idle> "text" [--pct 0-100]
 //   node .claude/team/team.mjs ask "question for the user"
 //   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
+//   node .claude/team/team.mjs ask --later "a question that can wait"   (queued, not shown; urgent asks also pop a macOS notification)
+//   node .claude/team/team.mjs inbox [--send]   (list the queued questions; --send asks them all as ONE question)
 //   node .claude/team/team.mjs wait [--timeout <seconds>]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>;
 //        no time limit by default: run it once in the background right after `ask`)
 //   node .claude/team/team.mjs answers   (board answers nobody has read yet and questions still open, all jobs; silent when none; used by the UserPromptSubmit hook)
@@ -34,6 +36,14 @@ let JOB = process.env.TEAM_JOB || '';
 { const i = args.indexOf('--job'); if (i >= 0) { JOB = String(args[i + 1] || ''); args = args.filter((_, j) => j !== i && j !== i + 1); } }
 const text = (a) => a.join(' ').replace(/\s+/g, ' ').trim().slice(0, 300);
 const add = (ev) => fs.appendFileSync(EVENTS, JSON.stringify({ t: Date.now(), ...(JOB ? { job: JOB } : {}), ...ev }) + '\n');
+const INBOX = path.join(dir, 'inbox.jsonl');
+const readInbox = () => { try { return fs.readFileSync(INBOX, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)); } catch { return []; } };
+// Desktop notification for an urgent question (macOS only, local, nothing leaves the machine). TEAM_NOTIFY=0 turns it off.
+function notify(msg) {
+  if (process.platform !== 'darwin' || process.env.TEAM_NOTIFY === '0') return;
+  const esc = (v) => String(v).replace(/[\\"]/g, ' ').slice(0, 180);
+  try { spawnSync('osascript', ['-e', `display notification "${esc(msg)}" with title "QA board: คำถามรอคำตอบ" sound name "Glass"`], { timeout: 3000 }); } catch {}
+}
 
 async function serverUp() {
   try {
@@ -97,15 +107,37 @@ if (cmd === 'start') {
   }
   add({ type: 'set', agent, state, text: text(words), pct });
 } else if (cmd === 'ask') {
-  let kind = 'info', options = [];
+  let kind = 'info', options = [], later = false;
   const rest = [];
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--approve') kind = 'approve';
-    else if (args[i] === '--options') options = String(args[++i] || '').split('|').map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 4);
+    else if (args[i] === '--later') later = true;
+    else if (args[i] === '--options') { const raw = String(args[++i] || ''); options = raw.split(raw.includes('|') ? '|' : ',').map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 4); }   // "a|b|c", or "a,b,c" when no | is used
     else rest.push(args[i]);
   }
-  add({ type: 'ask', text: text(rest), kind, options });
-  add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติ (บอร์ดหรือแชท)' : 'รอคำตอบจากคุณ' });
+  if (later) {   // not urgent: queue it; `inbox --send` asks all queued questions in one go (TEAM.md "Questions to the user")
+    fs.appendFileSync(INBOX, JSON.stringify({ t: Date.now(), job: JOB || '', text: text(rest) }) + '\n');
+    console.log(`INBOX: queued (${readInbox().length} waiting). Send them together with: team.mjs inbox --send`);
+  } else {
+    add({ type: 'ask', text: text(rest), kind, options });
+    add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติ (บอร์ดหรือแชท)' : 'รอคำตอบจากคุณ' });
+    notify(`${JOB ? JOB + ': ' : ''}${text(rest)}`);
+  }
+} else if (cmd === 'inbox') {
+  const items = readInbox();
+  if (!args.includes('--send')) {
+    console.log(items.length ? items.map((x, i) => `${i + 1}. [${x.job || '-'}] ${x.text}`).join('\n') : 'INBOX: empty');
+  } else if (!items.length) console.log('INBOX: empty, nothing sent');
+  else {
+    JOB = JOB || items[0].job;
+    const q = `คำถามที่ไม่ด่วน ${items.length} ข้อ (ตอบทีเดียว เช่น 1=... 2=...): ` + items.map((x, i) => `${i + 1}) [${x.job || '-'}] ${x.text}`).join(' ');
+    add({ type: 'ask', text: q.slice(0, 2000), kind: 'info', options: [] });
+    add({ type: 'set', agent: 'lead', state: 'waiting', text: 'รอคำตอบชุดคำถาม' });
+    fs.writeFileSync(INBOX, '');
+    fs.appendFileSync(path.join(dir, 'inbox-sent.jsonl'), JSON.stringify({ t: Date.now(), job: JOB, items }) + '\n');
+    notify(`${items.length} คำถามรอคำตอบบนบอร์ด`);
+    console.log(`INBOX: sent ${items.length} questions as one question on ${JOB}`);
+  }
 } else if (cmd === 'wait') {
   // The answer is read from the board server, which only reports answers it received from the board page itself.
   // Exit 0 = answered (ANSWER: <text>), 3 = no answer in time, 4 = the question was closed another way (e.g. answered in chat).
@@ -129,19 +161,36 @@ if (cmd === 'start') {
     await new Promise((r) => setTimeout(r, poll));
   }
 } else if (cmd === 'answers') {
-  // Runs on every chat message (UserPromptSubmit hook). Silent when there is nothing, or the board is down.
+  // Runs on every chat message (UserPromptSubmit hook; the hook passes the message as JSON on stdin). Silent when there is nothing, or the board is down.
   // 1. board answers nobody has read yet: not an approval by itself, it tells the lead to run `wait --job <KEY>`, whose ANSWER: line is the approval.
-  // 2. questions still open on the board: if this chat message answers one, the lead closes it with `answered`, so board and chat agree.
+  // 2. a chat message that is one of the answer buttons of the one open question that has it: the question is closed on the board at once
+  //    (the chat message itself is the user's answer; this only keeps the board in step).
+  // 3. other questions still open: the lead is told to close them with `answered` if the message answers one.
   const get = async (q) => { try { return await (await fetch(URL_BASE + '/state' + q, { signal: AbortSignal.timeout(1500) })).json(); } catch { return null; } };
+  let prompt = '';
+  if (!process.stdin.isTTY) {
+    prompt = await new Promise((res) => { let d = ''; const t = setTimeout(() => res(d), 700); process.stdin.on('data', (c) => { d += c; }); process.stdin.on('end', () => { clearTimeout(t); res(d); }); process.stdin.on('error', () => res('')); });
+    try { prompt = String(JSON.parse(prompt).prompt || ''); } catch { prompt = ''; }
+  }
+  const norm = (v) => String(v).replace(/\s+/g, ' ').trim().toLowerCase();
+  const msg = norm(prompt);
   const all = await get('');
   const jobs = all?.jobs || [], lines = [], open = [];
   for (const j of jobs.filter((x) => x.answered || x.ask)) {
     const k = j.key || j.ticket, s = await get('?job=' + encodeURIComponent(k));
     if (s?.answer && !s.answer.read) lines.push(`${k}: the user answered on the board "${String(s.answer.text).slice(0, 200)}" to "${String(s.answer.question || '').slice(0, 120)}". Read it with: node .claude/team/team.mjs wait --job ${k}`);
-    else if (s?.ask) open.push(`${k}: "${String(s.ask.text || '').slice(0, 160)}"${s.ask.options?.length ? ' (options: ' + s.ask.options.join(' | ') + ')' : ''}`);
+    else if (s?.ask) open.push({ k, ask: s.ask, hit: msg.length >= 2 && (s.ask.options || []).some((o) => { const n = norm(o); return n && (msg === n || msg.startsWith(n) || (n.startsWith(msg) && msg.length >= 4)); }) });
   }
+  const hits = open.filter((o) => o.hit), closed = [];
+  if (hits.length === 1) {   // only when it is clear which question the message answers
+    JOB = hits[0].k; add({ type: 'chat', text: prompt.replace(/\s+/g, ' ').trim().slice(0, 300) }); add({ type: 'set', agent: 'lead', state: 'working', text: 'ได้คำตอบจากแชท' });
+    closed.push(hits[0].k);
+  }
+  const rest = open.filter((o) => !closed.includes(o.k));
   if (lines.length) console.log('BOARD ANSWERS NOT READ YET:\n' + lines.join('\n'));
-  if (open.length) console.log('BOARD QUESTIONS STILL OPEN (if the user\'s message answers one, close it on the board with: node .claude/team/team.mjs answered --job <KEY> "<their answer>"):\n' + open.join('\n'));
+  if (closed.length) console.log(`BOARD QUESTION CLOSED: the user's message matches an answer button of ${closed[0]}, so the board question was closed (chat answer logged). Nothing more to do on the board for it.`);
+  if (rest.length) console.log('ACTION NEEDED - BOARD QUESTIONS STILL OPEN. If the user\'s message answers one of these, run the command shown for it right away, or the board keeps showing the question:\n'
+    + rest.map((o) => `${o.k}: "${String(o.ask.text || '').slice(0, 160)}"${o.ask.options?.length ? ' (buttons: ' + o.ask.options.join(' | ') + ')' : ''}\n  -> node .claude/team/team.mjs answered --job ${o.k} "<the user's answer>"`).join('\n'));
 } else if (cmd === 'answered') {
   // The user answered the open question in the chat: close it on the board, show the answer in the log, and end the background `wait` (CLOSED).
   const t = text(args);

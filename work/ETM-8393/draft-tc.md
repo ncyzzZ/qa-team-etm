@@ -1,11 +1,11 @@
 # ETM-8393 Draft test cases
 
-Story: ETM-8393 [Improvement] Shutdown Logic - Capacity and Consumption Tooltip on Manpower Histogram
+Story: ETM-8393 [Improvement] Shutdown Logic - Capacity and Used Resource Tooltip on Manpower Histogram
 Source: story.md, analyst.md (incl. BA answers of 18 Nov 2026), inspector.md (Figma 83:858533), docs/modules/shutdown-logic.md. Figma and Jira were not called.
 Existing [QA] subtasks: ETM-8562 [QA] Create Test Case Manual Test, ETM-8563 [QA] Execute Test Case Manual Test.
 Common precondition: logged in as a user with permission View All Shutdown Logic Item or View Active Shutdown Logic Item; the Shutdown Logic page of a plan is open and the Manpower Resource histogram (table left, chart right) shows at least one resource row with a bar, and at least one row where the Used Resource value changes along the plan. Build with the tooltip is not yet available (Q5).
 Notation: `->` separates the action from the expected result. Priority comes from damage if it breaks (the Story has no priority).
-Wording: the second tooltip value is called `Used Resource` (BA answer; the Story AC says Consumption). The tooltip has no date, no unit, whole numbers only, no decimals (BA answer).
+Wording: the second tooltip value is called `Used Resource` (BA answer; Story AC 2 and title changed to Used Resource on 24 Nov, DEC-083). The tooltip has no date, no unit, whole numbers only, no decimals (BA answer).
 Sample data: none from the sources for this feature. Cases use "record the current value, then compare" so they do not age.
 
 ## Think like the user
@@ -134,7 +134,7 @@ Priority: Medium
 2. Move the mouse out of the chart quickly. -> No card remains on the page.
 3. Hover over a bar and scroll the page with the mouse wheel. -> The card is hidden or shows the bar that is now under the pointer; it is not left showing a bar that is no longer under the pointer.
 4. Hover over a bar. -> The card appears.
-5. Click the `Expand Work Header` checkbox in the toolbar. -> The checkbox is ticked and the card disappears.
+5. Open `Custom View` and click `Collapse all Work Header` (Expand/Collapse by Data Level). -> The Work Header rows are collapsed and the card disappears. (changed 24 Nov: the toolbar `Expand Work Header` checkbox no longer exists; Xray updated)
 6. Look at the page. -> No card remains on the page.
 7. Hover over a bar again. -> The card appears normally.
 

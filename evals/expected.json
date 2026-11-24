@@ -6,6 +6,7 @@
   {"name": "coverage table shows no gap for a good draft", "args": ["coverage", "evals/draft-good.md", "--analyst", "evals/analyst-good.md"], "errors": -1, "contains": "2 AC, 2 covered, 0 gap(s)"},
   {"name": "bad draft (no Expected Result, refer to Figma, same as TC, no label, no Trace)", "args": ["draft", "evals/draft-bad.md"], "errors": 9},
   {"name": "good spec", "args": ["spec", "evals/spec-good.spec.ts"], "errors": 0},
+  {"name": "writes: @readonly test that clicks Save, and a write with no card data file", "args": ["spec", "evals/writes-repo/tests/spec-writes.spec.ts"], "errors": 2, "contains": "tagged @readonly but looks like it writes"},
   {"name": "bad spec (only, pause, timeout, credential, no steps, no key)", "args": ["spec", "evals/spec-bad.spec.ts"], "errors": 7},
   {"name": "ac-strength: weak without tests, ready with an AC that has none", "args": ["strength", "evals/strength-bad.json"], "errors": 2},
   {"name": "ac-strength: AC proven only when strong and every test passed in the last run", "args": ["strength", "evals/strength-proven/ac-strength.json"], "errors": 0, "contains": "AC proven 1/4"},

@@ -1,7 +1,7 @@
 # ETM-8392 manual steps: ETM-8690, ETM-8692 (Export PDF, Focus Timeframe)
 
 Test Execution: ETM-8825. Environment: QA only (https://stms-qa.apps.pttep.com). One screenshot per step (Xray needs a picture per step); for a PDF step, screenshot the PDF page with the Gantt.
-Replaces the 8690 / 8692 part of `manual-steps-pdf-8690-8692-8693.md` (that file had no data where both lines fit in one Focus window).
+Replaces `old-steps-pdf-8690-8692-8693.md` (8690, 8692 and, since 24 Nov 2026, 8693) (that file had no data where both lines fit in one Focus window).
 Log in as Turnaround Manager. Checked on QA in Chrome 24 Nov 2026 (export panel opened and cancelled, nothing exported).
 
 ## What the app does (checked)
@@ -24,6 +24,7 @@ Do 8690 before 8797: 8797 changes Snap C (Extend, Delete Extended Days). Exporti
 | Snap C 12 Jun | 11-14 Jun | inside (11 Jun, first day = edge) | inside (13 Jun) | 8690 steps 1-5 |
 | Snap C 14 Jun | 13-16 Jun | outside | inside, on the first day (D-1 edge) | 8690 steps 6-8 |
 | Snap C 11 Jun | 10-13 Jun | inside | inside, on the last day (D+2 edge) | 8690 steps 6-8 (second edge) |
+| Snap C 10 Jun | 09-12 Jun | inside (11 Jun) | outside (after D+2) | 8693 |
 | Snap C 17 Jun | 16-19 Jun | outside (before D-1) | outside (before D-1) | 8692 steps 1-4 |
 | ART For PSD 05 Jun | 04-07 Jun | outside (after D+2) | outside (after D+2) | 8692 steps 5-6 |
 
@@ -53,3 +54,15 @@ writes data: no
 
 ## Note on the test wording
 The Xray steps say "A PDF file is downloaded". With `Daily Plan` the app downloads a ZIP of PDFs (one per frozen day). If you agree, the expected results can be changed to "a ZIP with one PDF per frozen day is downloaded" after the run (Xray write, ask first).
+
+## ETM-8693 - only the line inside the Focus Timeframe is shown (4 steps)
+writes data: no
+Uses the Snap C ZIP from 8690 (same export). Day D = **10 Jun 2026** (frozen), Focus window 09 Jun 00:00 → 12 Jun 23:59: Ramp Down 11 Jun 08:00 inside, Ramp Up 13 Jun 20:00 outside.
+| # | Do | Expected | Picture |
+|---|---|---|---|
+| 1 | Open the Snap C Daily Report on **10 Jun 2026** (Snap C URL above with `?date=2026-06-10`) | header `10 Jun 2026`, button `Unfreeze`, `Export` enabled | header |
+| 2 | `Export` → `Daily Plan` → `Focus Timeframe` → `Export` (or reuse the ZIP from 8690) and open the PDF of **10 Jun 2026** | ZIP downloaded; PDF of 10 Jun opens, Gantt scale 09 Jun → 12 Jun | export panel / PDF Gantt page |
+| 3 | Look for `Ramp Down` | one `Ramp Down` line on 11 Jun 2026, about 1/3 into the day | zoom on the line |
+| 4 | Look for `Ramp Up` | no `Ramp Up` line (13 Jun is after 12 Jun) | whole Gantt page |
+
+Pass: step 3 shows one Ramp Down line, step 4 none. Fail: Ramp Up shown, or no / two Ramp Down lines.

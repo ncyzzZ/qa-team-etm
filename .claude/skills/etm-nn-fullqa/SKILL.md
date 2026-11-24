@@ -52,7 +52,7 @@ Never wiki markup: `**bold**`, `### Heading` (never `h2.` or a bold pseudo-headi
 
 ## 7. Execution
 
-Needs the Story at "Ready for QA" on the board (`BOARD_ID`); even then ask "ready to test?" first. Run Tests with Playwright through `tools/run-card.mjs` (see `TEAM.md`; browser only if the user asks), compare actual vs Expected, evidence for every step (BEFORE and AFTER for every data-changing Test), write results to Xray. On a FAILED step follow section 8, do not continue silently. Manual Tests are left to the user; import their results when the user sends them.
+Needs the Story at "Ready for QA" on the board (`BOARD_ID`). Runs follow the standing run approval in `TEAM.md` (`tools/run-policy.mjs`: `auto` runs without asking, `ask` asks "ready to test?"). Run Tests with Playwright through `tools/run-card.mjs` (see `TEAM.md`; browser only if the user asks), compare actual vs Expected, evidence for every step (BEFORE and AFTER for every data-changing Test), write results to Xray. On a FAILED step follow section 8, do not continue silently. Manual Tests are left to the user; import their results when the user sends them.
 
 ## 8. Defects, bugs and retests
 
@@ -84,7 +84,7 @@ Whenever live behaviour contradicts a Test's wording and the user confirms the r
 ## Standing rules
 
 - Ask the user whenever anything is unclear.
-- Never execute, log a defect, retest, or push to Xray without the user's explicit go-ahead, even when every gate has passed.
+- Never log a defect, retest, or push to Xray without the user's explicit go-ahead, even when every gate has passed (Xray results: one push per card from `tools/push-plan.mjs`). Test runs: standing run approval in `TEAM.md` (`run-policy` auto runs, ask asks).
 - Never create Jira subtasks or write anything before the workflow checkpoints (quick-scan review, TC-detail review, Xray approval) were offered.
 - Never create `.xlsx` or `.csv` test case files.
 - Every Jira description is Markdown. Every Test Execution has Test Environment = QA. Every Test-to-Story link has Test as inward and Story as outward and is verified with `linkedIssues(...)`.
