@@ -1,54 +1,36 @@
 {
- "card": "ETM-8393",
- "date": "2026-11-19",
- "verdict": "not-ready",
- "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
- "ac": [
-  {
-   "id": "AC-1",
-   "rule": "show and hide on hover",
-   "tests": [
-    "ETM-8810",
-    "ETM-8818",
-    "ETM-8819"
-   ],
-   "rating": "blocked",
-   "why": "tooltip ETM-8534 not in the build"
-  },
-  {
-   "id": "AC-2",
-   "rule": "Capacity and Consumption values and icons",
-   "tests": [
-    "ETM-8811",
-    "ETM-8812",
-    "ETM-8813",
-    "ETM-8814",
-    "ETM-8823"
-   ],
-   "rating": "blocked",
-   "why": "fixme"
-  },
-  {
-   "id": "AC-3",
-   "rule": "one tooltip per same-height section",
-   "tests": [
-    "ETM-8815",
-    "ETM-8817",
-    "ETM-8824",
-    "ETM-8826",
-    "ETM-8827"
-   ],
-   "rating": "blocked",
-   "why": "fixme"
-  },
-  {
-   "id": "AC-4",
-   "rule": "no Works list",
-   "tests": [
-    "ETM-8811"
-   ],
-   "rating": "blocked",
-   "why": "fixme"
-  }
- ]
+  "card": "ETM-8393",
+  "date": "2026-11-24",
+  "verdict": "partly",
+  "note": "Re-rated 2026-11-24 from spec verifyShutdownLogicHistogramTooltip.spec.ts + etm8393/histogramTooltip.helpers.ts and run-results.json (8 passed, 7 skipped not-proven). AC 2 label is Used Resource (BA R3-1).",
+  "ac": [
+    {
+      "id": "AC-1",
+      "rule": "hover a bar shows the tooltip, moving away hides it",
+      "tests": ["ETM-8810", "ETM-8818", "ETM-8819", "ETM-8821"],
+      "rating": "strong",
+      "why": "8810 asserts card values on hover (expectTipOf) and expectNoTip (count 0) after leaving; 8818 no card over a gap; 8819 no stuck or double card after fast moves, scroll and toolbar; all passed"
+    },
+    {
+      "id": "AC-2",
+      "rule": "Capacity and Used Resource values, line icon and box icon red/green",
+      "tests": ["ETM-8811", "ETM-8812", "ETM-8813", "ETM-8814", "ETM-8823", "ETM-8821"],
+      "rating": "weak",
+      "why": "Labels, whole numbers, values vs bar data, table Capacity and scale are asserted and passed (8811, 8812, 8821); box icon red/green (8813, 8814) and Capacity 0 outside Working Time (8823) end skipped not-proven: the QA plan has no red, green-at-capacity or off-shift bar"
+    },
+    {
+      "id": "AC-3",
+      "rule": "one tooltip per same-height section; a height change shows the next section's own values",
+      "tests": ["ETM-8815", "ETM-8817", "ETM-8824", "ETM-8826", "ETM-8827"],
+      "rating": "strong",
+      "why": "8815 (same numbers across one section) and 8817 (new Used Resource after a height change, bar height on scale, back to noted values) assert and passed; gap-split, capacity-only and both-change variants (8824, 8826, 8827) skipped not-proven, extra edge cases only"
+    },
+    {
+      "id": "AC-4",
+      "rule": "tooltip does not list the Works",
+      "tests": ["ETM-8811"],
+      "rating": "strong",
+      "why": "8811 asserts exactly two lines and the card text equals 'Capacity n Used Resource n' (spec line 143); passed"
+    }
+  ]
 }
