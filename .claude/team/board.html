@@ -252,7 +252,7 @@ TEAM.forEach((a) => {
 // ---- assets ----
 const IMG = {};
 const loadImg = (k, src) => new Promise(r => { const i = new Image(); i.onload = () => { IMG[k] = i; r(); }; i.onerror = () => r(); i.src = src; });
-const FURN = ['DESK/DESK_FRONT','PC/PC_FRONT_ON_1','PC/PC_FRONT_ON_2','PC/PC_FRONT_ON_3','PC/PC_FRONT_OFF','PC/PC_SIDE','WOODEN_CHAIR/WOODEN_CHAIR_SIDE','TABLE_FRONT/TABLE_FRONT','SOFA/SOFA_FRONT','SOFA/SOFA_BACK','SOFA/SOFA_SIDE','COFFEE_TABLE/COFFEE_TABLE','COFFEE/COFFEE','PLANT/PLANT','PLANT_2/PLANT_2','SMALL_PAINTING_2/SMALL_PAINTING_2','WOODEN_CHAIR/WOODEN_CHAIR_BACK','LARGE_PLANT/LARGE_PLANT','BOOKSHELF/BOOKSHELF','DOUBLE_BOOKSHELF/DOUBLE_BOOKSHELF','WHITEBOARD/WHITEBOARD','CLOCK/CLOCK','SMALL_PAINTING/SMALL_PAINTING','LARGE_PAINTING/LARGE_PAINTING'];
+const FURN = ['DESK/DESK_FRONT','PC/PC_FRONT_ON_1','PC/PC_FRONT_ON_2','PC/PC_FRONT_ON_3','PC/PC_FRONT_OFF','PC/PC_SIDE','WOODEN_CHAIR/WOODEN_CHAIR_SIDE','TABLE_FRONT/TABLE_FRONT','SOFA/SOFA_FRONT','SOFA/SOFA_BACK','SOFA/SOFA_SIDE','COFFEE_TABLE/COFFEE_TABLE','COFFEE/COFFEE','PLANT/PLANT','PLANT_2/PLANT_2','SMALL_PAINTING_2/SMALL_PAINTING_2','WOODEN_CHAIR/WOODEN_CHAIR_BACK','LARGE_PLANT/LARGE_PLANT','BOOKSHELF/BOOKSHELF','DOUBLE_BOOKSHELF/DOUBLE_BOOKSHELF','WHITEBOARD/WHITEBOARD','CLOCK/CLOCK','SMALL_PAINTING/SMALL_PAINTING','LARGE_PAINTING/LARGE_PAINTING','HANGING_PLANT/HANGING_PLANT','BIN/BIN'];
 const sheets = [];   // per team index: baked 112x96 canvas (hue-shifted when needed)
 let bg = null;
 let ZOMBIE = true; try { ZOMBIE = localStorage.getItem('ninas-zombie') !== '0'; } catch {}
@@ -280,53 +280,160 @@ function bake(i) {
   }
   return c;
 }
+// ---- time of day: the windows, the sunlight and the night lamps follow the clock (add ?hour=21 to the URL to try another hour) ----
+const HOUR_Q = new URLSearchParams(location.search).get('hour');
+const hourNow = () => { if (HOUR_Q !== null && HOUR_Q !== '' && !isNaN(+HOUR_Q)) return +HOUR_Q; const d = new Date(); return d.getHours() + d.getMinutes() / 60; };
+const phaseOf = (h) => h >= 7 && h < 16 ? 'day' : h >= 16 && h < 18.5 ? 'gold' : h >= 18.5 && h < 19.5 ? 'dusk' : h >= 5.5 && h < 7 ? 'dawn' : 'night';
+let PHASE = phaseOf(hourNow());
+const SKY = { day: ['#5DB7F5', '#BFE7FF'], gold: ['#F0875A', '#FFD58A'], dusk: ['#3E3486', '#E0729A'], dawn: ['#7C8BD9', '#FFC9A8'], night: ['#070C2A', '#1B2759'] };
+const CITY = { day: '#86A9C8', gold: '#9B5E66', dusk: '#2A2458', dawn: '#6A6FA8', night: '#10163A' };
+const DARK = { day: 0, gold: 0.1, dusk: 0.3, dawn: 0.22, night: 0.46 };   // how dark the room gets away from the lamps
+const SUN = { day: ['255,244,200', 0.16], gold: ['255,180,100', 0.2], dawn: ['255,205,170', 0.12] };   // the light through the windows on the floor
+const WINDOWS = [[8, 8, 40, 32], [162, 8, 40, 32], [274, 8, 40, 32]];   // x, y, w, h on the back wall
+const LAMP = { x: 277, y: 198 };   // the lounge floor lamp (its foot)
+const LIGHTS = [[74, 96, 58], [186, 100, 56], [131, 176, 70], [131, 262, 70], [LAMP.x, 160, 64], [294, 248, 34], [POST_X(), 140, 30]];   // pools of lamp light at night: x, y, radius
+function POST_X() { return WALL_X - 12; }
+let srs = 1; const srand = () => (srs = (srs * 16807) % 2147483647) / 2147483647;   // seeded, so the floor looks the same on every rebuild
+const shade = (hex, d) => '#' + [1, 3, 5].map((i) => Math.max(0, Math.min(255, parseInt(hex.slice(i, i + 2), 16) + Math.round(d))).toString(16).padStart(2, '0')).join('');
+
+function drawWindow(x, wx, wy, ww, wh) {
+  const R = (c, x0, y0, w, h) => { x.fillStyle = c; x.fillRect(x0, y0, w, h); };
+  R('#5C4630', wx - 3, wy - 3, ww + 6, wh + 6); R('#F4EDE0', wx - 2, wy - 2, ww + 4, wh + 4);   // outline and the white frame
+  const g = x.createLinearGradient(0, wy, 0, wy + wh); g.addColorStop(0, SKY[PHASE][0]); g.addColorStop(1, SKY[PHASE][1]);
+  x.fillStyle = g; x.fillRect(wx, wy, ww, wh);
+  srs = wx * 31 + 7;
+  if (PHASE === 'night') { for (let k = 0; k < 10; k++) R(srand() < 0.3 ? '#FFF6C8' : '#AFC0FF', wx + Math.floor(srand() * ww), wy + Math.floor(srand() * wh * 0.55), 1, 1); if (wx > 200) { R('#FFF6C8', wx + ww - 12, wy + 4, 5, 5); R(SKY.night[0], wx + ww - 10, wy + 3, 4, 4); } }
+  else if (PHASE === 'day') { for (let k = 0; k < 2; k++) { const cx = wx + 3 + Math.floor(srand() * (ww - 16)), cy = wy + 4 + k * 8; R('#FFFFFF', cx, cy, 12, 3); R('#FFFFFF', cx + 3, cy - 2, 6, 2); R('#DDEFFF', cx, cy + 3, 12, 1); } }
+  else { R(PHASE === 'dusk' ? '#FFB88A' : '#FFE9A8', wx + ww / 2 - 4, wy + wh - 12, 8, 6); }   // the sun low on the skyline
+  for (let bx = wx; bx < wx + ww;) {   // the city skyline
+    const bw = 4 + Math.floor(srand() * 6), bh = 6 + Math.floor(srand() * 14), w2 = Math.min(bw, wx + ww - bx);
+    R(CITY[PHASE], bx, wy + wh - bh, w2, bh);
+    if (PHASE === 'night' || PHASE === 'dusk') for (let yy = wy + wh - bh + 2; yy < wy + wh - 1; yy += 3) for (let xx = bx + 1; xx < bx + w2 - 1; xx += 2) if (srand() < 0.35) R('#FFD86B', xx, yy, 1, 1);
+    bx += bw;
+  }
+  x.fillStyle = 'rgba(255,255,255,.22)'; for (let k = 0; k < 6; k++) x.fillRect(wx + 4 + k, wy + wh - 6 - k * 3, 2, 3);   // a glint on the glass
+  R('#F4EDE0', wx + ww / 2 - 1, wy, 2, wh); R('#F4EDE0', wx, wy + wh / 2 - 1, ww, 2);   // the window bars
+  R('#C9B48E', wx - 4, wy + wh + 2, ww + 8, 3); R('#F4EDE0', wx - 4, wy + wh + 2, ww + 8, 1);   // the sill
+  R('#D9C7A6', wx - 6, wy - 5, 5, wh + 8); R('#D9C7A6', wx + ww + 1, wy - 5, 5, wh + 8); R('#BFA983', wx - 3, wy - 5, 1, wh + 8); R('#BFA983', wx + ww + 3, wy - 5, 1, wh + 8);   // curtains
+  R('#8B6B45', wx - 7, wy - 6, ww + 14, 2);   // the curtain rod
+}
+
 function buildBackground() {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d'); x.imageSmoothingEnabled = false;
-  // wall: burlywood stripes alternating with light grey
-  for (let i = 0; i < W; i += 16) { x.fillStyle = i % 32 ? '#D3D3D3' : '#DEB887'; x.fillRect(i, 0, 16, 60); }
-  x.fillStyle = '#8F7650'; x.fillRect(0, 60, W, 4); x.fillStyle = '#B89B6E'; x.fillRect(0, 58, W, 2);
-  // floors: dark slate grey in the work room, medium purple in the lounge, a black and white checker strip along the bottom of the lounge.
-  // A floor tile is a grey picture: keep its pattern but give it the wanted colour (the pattern is softened so a pale floor stays pale).
+  const R = (col, x0, y0, w, h) => { x.fillStyle = col; x.fillRect(x0, y0, w, h); };
+  // back wall: cream wallpaper with a faint stripe, crown moulding on top, a wooden wainscot under a chair rail, a dark skirting board
+  R('#EFE3CC', 0, 0, W, 60);
+  for (let i = 0; i < W; i += 8) R('rgba(150,110,60,.07)', i, 3, 3, 40);
+  R('#C9B48E', 0, 0, W, 2); R('#A88B62', 0, 2, W, 1);
+  R('#8B5E3C', 0, 44, W, 14);
+  for (let i = 4; i < W; i += 24) { R('#7A5032', i, 47, 20, 9); R('#A0704A', i, 47, 20, 1); R('#A0704A', i, 47, 1, 9); R('#5E3D26', i, 55, 20, 1); }
+  R('#D4AE84', 0, 42, W, 2); R('#6B4529', 0, 44, W, 1);
+  R('#4A3020', 0, 58, W, 6); R('#6B4529', 0, 58, W, 1);
+  // floors: oak planks in the work room, a soft lavender tile in the lounge, the black and white checker strip along the bottom of the lounge
   const colorize = (img, hex) => {
     const k = document.createElement('canvas'); k.width = 16; k.height = 16; const kx = k.getContext('2d'); kx.drawImage(img, 0, 0);
     const d = kx.getImageData(0, 0, 16, 16), p = d.data, lum = [];
     for (let i = 0; i < p.length; i += 4) lum.push(0.3 * p[i] + 0.59 * p[i + 1] + 0.11 * p[i + 2]);
-    const base = lum.slice().sort((a, b) => a - b)[lum.length >> 1] || 1, R = parseInt(hex.slice(1, 3), 16), G = parseInt(hex.slice(3, 5), 16), B = parseInt(hex.slice(5, 7), 16);
-    for (let i = 0, j = 0; i < p.length; i += 4, j++) { const fct = 1 - (1 - lum[j] / base) * 0.45; p[i] = Math.min(255, R * fct); p[i + 1] = Math.min(255, G * fct); p[i + 2] = Math.min(255, B * fct); }
+    const base = lum.slice().sort((a, b) => a - b)[lum.length >> 1] || 1, Rr = parseInt(hex.slice(1, 3), 16), G = parseInt(hex.slice(3, 5), 16), B = parseInt(hex.slice(5, 7), 16);
+    for (let i = 0, j = 0; i < p.length; i += 4, j++) { const fct = 1 - (1 - lum[j] / base) * 0.35; p[i] = Math.min(255, Rr * fct); p[i + 1] = Math.min(255, G * fct); p[i + 2] = Math.min(255, B * fct); }
     kx.putImageData(d, 0, 0); return k;
   };
   const CHECK_Y = 280;
-  const tile = (img, col, x0, x1, y0, y1) => { if (!img) { x.fillStyle = col || '#888'; x.fillRect(x0, y0, x1 - x0, y1 - y0); return; } const k = col ? colorize(img, col) : img; for (let yy = y0; yy < y1; yy += 16) for (let xx = x0; xx < x1; xx += 16) x.drawImage(k, xx, yy); };
-  tile(IMG.floor, '#2F4F4F', 0, WALL_X, 64, H);
-  tile(IMG.floorBlue, '#9370DB', WALL_X, W, 64, CHECK_Y);
+  const tile = (img, col, x0, x1, y0, y1) => { if (!img) { R(col || '#888', x0, y0, x1 - x0, y1 - y0); return; } const k = col ? colorize(img, col) : img; for (let yy = y0; yy < y1; yy += 16) for (let xx = x0; xx < x1; xx += 16) x.drawImage(k, xx, yy); };
+  const planks = (x0, x1, y0, y1, base) => {
+    srs = 4242;
+    for (let y = y0; y < y1; y += 8) {
+      let xx = x0 - Math.floor(srand() * 40);
+      while (xx < x1) {
+        const len = 28 + Math.floor(srand() * 36), v = (srand() - 0.5) * 22, a0 = Math.max(xx, x0), a1 = Math.min(xx + len, x1);
+        R(shade(base, v), a0, y, a1 - a0, 8);
+        for (let g = 0; g < 3; g++) { const gx = xx + 2 + Math.floor(srand() * (len - 8)), gy = y + 2 + Math.floor(srand() * 4); if (gx >= x0 && gx + 5 <= x1) R(shade(base, v - 16), gx, gy, 5, 1); }
+        if (xx + len < x1) R(shade(base, -42), xx + len - 1, y, 1, 7);   // butt joint
+        xx += len;
+      }
+      R(shade(base, -36), x0, y + 7, x1 - x0, 1); R(shade(base, 14), x0, y, x1 - x0, 1);
+    }
+  };
+  planks(0, WALL_X, 64, H, '#B4825A');
+  tile(IMG.floorBlue, '#A99BCF', WALL_X, W, 64, CHECK_Y);
   tile(IMG.floorChk, null, WALL_X, W, CHECK_Y, H);
-  // partition wall with a doorway on the aisle
-  const WL = '#D3D3D3', WH = '#DEB887', WD = '#8F7650';
-  for (const [y0, y1] of [[60, DOOR_Y0], [DOOR_Y1, H]]) {
-    x.fillStyle = WD; x.fillRect(WALL_X, y0, 8, y1 - y0); x.fillStyle = WL; x.fillRect(WALL_X + 1, y0, 6, y1 - y0); x.fillStyle = WH; x.fillRect(WALL_X, y0, 1, y1 - y0);
-    x.fillStyle = WH; x.fillRect(WALL_X, y0 === 60 ? y1 - 3 : y0, 8, 3);   // door post caps
+  R('rgba(255,255,255,.06)', WALL_X, CHECK_Y, W - WALL_X, H - CHECK_Y);
+  // rugs: a runner under the big table, a patterned rug under the sofa corner
+  const rug = (x0, y0, w, h, edge, band, field, dot) => {
+    R(edge, x0, y0, w, h); R(band, x0 + 2, y0 + 2, w - 4, h - 4); R(edge, x0 + 4, y0 + 4, w - 8, h - 8); R(field, x0 + 5, y0 + 5, w - 10, h - 10);
+    for (let yy = y0 + 9; yy < y0 + h - 9; yy += 8) for (let xx = x0 + 9 + ((yy - y0) % 16 ? 4 : 0); xx < x0 + w - 9; xx += 8) { R(dot, xx, yy - 1, 1, 3); R(dot, xx - 1, yy, 3, 1); }
+    for (let xx = x0 + 1; xx < x0 + w - 1; xx += 2) { R('#EFE3CC', xx, y0 - 2, 1, 2); R('#EFE3CC', xx, y0 + h, 1, 2); }   // fringe
+  };
+  rug(80, 140, 102, 168, '#2C3E57', '#C9A27A', '#3E5C76', '#5B7A96');
+  rug(286, 152, 84, 80, '#5E1F2C', '#E8C07A', '#A8344A', '#D0606F');
+  // shadows: the back wall on the floor, the partition wall on the lounge floor, under every table and the sofas (the light comes from the windows, top left)
+  { const g = x.createLinearGradient(0, 64, 0, 76); g.addColorStop(0, 'rgba(40,20,0,.3)'); g.addColorStop(1, 'rgba(40,20,0,0)'); x.fillStyle = g; x.fillRect(0, 64, W, 12); }
+  { const g = x.createLinearGradient(WALL_X + 8, 0, WALL_X + 16, 0); g.addColorStop(0, 'rgba(40,20,0,.28)'); g.addColorStop(1, 'rgba(40,20,0,0)'); x.fillStyle = g; x.fillRect(WALL_X + 8, 64, 8, H - 64); }
+  for (const T of TABLES) { const h = T.side ? T.n * ROWH : 32; R('rgba(30,15,0,.22)', T.x + 3, T.y + h - 3, T.w, 5); R('rgba(30,15,0,.16)', T.x + T.w, T.y + 8, 4, h - 8); }
+  const blob = (cx, cy, rx, ry, a) => { x.fillStyle = 'rgba(30,15,0,' + a + ')'; x.beginPath(); x.ellipse(cx, cy, rx, ry, 0, 0, 6.29); x.fill(); };
+  blob(LX + 16, LY + 50, 30, 4, 0.2); blob(CFX + 18, CFY + 30, 18, 3, 0.2); blob(18, H - 3, 14, 3, 0.25); blob(WALL_X - 22, H - 3, 14, 3, 0.25);
+  // sunlight through the windows, falling on the floor in front of the wall
+  if (SUN[PHASE]) for (const [wx, , ww] of WINDOWS) {
+    const [rgb, a] = SUN[PHASE], g = x.createLinearGradient(0, 64, 0, 130); g.addColorStop(0, 'rgba(' + rgb + ',' + a + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
+    x.fillStyle = g; x.beginPath(); x.moveTo(wx, 64); x.lineTo(wx + ww, 64); x.lineTo(wx + ww + 26, 130); x.lineTo(wx + 26, 130); x.closePath(); x.fill();
   }
+  // partition wall with a doorway on the aisle
+  const WL = '#EFE3CC', WH = '#D4AE84', WD = '#6B4529';
+  for (const [y0, y1] of [[60, DOOR_Y0], [DOOR_Y1, H]]) {
+    R(WD, WALL_X, y0, 8, y1 - y0); R(WL, WALL_X + 1, y0, 6, y1 - y0); R(WH, WALL_X, y0, 1, y1 - y0); R('#D9CBB0', WALL_X + 6, y0, 1, y1 - y0);
+    R(WH, WALL_X, y0 === 60 ? y1 - 3 : y0, 8, 3);   // door post caps
+  }
+  // the windows, then the wall dressing around them
+  for (const [wx, wy, ww, wh] of WINDOWS) drawWindow(x, wx, wy, ww, wh);
   const put = (k, px, py) => { if (IMG[k]) x.drawImage(IMG[k], px, py); };
   const at = (k, px, bottom) => { if (IMG[k]) x.drawImage(IMG[k], px, bottom - IMG[k].height); };
-  // wall dressing: shelves and the clock above the work room, paintings above the lounge
-  put('BOOKSHELF', 10, 22); put('CLOCK', 60, 14); put('DOUBLE_BOOKSHELF', 180, 14); put('BOOKSHELF', 220, 22);
-  put('SMALL_PAINTING', 280, 18); put('LARGE_PAINTING', 311, 8); put('SMALL_PAINTING_2', 354, 18);
+  put('BOOKSHELF', 54, 22); put('CLOCK', 88, 12); put('DOUBLE_BOOKSHELF', 210, 14); put('HANGING_PLANT', 244, 0);
+  put('LARGE_PAINTING', 324, 8); put('SMALL_PAINTING_2', 362, 16);
   put('DOUBLE_BOOKSHELF', 306, 70);   // the reading corner at the top of the lounge
+  put('BIN', 102, 90);
   // floor decor
   at('LARGE_PLANT', 2, H - 2); at('LARGE_PLANT', WALL_X - 38, H - 2);
-  // the lounge: four sofas around a coffee table with a mug, a plant in each back corner, a coffee corner and the chicken's food bowl
+  // the lounge: four sofas around a coffee table with a mug, a plant in each back corner, a floor lamp, a coffee corner and the chicken's food bowl
   at('PLANT', WALL_X + 12, 100); at('PLANT_2', W - 20, 100);
   put('SOFA_FRONT', LX, LY - 16); put('SOFA_BACK', LX, LY + 32); put('SOFA_SIDE', LX - 16, LY);
   if (IMG.SOFA_SIDE) { x.save(); x.translate(LX + 32 + 16, LY); x.scale(-1, 1); x.drawImage(IMG.SOFA_SIDE, 0, 0); x.restore(); }
   put('COFFEE_TABLE', LX, LY); put('COFFEE', LX, LY + 8);
+  { const lx = LAMP.x, ly = LAMP.y, lit = PHASE !== 'day';   // floor lamp: round foot, thin pole, a cream shade that glows after dark
+    blob(lx, ly + 1, 6, 2, 0.25); R('#2B2B33', lx - 4, ly - 2, 9, 2); R('#3A3A44', lx, ly - 34, 1, 32);
+    R('#5C4630', lx - 7, ly - 44, 15, 1); R(lit ? '#FFE9A8' : '#F4E6C8', lx - 6, ly - 43, 13, 8); R(lit ? '#FFF6D6' : '#FFF8EA', lx - 5, ly - 43, 4, 8); R('#C9A86A', lx - 7, ly - 35, 15, 1); }
   put('COFFEE_TABLE', CFX, CFY);
-  { const mx = CFX + 10, my = CFY + 6, R = (col, x0, y0, w, h) => { x.fillStyle = col; x.fillRect(mx + x0, my + y0, w, h); };   // coffee machine: its base rests on the table top (rows 7-25 of the table picture)
-    R('#0B1022', -1, -1, 14, 16); R('#4A5280', 0, 0, 12, 14); R('#2A2F4A', 0, 0, 12, 3); R('#FF5A5A', 2, 1, 1, 1); R('#9BE3B5', 9, 1, 1, 1);
-    R('#C8D3F0', 4, 3, 4, 2); R('#14182C', 2, 5, 8, 6); R('#fff', 5, 8, 3, 3); R('#8B5A33', 5, 8, 3, 1); R('#C8D3F0', 1, 11, 10, 2); }
-  x.fillStyle = '#5A3A1E'; x.fillRect(BOWL.x, BOWL.y + 2, 9, 3); x.fillStyle = '#8B5A33'; x.fillRect(BOWL.x, BOWL.y + 1, 9, 2); x.fillStyle = '#E8C06A'; x.fillRect(BOWL.x + 1, BOWL.y, 7, 1);   // food bowl
+  { const mx = CFX + 10, my = CFY + 6, Q = (col, x0, y0, w, h) => R(col, mx + x0, my + y0, w, h);   // coffee machine: its base rests on the table top (rows 7-25 of the table picture)
+    Q('#0B1022', -1, -1, 14, 16); Q('#4A5280', 0, 0, 12, 14); Q('#2A2F4A', 0, 0, 12, 3); Q('#FF5A5A', 2, 1, 1, 1); Q('#9BE3B5', 9, 1, 1, 1);
+    Q('#C8D3F0', 4, 3, 4, 2); Q('#14182C', 2, 5, 8, 6); Q('#fff', 5, 8, 3, 3); Q('#8B5A33', 5, 8, 3, 1); Q('#C8D3F0', 1, 11, 10, 2); }
+  R('#5A3A1E', BOWL.x, BOWL.y + 2, 9, 3); R('#8B5A33', BOWL.x, BOWL.y + 1, 9, 2); R('#E8C06A', BOWL.x + 1, BOWL.y, 7, 1);   // food bowl
   return c;
 }
+
+// lights over everything after dark: the room dims, lamp pools stay bright; plus a soft vignette at every hour
+let lightCv = null;
+function buildLight() {
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  const d = DARK[PHASE];
+  if (d > 0) {
+    x.fillStyle = 'rgba(14,18,52,' + d + ')'; x.fillRect(0, 0, W, H);
+    x.globalCompositeOperation = 'destination-out';
+    for (const [lx, ly, r] of LIGHTS) { const g = x.createRadialGradient(lx, ly, 0, lx, ly, r); g.addColorStop(0, 'rgba(0,0,0,.92)'); g.addColorStop(0.6, 'rgba(0,0,0,.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(lx - r, ly - r, 2 * r, 2 * r); }
+    x.globalCompositeOperation = 'source-over';
+    for (const [lx, ly, r] of LIGHTS) { const g = x.createRadialGradient(lx, ly, 0, lx, ly, r * 0.8); g.addColorStop(0, 'rgba(255,214,140,' + (d * 0.3) + ')'); g.addColorStop(1, 'rgba(255,214,140,0)'); x.fillStyle = g; x.fillRect(lx - r, ly - r, 2 * r, 2 * r); }
+  }
+  const v = x.createRadialGradient(W / 2, H / 2, H * 0.45, W / 2, H / 2, W * 0.72); v.addColorStop(0, 'rgba(10,8,30,0)'); v.addColorStop(1, 'rgba(10,8,30,.32)');
+  x.fillStyle = v; x.fillRect(0, 0, W, H);
+  return c;
+}
+const glowCache = {};
+function glowSprite(col) {   // a soft round glow in the screen's colour
+  if (glowCache[col]) return glowCache[col];
+  const c = document.createElement('canvas'); c.width = 28; c.height = 28; const x = c.getContext('2d');
+  const g = x.createRadialGradient(14, 14, 0, 14, 14, 14); g.addColorStop(0, col + 'AA'); g.addColorStop(1, col + '00'); x.fillStyle = g; x.fillRect(0, 0, 28, 28);
+  return (glowCache[col] = c);
+}
+function refreshScene() { const p = phaseOf(hourNow()); if (p === PHASE && bg) return; PHASE = p; bg = buildBackground(); lightCv = buildLight(); }
 
 // ---- drawing ----
 const cv = el('cv'), ctx = cv.getContext('2d');
@@ -395,6 +502,9 @@ const LED = { idle:'#7A6CFF', working:'#3DDC84', waiting:'#F25C9C', done:'#9BE3B
 function draw(t) {
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(bg, 0, 0);
+  ctx.fillStyle = 'rgba(30,15,0,.28)';   // a soft shadow under everyone on the floor
+  for (const a of [...TEAM, guard]) { if (a.guard && !a.sheet) continue; ctx.beginPath(); ctx.ellipse(Math.round(a.x) + 8, Math.round(a.y) + 31, 5, 1.6, 0, 0, 6.29); ctx.fill(); }
+  if (hen.on) { ctx.beginPath(); ctx.ellipse(Math.round(hen.x) + 5, Math.round(hen.y) + 9, 4, 1.2, 0, 0, 6.29); ctx.fill(); }
   const items = [];
   for (const T of TABLES) items.push(T.side ? { z: T.y + 11, f: () => drawSideTable(T) } : { z: T.y + 31.9, f: () => drawTable(T) });
   TEAM.forEach((a, i) => {
@@ -442,6 +552,14 @@ function draw(t) {
     ctx.restore();
   } });
   items.sort((p, q) => p.z - q.z).forEach(o => o.f());
+  if (lightCv) ctx.drawImage(lightCv, 0, 0);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = PHASE === 'day' ? 0.35 : 0.7;   // screens glow on the faces in front of them
+  for (const a of TEAM) {
+    if (a.state === 'blocked') continue;
+    const gx = a.side === 'N' ? a.cx : a.pcX + (a.side === 'R' ? 8 : 7), gy = a.side === 'N' ? a.deskY + 2 : a.seatY + 6;
+    ctx.drawImage(glowSprite(SCREEN[a.state]), gx - 14, gy - 14);
+  }
+  ctx.restore();
 }
 
 // ---- movement + handoff ----
@@ -915,7 +1033,7 @@ async function poll() {
   await Promise.all(jobs);
   TEAM.forEach((a, i) => { sheets[i] = bake(i); });
   if (IMG.ch0) { bakeGuard(); guardLoop(); }
-  bg = buildBackground();
+  refreshScene(); setInterval(refreshScene, 30000);
   buildPanels(); buildOverlay(); layout();
   TEAM.forEach(a => { for (const h of [lbl[a.id], el('rn-' + a.id)]) { h.title = 'คลิกเพื่อเปลี่ยนชื่อ'; h.addEventListener('click', () => { if (!h.querySelector('input')) editName(a, h); }); } });
   applyNames();
