@@ -479,6 +479,15 @@ function drawFireplace(x) {
     R(O, sx - 1, 31, 7, 11); R('#F4F1E8', sx, 31, 5, 2); R(c, sx, 33, 5, 5); R(c, sx + 1, 37, 5, 3); R('#F4F1E8', sx + 1, 38, 1, 1); }
   R('#FFD23F', X + 16, 12, 8, 8); R(O, X + 15, 11, 10, 1); R('#2E7D32', X + 14, 12, 12, 8); R('#1B5E20', X + 16, 14, 8, 4); R('#9A4E3A', X + 17, 15, 6, 2); R('#E53935', X + 19, 18, 2, 2);   // a wreath above
 }
+// snow falling inside the room, over everyone: light flakes that sway as they drift down
+const FLAKES = Array.from({ length: 80 }, (_, k) => ({ x: (k * 97.3) % W, y: (k * 53.7) % H, v: 7 + (k % 5) * 2.2, a: 0.65 + (k % 3) * 0.15, big: k % 3 === 0, ph: k * 1.31 }));
+function drawSnow(t) {
+  for (const f of FLAKES) {
+    const y = (f.y + t * f.v) % (H + 4) - 2, x = ((f.x + Math.sin(t * 0.9 + f.ph) * 4 + t * 1.5) % W + W) % W;
+    ctx.fillStyle = 'rgba(255,255,255,' + f.a + ')';
+    if (f.big) { ctx.fillRect(Math.round(x), Math.round(y), 2, 2); } else ctx.fillRect(Math.round(x), Math.round(y), 1, 1);
+  }
+}
 function drawXmas(t) {   // things that move: snowflakes outside, twinkling lights, the star, the fire
   const R = (c, x0, y0, w, h) => { ctx.fillStyle = c; ctx.fillRect(x0, y0, w, h); };
   for (const [wx, wy, ww, wh] of WINDOWS) for (let k = 0; k < 11; k++) {
@@ -736,6 +745,7 @@ function draw(t) {
     ctx.restore();
   } });
   items.sort((p, q) => p.z - q.z).forEach(o => o.f());
+  if (XMAS) drawSnow(t);
   if (lightCv) ctx.drawImage(lightCv, 0, 0);
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = PHASE === 'day' ? 0.35 : 0.7;   // screens glow on the faces in front of them
   for (const a of TEAM) {
