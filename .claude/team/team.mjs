@@ -4,6 +4,8 @@
 //   node .claude/team/team.mjs set <agent> <working|waiting|done|blocked|idle> "text" [--pct 0-100]
 //   node .claude/team/team.mjs ask "question for the user"
 //   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
+//   node .claude/team/team.mjs ask --later "a question that can wait"   (queued, not shown; urgent asks also pop a macOS notification)
+//   node .claude/team/team.mjs inbox [--send]   (list the queued questions; --send asks them all as ONE question)
 //   node .claude/team/team.mjs wait [--timeout <seconds>]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>;
 //        no time limit by default: run it once in the background right after `ask`)
 //   node .claude/team/team.mjs answers   (board answers nobody has read yet and questions still open, all jobs; silent when none; used by the UserPromptSubmit hook)
@@ -34,6 +36,14 @@ let JOB = process.env.TEAM_JOB || '';
 { const i = args.indexOf('--job'); if (i >= 0) { JOB = String(args[i + 1] || ''); args = args.filter((_, j) => j !== i && j !== i + 1); } }
 const text = (a) => a.join(' ').replace(/\s+/g, ' ').trim().slice(0, 300);
 const add = (ev) => fs.appendFileSync(EVENTS, JSON.stringify({ t: Date.now(), ...(JOB ? { job: JOB } : {}), ...ev }) + '\n');
+const INBOX = path.join(dir, 'inbox.jsonl');
+const readInbox = () => { try { return fs.readFileSync(INBOX, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)); } catch { return []; } };
+// Desktop notification for an urgent question (macOS only, local, nothing leaves the machine). TEAM_NOTIFY=0 turns it off.
+function notify(msg) {
+  if (process.platform !== 'darwin' || process.env.TEAM_NOTIFY === '0') return;
+  const esc = (v) => String(v).replace(/[\\"]/g, ' ').slice(0, 180);
+  try { spawnSync('osascript', ['-e', `display notification "${esc(msg)}" with title "QA board: คำถามรอคำตอบ" sound name "Glass"`], { timeout: 3000 }); } catch {}
+}
 
 async function serverUp() {
   try {
@@ -97,15 +107,37 @@ if (cmd === 'start') {
   }
   add({ type: 'set', agent, state, text: text(words), pct });
 } else if (cmd === 'ask') {
-  let kind = 'info', options = [];
+  let kind = 'info', options = [], later = false;
   const rest = [];
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--approve') kind = 'approve';
+    else if (args[i] === '--later') later = true;
     else if (args[i] === '--options') options = String(args[++i] || '').split('|').map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 4);
     else rest.push(args[i]);
   }
-  add({ type: 'ask', text: text(rest), kind, options });
-  add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติ (บอร์ดหรือแชท)' : 'รอคำตอบจากคุณ' });
+  if (later) {   // not urgent: queue it; `inbox --send` asks all queued questions in one go (TEAM.md "Questions to the user")
+    fs.appendFileSync(INBOX, JSON.stringify({ t: Date.now(), job: JOB || '', text: text(rest) }) + '\n');
+    console.log(`INBOX: queued (${readInbox().length} waiting). Send them together with: team.mjs inbox --send`);
+  } else {
+    add({ type: 'ask', text: text(rest), kind, options });
+    add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติ (บอร์ดหรือแชท)' : 'รอคำตอบจากคุณ' });
+    notify(`${JOB ? JOB + ': ' : ''}${text(rest)}`);
+  }
+} else if (cmd === 'inbox') {
+  const items = readInbox();
+  if (!args.includes('--send')) {
+    console.log(items.length ? items.map((x, i) => `${i + 1}. [${x.job || '-'}] ${x.text}`).join('\n') : 'INBOX: empty');
+  } else if (!items.length) console.log('INBOX: empty, nothing sent');
+  else {
+    JOB = JOB || items[0].job;
+    const q = `คำถามที่ไม่ด่วน ${items.length} ข้อ (ตอบทีเดียว เช่น 1=... 2=...): ` + items.map((x, i) => `${i + 1}) [${x.job || '-'}] ${x.text}`).join(' ');
+    add({ type: 'ask', text: q.slice(0, 2000), kind: 'info', options: [] });
+    add({ type: 'set', agent: 'lead', state: 'waiting', text: 'รอคำตอบชุดคำถาม' });
+    fs.writeFileSync(INBOX, '');
+    fs.appendFileSync(path.join(dir, 'inbox-sent.jsonl'), JSON.stringify({ t: Date.now(), job: JOB, items }) + '\n');
+    notify(`${items.length} คำถามรอคำตอบบนบอร์ด`);
+    console.log(`INBOX: sent ${items.length} questions as one question on ${JOB}`);
+  }
 } else if (cmd === 'wait') {
   // The answer is read from the board server, which only reports answers it received from the board page itself.
   // Exit 0 = answered (ANSWER: <text>), 3 = no answer in time, 4 = the question was closed another way (e.g. answered in chat).

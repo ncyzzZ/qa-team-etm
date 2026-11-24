@@ -5,6 +5,7 @@
 // the user's Apply.
 //   node tools/heal/auto-heal.mjs propose <run folder>            writes heal-proposals.json / .md (+ heal-<n>.diff)
 //   node tools/heal/auto-heal.mjs apply <run folder> <ids|all>    applies ready proposals (only after the user's Apply)
+//   node tools/heal/auto-heal.mjs revert <run folder> <ids|all>   puts the old line back for applied heals
 //   node tools/heal/auto-heal.mjs skip <run folder> <ids|all>     marks them skipped
 // Status per proposal: ready (diff passed the guard) | needs-live (call playwright-healer) | manual (a person fixes it)
 // | applied | skipped.
@@ -112,6 +113,25 @@ export function apply(runDir, ids, { pwRepo = resolveRepos().pwRepo } = {}) {
   return done;
 }
 
+/** Undo applied heals whose re-run did not pass (or the user said revert): put the old line back. */
+export function revert(runDir, ids, { pwRepo = resolveRepos().pwRepo } = {}) {
+  const data = JSON.parse(fs.readFileSync(path.join(runDir, FILE), 'utf8'));
+  const done = [];
+  for (const p of pick(data, ids).filter((x) => x.status === 'applied')) {
+    const [rel, n] = [p.page.replace(/:\d+$/, ''), Number(p.page.match(/:(\d+)$/)[1])];
+    const abs = path.join(pwRepo, rel);
+    const src = fs.readFileSync(abs, 'utf8');
+    const eol = src.includes('\r\n') ? '\r\n' : '\n';
+    const lines = src.split(/\r?\n/);
+    if (lines[n - 1] !== p.newLine) { p.reason = 'revert: the line changed after the heal, fix by hand'; continue; }
+    lines[n - 1] = p.oldLine;
+    fs.writeFileSync(abs, lines.join(eol));
+    p.status = 'reverted'; p.revertedAt = new Date().toISOString(); done.push(p);
+  }
+  write(runDir, data);
+  return done;
+}
+
 export function skip(runDir, ids) {
   const data = JSON.parse(fs.readFileSync(path.join(runDir, FILE), 'utf8'));
   for (const p of pick(data, ids)) if (['ready', 'needs-live'].includes(p.status)) p.status = 'skipped';
@@ -125,9 +145,10 @@ export function summaryLine(data) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [cmd, dir, ids] = process.argv.slice(2);
-  if (!cmd || !dir || !fs.existsSync(dir)) { console.error('Usage: node tools/heal/auto-heal.mjs propose|apply|skip <run folder> [ids|all]'); process.exit(2); }
+  if (!cmd || !dir || !fs.existsSync(dir)) { console.error('Usage: node tools/heal/auto-heal.mjs propose|apply|revert|skip <run folder> [ids|all]'); process.exit(2); }
   if (cmd === 'propose') { const d = propose(dir); console.log(d.proposals.length ? `[auto-heal] ${summaryLine(d)}  (${path.join(dir, 'heal-proposals.md')})` : '[auto-heal] no locator failures'); }
   else if (cmd === 'apply') { if (!ids) { console.error('apply needs ids or all'); process.exit(2); } const d = apply(dir, ids); console.log(`[auto-heal] applied ${d.length}: ${d.map((p) => `#${p.id} ${p.test} ${p.page}`).join(', ') || 'none'}`); }
+  else if (cmd === 'revert') { const d = revert(dir, ids || 'all'); console.log(`[auto-heal] reverted ${d.length}: ${d.map((p) => `#${p.id} ${p.test}`).join(', ') || 'none'}`); }
   else if (cmd === 'skip') { skip(dir, ids || 'all'); console.log('[auto-heal] skipped'); }
   else { console.error(`unknown command ${cmd}`); process.exit(2); }
 }
