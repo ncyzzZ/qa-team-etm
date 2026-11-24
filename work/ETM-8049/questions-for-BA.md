@@ -51,3 +51,10 @@ Story: [Improvement] View Worklist Table - Working Location Columns
 23. ผู้ใช้ที่ไม่มีสิทธิ์ View Worklist เปิดลิงก์ worklist ตรงๆ จะเห็นอะไร (redirect เงียบ หรือขึ้นข้อความ)?
 24. กด Select All ขณะที่พิมพ์ข้อความค้นหาใน filter อยู่ จะเลือกเฉพาะ option ที่เห็นอยู่ ใช่ไหม (เหมือนคอลัมน์อื่น)?
 25. ถ้าไม่กรอก Deck / X / Y แล้วกดบันทึก ระบบแสดงอย่างไร (ปุ่ม Save ถูก disable หรือขึ้นข้อความ error)?
+
+
+## Round 2 questions (raised after test runs, 2026-11-24, Story status: Deployed to QA)
+
+26. ⭐ AC 6.1 says "Edit Work", but the Edit Work Details form has no Working Location (Deck / X / Y) field. Should AC 6.1 read "Edit Work Breakdown" (worklist row menu > View Work Details > Edit Breakdown)? Is there any other edit screen where Deck can be changed?
+27. ⭐ Import Excel rejects a cell with `Helipad,helipad` with a "duplicates" error, but AC 6.2 says values that differ only by letter case are stored as separate values. Which is correct for Excel import: reject as duplicate, or store `Helipad` and `helipad` as two values?
+28. Create Work: the user types a Deck value and clicks away without pressing Enter. What should happen: the typed text is added as a value, the text is discarded, or a message is shown? (follow-up to Q16)

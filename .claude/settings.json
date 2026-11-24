@@ -1,1 +1,10 @@
-{}
+{
+  "hooks": {
+    "PostToolUse": [
+      { "matcher": "Bash", "hooks": [{ "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/tools/heal/hook.mjs\"", "timeout": 10 }] }
+    ],
+    "UserPromptSubmit": [
+      { "hooks": [{ "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/tools/heal/hook.mjs\"", "timeout": 10 }] }
+    ]
+  }
+}

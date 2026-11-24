@@ -51,3 +51,10 @@ Source: analyst.md (22 questions). Items marked ⭐ change an Expected Result di
 23. What does a user without View Worklist permission see when opening a worklist by direct link (silent redirect or a message)?
 24. Does Select All, while a search text is typed in a filter, select only the options currently listed (same as other columns)?
 25. If Deck / X / Y is left empty on save, how does the system show it (Save button disabled or an error message)?
+
+
+## Round 2 questions (raised after test runs, 2026-11-24, Story status: Deployed to QA)
+
+26. ⭐ AC 6.1 says "Edit Work", but the Edit Work Details form has no Working Location (Deck / X / Y) field. Should AC 6.1 read "Edit Work Breakdown" (worklist row menu > View Work Details > Edit Breakdown)? Is there any other edit screen where Deck can be changed?
+27. ⭐ Import Excel rejects a cell with `Helipad,helipad` with a "duplicates" error, but AC 6.2 says values that differ only by letter case are stored as separate values. Which is correct for Excel import: reject as duplicate, or store `Helipad` and `helipad` as two values?
+28. Create Work: the user types a Deck value and clicks away without pressing Enter. What should happen: the typed text is added as a value, the text is discarded, or a message is shown? (follow-up to Q16)
