@@ -143,20 +143,7 @@
 :root[data-theme=light] h1 { text-shadow:none; } :root[data-theme=light] .panel, :root[data-theme=light] #stagewrap { box-shadow:4px 4px 0 rgba(30,40,90,.15); }
 :root[data-theme=light] .tile b, :root[data-theme=light] .urow b, :root[data-theme=light] .mem .who b, :root[data-theme=light] .splitlbl b, :root[data-theme=light] .szl b { color:#111A3F; }
 :root[data-theme=light] #log time, :root[data-theme=light] .meta b { color:#B77900; }
-:root[data-theme=green] { --bg:#04100A; --panel:#08200F; --edge:#1E7A3C; --soft:#BDF5CC; --inset:#06180C; --deep:#020A05; --neon:#3DFF8A; --accent:#E6FF5C; --main:#FF7AB6; --mint:#9BE3B5; --alert:#FF8A80; }
-:root[data-theme=warm] { --bg:#1B1410; --panel:#2A1F18; --edge:#7A5A3A; --soft:#F0DFC8; --inset:#20170F; --deep:#120D09; --neon:#FFB454; --accent:#FFD23F; --main:#F25C9C; --mint:#9BE3B5; --alert:#FF8A80; }
 :root[data-theme=light] #modal { background:rgba(30,40,90,.45); } :root[data-theme=light] #modal .box h2 { color:#9A6200; }
-:root[data-theme=princess] { --strong:#4A2A6B; --bg:#FFE9F3; --panel:#FFF8FC; --edge:#E9A8D2; --soft:#6B3F8C; --inset:#FDE7F2; --deep:#F6D3EA; --neon:#C2409A; --accent:#B8860B; --main:#E0559F; --mint:#3FA97F; --alert:#E04B6A; }
-:root[data-theme=princess] body { background:linear-gradient(160deg,#FFE9F3 0%,#EBDDFB 55%,#FFF3D6 100%) fixed; }
-:root[data-theme=princess] h1 { color:#C2409A; text-shadow:2px 2px 0 #F5C6E3, 0 0 14px rgba(255,200,230,.9); }
-:root[data-theme=princess] .panel, :root[data-theme=princess] #stagewrap { border-color:#E9A8D2; border-radius:14px; box-shadow:0 4px 0 #F2C7E1, 0 8px 18px rgba(194,64,154,.15); }
-:root[data-theme=princess] #team { border-color:#B993E8; box-shadow:0 4px 0 #DCCBF5, 0 8px 18px rgba(130,90,200,.15); }
-:root[data-theme=princess] #stagewrap { overflow:hidden; }
-:root[data-theme=princess] .mem, :root[data-theme=princess] .tile, :root[data-theme=princess] #links a { border-radius:8px; }
-:root[data-theme=princess] #log time, :root[data-theme=princess] .meta b { color:#B8860B; }
-:root[data-theme=princess] #tabbar { background:#F7D7EA; }
-:root[data-theme=princess] #modal { background:rgba(120,60,140,.4); } :root[data-theme=princess] #modal .box h2 { color:#B8860B; }
-:root[data-theme=princess] .zbtn { border-radius:10px; }
 </style>
 </head>
 <body>
@@ -1392,7 +1379,7 @@ async function poll() {
     TEAM.forEach((a, i) => { sheets[i] = bake(i); avatar(el('av-' + a.id), i); }); zlabel();
   });
   window.addEventListener('resize', layout);
-  { const TH = ['dark', 'light', 'green', 'warm', 'princess'], NM = { dark:'มืด', light:'สว่าง', green:'เขียว', warm:'อุ่น', princess:'เจ้าหญิง 👑' }; let t = 'dark'; try { t = localStorage.getItem('ninas-theme') || 'dark'; } catch {}
+  { const TH = ['dark', 'light'], NM = { dark:'มืด', light:'สว่าง' }; /* a theme saved before (green, warm, princess) falls back to dark */ let t = 'dark'; try { t = localStorage.getItem('ninas-theme') || 'dark'; } catch {}
     if (!TH.includes(t)) t = 'dark';
     const sel = el('thsel'); sel.innerHTML = TH.map(k => '<option value="' + k + '">' + NM[k] + '</option>').join('');
     const ap = () => { document.documentElement.setAttribute('data-theme', t); sel.value = t; try { localStorage.setItem('ninas-theme', t); } catch {} };
