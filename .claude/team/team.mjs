@@ -112,7 +112,7 @@ if (cmd === 'start') {
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--approve') kind = 'approve';
     else if (args[i] === '--later') later = true;
-    else if (args[i] === '--options') options = String(args[++i] || '').split('|').map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 4);
+    else if (args[i] === '--options') { const raw = String(args[++i] || ''); options = raw.split(raw.includes('|') ? '|' : ',').map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 4); }   // "a|b|c", or "a,b,c" when no | is used
     else rest.push(args[i]);
   }
   if (later) {   // not urgent: queue it; `inbox --send` asks all queued questions in one go (TEAM.md "Questions to the user")
@@ -161,19 +161,36 @@ if (cmd === 'start') {
     await new Promise((r) => setTimeout(r, poll));
   }
 } else if (cmd === 'answers') {
-  // Runs on every chat message (UserPromptSubmit hook). Silent when there is nothing, or the board is down.
+  // Runs on every chat message (UserPromptSubmit hook; the hook passes the message as JSON on stdin). Silent when there is nothing, or the board is down.
   // 1. board answers nobody has read yet: not an approval by itself, it tells the lead to run `wait --job <KEY>`, whose ANSWER: line is the approval.
-  // 2. questions still open on the board: if this chat message answers one, the lead closes it with `answered`, so board and chat agree.
+  // 2. a chat message that is one of the answer buttons of the one open question that has it: the question is closed on the board at once
+  //    (the chat message itself is the user's answer; this only keeps the board in step).
+  // 3. other questions still open: the lead is told to close them with `answered` if the message answers one.
   const get = async (q) => { try { return await (await fetch(URL_BASE + '/state' + q, { signal: AbortSignal.timeout(1500) })).json(); } catch { return null; } };
+  let prompt = '';
+  if (!process.stdin.isTTY) {
+    prompt = await new Promise((res) => { let d = ''; const t = setTimeout(() => res(d), 700); process.stdin.on('data', (c) => { d += c; }); process.stdin.on('end', () => { clearTimeout(t); res(d); }); process.stdin.on('error', () => res('')); });
+    try { prompt = String(JSON.parse(prompt).prompt || ''); } catch { prompt = ''; }
+  }
+  const norm = (v) => String(v).replace(/\s+/g, ' ').trim().toLowerCase();
+  const msg = norm(prompt);
   const all = await get('');
   const jobs = all?.jobs || [], lines = [], open = [];
   for (const j of jobs.filter((x) => x.answered || x.ask)) {
     const k = j.key || j.ticket, s = await get('?job=' + encodeURIComponent(k));
     if (s?.answer && !s.answer.read) lines.push(`${k}: the user answered on the board "${String(s.answer.text).slice(0, 200)}" to "${String(s.answer.question || '').slice(0, 120)}". Read it with: node .claude/team/team.mjs wait --job ${k}`);
-    else if (s?.ask) open.push(`${k}: "${String(s.ask.text || '').slice(0, 160)}"${s.ask.options?.length ? ' (options: ' + s.ask.options.join(' | ') + ')' : ''}`);
+    else if (s?.ask) open.push({ k, ask: s.ask, hit: msg.length >= 2 && (s.ask.options || []).some((o) => { const n = norm(o); return n && (msg === n || msg.startsWith(n) || (n.startsWith(msg) && msg.length >= 4)); }) });
   }
+  const hits = open.filter((o) => o.hit), closed = [];
+  if (hits.length === 1) {   // only when it is clear which question the message answers
+    JOB = hits[0].k; add({ type: 'chat', text: prompt.replace(/\s+/g, ' ').trim().slice(0, 300) }); add({ type: 'set', agent: 'lead', state: 'working', text: 'ได้คำตอบจากแชท' });
+    closed.push(hits[0].k);
+  }
+  const rest = open.filter((o) => !closed.includes(o.k));
   if (lines.length) console.log('BOARD ANSWERS NOT READ YET:\n' + lines.join('\n'));
-  if (open.length) console.log('BOARD QUESTIONS STILL OPEN (if the user\'s message answers one, close it on the board with: node .claude/team/team.mjs answered --job <KEY> "<their answer>"):\n' + open.join('\n'));
+  if (closed.length) console.log(`BOARD QUESTION CLOSED: the user's message matches an answer button of ${closed[0]}, so the board question was closed (chat answer logged). Nothing more to do on the board for it.`);
+  if (rest.length) console.log('ACTION NEEDED - BOARD QUESTIONS STILL OPEN. If the user\'s message answers one of these, run the command shown for it right away, or the board keeps showing the question:\n'
+    + rest.map((o) => `${o.k}: "${String(o.ask.text || '').slice(0, 160)}"${o.ask.options?.length ? ' (buttons: ' + o.ask.options.join(' | ') + ')' : ''}\n  -> node .claude/team/team.mjs answered --job ${o.k} "<the user's answer>"`).join('\n'));
 } else if (cmd === 'answered') {
   // The user answered the open question in the chat: close it on the board, show the answer in the log, and end the background `wait` (CLOSED).
   const t = text(args);
