@@ -164,6 +164,7 @@
   <h1>Ninas Agent (ETM)</h1>
   <div class="tools">
     <button id="zbtn" class="zbtn" type="button"></button>
+    <button id="xbtn" class="zbtn" type="button"></button>
     <label class="zbtn thl">🎨 ธีม <select id="thsel"></select></label>
     <button id="mbtn" class="zbtn" type="button" aria-pressed="false">🎵 เพลง: ปิด</button>
   </div>
@@ -256,6 +257,9 @@ const FURN = ['DESK/DESK_FRONT','PC/PC_FRONT_ON_1','PC/PC_FRONT_ON_2','PC/PC_FRO
 const sheets = [];   // per team index: baked 112x96 canvas (hue-shifted when needed)
 let bg = null;
 let ZOMBIE = false; try { ZOMBIE = localStorage.getItem('ninas-zombie') === '1'; } catch {}   // off unless the viewer switched it on
+// Christmas: on by itself from 20 Nov to 6 Jan, unless the viewer switched it on or off
+let XMAS = (() => { const d = new Date(), m = d.getMonth(), day = d.getDate(); return (m === 10 && day >= 20) || m === 11 || (m === 0 && day <= 6); })();
+try { const v = localStorage.getItem('ninas-xmas'); if (v === '1' || v === '0') XMAS = v === '1'; } catch {}
 function zombify(c, h0 = 8, h1 = 50, rotten = false) {   // pale green skin, tired desaturated clothes (h0..h1 = the skin hues; rotten = greyer skin, darker clothes)
   const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), p = d.data;
   for (let i = 0; i < p.length; i += 4) {
@@ -280,7 +284,10 @@ function dress(c, a) {
     for (let y = yt + 1; y <= yt + 2; y++) for (let xx = 1; xx < 15; xx++) { const i = ((oy + y) * 112 + ox + xx) * 4; if (!p[i + 3]) continue; const l = p[i] + p[i + 1] + p[i + 2]; if (l < 120) continue; if (!A(ox + xx - 1, oy + y) || !A(ox + xx + 1, oy + y)) continue; const k = y === yt + 1 ? 1.28 : 1.12; p[i] = Math.min(255, p[i] * k + 6); p[i + 1] = Math.min(255, p[i + 1] * k + 6); p[i + 2] = Math.min(255, p[i + 2] * k + 6); }
   }
   x.putImageData(d, 0, 0);
-  const gear = GEAR[a.id]; if (!gear) return;
+  const XG = { lead:['santa'], analyst:['glasses', 'santa'], inspector:['elf'], designer:['nose', 'antlers'], reviewer:['redglasses', 'santa'], automator:['elf'], reporter:['nose', 'antlers'], healer:['elf'] };
+  const gears = XMAS ? ['scarf', ...(XG[a.id] || ['santa'])] : GEAR[a.id] ? [GEAR[a.id]] : [];
+  if (!gears.length) return;
+  const SCARF = ['#D7263D', '#2E9E4F', '#3F7FD9', '#F2A900'][TEAM.indexOf(a) % 4];
   const R = (col, x0, y0, w, h) => { x.fillStyle = col; x.fillRect(x0, y0, w, h); };
   for (let row = 0; row < 3; row++) for (let col = 0; col < 7; col++) {
     const ox = col * 16, oy = row * 32; let yt = -1;
@@ -295,7 +302,25 @@ function dress(c, a) {
       for (let y = t + 1; y < b; y++) { const i = y === t + 1 ? 3 : y === t + 2 ? 1 : 0; R(f, L + i + 1, y, w - 2 * i - 2, 1); }
       R(hi, L + 4, t + 2, 3, 1);
     };
-    if (gear === 'glasses' || gear === 'redglasses') {
+    let bl = 16, br = -1; for (let xx = 0; xx < 16; xx++) if (A(ox + xx, oy + yt + 16)) { bl = Math.min(bl, xx); br = Math.max(br, xx); }
+    for (const gear of gears) {
+    if (gear === 'scarf') {   // a knitted scarf round the neck, its end hanging down the front
+      const sl = ox + bl, sw = br - bl + 1;
+      if (sw > 2) { R(O, sl - 1, T + 15, sw + 2, 4); R(SCARF, sl, T + 16, sw, 2); for (let k = sl + 1; k < sl + sw; k += 3) R('#F4F1E8', k, T + 16, 1, 2);
+        if (front) { R(O, cx, T + 18, 4, 6); R(SCARF, cx + 1, T + 18, 2, 4); R('#F4F1E8', cx + 1, T + 21, 2, 1); }
+        else if (back) { R(O, cx - 3, T + 18, 4, 5); R(SCARF, cx - 2, T + 18, 2, 3); } }
+    } else if (gear === 'santa') {   // red crown, white fur trim, the tip flopping over to one side with its pompom
+      dome(T - 3, T + 1, '#D7263D', '#FF7A7A'); R(O, L - 1, T + 1, w + 2, 4); R('#F4F1E8', L, T + 2, w, 2); R('#FFFFFF', L + 1, T + 2, w - 4, 1);
+      const px = side ? L - 1 : Rr - 2; R(O, px - 1, T - 1, 5, 5); R('#F4F1E8', px, T, 3, 3); R('#FFFFFF', px, T, 1, 1);
+    } else if (gear === 'elf') {   // green, a red band and a gold bell
+      dome(T - 3, T + 1, '#2E9E4F', '#7AD69A'); R(O, L - 1, T + 1, w + 2, 3); R('#D7263D', L, T + 2, w, 1);
+      const px = side ? L : Rr - 3; R(O, px - 1, T - 2, 4, 4); R('#FFD23F', px, T - 1, 2, 2);
+    } else if (gear === 'antlers') {   // a brown band with two little antlers
+      R(O, L, T, w, 3); R('#7A5032', L + 1, T + 1, w - 2, 1);
+      for (const ax of side ? [cx] : [L + 3, Rr - 3]) { R(O, ax - 2, T - 3, 5, 4); R('#A0703A', ax, T - 2, 1, 3); R('#A0703A', ax - 1, T - 3, 1, 1); R('#A0703A', ax + 1, T - 3, 1, 1); R('#C9925A', ax, T - 2, 1, 1); }
+    } else if (gear === 'nose') {   // a shiny red nose
+      if (front) { R('#E0202A', cx - 1, T + 13, 2, 1); R('#FF9A9A', cx - 1, T + 13, 1, 1); } else if (side) { R('#E0202A', Rr, T + 13, 2, 1); }
+    } else if (gear === 'glasses' || gear === 'redglasses') {
       const f = gear === 'glasses' ? '#1B1B3A' : '#D7263D', ey = T + 10;
       if (front) { for (const gx of [cx - 5, cx + 1]) { R(f, gx, ey, 4, 3); R('rgba(190,230,255,.75)', gx + 1, ey + 1, 2, 1); } R(f, cx - 1, ey + 1, 2, 1); }
       else if (side) { R(f, Rr - 4, ey, 4, 3); R('rgba(190,230,255,.75)', Rr - 3, ey + 1, 2, 1); R(f, cx - 2, ey + 1, Rr - 4 - cx + 2, 1); }
@@ -319,6 +344,7 @@ function dress(c, a) {
       if (front) { R('#E53935', cx - 1, T + 4, 2, 4); R('#E53935', cx - 2, T + 5, 4, 2); } else if (side) { R('#E53935', Rr - 4, T + 4, 2, 4); R('#E53935', Rr - 5, T + 5, 4, 2); }
     } else if (gear === 'bow') {
       const bx = back ? cx - 3 : side ? cx - 4 : Rr - 4; R(O, bx - 1, T - 1, 8, 5); R('#FF6FB5', bx, T, 2, 3); R('#FF6FB5', bx + 4, T, 2, 3); R('#C2307A', bx + 2, T + 1, 2, 1);
+    }
     }
     x.restore();
   }
@@ -380,8 +406,8 @@ const HOUR_Q = new URLSearchParams(location.search).get('hour');
 const hourNow = () => { if (HOUR_Q !== null && HOUR_Q !== '' && !isNaN(+HOUR_Q)) return +HOUR_Q; const d = new Date(); return d.getHours() + d.getMinutes() / 60; };
 const phaseOf = (h) => h >= 7 && h < 16 ? 'day' : h >= 16 && h < 18.5 ? 'gold' : h >= 18.5 && h < 19.5 ? 'dusk' : h >= 5.5 && h < 7 ? 'dawn' : 'night';
 let PHASE = phaseOf(hourNow());
-const SKY = { day: ['#5DB7F5', '#BFE7FF'], gold: ['#F0875A', '#FFD58A'], dusk: ['#3E3486', '#E0729A'], dawn: ['#7C8BD9', '#FFC9A8'], night: ['#070C2A', '#1B2759'] };
-const CITY = { day: '#86A9C8', gold: '#9B5E66', dusk: '#2A2458', dawn: '#6A6FA8', night: '#10163A' };
+const SKY0 = { day: ['#5DB7F5', '#BFE7FF'], gold: ['#F0875A', '#FFD58A'], dusk: ['#3E3486', '#E0729A'], dawn: ['#7C8BD9', '#FFC9A8'], night: ['#070C2A', '#1B2759'] };
+const CITY0 = { day: '#86A9C8', gold: '#9B5E66', dusk: '#2A2458', dawn: '#6A6FA8', night: '#10163A' };
 const DARK = { day: 0, gold: 0.1, dusk: 0.3, dawn: 0.22, night: 0.46 };   // how dark the room gets away from the lamps
 const SUN = { day: ['255,244,200', 0.16], gold: ['255,180,100', 0.2], dawn: ['255,205,170', 0.12] };   // the light through the windows on the floor
 const WINDOWS = [[8, 8, 40, 32], [162, 8, 40, 32], [274, 8, 40, 32]];   // x, y, w, h on the back wall
@@ -393,24 +419,81 @@ const shade = (hex, d) => '#' + [1, 3, 5].map((i) => Math.max(0, Math.min(255, p
 
 function drawWindow(x, wx, wy, ww, wh) {
   const R = (c, x0, y0, w, h) => { x.fillStyle = c; x.fillRect(x0, y0, w, h); };
+  const SKY = XMAS ? { ...SKY0, day: ['#9DB4CC', '#E2EAF2'] } : SKY0, CITY = XMAS ? { ...CITY0, day: '#8FA3B8' } : CITY0;
   R('#5C4630', wx - 3, wy - 3, ww + 6, wh + 6); R('#F4EDE0', wx - 2, wy - 2, ww + 4, wh + 4);   // outline and the white frame
   const g = x.createLinearGradient(0, wy, 0, wy + wh); g.addColorStop(0, SKY[PHASE][0]); g.addColorStop(1, SKY[PHASE][1]);
   x.fillStyle = g; x.fillRect(wx, wy, ww, wh);
   srs = wx * 31 + 7;
   if (PHASE === 'night') { for (let k = 0; k < 10; k++) R(srand() < 0.3 ? '#FFF6C8' : '#AFC0FF', wx + Math.floor(srand() * ww), wy + Math.floor(srand() * wh * 0.55), 1, 1); if (wx > 200) { R('#FFF6C8', wx + ww - 12, wy + 4, 5, 5); R(SKY.night[0], wx + ww - 10, wy + 3, 4, 4); } }
-  else if (PHASE === 'day') { for (let k = 0; k < 2; k++) { const cx = wx + 3 + Math.floor(srand() * (ww - 16)), cy = wy + 4 + k * 8; R('#FFFFFF', cx, cy, 12, 3); R('#FFFFFF', cx + 3, cy - 2, 6, 2); R('#DDEFFF', cx, cy + 3, 12, 1); } }
+  else if (PHASE === 'day' && !XMAS) { for (let k = 0; k < 2; k++) { const cx = wx + 3 + Math.floor(srand() * (ww - 16)), cy = wy + 4 + k * 8; R('#FFFFFF', cx, cy, 12, 3); R('#FFFFFF', cx + 3, cy - 2, 6, 2); R('#DDEFFF', cx, cy + 3, 12, 1); } }
   else { R(PHASE === 'dusk' ? '#FFB88A' : '#FFE9A8', wx + ww / 2 - 4, wy + wh - 12, 8, 6); }   // the sun low on the skyline
   for (let bx = wx; bx < wx + ww;) {   // the city skyline
     const bw = 4 + Math.floor(srand() * 6), bh = 6 + Math.floor(srand() * 14), w2 = Math.min(bw, wx + ww - bx);
-    R(CITY[PHASE], bx, wy + wh - bh, w2, bh);
+    R(CITY[PHASE], bx, wy + wh - bh, w2, bh); if (XMAS) R('#F4F8FF', bx, wy + wh - bh, w2, 1);   // snow on the roofs
     if (PHASE === 'night' || PHASE === 'dusk') for (let yy = wy + wh - bh + 2; yy < wy + wh - 1; yy += 3) for (let xx = bx + 1; xx < bx + w2 - 1; xx += 2) if (srand() < 0.35) R('#FFD86B', xx, yy, 1, 1);
     bx += bw;
   }
   x.fillStyle = 'rgba(255,255,255,.22)'; for (let k = 0; k < 6; k++) x.fillRect(wx + 4 + k, wy + wh - 6 - k * 3, 2, 3);   // a glint on the glass
+  if (XMAS) { R('#F4F8FF', wx, wy + wh - 2, ww, 2); for (let k = 0; k < ww; k += 5) R('#F4F8FF', wx + k, wy + wh - 3, 3, 1); }   // snow piled on the glass
   R('#F4EDE0', wx + ww / 2 - 1, wy, 2, wh); R('#F4EDE0', wx, wy + wh / 2 - 1, ww, 2);   // the window bars
   R('#C9B48E', wx - 4, wy + wh + 2, ww + 8, 3); R('#F4EDE0', wx - 4, wy + wh + 2, ww + 8, 1);   // the sill
   R('#D9C7A6', wx - 6, wy - 5, 5, wh + 8); R('#D9C7A6', wx + ww + 1, wy - 5, 5, wh + 8); R('#BFA983', wx - 3, wy - 5, 1, wh + 8); R('#BFA983', wx + ww + 3, wy - 5, 1, wh + 8);   // curtains
   R('#8B6B45', wx - 7, wy - 6, ww + 14, 2);   // the curtain rod
+}
+
+// ---- Christmas: a tree in the work room corner, a fireplace on the back wall, a garland, snow outside ----
+const TREE = { cx: 20, b: H - 2 }, FP = 214;   // tree centre and bottom; fireplace left edge on the back wall
+const TREE_LIGHTS = [];
+for (let k = 0; k < 22; k++) { const f = (k * 0.618) % 1, row = Math.floor(k / 4), y = TREE.b - 50 + row * 7 + (k % 2) * 2, hw = 3 + row * 2.6; TREE_LIGHTS.push([Math.round(TREE.cx - hw + f * 2 * hw), Math.min(y, TREE.b - 14)]); }
+const BULB = ['#FF4D4D', '#FFD23F', '#4DA6FF', '#5CFF8A', '#FF7AE0'];
+function drawTree(x) {
+  const R = (c, x0, y0, w, h) => { x.fillStyle = c; x.fillRect(x0, y0, w, h); }, cx = TREE.cx, B = TREE.b, O = '#0E2016';
+  R(O, cx - 8, B - 10, 16, 10); R('#B22222', cx - 7, B - 9, 14, 8); R('#E04848', cx - 7, B - 9, 14, 1); R('#FFD23F', cx - 7, B - 6, 14, 1);   // pot
+  R('#5A3A1E', cx - 2, B - 13, 4, 4);   // trunk
+  for (const [top, bot, hw] of [[B - 56, B - 40, 7], [B - 46, B - 29, 11], [B - 36, B - 20, 14], [B - 27, B - 12, 17]]) {
+    for (let y = top; y <= bot; y++) { const h = Math.max(1, Math.round(hw * (y - top + 1) / (bot - top + 1))); R(O, cx - h - 1, y, 2 * h + 3, 1); }
+    for (let y = top + 1; y < bot; y++) { const h = Math.max(1, Math.round(hw * (y - top + 1) / (bot - top + 1))) - 1; if (h < 1) continue;
+      R('#2E8B4E', cx - h, y, 2 * h + 1, 1); R('#47B06A', cx - h, y, Math.max(1, h >> 1), 1); R('#1E6638', cx + (h >> 1) + 1, y, h - (h >> 1), 1); }
+    for (let xx = cx - hw; xx <= cx + hw; xx += 3) R(O, xx, bot, 2, 1);   // a ragged bottom edge
+  }
+  for (let k = 0; k < 14; k++) { const y = B - 42 + k * 2, xx = cx - 9 + k; if (y < B - 13) R('#FFE38A', xx, y, 1, 1); }   // tinsel
+  for (let k = 0; k < 16; k++) { const y = B - 30 + k, xx = cx + 10 - k; if (y < B - 13) R('#E8EEF8', xx, y, 1, 1); }
+  for (const [bx, by, c] of [[cx - 4, B - 44, '#E53935'], [cx + 5, B - 36, '#3F7FD9'], [cx - 9, B - 30, '#FFD23F'], [cx + 2, B - 26, '#E53935'], [cx + 10, B - 20, '#FFD23F'], [cx - 12, B - 18, '#3F7FD9'], [cx - 2, B - 17, '#C2307A']]) {
+    R(O, bx - 1, by - 1, 4, 4); R(c, bx, by, 2, 2); R('#FFFFFF', bx, by, 1, 1); }   // baubles
+  // presents under the tree
+  const box = (bx, by, w, h, c, rib) => { R(O, bx - 1, by - 1, w + 2, h + 2); R(c, bx, by, w, h); R(rib, bx + (w >> 1) - 1, by, 2, h); R(rib, bx, by + (h >> 1), w, 1); R(rib, bx + (w >> 1) - 2, by - 2, 2, 2); R(rib, bx + (w >> 1), by - 2, 2, 2); };
+  box(cx + 13, B - 9, 10, 8, '#D7263D', '#FFD23F'); box(cx + 24, B - 7, 7, 6, '#2E9E4F', '#F4F1E8'); box(cx - 16, B - 7, 7, 6, '#3F7FD9', '#FFD23F');
+}
+function drawFireplace(x) {
+  const R = (c, x0, y0, w, h) => { x.fillStyle = c; x.fillRect(x0, y0, w, h); }, X = FP, O = '#1A0F0A';
+  R(O, X - 1, 6, 42, 58); R('#9A4E3A', X, 7, 40, 57);   // brick chimney breast
+  for (let y = 7; y < 64; y += 4) { R('#B98070', X, y, 40, 1); for (let xx = X + ((y >> 2) % 2 ? 0 : 4); xx < X + 40; xx += 8) R('#B98070', xx, y, 1, 4); }
+  R('#7E3B2B', X + 38, 7, 2, 57);
+  R(O, X - 4, 26, 48, 6); R('#6B4529', X - 3, 27, 46, 4); R('#A0704A', X - 3, 27, 46, 1);   // mantel shelf
+  R(O, X + 7, 36, 26, 28); R('#140A06', X + 8, 37, 24, 27); R('#2A1710', X + 8, 37, 24, 3);   // the firebox
+  R('#5A3A1E', X + 11, 58, 18, 3); R('#7A5032', X + 12, 58, 16, 1); R('#3A2414', X + 15, 56, 10, 2);   // logs
+  R('#55505E', X - 5, 62, 50, 5); R('#7E7A88', X - 5, 62, 50, 1); R('#3A3640', X - 5, 66, 50, 1);   // stone hearth
+  for (let xx = X - 3; xx < X + 43; xx += 2) R(xx % 4 ? '#2E7D32' : '#1B5E20', xx, 24 + (xx % 3 === 0 ? 1 : 0), 2, 3);   // greenery on the mantel
+  for (let xx = X - 1; xx < X + 42; xx += 6) R('#E53935', xx, 25, 1, 1);
+  for (const [sx, c] of [[X + 1, '#D7263D'], [X + 17, '#2E9E4F'], [X + 32, '#D7263D']]) {   // stockings
+    R(O, sx - 1, 31, 7, 11); R('#F4F1E8', sx, 31, 5, 2); R(c, sx, 33, 5, 5); R(c, sx + 1, 37, 5, 3); R('#F4F1E8', sx + 1, 38, 1, 1); }
+  R('#FFD23F', X + 16, 12, 8, 8); R(O, X + 15, 11, 10, 1); R('#2E7D32', X + 14, 12, 12, 8); R('#1B5E20', X + 16, 14, 8, 4); R('#9A4E3A', X + 17, 15, 6, 2); R('#E53935', X + 19, 18, 2, 2);   // a wreath above
+}
+function drawXmas(t) {   // things that move: snowflakes outside, twinkling lights, the star, the fire
+  const R = (c, x0, y0, w, h) => { ctx.fillStyle = c; ctx.fillRect(x0, y0, w, h); };
+  for (const [wx, wy, ww, wh] of WINDOWS) for (let k = 0; k < 11; k++) {
+    const sp = 5 + (k % 3) * 3, y = wy + ((t * sp + k * 9.7) % (wh - 2)), xx = wx + ((k * 13.3 + Math.sin(t * 1.2 + k) * 2.5 + ww * 4) % ww);
+    R(k % 4 ? '#FFFFFF' : '#DDE8F5', Math.round(xx), Math.round(y), 1, 1);
+  }
+  for (let gx = 4, k = 0; gx < W; gx += 9, k++) { const gy = 4 + Math.round(2.5 * Math.sin(Math.PI * ((gx % 48) / 48))); R(BULB[(k + Math.floor(t * 2)) % BULB.length], gx, gy + 2, 2, 2); }   // garland bulbs
+  TREE_LIGHTS.forEach(([lx, ly], k) => { if ((k + Math.floor(t * 3)) % 3) R(BULB[k % BULB.length], lx, ly, 1, 1); });
+  const tw = Math.floor(t * 4) % 2, sx = TREE.cx, sy = TREE.b - 60;   // the star on top
+  R('#0E2016', sx - 3, sy - 1, 7, 5); R('#FFD23F', sx - 2, sy + 1, 5, 1); R('#FFD23F', sx, sy - 1, 1, 5); R('#FFD23F', sx - 1, sy, 3, 3); if (tw) { R('#FFF6C8', sx, sy + 1, 1, 1); R('rgba(255,230,120,.5)', sx - 4, sy + 1, 9, 1); R('rgba(255,230,120,.5)', sx, sy - 3, 1, 9); }
+  const fx = FP + 12;   // flames
+  for (let k = 0; k < 8; k++) { const h = Math.max(2, Math.round(7 + 4 * Math.sin(t * 9 + k * 1.7) + 2 * Math.sin(t * 13 + k))), xx = fx + k * 2;
+    R('#E8481C', xx, 58 - h, 2, h); R('#FF9A1F', xx, 58 - Math.round(h * 0.7), 2, Math.round(h * 0.7)); R('#FFE36A', xx + (k % 2), 58 - Math.round(h * 0.35), 1, Math.round(h * 0.35)); }
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.18 + 0.06 * Math.sin(t * 11);
+  ctx.drawImage(glowSprite('#FF8A2A'), FP + 6, 50, 28, 28); ctx.globalAlpha = 0.12; ctx.drawImage(glowSprite('#FFD23F'), TREE.cx - 14, TREE.b - 64, 28, 28); ctx.restore();
 }
 
 function buildBackground() {
@@ -483,12 +566,15 @@ function buildBackground() {
   for (const [wx, wy, ww, wh] of WINDOWS) drawWindow(x, wx, wy, ww, wh);
   const put = (k, px, py) => { if (IMG[k]) x.drawImage(IMG[k], px, py); };
   const at = (k, px, bottom) => { if (IMG[k]) x.drawImage(IMG[k], px, bottom - IMG[k].height); };
-  put('BOOKSHELF', 54, 22); put('CLOCK', 88, 12); put('DOUBLE_BOOKSHELF', 210, 14); put('HANGING_PLANT', 244, 0);
+  put('BOOKSHELF', 54, 22); put('CLOCK', 88, 12);
+  if (XMAS) drawFireplace(x); else { put('DOUBLE_BOOKSHELF', 210, 14); put('HANGING_PLANT', 244, 0); }
   put('LARGE_PAINTING', 324, 8); put('SMALL_PAINTING_2', 362, 16);
+  if (XMAS) for (let gx = 0; gx < W; gx++) { const gy = 4 + Math.round(2.5 * Math.sin(Math.PI * ((gx % 48) / 48))); R('#14401E', gx, gy, 1, 4); R(gx % 3 ? '#2E7D32' : '#3E9E44', gx, gy + 1, 1, 2); }   // the garland along the top of the wall
   put('DOUBLE_BOOKSHELF', 306, 70);   // the reading corner at the top of the lounge
   put('BIN', 102, 90);
   // floor decor
-  at('LARGE_PLANT', 2, H - 2); at('LARGE_PLANT', WALL_X - 38, H - 2);
+  if (XMAS) drawTree(x); else at('LARGE_PLANT', 2, H - 2);
+  at('LARGE_PLANT', WALL_X - 38, H - 2);
   // the lounge: four sofas around a coffee table with a mug, a plant in each back corner, a floor lamp, a coffee corner and the chicken's food bowl
   at('PLANT', WALL_X + 12, 100); at('PLANT_2', W - 20, 100);
   put('SOFA_FRONT', LX, LY - 16); put('SOFA_BACK', LX, LY + 32); put('SOFA_SIDE', LX - 16, LY);
@@ -513,9 +599,10 @@ function buildLight() {
   if (d > 0) {
     x.fillStyle = 'rgba(14,18,52,' + d + ')'; x.fillRect(0, 0, W, H);
     x.globalCompositeOperation = 'destination-out';
-    for (const [lx, ly, r] of LIGHTS) { const g = x.createRadialGradient(lx, ly, 0, lx, ly, r); g.addColorStop(0, 'rgba(0,0,0,.92)'); g.addColorStop(0.6, 'rgba(0,0,0,.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(lx - r, ly - r, 2 * r, 2 * r); }
+    const LS = XMAS ? [...LIGHTS, [FP + 20, 70, 52], [TREE.cx + 4, TREE.b - 26, 46]] : LIGHTS;
+    for (const [lx, ly, r] of LS) { const g = x.createRadialGradient(lx, ly, 0, lx, ly, r); g.addColorStop(0, 'rgba(0,0,0,.92)'); g.addColorStop(0.6, 'rgba(0,0,0,.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(lx - r, ly - r, 2 * r, 2 * r); }
     x.globalCompositeOperation = 'source-over';
-    for (const [lx, ly, r] of LIGHTS) { const g = x.createRadialGradient(lx, ly, 0, lx, ly, r * 0.8); g.addColorStop(0, 'rgba(255,214,140,' + (d * 0.3) + ')'); g.addColorStop(1, 'rgba(255,214,140,0)'); x.fillStyle = g; x.fillRect(lx - r, ly - r, 2 * r, 2 * r); }
+    for (const [lx, ly, r] of LS) { const g = x.createRadialGradient(lx, ly, 0, lx, ly, r * 0.8); g.addColorStop(0, 'rgba(255,214,140,' + (d * 0.3) + ')'); g.addColorStop(1, 'rgba(255,214,140,0)'); x.fillStyle = g; x.fillRect(lx - r, ly - r, 2 * r, 2 * r); }
   }
   const v = x.createRadialGradient(W / 2, H / 2, H * 0.45, W / 2, H / 2, W * 0.72); v.addColorStop(0, 'rgba(10,8,30,0)'); v.addColorStop(1, 'rgba(10,8,30,.32)');
   x.fillStyle = v; x.fillRect(0, 0, W, H);
@@ -597,6 +684,7 @@ const LED = { idle:'#7A6CFF', working:'#3DDC84', waiting:'#F25C9C', done:'#9BE3B
 function draw(t) {
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(bg, 0, 0);
+  if (XMAS) drawXmas(t);
   ctx.fillStyle = 'rgba(30,15,0,.28)';   // a soft shadow under everyone on the floor
   for (const a of [...TEAM, guard]) { if (a.guard && !a.sheet) continue; ctx.beginPath(); ctx.ellipse(Math.round(a.x) + 8, Math.round(a.y) + 31, 5, 1.6, 0, 0, 6.29); ctx.fill(); }
   if (hen.on) { ctx.beginPath(); ctx.ellipse(Math.round(hen.x) + 5, Math.round(hen.y) + 9, 4, 1.2, 0, 0, 6.29); ctx.fill(); }
@@ -643,6 +731,7 @@ function draw(t) {
     ctx.save(); ctx.translate(hx + 5, hy); if (hen.dir < 0) ctx.scale(-1, 1);
     const R = (c, x, y, w, h) => { ctx.fillStyle = c; ctx.fillRect(x - 5, y, w, h); };
     R('#D8DEF0', 0, 3, 3, 3); R('#fff', 1, 2, 7, 5); R('#fff', 6, 0, 3, 4); R('#E53935', 7, -1, 2, 1); R('#F59E0B', 9, 2, 2, 1); R('#1B1B3A', 8, 1, 1, 1);
+    if (XMAS) { R('#D7263D', 6, -2, 3, 2); R('#D7263D', 5, -3, 2, 1); R('#fff', 6, 0, 3, 1); R('#fff', 4, -3, 1, 1); }   // a tiny Santa hat
     R('#F59E0B', 3, 7, 1, 2); R('#F59E0B', 5, 7, 1, 2);
     ctx.restore();
   } });
@@ -697,7 +786,13 @@ function drawGuard(t) {
   if (fl) { ctx.save(); ctx.translate(X + 16, Y); ctx.scale(-1, 1); ctx.drawImage(s, c * 16, r * 32, 16, 32, 0, 0, 16, 32); ctx.restore(); }
   else ctx.drawImage(s, c * 16, r * 32, 16, 32, X, Y, 16, 32);
   const cap = g.caps[r + ',' + c];   // a peaked guard cap: a flared navy crown, a black band with a gold cord, a shiny peak and a gold shield badge
-  if (cap && cap.top >= 0) {
+  if (cap && cap.top >= 0 && XMAS) {   // Christmas: a Santa hat with his gold badge on the fur
+    const L = cap.l, w = cap.r - cap.l + 1, T = cap.top, mid = L + (w >> 1), O = '#0B1022';
+    R(O, L + 2, T - 4, w - 4, 1); R(O, L, T - 3, w, 4); R('#D7263D', L + 2, T - 3, w - 4, 1); R('#D7263D', L + 1, T - 2, w - 2, 2); R('#FF7A7A', L + 3, T - 3, 3, 1);
+    R(O, L - 1, T, w + 2, 4); R('#F4F1E8', L, T + 1, w, 2);
+    if (r !== 1) R('#FFD23F', r === 2 ? cap.r - 2 : mid - 1, T + 1, 2, 2);
+    const px = r === 2 ? L - 1 : cap.r - 2; R(O, px - 1, T - 2, 5, 5); R('#FFFFFF', px, T - 1, 3, 3);
+  } else if (cap && cap.top >= 0) {
     const L = cap.l, w = cap.r - cap.l + 1, T = cap.top, mid = L + (w >> 1), O = '#0B1022';
     R(O, L, T - 4, w, 1); R(O, L - 1, T - 3, w + 2, 4);   // outline: the crown flares a little wider than the head
     R('#3554B8', L, T - 3, w, 2); R('#5677DA', L + 1, T - 3, w - 3, 1); R('#22398A', L, T - 1, w, 1);   // crown, its light top, its shaded fold
@@ -1139,6 +1234,12 @@ async function poll() {
   buildPanels(); buildOverlay(); layout();
   TEAM.forEach(a => { for (const h of [lbl[a.id], el('rn-' + a.id)]) { h.title = 'คลิกเพื่อเปลี่ยนชื่อ'; h.addEventListener('click', () => { if (!h.querySelector('input')) editName(a, h); }); } });
   applyNames();
+  const xlabel = () => { el('xbtn').textContent = '🎄 คริสต์มาส: ' + (XMAS ? 'เปิด' : 'ปิด'); };
+  xlabel();
+  el('xbtn').addEventListener('click', () => {
+    XMAS = !XMAS; try { localStorage.setItem('ninas-xmas', XMAS ? '1' : '0'); } catch {}
+    TEAM.forEach((a, i) => { sheets[i] = bake(i); avatar(el('av-' + a.id), i); }); bg = null; refreshScene(); xlabel();
+  });
   const zlabel = () => { el('zbtn').textContent = '🧟 ซอมบี้: ' + (ZOMBIE ? 'เปิด' : 'ปิด'); };
   zlabel();
   el('zbtn').addEventListener('click', () => {
