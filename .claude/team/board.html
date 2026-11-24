@@ -1273,6 +1273,14 @@ async function poll() {
   const LEAD = [72,null,76,79,81,null,79,76, 74,null,77,81,84,null,81,77,
                 72,null,76,79,84,null,81,79, 79,76,74,76,72,null,null,null];
   const BASS = [48,48,55,55, 53,53,57,57, 48,48,55,55, 55,55,52,52]; // per quarter note
+  // Christmas: "Jingle Bells" (J. S. Pierpont, 1857, public domain), the chorus, 16 bars of eighth notes, with an oom-pah bass and sleigh bells
+  const _ = null, E = 76, F = 77, G = 79, D = 74, C = 72;
+  const J1 = [E,_,E,_,E,_,_,_, E,_,E,_,E,_,_,_, E,_,G,_,C,_,_,D, E,_,_,_,_,_,_,_];
+  const XLEAD = [...J1, F,_,F,_,F,_,_,F, F,_,E,_,E,_,E,E, E,_,D,_,D,_,E,_, D,_,_,_,G,_,_,_,
+                 ...J1, F,_,F,_,F,_,_,F, F,_,E,_,E,_,E,E, G,_,G,_,F,_,D,_, C,_,_,_,_,_,_,_];
+  const cC = [48,55,48,55], cF = [53,48,53,48], cG = [43,50,43,50];
+  const XBASS = [...cC, ...cC, ...cC, ...cC, ...cF, ...cC, ...cG, ...cG, ...cC, ...cC, ...cC, ...cC, ...cF, ...cC, ...cG, ...cC];
+  const xmasOn = () => typeof XMAS !== 'undefined' && XMAS;
   let ctx, master, timer, step = 0, nextT = 0, on = false;
   try { on = localStorage.getItem('ninas-music') === '1'; } catch {}
 
@@ -1291,10 +1299,11 @@ async function poll() {
   }
   function schedule() {
     while (nextT < ctx.currentTime + 0.25) {
-      const i = step % LEAD.length, n = LEAD[i];
-      if (n != null) tone('square', hz(n), nextT, STEP * 0.9, 0.07);
-      if (i % 2 === 0) tone('triangle', hz(BASS[(i / 2) % BASS.length]), nextT, STEP * 1.8, 0.16);
-      if (i % 2 === 1) hat(nextT);
+      const X = xmasOn(), LD = X ? XLEAD : LEAD, BS = X ? XBASS : BASS, i = step % LD.length, n = LD[i];
+      if (n != null) { tone('square', hz(n), nextT, STEP * 0.9, 0.07); if (X) tone('triangle', hz(n + 12), nextT, STEP * 0.6, 0.03); }   // a soft bell an octave up at Christmas
+      if (i % 2 === 0) tone('triangle', hz(BS[(i / 2) % BS.length]), nextT, STEP * 1.8, 0.16);
+      if (X) { hat(nextT); if (i % 2 === 1) tone('sine', 2637, nextT, 0.08, 0.025); }   // sleigh bells on every eighth
+      else if (i % 2 === 1) hat(nextT);
       nextT += STEP; step++;
     }
   }
