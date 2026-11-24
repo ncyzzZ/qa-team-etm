@@ -255,7 +255,7 @@ const loadImg = (k, src) => new Promise(r => { const i = new Image(); i.onload =
 const FURN = ['DESK/DESK_FRONT','PC/PC_FRONT_ON_1','PC/PC_FRONT_ON_2','PC/PC_FRONT_ON_3','PC/PC_FRONT_OFF','PC/PC_SIDE','WOODEN_CHAIR/WOODEN_CHAIR_SIDE','TABLE_FRONT/TABLE_FRONT','SOFA/SOFA_FRONT','SOFA/SOFA_BACK','SOFA/SOFA_SIDE','COFFEE_TABLE/COFFEE_TABLE','COFFEE/COFFEE','PLANT/PLANT','PLANT_2/PLANT_2','SMALL_PAINTING_2/SMALL_PAINTING_2','WOODEN_CHAIR/WOODEN_CHAIR_BACK','LARGE_PLANT/LARGE_PLANT','BOOKSHELF/BOOKSHELF','DOUBLE_BOOKSHELF/DOUBLE_BOOKSHELF','WHITEBOARD/WHITEBOARD','CLOCK/CLOCK','SMALL_PAINTING/SMALL_PAINTING','LARGE_PAINTING/LARGE_PAINTING','HANGING_PLANT/HANGING_PLANT','BIN/BIN'];
 const sheets = [];   // per team index: baked 112x96 canvas (hue-shifted when needed)
 let bg = null;
-let ZOMBIE = true; try { ZOMBIE = localStorage.getItem('ninas-zombie') !== '0'; } catch {}
+let ZOMBIE = false; try { ZOMBIE = localStorage.getItem('ninas-zombie') === '1'; } catch {}   // off unless the viewer switched it on
 function zombify(c, h0 = 8, h1 = 50, rotten = false) {   // pale green skin, tired desaturated clothes (h0..h1 = the skin hues; rotten = greyer skin, darker clothes)
   const x = c.getContext('2d'), d = x.getImageData(0, 0, c.width, c.height), p = d.data;
   for (let i = 0; i < p.length; i += 4) {
