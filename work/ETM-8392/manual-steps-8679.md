@@ -7,7 +7,7 @@ Log in as Turnaround Manager.
 ## Data (`ep-etm-fe-qa/.env` `ETM8392_CMP_*`): Plan **Plan ART For PSD**, event **ART PSD** (Ramp 08 Jun 2026 18:00 → 16 Jun 2026 07:00, same on both pages)
 - Shutdown Logic: `/shutdown-event-list/events/6580f57b-4bc6-43d2-a4c3-a7b20952f851/planning/9938a273-6679-4732-bf2f-b9774000cdce/shutdown-logic/b6ea65da-a81f-4141-981b-9590d7997e7c`
 - Daily Report: `/shutdown-event-list/events/6580f57b-4bc6-43d2-a4c3-a7b20952f851/planning/9938a273-6679-4732-bf2f-b9774000cdce/daily-report/bbdb46c4-e89b-4a21-b372-d7ee2de75746`
-(If a URL does not open, use Planning tab → Plan Card "Plan ART For PSD" → Shutdown Logic / Daily Report ⋮ → View.)
+(The Shutdown Logic URL above opens the event list on QA (24 Nov 2026: the route is now `/logics/`); use Planning tab → Plan Card "Plan ART For PSD" → Shutdown Logic / Daily Report ⋮ → View.)
 
 ## What to look at (both pages, both lines)
 | Part | Shutdown Logic (reference, ETM-7897) |
@@ -17,7 +17,7 @@ Log in as Turnaround Manager.
 | Label | text `Ramp Down` / `Ramp Up` inside the badge, white, same font size |
 Tip: take both screenshots at the same browser zoom (100%) so thickness and badge size can be compared side by side.
 
-## ETM-8679 (4 steps)
+## ETM-8679 - line style, badge and label equal the Shutdown Logic lines (4 steps)
 writes data: no
 | # | Do | Expected | Picture |
 |---|---|---|---|
