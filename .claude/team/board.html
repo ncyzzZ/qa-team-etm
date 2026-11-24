@@ -530,6 +530,37 @@ function drawSanta(t) {
   ctx.save(); ctx.translate(cx, by); ctx.rotate(a); ctx.scale(1, sy); ctx.drawImage(santaCv, -SANTA.w / 2, -SANTA.h); ctx.restore();
   ctx.fillStyle = '#E8E8E8'; ctx.fillRect(SANTA.x + SANTA.w + 1, by - 30, 1, 29); ctx.fillRect(SANTA.x - 2, by - 26, 1, 25);   // tether cords to the floor
 }
+// Santa's sleigh and two reindeer fly across the top of the room every 45 seconds (the first time right after the board opens)
+const SLEIGH_EVERY = 45, SLEIGH_TAKES = 10;
+function drawSleigh(t) {
+  const p = (t % SLEIGH_EVERY) / SLEIGH_TAKES; if (p >= 1) return;
+  const R = (c, x0, y0, w, h) => { ctx.fillStyle = c; ctx.fillRect(Math.round(x0), Math.round(y0), w, h); }, O = '#2A1608';
+  const sx = -80 + p * (W + 100), by = 18 + 7 * Math.sin(p * Math.PI * 2), gal = Math.floor(t * 8) % 2;
+  const deer = (X, Y, f) => {   // a reindeer, side view, galloping right
+    R(O, X + 1, Y + 5, 12, 6); R('#8B5A2B', X + 2, Y + 6, 10, 4); R('#C9925A', X + 3, Y + 9, 7, 1); R('#F4F1E8', X, Y + 6, 2, 2);   // body, belly, white tail
+    for (const [lx, d] of [[X + 3, f ? -1 : 1], [X + 5, f ? 1 : -1], [X + 10, f ? 1 : -1], [X + 12, f ? -1 : 1]]) { R('#5A3A1E', lx, Y + 11, 1, 2); R('#5A3A1E', lx + d, Y + 13, 1, 1); }   // legs
+    R(O, X + 11, Y + 2, 4, 6); R('#8B5A2B', X + 12, Y + 3, 2, 4);   // neck
+    R(O, X + 12, Y + 1, 7, 4); R('#8B5A2B', X + 13, Y + 2, 5, 2); R('#1E1E24', X + 18, Y + 2, 1, 1); R('#000000', X + 14, Y + 2, 1, 1); R('#5A3A1E', X + 12, Y + 1, 1, 1);   // head, nose, eye, ear
+    R('#E8D5A8', X + 13, Y - 2, 1, 3); R('#E8D5A8', X + 12, Y - 3, 1, 1); R('#E8D5A8', X + 14, Y - 3, 1, 1); R('#E8D5A8', X + 15, Y - 1, 2, 1); R('#E8D5A8', X + 16, Y - 2, 1, 1);   // antlers
+    R('#D7263D', X + 10, Y + 5, 2, 5); R('#FFD23F', X + 11, Y + 9, 1, 1);   // collar and bell
+  };
+  // sparkles trailing behind the sleigh
+  for (let k = 1; k < 8; k++) { ctx.globalAlpha = 1 - k / 8; R(k % 2 ? '#FFD23F' : '#FFFFFF', sx - k * 6, by + 14 + Math.sin(t * 6 + k) * 2, 1, 1); }
+  ctx.globalAlpha = 1;
+  const d1 = [sx + 52, by + 2 + (gal ? -1 : 0)], d2 = [sx + 32, by + 3 + (gal ? 0 : -1)];
+  ctx.strokeStyle = '#7A5032'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx + 22, by + 2); ctx.lineTo(d2[0] + 11, d2[1] + 7); ctx.moveTo(d2[0] + 13, d2[1] + 7); ctx.lineTo(d1[0] + 11, d1[1] + 7); ctx.stroke();   // the reins
+  deer(d2[0], d2[1], gal); deer(d1[0], d1[1], 1 - gal);
+  const X = sx, Y = by;   // the sleigh: Santa holding the reins, a sack of presents behind him, gold runners
+  R(O, X - 1, Y + 2, 4, 6); R('#C21A2C', X, Y + 3, 2, 4);
+  R(O, X + 2, Y - 1, 9, 8); R('#7A5032', X + 3, Y, 7, 6); R('#A0703A', X + 4, Y, 3, 1); R('#3F7FD9', X + 5, Y - 3, 3, 3); R('#FFD23F', X + 6, Y - 3, 1, 3); R('#2E9E4F', X + 8, Y - 2, 2, 2);
+  R(O, X + 11, Y - 1, 9, 8); R('#D7263D', X + 12, Y, 7, 6); R('#F4F1E8', X + 12, Y + 4, 7, 1);
+  R('#F7C9A0', X + 15, Y - 4, 4, 3); R('#FFFFFF', X + 14, Y - 2, 6, 3); R('#000000', X + 17, Y - 4, 1, 1);
+  R('#D7263D', X + 14, Y - 7, 5, 3); R('#FFFFFF', X + 13, Y - 5, 7, 1); R('#FFFFFF', X + 12, Y - 7, 2, 2);
+  R('#D7263D', X + 19, Y + 1, 3, 2); R('#1E1E24', X + 21, Y + 1, 2, 2);
+  R(O, X, Y + 6, 24, 8); R('#C21A2C', X + 1, Y + 7, 22, 6); R('#E8283A', X + 1, Y + 7, 22, 1); R('#FFD23F', X + 1, Y + 12, 22, 1); R('#FFD23F', X + 4, Y + 9, 2, 2); R('#FFD23F', X + 18, Y + 9, 2, 2);
+  R(O, X + 21, Y + 4, 4, 4); R('#C21A2C', X + 22, Y + 5, 2, 2);
+  R('#B8860B', X + 5, Y + 14, 1, 2); R('#B8860B', X + 17, Y + 14, 1, 2); R('#FFD23F', X - 1, Y + 16, 25, 1); R('#FFD23F', X + 24, Y + 13, 1, 3); R('#FFD23F', X + 23, Y + 12, 1, 1);
+}
 function drawXmas(t) {   // things that move: snowflakes outside, twinkling lights, the star, the fire
   const R = (c, x0, y0, w, h) => { ctx.fillStyle = c; ctx.fillRect(x0, y0, w, h); };
   for (const [wx, wy, ww, wh] of WINDOWS) for (let k = 0; k < 11; k++) {
@@ -795,6 +826,7 @@ function draw(t) {
   items.sort((p, q) => p.z - q.z).forEach(o => o.f());
   if (XMAS) drawSnow(t);
   if (lightCv) ctx.drawImage(lightCv, 0, 0);
+  if (XMAS) drawSleigh(t);   // after the night shade, so it shows against the dark too
   ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = PHASE === 'day' ? 0.35 : 0.7;   // screens glow on the faces in front of them
   for (const a of TEAM) {
     if (a.state === 'blocked') continue;
