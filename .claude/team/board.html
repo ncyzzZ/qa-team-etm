@@ -429,6 +429,7 @@ function draw(t) {
         ctx.fillStyle = '#1B1B3A'; ctx.fillRect(bx - 1, by - 1, 12, 8); ctx.fillStyle = '#C0392B'; ctx.fillRect(bx, by, 10, 6); ctx.fillStyle = '#8E2A20'; ctx.fillRect(bx + 4, by, 2, 6); ctx.fillStyle = '#F4D58D'; ctx.fillRect(bx + 1 + pg * 7, by + 4, 2, 1); }   // seen from behind: the cover, with a bookmark that swings now and then
     } });
   });
+  items.push({ z: guard.y + 32 + (guard.moving ? 0.2 : 0.1), f: () => drawGuard(t) });
   if (hen.on) items.push({ z: hen.y + 9, f: () => {
     const hx = Math.round(hen.x), hy = Math.round(hen.y) + (hen.peck ? (Math.floor(t * 5) % 2) * 2 : -(Math.floor(t * 8) % 2)), o = hen.owner;   // pecking at the bowl: head down, up
     const fx = o ? Math.round(o.x) + (o.flip ? 0 : 16) : hx, fy = o ? Math.round(o.y) + 20 : hy;
@@ -451,15 +452,80 @@ function goto(a, x, y) {
   return new Promise(res => { a.tx = x; a.ty = y; a.moving = true; a.done = res; });
 }
 const hen = { x: 0, y: 0, dir: 1, on: false, owner: null, peck: false };
+// ---- ร.ป.ภ, the security guard: board only (never on the server, not in TEAM STATUS). He stands guard by the doorway and now and then
+// walks a round of the work room or the lounge. While a security test runs (an agent is working on a task that says security / ความปลอดภัย,
+// or the page is opened with ?sec=1) he takes out his red light baton and patrols without a break until it is over. ----
+const SEC = /security|ความปลอดภัย|\bxss\b|injection|owasp/i;
+let FORCE_SEC = false; try { FORCE_SEC = new URLSearchParams(location.search).get('sec') === '1'; } catch {}
+const POST = [WALL_X - 20, 128];   // beside the lower door post, on the work-room side
+const guard = { id: 'guard', name: 'ร.ป.ภ', guard: true, x: POST[0], y: POST[1], away: true, moving: false, dir: 'down', flip: false, face: null,
+  say: '', baton: false, alert: false, run: 0.8, next: performance.now() + 8000 + Math.random() * 12000, sheet: null, caps: null };
+const ROUNDS = [   // [x, y, look around here?]: only along the free lanes, like everyone else
+  [[POST[0], AISLE_TOP], [20, AISLE_TOP, 1], [20, 232, 1], [20, AISLE_TOP], [POST[0], AISLE_TOP]],             // the work room: the aisle and the left side
+  [[POST[0], AISLE_TOP], [LOUNGE_R, AISLE_TOP, 1], [LOUNGE_R, 250, 1], [LOUNGE_R, AISLE_TOP], [POST[0], AISLE_TOP]], // the lounge, down its right lane
+];
+function bakeGuard() {   // a navy uniform (never a zombie), and where the top of his head is in each frame, for the cap
+  const c = document.createElement('canvas'); c.width = 112; c.height = 96;
+  const x = c.getContext('2d'); x.filter = 'hue-rotate(200deg) saturate(0.7) brightness(0.85)'; x.drawImage(IMG.ch5, 0, 0); x.filter = 'none';
+  const p = x.getImageData(0, 0, 112, 96).data, op = (px, py) => p[(py * 112 + px) * 4 + 3] > 0, caps = {};
+  for (let r = 0; r < 3; r++) for (let k = 0; k < 7; k++) {
+    let top = -1, l = 16, rr = -1;
+    for (let y = 0; y < 32 && top < 0; y++) for (let xx = 0; xx < 16; xx++) if (op(k * 16 + xx, r * 32 + y)) { top = y; break; }
+    if (top >= 0) for (let y = top; y < top + 3; y++) for (let xx = 0; xx < 16; xx++) if (op(k * 16 + xx, r * 32 + y)) { l = Math.min(l, xx); rr = Math.max(rr, xx); }
+    caps[r + ',' + k] = { top, l, r: rr };
+  }
+  guard.sheet = c; guard.caps = caps;
+}
+function drawGuard(t) {
+  const g = guard, s = g.sheet; if (!s) return;
+  const [r, c, fl] = frame(g, t), X = Math.round(g.x), Y = Math.round(g.y);
+  const R = (col, x0, y0, w, h) => { ctx.fillStyle = col; ctx.fillRect(fl ? X + 16 - x0 - w : X + x0, Y + y0, w, h); };   // x0 in sprite space, mirrored with him
+  if (fl) { ctx.save(); ctx.translate(X + 16, Y); ctx.scale(-1, 1); ctx.drawImage(s, c * 16, r * 32, 16, 32, 0, 0, 16, 32); ctx.restore(); }
+  else ctx.drawImage(s, c * 16, r * 32, 16, 32, X, Y, 16, 32);
+  const cap = g.caps[r + ',' + c];   // the guard's cap: navy crown, dark peak, gold badge in front
+  if (cap && cap.top >= 0) {
+    const w = cap.r - cap.l + 1;
+    R('#2E3D7A', cap.l, cap.top - 1, w, 1); R('#1F2A5A', cap.l, cap.top, w, 2);
+    if (r === 0) { R('#0F1530', cap.l, cap.top + 2, w, 1); R('#FFD23F', cap.l + (w >> 1) - 1, cap.top, 2, 1); }
+    else if (r === 2) { R('#0F1530', cap.l + (w >> 1), cap.top + 2, (w >> 1) + 3, 1); R('#FFD23F', cap.r - 1, cap.top, 1, 1); }
+  }
+  if (g.baton) {   // red light baton held up, pulsing
+    const side = g.moving ? g.dir === 'side' : !!g.face, hx = side ? 13 : 12, hy = 16, lit = 0.5 + 0.5 * Math.sin(t * 9);
+    ctx.globalAlpha = 0.18 + 0.22 * lit; R('#FF2A2A', hx - 3, hy - 13, 8, 15); ctx.globalAlpha = 0.35 + 0.3 * lit; R('#FF2A2A', hx - 1, hy - 11, 4, 11); ctx.globalAlpha = 1;
+    R('#1B1B3A', hx - 1, hy - 1, 4, 5); R('#3A3A3A', hx, hy, 2, 3);   // grip in his hand
+    R('#C81E1E', hx, hy - 9, 2, 9); R(lit > 0.5 ? '#FFD0D0' : '#FF6B6B', hx, hy - 9, 1, 8);   // the light tube, bright core
+  }
+}
+const gWait = (ms) => sleep(ms);
+async function guardLoop() {
+  for (;;) {
+    await gWait(400);
+    if (!guard.alert && performance.now() < guard.next) continue;
+    if (guard.alert && !guard.baton) { guard.say = '🚨 มี security test! หยิบกระบองไฟ'; guard.face = null; await gWait(1500); guard.baton = true; }
+    const round = ROUNDS[Math.floor(Math.random() * ROUNDS.length)];
+    guard.run = guard.alert ? 1.25 : 0.8;
+    guard.say = guard.alert ? '🚨 ตรวจตราความปลอดภัย' : '👮 เดินตรวจรอบห้อง';
+    for (const [x, y, look] of round) {
+      await goto(guard, x, y);
+      if (look) { guard.say = guard.alert ? '🔦 ใครเจาะระบบ!?' : '👀 เรียบร้อยดี'; guard.face = 'l'; await gWait(900); guard.face = 'r'; await gWait(900); guard.face = null;
+        guard.say = guard.alert ? '🚨 ตรวจตราความปลอดภัย' : '👮 เดินตรวจรอบห้อง'; }
+    }
+    await goto(guard, POST[0], POST[1]);
+    guard.dir = 'down'; guard.face = null;
+    if (guard.alert) { guard.say = '🚪 เฝ้าประตู'; await gWait(1500); continue; }   // still under test: straight out on the next round
+    if (guard.baton) { guard.say = '✅ ปลอดภัยแล้ว เก็บกระบอง'; await gWait(1800); guard.baton = false; }
+    guard.say = ''; guard.next = performance.now() + 25000 + Math.random() * 35000;
+  }
+}
 function step(dt) {
   if (hen.on && hen.owner) {
     const o = hen.owner, side = o.dir === 'side' ? (o.flip ? 1 : -1) : -1, k = Math.min(1, 4 * dt), ox = hen.x;
     hen.x += (o.x + 4 + side * 22 - hen.x) * k; hen.y += (o.y + 23 - hen.y) * k;
     if (Math.abs(hen.x - ox) > 0.05) hen.dir = hen.x > ox ? 1 : -1;
   }
-  for (const a of TEAM) {
+  for (const a of [...TEAM, guard]) {
     if (!a.moving) continue;
-    const dx = a.tx - a.x, dy = a.ty - a.y, d = Math.hypot(dx, dy), s = SPEED * (a.run || 1) * dt * zombieGait(a);
+    const dx = a.tx - a.x, dy = a.ty - a.y, d = Math.hypot(dx, dy), s = SPEED * (a.run || 1) * dt * (a.guard ? 1 : zombieGait(a));
     if (Math.abs(dx) > Math.abs(dy)) { a.dir = 'side'; a.flip = dx < 0; } else a.dir = dy < 0 ? 'up' : 'down';
     if (d <= s) { a.x = a.tx; a.y = a.ty; a.moving = false; const r = a.done; a.done = null; if (r) r(); }
     else { a.x += dx / d * s; a.y += dy / d * s; }
@@ -637,6 +703,8 @@ function buildOverlay() {
     const l = document.createElement('div'); l.className = 'lbl' + (a.side === 'L' ? ' lblL' : a.side === 'R' ? ' lblR' : ''); l.textContent = a.name; stage.appendChild(l); lbl[a.id] = l;
     const b = document.createElement('div'); b.className = 'bub idle'; b.textContent = ''; stage.appendChild(b); bub[a.id] = b;
   });
+  const l = document.createElement('div'); l.className = 'lbl'; l.style.pointerEvents = 'none'; l.textContent = guard.name; stage.appendChild(l); lbl.guard = l;
+  const b = document.createElement('div'); b.className = 'bub idle hide'; stage.appendChild(b); bub.guard = b;
 }
 const MARK = { idle:'', waiting:'? ', done:'✓ ', blocked:'! ', working:'' };
 function bubbleText(a) { return a.state === 'idle' ? '' : MARK[a.state] + (a.task || LABEL[a.state]); }
@@ -665,6 +733,10 @@ function placeOverlay(now) {
     if (recv) { setBub(b, 'bub done', '📄 ได้รับงานแล้ว'); }
     else { const txt = a.say || (a.away ? '📄 ส่งงานต่อ' : bubbleText(a)); setBub(b, 'bub ' + a.state + ((a.away && a.moving) || !txt ? ' hide' : ''), txt); }   // idle at the desk: no bubble
   }
+  { const g = guard, l = lbl.guard, b = bub.guard;
+    l.style.left = ((g.x + 8) * K) + 'px'; l.style.top = ((g.y + 33) * K) + 'px'; l.style.fontSize = fs + 'px';
+    b.style.left = (Math.min(W - 42, Math.max(42, g.x + 8)) * K) + 'px'; b.style.top = ((g.y - 3) * K) + 'px'; b.style.fontSize = bfs + 'px'; b.style.maxWidth = (80 * K) + 'px';
+    setBub(b, 'bub ' + (g.alert ? 'blocked' : 'working') + (g.say ? '' : ' hide'), g.say); }
 }
 
 // ---- panels ----
@@ -792,6 +864,7 @@ function render(s) {
     if (st.state !== 'idle') online++;
   }
   el('online').textContent = online;
+  guard.alert = FORCE_SEC || TEAM.some((a) => !a.npc && a.state === 'working' && SEC.test(a.task));
   el('log').innerHTML = s.log.slice().reverse().map(l => '<li class="'+l.state+'"><time>'+hhmm(l.t)+'</time><b>'+esc(nameOf(l.agent))+'</b> '+linkify(l.text)+'</li>').join('');
   el('modal').classList.toggle('on', !!s.ask && dismissed !== s.ask.at);   // closed with the X: stays closed until a new question arrives
   if (s.ask) showAsk(s.ask);
@@ -836,6 +909,7 @@ async function poll() {
   for (const f of FURN) jobs.push(loadImg(f.split('/')[1], 'assets/furniture/' + f + '.png'));
   await Promise.all(jobs);
   TEAM.forEach((a, i) => { sheets[i] = bake(i); });
+  if (IMG.ch5) { bakeGuard(); guardLoop(); }
   bg = buildBackground();
   buildPanels(); buildOverlay(); layout();
   TEAM.forEach(a => { for (const h of [lbl[a.id], el('rn-' + a.id)]) { h.title = 'คลิกเพื่อเปลี่ยนชื่อ'; h.addEventListener('click', () => { if (!h.querySelector('input')) editName(a, h); }); } });
