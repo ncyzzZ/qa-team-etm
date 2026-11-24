@@ -39,3 +39,4 @@ evals/metrics/out.html
 
 # unzipped copies made by tools/export-skills.mjs (only the zips are kept in git)
 dist/account-skills/*/
+!dist/account-skills/*.zip
