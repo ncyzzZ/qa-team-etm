@@ -1,7 +1,7 @@
 # ETM-8392 QA data plan: Ramp snapshot different from the Event (ETM-8677, ETM-8688, ETM-8797)
 
 Decision D-1 (chat 2026-11-20): new data set for 8392, do not use the ETM-8042 plans (event "QA S26 Ramp").
-Dev answer (`ETM-8392-answers-ramp-source.md`): the lines read `daily_report.sdr_ramp_down_date / sdr_ramp_up_date`, written once when the Daily Report is created from the Plan's Ramp dates. To tell the snapshot apart from the Event, the Plan's Ramp dates must differ from the Event BEFORE the Daily Report is created.
+Dev answer ([ETM-8392-answers-ramp-source.md](ETM-8392-answers-ramp-source.md), copied into this folder 24 Nov 2026): the lines read `daily_report.sdr_ramp_down_date / sdr_ramp_up_date`, written once when the Daily Report is created from the Plan's Ramp dates. To tell the snapshot apart from the Event, the Plan's Ramp dates must differ from the Event BEFORE the Daily Report is created.
 
 ## Where
 - Event "ART PSD" (`DAILY_REPORT_EVENT_ID` 6580f57b-...), Planned Date **08 Jun 2026 18:00 → 16 Jun 2026 07:00** (every plan there now has Ramp = Event, read from the QA DB 2026-11-20).

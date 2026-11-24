@@ -4,7 +4,9 @@
 //   node .claude/team/team.mjs set <agent> <working|waiting|done|blocked|idle> "text" [--pct 0-100]
 //   node .claude/team/team.mjs ask "question for the user"
 //   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
-//   node .claude/team/team.mjs wait [--timeout 540]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>)
+//   node .claude/team/team.mjs wait [--timeout <seconds>]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>;
+//        no time limit by default: run it once in the background right after `ask`)
+//   node .claude/team/team.mjs answers   (board answers nobody has read yet, all jobs; silent when none; used by the UserPromptSubmit hook)
 //   node .claude/team/team.mjs clear
 //   node .claude/team/team.mjs log "text"
 //   node .claude/team/team.mjs link "Evidence report" <path or https url> --kind report   (shows in the board's LINKS panel)
@@ -106,15 +108,30 @@ if (cmd === 'start') {
 } else if (cmd === 'wait') {
   // The answer is read from the board server, which only reports answers it received from the board page itself.
   // Exit 0 = answered (ANSWER: <text>), 3 = no answer in time, 4 = the question was closed another way (e.g. answered in chat).
-  const i = args.indexOf('--timeout'); const limit = (i >= 0 ? Number(args[i + 1]) : 540) * 1000; const t0 = Date.now(); let seen = false;
+  // No time limit by default: a wait that gave up after 9 minutes lost every board answer given later (nobody re-ran it).
+  const num = (f, d) => { const i = args.indexOf(f); const v = i >= 0 ? Number(args[i + 1]) : NaN; return Number.isFinite(v) && v > 0 ? v : d; };
+  const limit = num('--timeout', 0) * 1000, poll = num('--poll', 1.5) * 1000, t0 = Date.now(); let seen = false;
+  console.log(limit ? `WAITING: up to ${limit / 1000} s for the board answer${JOB ? ' (' + JOB + ')' : ''}` : `WAITING: no time limit, until the board answers or the question is closed${JOB ? ' (' + JOB + ')' : ''}`);
   for (;;) {
     let s = null; try { s = await (await fetch(URL_BASE + '/state' + (JOB ? '?job=' + encodeURIComponent(JOB) : ''), { signal: AbortSignal.timeout(3000) })).json(); } catch {}
     if (s && s.ask) seen = true;
     if (s && s.answer) { console.log('QUESTION: ' + s.answer.question + '\nANSWER: ' + s.answer.text + '\n(answered on the board at ' + new Date(s.answer.at).toLocaleTimeString() + ', job ' + s.job + ')'); process.exit(0); }
     if (s && !s.ask && !s.answer) { console.log(seen ? 'CLOSED: the question was cleared without a board answer' : 'NO QUESTION: nothing is open on the board'); process.exit(4); }
-    if (Date.now() - t0 > limit) { console.log('TIMEOUT: no answer on the board yet'); process.exit(3); }
-    await new Promise((r) => setTimeout(r, 1500));
+    if (limit && Date.now() - t0 > limit) { console.log('TIMEOUT: no answer on the board yet'); process.exit(3); }
+    await new Promise((r) => setTimeout(r, poll));
   }
+} else if (cmd === 'answers') {
+  // Board answers waiting to be read, every job. Silent when there are none or the board is down (it runs on every chat message).
+  // Not an approval by itself: it tells the lead to run `wait --job <KEY>`, whose ANSWER: line is the approval.
+  const get = async (q) => { try { return await (await fetch(URL_BASE + '/state' + q, { signal: AbortSignal.timeout(1500) })).json(); } catch { return null; } };
+  const all = await get('');
+  const keys = (all?.jobs || []).filter((j) => j.ask).map((j) => j.key || j.ticket);
+  const lines = [];
+  for (const k of keys) {
+    const s = await get('?job=' + encodeURIComponent(k));
+    if (s?.answer) lines.push(`${k}: the user answered on the board "${String(s.answer.text).slice(0, 200)}" to "${String(s.answer.question || '').slice(0, 120)}". Read it with: node .claude/team/team.mjs wait --job ${k}`);
+  }
+  if (lines.length) console.log('BOARD ANSWERS NOT READ YET:\n' + lines.join('\n'));
 } else if (cmd === 'clear') {
   add({ type: 'clear' });
   add({ type: 'set', agent: 'lead', state: 'working', text: 'ทำงานต่อ' });
@@ -137,5 +154,5 @@ if (cmd === 'start') {
 } else if (cmd === 'status') {
   try { console.log(JSON.stringify(await (await fetch(URL_BASE + '/state')).json(), null, 2)); } catch { console.log('board not running'); }
 } else {
-  console.log('Commands: start <KEY> | set <agent> <state> "text" | ask "text" | clear | log "text" | open | stop | status');
+  console.log('Commands: start <KEY> | set <agent> <state> "text" | ask "text" | wait | answers | clear | log "text" | open | stop | status');
 }
