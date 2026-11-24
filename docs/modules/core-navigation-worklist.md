@@ -50,6 +50,15 @@ Shutdown Event List  (หน้าแรกหลัง login)
 - คอลัมน์: Work Number | Job Description | Equipment Number | Functional Location | Platform | Job Owner | Department | Manpower Resource | POB | Man-hrs. | Duration | Status | *(เลื่อนขวาเพื่อดูคอลัมน์เพิ่ม)*
 - Empty state: "No results found" + "Total Results: 0"
 
+#### Worklist table: how filter, search and delete really behave (for scripts and manual steps)
+- Column filter panel: clear its search text first; with a search text typed, `Select All` acts only on the options still shown. To pick exact values: clear search, untick `Select All` (none ticked), then tick the labels (ETM-8049, 24 Nov 2026, live check by the lead).
+- When no option of a column filter is ticked, the table is empty (same for every column, also Remark). Tick `Select All` or `Reset Table Filter` before a step that needs other rows (ETM-8391, 24 Nov 2026, user on QA).
+- Close the open column filter panel (Apply) before typing in the table search box; typing while it is open loses the filter (ETM-8391, 24 Nov 2026).
+- The table search box searches only after Enter (ETM-8049, 24 Nov 2026, live check).
+- After search or filter, wait for the search request's response (or a changed `Total Results`) before reading rows; old rows stay on screen until it arrives (ETM-8391, 24 Nov 2026, hid defect ETM-9229).
+- A deleted work stays in the grid with Status `D`; it does not disappear. A row off screen is not in the DOM (virtual scroll): scroll to it before acting, and fail if it is not found (ETM-8049, 24 Nov 2026).
+- Working Location Deck tag: open the cell editor before removing a tag (ETM-8049, 24 Nov 2026).
+
 ### หน้า Create Work (Create Work > Manual Create)
 - เป็น **หน้าเต็ม** ไม่ใช่ modal · URL ลงท้าย `/form` · หัวข้อ "Create Work"
 - Section **"General Information"**: `*Work Header` (dropdown) · `*Priority` (dropdown) · `*Job Owner` · `Department` (auto/disabled) · `Accommodation` (default LQ) · `Hot Bed` (default No) · `Remark` (0/200) · `Specific Requirement` (checkbox 15 ตัว)

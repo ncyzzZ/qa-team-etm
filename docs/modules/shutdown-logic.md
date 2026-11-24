@@ -18,6 +18,14 @@ Also read, not repeated here: skill `etm-simop-rules` (SIMOP / Work Conflict Mat
 - Manpower is changed in the Manpower Resource tab of Breakdown Setting; POB and Man-hrs there are calculated and greyed (ETM-7898, 4 Nov 2026).
 - Checked on QA, plan `eND50`, 4 Nov 15:48: histogram header = [blank, `Manpower Resource`, `Shift`, `Capacity`]; the only switches on the page are `Focus Critical Path` and `Focus Dropped Task`, both disabled; 5 resources: ECM Fitter, EI, Inspection, SSHE, test (ETM-7898, 4 Nov 2026).
 
+## Gantt grid behaviour for scripts (checked on QA)
+- Collapse the Manpower Resource histogram after every load (`aria-label="Hide histogram"` in `data-testid="sl-splitter-horizontal"`, shown on hover); it is not remembered (lead rule, 24 Nov 2026).
+- The grid has `deselectOnClick`: clicking an already selected cell un-selects it. Before Ctrl+V check the anchor cell is in `gantt.selectedCells`; click again if not (ETM-8521, 24 Nov 2026).
+- A paste whose date fails the plan schedule check is reverted as a whole. Derive pasted dates from the target row's own dates (e.g. current Start + 1 day), never a fixed date (ETM-8521, 24 Nov 2026).
+- Duration is fitted to the working calendar (typed 12 shows 10.00). After seeding or pasting, read the row's shown value and use that as expected (ETM-8521, 24 Nov 2026).
+- A Gantt bar spans non-working time, so its length is not the Duration in hours. Compare bar start/end with the row's Start/End from the task store (ETM-8521, 24 Nov 2026).
+- Count dependency lines with `.b-sch-dependency:not(.b-click-area)`; each line also has a transparent `b-click-area` path (ETM-8449, 24 Nov 2026).
+
 ## Confirmed rules
 Used Resource toggle (resource hiding)
 - Hide a row only when its allocated demand is 0 at every time point of the plan, for the tasks that pass the filters (ETM-7898, 4 Nov 2026, confirmed by: BA).
