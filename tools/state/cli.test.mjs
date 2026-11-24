@@ -221,3 +221,13 @@ test('a round re-discovered in the other folder replaces the old path instead of
   const s = C.init(K, [], opt);
   assert.equal(s.files.questions.filter((p) => p.endsWith('questions-for-BA-round2.md')).length, 1);
 });
+
+test('policy approval: only run-tests with the RUN-POLICY line', () => {
+  const opt = { root: fs.mkdtempSync(path.join(os.tmpdir(), 'state-policy-')) };
+  C.init('ETM-77', [], opt);
+  assert.throws(() => C.approve('ETM-77', ['push', '--kind', 'xray-push', '--source', 'policy', '--evidence', 'RUN-POLICY: auto ETM-77'], opt), /only for --kind run-tests/);
+  assert.throws(() => C.approve('ETM-77', ['run', '--kind', 'run-tests', '--source', 'policy', '--evidence', 'lead says ok'], opt), /RUN-POLICY/);
+  const s = C.approve('ETM-77', ['run 2 tests', '--kind', 'run-tests', '--source', 'policy', '--evidence', 'RUN-POLICY: auto ETM-77 tests=ETM-1 | C: re-run'], opt);
+  assert.equal(s.approvals.at(-1).verified, true);
+  assert.equal(C.phase('ETM-77', ['run'], opt).phase, 'run');
+});

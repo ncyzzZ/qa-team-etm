@@ -171,7 +171,9 @@ export function approve(key, args, opt) {
   const what = positional(args).join(' ');
   const a = { kind: flag(args, '--kind'), what, answer: flag(args, '--answer') || '', source: flag(args, '--source'), evidence: flag(args, '--evidence') || '', at: now() };
   if (!APPROVAL_KINDS.includes(a.kind)) throw new Error(`approve needs --kind (${APPROVAL_KINDS.join(', ')})`);
-  if (!['chat', 'board'].includes(a.source)) throw new Error('approve needs --source chat|board');
+  if (!['chat', 'board', 'policy'].includes(a.source)) throw new Error('approve needs --source chat|board|policy');
+  // policy: the standing run approval (TEAM.md "Standing approvals"); only run-tests, only with run-policy's own line
+  if (a.source === 'policy' && (a.kind !== 'run-tests' || !a.evidence.startsWith('RUN-POLICY: auto'))) throw new Error('--source policy is only for --kind run-tests, with the "RUN-POLICY: auto ..." line of tools/run-policy.mjs as --evidence');
   if (!a.evidence.trim()) throw new Error('approve needs --evidence (the user\'s chat reply, or the ANSWER: line of team.mjs wait)');
   if (a.source === 'board' && !a.evidence.includes('ANSWER:')) throw new Error('a board approval needs the ANSWER: line printed by team.mjs wait as --evidence');
   // board: the answer must be one the board recorded for this card (signed by the board server in events.jsonl).
@@ -180,7 +182,7 @@ export function approve(key, args, opt) {
     const ev = boardAnswers(key, opt.root).find((x) => x.text === a.answer);
     if (!ev) throw new Error(`no answer "${a.answer}" on the board for ${key} (events.jsonl): use the exact ANSWER text`);
     a.verified = true; a.boardAt = new Date(ev.t).toISOString();
-  } else a.verified = false;
+  } else a.verified = a.source === 'policy';
   const s = current(key, opt);
   s.approvals.push(a);
   return save(key, s, `approval ${a.kind}: ${what}`, opt.root);
@@ -204,7 +206,7 @@ export function show(key, args, opt) {
     ...LIST_KINDS.filter((k) => s.files[k].length).map((k) => `  ${k}: ${s.files[k].length} (latest ${s.files[k].at(-1)})`),
     `Decisions: ${s.decisions.length}${s.decisions.length ? ` (latest: ${s.decisions.at(-1).text.slice(0, 70)})` : ''}`,
     `Open: ${s.open.length ? s.open.slice(0, 4).map((q) => `${q.id} ${q.text.slice(0, 50)}`).join(' | ') : 'none'}`,
-    `Approvals: ${s.approvals.length ? s.approvals.slice(-3).map((a) => `${a.kind} (${a.source === 'chat' ? 'chat, not verified' : 'board'})`).join(', ') : 'none'}`,
+    `Approvals: ${s.approvals.length ? s.approvals.slice(-3).map((a) => `${a.kind} (${a.source === 'chat' ? 'chat, not verified' : a.source})`).join(', ') : 'none'}`,
     ...(s.history.some((h) => /^REBUILD/.test(h.change)) ? ['WARNING: this state was rebuilt after a broken file; check approvals and phase'] : []),
     `Gates: ${Object.entries(s.gates).map(([k, g]) => `${k} ${g.result}`).join(', ') || 'none'}`,
   ];

@@ -47,7 +47,7 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
   }
   if (notMapped.length) L.push('## Not mapped (add them to tools/regress-map.json)', '', ...notMapped.map((f) => `- \`${f}\``), '');
   if (wide.length) L.push('## Wide changes: consider the full regression', '', ...wide.map((w) => `- ${w.merge}: \`${w.file}\` is used by ${w.folders.length} pages`), '');
-  L.push('## Run commands', '', 'Run only after "พร้อมรันไหม", from the qa-team-etm folder. One run-card per card (its data is reset once before it). A spec appears once, under the card that owns its tests.', '', '```', ...cmds, '```', '');
+  L.push('## Run commands', '', 'Run under the standing run approval (check each with tools/run-policy.mjs; ask only when it says ask), from the qa-team-etm folder. One run-card per card (its data is reset once before it). A spec appears once, under the card that owns its tests.', '', '```', ...cmds, '```', '');
   return L.join('\n');
 }
 

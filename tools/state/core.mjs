@@ -55,7 +55,8 @@ export function validate(s, key) {
   if (isArr(s.decisions)) s.decisions.forEach((d, i) => { if (!isStr(d?.text) || !d.text || !isStr(d?.source) || !d.source) e.push(`decisions[${i}] needs text and source`); });
   if (isArr(s.approvals)) s.approvals.forEach((a, i) => {
     if (!APPROVAL_KINDS.includes(a?.kind)) e.push(`approvals[${i}].kind "${a?.kind}" not one of ${APPROVAL_KINDS.join(', ')}`);
-    if (!['chat', 'board'].includes(a?.source)) e.push(`approvals[${i}].source must be chat or board`);
+    if (!['chat', 'board', 'policy'].includes(a?.source)) e.push(`approvals[${i}].source must be chat, board or policy`);
+    if (a?.source === 'policy' && (a.kind !== 'run-tests' || !String(a.evidence).startsWith('RUN-POLICY: auto'))) e.push(`approvals[${i}]: a policy approval is only for run-tests, with the RUN-POLICY: auto line as evidence`);
     if (!isStr(a?.evidence) || !a.evidence.trim()) e.push(`approvals[${i}] has no evidence`);
     else if (a.source === 'board' && !a.evidence.includes('ANSWER:')) e.push(`approvals[${i}]: a board approval needs the ANSWER: line from team.mjs wait as evidence`);
   });
