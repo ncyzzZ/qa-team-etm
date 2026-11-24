@@ -15,6 +15,7 @@ node_modules/
 Thumbs.db
 .claude/team/events.jsonl
 .claude/team/server.pid
+.claude/team/.board-secret
 .claude/team/usage.json
 .claude/team/usage-raw.json
 
