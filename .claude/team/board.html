@@ -150,8 +150,7 @@
 <header>
   <h1>Ninas Agent (ETM)</h1>
   <div class="tools">
-    <button id="zbtn" class="zbtn" type="button"></button>
-    <button id="xbtn" class="zbtn" type="button"></button>
+    <label class="zbtn thl">🎉 อีเวนต์ <select id="evsel"></select></label>
     <label class="zbtn thl">🎨 ธีม <select id="thsel"></select></label>
     <button id="mbtn" class="zbtn" type="button" aria-pressed="false">🎵 เพลง: ปิด</button>
   </div>
@@ -1366,18 +1365,17 @@ async function poll() {
   buildPanels(); buildOverlay(); layout();
   TEAM.forEach(a => { for (const h of [lbl[a.id], el('rn-' + a.id)]) { h.title = 'คลิกเพื่อเปลี่ยนชื่อ'; h.addEventListener('click', () => { if (!h.querySelector('input')) editName(a, h); }); } });
   applyNames();
-  const xlabel = () => { el('xbtn').textContent = '🎄 คริสต์มาส: ' + (XMAS ? 'เปิด' : 'ปิด'); };
-  xlabel();
-  el('xbtn').addEventListener('click', () => {
-    XMAS = !XMAS; try { localStorage.setItem('ninas-xmas', XMAS ? '1' : '0'); } catch {}
-    TEAM.forEach((a, i) => { sheets[i] = bake(i); avatar(el('av-' + a.id), i); }); bg = null; refreshScene(); xlabel();
-  });
-  const zlabel = () => { el('zbtn').textContent = '🧟 ซอมบี้: ' + (ZOMBIE ? 'เปิด' : 'ปิด'); };
-  zlabel();
-  el('zbtn').addEventListener('click', () => {
-    ZOMBIE = !ZOMBIE; try { localStorage.setItem('ninas-zombie', ZOMBIE ? '1' : '0'); } catch {}
-    TEAM.forEach((a, i) => { sheets[i] = bake(i); avatar(el('av-' + a.id), i); }); zlabel();
-  });
+  { // one "event" menu for the seasonal looks (Christmas, zombies), instead of a button each; the choice is kept per viewer as before
+    const EV = [['none', 'ไม่มี', false, false], ['xmas', 'คริสต์มาส 🎄', true, false], ['zombie', 'ซอมบี้ 🧟', false, true], ['both', 'คริสต์มาส + ซอมบี้', true, true]];
+    const sel = el('evsel'); sel.innerHTML = EV.map(([k, n]) => '<option value="' + k + '">' + n + '</option>').join('');
+    sel.value = (EV.find(([, , x, z]) => x === XMAS && z === ZOMBIE) || EV[0])[0];
+    sel.addEventListener('change', () => {
+      const [, , x, z] = EV.find(([k]) => k === sel.value); const xc = x !== XMAS;
+      XMAS = x; ZOMBIE = z; try { localStorage.setItem('ninas-xmas', XMAS ? '1' : '0'); localStorage.setItem('ninas-zombie', ZOMBIE ? '1' : '0'); } catch {}
+      TEAM.forEach((a, i) => { sheets[i] = bake(i); avatar(el('av-' + a.id), i); });
+      if (xc) { bg = null; refreshScene(); }
+    });
+  }
   window.addEventListener('resize', layout);
   { const TH = ['dark', 'light'], NM = { dark:'มืด', light:'สว่าง' }; /* a theme saved before (green, warm, princess) falls back to dark */ let t = 'dark'; try { t = localStorage.getItem('ninas-theme') || 'dark'; } catch {}
     if (!TH.includes(t)) t = 'dark';
