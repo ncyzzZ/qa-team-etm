@@ -36,3 +36,6 @@ evals/metrics/out.html
 
 # Playwright MCP working files (overlay scripts, downloads, snapshots)
 .playwright-mcp/
+
+# unzipped copies made by tools/export-skills.mjs (only the zips are kept in git)
+dist/account-skills/*/
