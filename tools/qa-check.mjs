@@ -202,14 +202,21 @@ function falsePass(name, text) {
 // A test body that saves, deletes, imports or changes state on QA (UI button names or DB writes). A heuristic: helpers can hide
 // a write, so the automator still tags by what the test does (agents/automation-engineer.md step 4c).
 const WRITE_RE = /(?:name:\s*(?:['"`]|\/\^?)|getByText\(\s*['"`])(?:[Ss]ave|[Dd]elete|[Rr]emove|[Ii]mport|[Ss]ubmit|[Uu]pdate [Pp]rogress|[Cc]onfirm|[Ff]reeze|[Uu]nfreeze|[Aa]ctivate|[Ss]et [Aa]ctive|[Ee]xtension)\b[^;\n]{0,40}?\)\s*\.(?:first\(\)\.|last\(\)\.)?(?:click|dblclick)\(|\bqueryDb\([^)]*\b(?:INSERT|UPDATE|DELETE)\b|\bawait\s+(?:\w+\.)?(?:save|delete|remove|create|import|activate|freeze|unfreeze|submit)(?!\w*(?:Screenshot|Picture|Evidence|Shot))[A-Z]\w*\(/;
-/** The Story key of a spec: `(ETM-1234)` in a describe title, else the test's own key. */
-const cardOf = (text, key) => (text.match(/test\.describe(?:\.\w+)?\(\s*['"`][^'"`]*\((ETM-\d+)\)/) || [])[1] || key;
-/** True when <repo>/scripts/seed/cards/<card>.data.cjs exists, the repo found by walking up from the spec file. */
-function cardDataFor(specFile, card) {
+/** Card keys a spec belongs to: every ETM key named in the spec or in the local files it imports (helpers call cardId('ETM-n')). */
+function cardsOf(specFile, text) {
+  const keys = new Set(text.match(/ETM-\d+/g) || []);
+  for (const m of text.matchAll(/from\s+['"](\.{1,2}\/[^'"]+)['"]/g)) {
+    const base = path.resolve(path.dirname(path.resolve(specFile)), m[1]);
+    for (const f of [base, base + '.ts']) { const t = read(f); if (t != null) { (t.match(/ETM-\d+/g) || []).forEach((k) => keys.add(k)); break; } }
+  }
+  return [...keys];
+}
+/** True when one of the cards has <repo>/scripts/seed/cards/<card>.data.cjs, the repo found by walking up from the spec file. */
+function cardDataFor(specFile, cards) {
   let d = path.dirname(path.resolve(specFile));
   for (let i = 0; i < 8; i++) {
-    const cards = path.join(d, 'scripts', 'seed', 'cards');
-    if (fs.existsSync(cards)) return fs.existsSync(path.join(cards, `${card}.data.cjs`));
+    const dir = path.join(d, 'scripts', 'seed', 'cards');
+    if (fs.existsSync(dir)) return cards.some((c) => fs.existsSync(path.join(dir, `${c}.data.cjs`)));
     const up = path.dirname(d); if (up === d) break; d = up;
   }
   return true; // repo not found (fixture outside PW_REPO): do not block
@@ -226,6 +233,7 @@ function checkSpec() {
     const name = path.basename(f);
     const re = /\btest(?:\.(?:only|skip|fixme))?\(\s*(['"`])([^'"`]+)\1/g;
     const marks = [...text.matchAll(re)].map((m) => ({ title: m[2], at: m.index, whole: m[0] }));
+    let ownedCache;
     const describeTags = [...text.matchAll(/test\.describe(?:\.\w+)?\(\s*(['"`])((?:(?!\1).)*)\1/g)].map((m) => m[2]).join(' ').match(/@[\w-]+/g)?.join(' ') ?? '';
     if (!marks.length) warn(`${name}: no test() found`);
     marks.forEach((t, i) => {
@@ -251,7 +259,7 @@ function checkSpec() {
       const tags = `${t.title} ${describeTags}`;
       const writes = body.match(WRITE_RE);
       if (/@readonly/i.test(tags) && writes) err(`${name}: ${key || ''} is tagged @readonly but looks like it writes data ("${writes[0].slice(0, 40)}"): remove the tag`);
-      if (writes && !/@shared-data/i.test(tags) && key && !cardDataFor(f, cardOf(text, key))) err(`${name}: ${key} writes data ("${writes[0].slice(0, 40)}") but the card has no scripts/seed/cards/<KEY>.data.cjs and the test is not tagged @shared-data: give the card its own data (create: true), or tag @shared-data with the reason`);
+      if (writes && !/@shared-data/i.test(tags) && key && !(ownedCache ??= cardDataFor(f, cardsOf(f, text)))) err(`${name}: ${key} writes data ("${writes[0].slice(0, 40)}") but the card has no scripts/seed/cards/<KEY>.data.cjs and the test is not tagged @shared-data: give the card its own data (create: true), or tag @shared-data with the reason`);
     });
     const hits = (re2, m, lvl = err) => { const n = (text.match(re2) || []).length; if (n) lvl(`${name}: ${m} (${n}x)`); };
     hits(/\bwaitForTimeout\(/g, 'waitForTimeout is not allowed, wait for a condition instead');
