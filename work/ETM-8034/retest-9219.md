@@ -46,3 +46,4 @@ Shutdown Logic `S26 Row Colour` (event NN TEST QA), Turnaround Manager.
 - So the app keeps the colours; the script failure at step 20 was not reproduced. Likely script/env timing: the first page load hung today (Gantt never rendered, `window.bryntum` undefined) until a reload, same as the script's retry.
 - Row put back to No Color / No Color and saved after the check (start state).
 - Pictures: `manual-8859-step15-20/` (18-after-redo, 19-after-save, 20-after-reload).
+- 25 Nov 14:07 (user OK in chat): Xray ETM-8875 8856 + 8858 PASSED with evidence; "Retest: Passed" comment with 3 pictures on ETM-9219 (comment 600526) and ETM-10034 (comment 600527). Status still Deployed to QA, no [QA] Retest sub-task yet.
