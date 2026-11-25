@@ -110,6 +110,14 @@ question.
   alignment rule.
 - Someone else changes or deletes the object while it is open (second tab or
   user): the next Save, Export or edit shows the proper message.
+- Strange input in EVERY free-text field the Story adds or shows (names,
+  codes and numbers such as WIN#, not only Remark): special characters
+  (\ / : * ? " < > | & # % '), leading and trailing spaces, a very long
+  value, Thai and emoji, a value that looks like HTML. Check the field, the
+  saved value after reload, and every place it is shown or exported. One
+  field tested does not prove the others (defect exam ETM-7860, 2026-11-25:
+  special characters were tried in Remark and Department only, the bug was in
+  WIN#). Use only values the screen lets the user type.
 
 ## Effects and their reverse (finish the flow)
 A case often sets up the effect and stops: the note is gone, the new value is
