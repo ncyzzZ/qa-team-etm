@@ -110,3 +110,24 @@ Rule in Story: 3/5 -> 4/5. Not in Story: 0/7 -> 0/7. Bug-check fixes wrong or he
 | Sprint 26 cards + ETM-7345/7348 (rules were made from these) | 4/8 | 8/8 (ETM-9229/8902 with a leading prompt) |
 | Equipment Mob Plan ETM-7311/7306 | 3/12 | 4/12 |
 | ETM-7902/7314 (never used for a rule) | 5/7 | 6/7 |
+| ETM-7899/7350/7315 (never used for a rule) | 5/9 | 5/9 |
+
+### Fourth set, never seen by the team (2026-11-25): ETM-7899, ETM-7350, ETM-7315
+
+Stories of another tester (Dechathon); the team never designed them. Same method: fresh designer, bug-check with the generic prompt, one fix round. `equipment-mob-plan.md` withheld for ETM-7315 (holds later BA answers). ETM-7876 dropped: grid edit rule of ETM-7311, not in the Export Story.
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-8433 | yes | CAUGHT (TC-008) | CAUGHT | Work Header list in Master Data order. First scored MISSED: block wanted "filter", the case says only "Expand `Work Header`". Signature widened, test added. |
+| ETM-8437 | yes (AND rule) | MISSED | MISSED | TC-022 combines Work Header with Priority (expects empty body), never with Date. Near miss: the bug may not be Date-only. |
+| ETM-8439 | partly | MISSED | MISSED | TC-027 adds the value on Shutdown Logic; the bug is a value created on the Worklist page. |
+| ETM-8295 | yes | CAUGHT (TC-033) | CAUGHT | shorten, then extend back, note must not return. First scored MISSED ("move the End Date into an earlier week"); signature widened, test added. |
+| ETM-8328 | yes | MISSED | MISSED | TC-035 (Shutdown Type) and TC-036 (Actual + Update Progress) shrink the grid but never extend it back; "note is gone" passes on the bug while the week is hidden. |
+| ETM-8361 | no | MISSED | MISSED | no case checks the plan dates after Save. First scored CAUGHT by TC-034 on "End Date ... same week"; signature narrowed, test added. |
+| ETM-7863 | yes | CAUGHT (TC-022) | CAUGHT | |
+| ETM-7869 | partly | CAUGHT (TC-023) | CAUGHT | |
+| ETM-7892 | yes | CAUGHT (TC-024) | CAUGHT | |
+
+5/9 -> 5/9 (rule in Story: 5/7). Bug-check opened 11 / 22 / 13 rows and the fix round added 9 / 16 / 8 cases (42->51, 36->52, 37->45), none of them on the missed defects. Pattern of the misses: the case does the first half of the flow and stops ("gone" without coming back, a new value made on the same page instead of the page where users make it, AND with one other filter instead of each). Candidate rule, not added yet: for "X is removed/hidden when Y" also undo Y and check X stays removed; for "new values appear", create the value on every page that can create it. Measure on another set before adding.
+
+Drafts and bug-checks: `_story-<KEY>/runs/2026-11-25-*`. qa-check could not read the exam path for the designers (they passed a key); not checked.

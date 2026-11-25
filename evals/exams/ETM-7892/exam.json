@@ -1,0 +1,35 @@
+{
+  "defect": "ETM-7892",
+  "story": "ETM-7315",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "In the exported Excel, Premob Inspection values are left-aligned instead of centered.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7315",
+  "run": "STORY-ETM-7315",
+  "frozen": "evals/exams/_story-ETM-7315/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "xlsx",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "premob"
+        ],
+        [
+          "center",
+          "centre"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 5.2: Premob Inspection center-aligned. Withhold docs/modules/equipment-mob-plan.md from the designer (it holds BA answers on ETM-7315 learned after these defects), as for ETM-7314."
+}

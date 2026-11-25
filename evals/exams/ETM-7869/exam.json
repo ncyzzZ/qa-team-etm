@@ -1,0 +1,36 @@
+{
+  "defect": "ETM-7869",
+  "story": "ETM-7315",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "In the exported Excel, No. values are left-aligned instead of centered (and Material Description indentation differs from the Work Header).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7315",
+  "run": "STORY-ETM-7315",
+  "frozen": "evals/exams/_story-ETM-7315/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "xlsx",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "re:(?<!(mmr|win#|item|ccu)\\s)\\bno\\.",
+          "re:column a\\b"
+        ],
+        [
+          "center",
+          "centre"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 5.2: No. center-aligned (in Story). The Material Description indentation half is not in the Story (it says left-aligned) and is not scored. Withhold docs/modules/equipment-mob-plan.md from the designer (it holds BA answers on ETM-7315 learned after these defects), as for ETM-7314."
+}

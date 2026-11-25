@@ -1,0 +1,66 @@
+{
+  "defect": "ETM-8439",
+  "story": "ETM-7899",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "A new Platform and Work Header created on the Worklist page do not appear in the Shutdown Logic Filter Panel lists.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7899",
+  "run": "STORY-ETM-7899",
+  "frozen": "evals/exams/_story-ETM-7899/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "worklist"
+        ],
+        [
+          "new",
+          "add",
+          "create"
+        ],
+        [
+          "platform",
+          "work header"
+        ]
+      ],
+      [
+        [
+          "filter"
+        ],
+        [
+          "platform",
+          "work header"
+        ],
+        [
+          "appear",
+          "listed",
+          "shows",
+          "show ",
+          "present",
+          "registers",
+          "included",
+          "visible",
+          "available",
+          "contains",
+          "in the list"
+        ],
+        [
+          "!",
+          "not listed",
+          "does not appear",
+          "not appear",
+          "not shown",
+          "not in the list",
+          "removed",
+          "purged",
+          "no longer"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 5.1: a newly introduced value registers in the filter list at once. The Story speaks of tasks added or edited; that they may come from the Worklist page is not written."
+}

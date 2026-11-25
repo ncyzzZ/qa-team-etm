@@ -1,0 +1,121 @@
+{
+  "defect": "ETM-8437",
+  "story": "ETM-7899",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "A Work Header filter plus a Date range in which it has no task hides the Work Header row but leaves its Platform row.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7899",
+  "run": "STORY-ETM-7899",
+  "frozen": "evals/exams/_story-ETM-7899/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "any": [
+      {
+        "block": [
+          [
+            "work header"
+          ],
+          [
+            "platform"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "date"
+            ],
+            [
+              "no task",
+              "no tasks",
+              "zero task",
+              "no activit",
+              "outside",
+              "none of its",
+              "no row",
+              "no work",
+              "no matching"
+            ]
+          ],
+          [
+            [
+              "platform"
+            ],
+            [
+              "hidden",
+              "hide",
+              "not shown",
+              "not displayed",
+              "disappear",
+              "not visible",
+              "removed from"
+            ],
+            [
+              "!",
+              "platform row stays",
+              "platform row remains",
+              "platform row is still",
+              "platform row still",
+              "platform stays",
+              "platform remains",
+              "platform is still",
+              "platform still"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "work header"
+          ],
+          [
+            "platform"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "date"
+            ],
+            [
+              "no task",
+              "no tasks",
+              "zero task",
+              "no activit",
+              "outside",
+              "none of its",
+              "no row",
+              "no work",
+              "no matching"
+            ]
+          ],
+          [
+            [
+              "empty",
+              "no rows",
+              "all rows hidden",
+              "only the header",
+              "only the table header",
+              "header row only"
+            ],
+            [
+              "!",
+              "platform row stays",
+              "platform row remains",
+              "platform row is still",
+              "platform row still",
+              "platform stays",
+              "platform remains",
+              "platform is still",
+              "platform still"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null,
+  "note": "AC 3.2 parent auto-hiding names 'unchecked or filtered out'; AC 4.1 AND with the Date filter. The combination with Date is not spelled out."
+}

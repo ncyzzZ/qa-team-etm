@@ -1,0 +1,108 @@
+{
+  "defect": "ETM-8328",
+  "story": "ETM-7350",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Key Milestone notes reappear after the timeline is shortened then extended, also when shortened by Shutdown Type or by removing Actual + Update Progress.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7350",
+  "run": "STORY-ETM-7350",
+  "frozen": "evals/exams/_story-ETM-7350/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "milestone",
+        "note"
+      ],
+      [
+        "shutdown type",
+        "shutdown size",
+        "sd type",
+        "update progress"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "shutdown type",
+          "shutdown size",
+          "sd type",
+          "update progress",
+          "actual"
+        ],
+        [
+          "shorten",
+          "contract",
+          "narrow",
+          "later start",
+          "later date",
+          "earlier end",
+          "smaller",
+          "out of range",
+          "outside",
+          "falls out",
+          "out of the time",
+          "minor",
+          "delete",
+          "clear",
+          "remove"
+        ]
+      ],
+      [
+        [
+          "extend",
+          "widen",
+          "back to the original",
+          "restore",
+          "original",
+          "back to cover",
+          "expand"
+        ],
+        [
+          "timeframe",
+          "range",
+          "timeline",
+          "date",
+          "week",
+          "plan",
+          "size",
+          "type"
+        ]
+      ],
+      [
+        [
+          "empty",
+          "no icon",
+          "no note",
+          "no milestone",
+          "not reappear",
+          "does not reappear",
+          "not shown again",
+          "not displayed again",
+          "not come back",
+          "is gone",
+          "+ button",
+          "stays deleted",
+          "still deleted",
+          "not restored",
+          "deleted"
+        ],
+        [
+          "!",
+          "note reappears",
+          "icon reappears",
+          "milestone reappears",
+          "is restored",
+          "comes back with",
+          "reappears with",
+          "note is kept",
+          "note is preserved"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 3.5 names both triggers (Edit Plan incl. Shutdown Type, deleting Actual + Update Progress). The Edit Plan date path is counted for ETM-8295; this exam needs the Shutdown Type or Actual/Update Progress path."
+}

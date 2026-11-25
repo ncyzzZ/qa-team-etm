@@ -172,3 +172,53 @@ test('ETM-7902 set: other wording is understood, "table" is not "Tab", Tab on an
   assert.deepEqual(ids('### TC-029 Manpower Mob Plan dates\n1. For each row of the table type the input into Mobilization Date and press `Enter`. -> The cell shows the expected value.', 'ETM-8456'), []);
   assert.deepEqual(ids('### TC-002 Shutdown Logic\n5. Type `6/6/26 08:00`. -> Typed.\n6. Press `Tab`. -> The End cell shows `06 Jun 2026 08:00`.', 'ETM-8456'), []);
 });
+
+// Shutdown Logic filters (ETM-7899), Key Milestones (ETM-7350) and Equipment Mob Plan export (ETM-7315) exams
+const set4 = {
+  'ETM-8433': ['### TC-1 Work Header order\n1. Open the Filter Panel and expand Work Header. -> The Work Header options follow the Master Data sequence (Mechanical (PM), Mechanical (CM), ...), not the row order.',
+               '### TC-1 Work Header list\n1. Open the Filter Panel and expand Work Header. -> All Work Headers of the plan are listed with Select All checked.'],
+  'ETM-8437': ['### TC-1 Work Header and Date\n1. In the Filter Panel keep only Work Header `Valve Greasing` (the only one under Platform `WP-A`). -> Set.\n2. Set the Date filter to a range in which that Work Header has no task. -> Platform `WP-A` row and the Work Header row are both hidden.',
+               '### TC-1 Work Header and Date\n1. In the Filter Panel keep only Work Header `Valve Greasing` (the only one under Platform `WP-A`). -> Set.\n2. Set the Date filter to a range that covers its tasks. -> Platform `WP-A`, the Work Header and its tasks show.'],
+  'ETM-8439': ['### TC-1 New values from the Worklist\n1. On the Worklist page create a Work with a new Platform `WP-NEW` and a new Work Header, save. -> Saved.\n2. Open Shutdown Logic and the Filter Panel. -> `WP-NEW` and the new Work Header are listed in the Platform and Work Header filters.',
+               '### TC-1 New values\n1. On the Worklist page create a Work with a new Platform `WP-NEW`, save. -> Saved.\n2. Open Shutdown Logic. -> The new row shows in the Gantt table.'],
+  'ETM-8295': ['### TC-1 Notes outside a shortened range\n1. Add a note in the last week and save. -> Icon shows.\n2. Edit Plan: shorten the plan so that week is outside the range, Save. -> The week is gone.\n3. Edit Plan: extend the range back to the original end date, Save. -> The Key Milestones cell of that week is empty (+ on hover); the note does not reappear.',
+               '### TC-1 Notes outside a shortened range\n1. Add a note in the last week and save. -> Icon shows.\n2. Edit Plan: shorten the plan so that week is outside the range, Save. -> The note is deleted without a prompt.'],
+  'ETM-8328': ['### TC-1 Shutdown Type shrinks the range\n1. Add a note in the last week. -> Icon shows.\n2. Edit Plan: change Shutdown Type to Minor SD so that week falls out, Save. -> The week is gone.\n3. Edit Plan: change the Shutdown Type back to the original, Save. -> The Key Milestones cell of that week is empty; the note does not reappear.',
+               '### TC-1 Shutdown Type shrinks the range\n1. Add a note in the last week. -> Icon shows.\n2. Edit Plan: change Shutdown Type to Minor SD so that week falls out, Save. -> The note is deleted.'],
+  'ETM-8361': ['### TC-1 Dates after Save\n1. Note Start Date and End Date of the plan, open Edit Plan, rename one activity and click Save. -> Saved.\n2. Look at the plan Start Date and End Date. -> Both are unchanged (same as noted in step 1).',
+               '### TC-1 Save\n1. Open Edit Plan, rename one activity and click Save. -> Toast `Edit Success`.'],
+  'ETM-7892': ['### TC-1 Export alignment\n1. Export the plan and open the .xlsx. -> Opened.\n2. Look at Premob Inspection. -> `Yes` / `No` values are center-aligned.',
+               '### TC-1 Export values\n1. Export the plan and open the .xlsx. -> Opened.\n2. Look at Premob Inspection. -> It shows `Yes` / `No`.'],
+  'ETM-7869': ['### TC-1 Export No.\n1. Export the plan and open the .xlsx. -> Opened.\n2. Look at column `No.`. -> 1, 2, 3 ... continuous, center-aligned.',
+               '### TC-1 Export MMR\n1. Export the plan and open the .xlsx. -> Opened.\n2. Look at `MMR No.`. -> Text, center-aligned.'],
+  'ETM-7863': ['### TC-1 Empty Work Header in Excel\n1. Export a plan with an empty Work Header and open the .xlsx. -> Opened.\n2. Look at the row under it. -> `No equipment assigned.` merged A-X, italic gray #8C8C8C on white.',
+               '### TC-1 Empty Work Header in Excel\n1. Export a plan with an empty Work Header and open the .xlsx. -> Opened.\n2. Look at the row under it. -> `No equipment assigned.` merged A-X.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set4)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('ETM-7899/7350/7315 set: cases that expect the bug are not counted, other wording is', () => {
+  // Platform row expected to stay = the bug
+  assert.deepEqual(ids('### TC-1 x\n1. In the Filter Panel keep one Work Header and set a Date range with no task for it. -> The Work Header row is hidden; the Platform row stays visible.', 'ETM-8437'), []);
+  // empty-table wording catches too
+  assert.deepEqual(ids('### TC-2 x\n1. Keep Work Header `MFL` only and set the Date filter outside all its tasks. -> Only the table header shows, all rows hidden incl. Platform.', 'ETM-8437'), ['TC-2']);
+  // a note that comes back is the bug
+  assert.deepEqual(ids('### TC-3 x\n1. Edit Plan: shorten the range so the note week is outside, Save. -> Week gone.\n2. Edit Plan: extend back to the original range, Save. -> The note reappears with its icon.', 'ETM-8295'), []);
+  // ETM-8328 needs the Shutdown Type or Actual/Update Progress path, the plain date path is ETM-8295
+  assert.deepEqual(ids('### TC-4 x\n1. Edit Plan: shorten the range so the note week is outside, Save. -> Week gone.\n2. Edit Plan: extend back to the original range, Save. -> The cell is empty; the note does not reappear.', 'ETM-8328'), []);
+  assert.deepEqual(ids('### TC-5 x\n1. Clear the Actual (%) of the outer week and click Update Progress so the note week falls out. -> Grid contracts.\n2. Edit Plan: extend the range back to cover that week, Save. -> No icon in that week.', 'ETM-8328'), ['TC-5']);
+  // a date shifted by one day expected = the bug; "No equipment" placeholder in the "No." regex is not the No. column
+  assert.deepEqual(ids('### TC-6 x\n1. Open Edit Plan and click Save. -> Start Date stays one day earlier than before (day earlier).', 'ETM-8361'), []);
+  assert.deepEqual(ids('### TC-7 x\n1. Export the plan (.xlsx). -> Opened.\n2. Look at the empty header row. -> `No equipment assigned.` center of the merged row.', 'ETM-7869'), []);
+});
+test('ETM-7899/7350 set: signature fixes from the first draft (read by hand)', () => {
+  // ETM-8433: the draft never says "filter" inside the case, only "Expand `Work Header`" (TC-008 of the 2026-11-25 draft)
+  assert.deepEqual(ids('### TC-008 x\nPrecondition: common\n1. Expand `Work Header`. -> The options are listed in the Master Data sequence.', 'ETM-8433'), ['TC-008']);
+  // ETM-8295: "move the End Date to a date inside an earlier week" is a shortening (TC-033)
+  assert.deepEqual(ids('### TC-033 x\nPrecondition: a note in the last week\n2. Edit Plan, move the End Date of the last activity to a date inside an earlier week, click `Save`. -> Edit Plan saves.\n5. (Check) Go back and extend the dates to the old End Date. -> The deleted note does not come back; the week cell is empty.', 'ETM-8295'), ['TC-033']);
+  // ETM-8361: "End Date ... inside the same week" is not a check that the dates did not move (TC-034)
+  assert.deepEqual(ids('### TC-034 x\n1. In Edit Plan, change the last End Date by a few days inside the same week, click `Save`. -> Save completes; no warning.\n2. Open the Timeline. -> The grid End week is the same; the note in that week is still there.', 'ETM-8361'), []);
+});

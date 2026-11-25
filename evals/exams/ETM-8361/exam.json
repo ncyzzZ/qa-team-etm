@@ -1,0 +1,60 @@
+{
+  "defect": "ETM-8361",
+  "story": "ETM-7350",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Saving Edit Plan moves the plan Start Date and End Date one day earlier, though the user did not change them.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7350",
+  "run": "STORY-ETM-7350",
+  "frozen": "evals/exams/_story-ETM-7350/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "edit plan"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "save"
+        ]
+      ],
+      [
+        [
+          "start date",
+          "end date",
+          "dates"
+        ],
+        [
+          "unchanged",
+          "same",
+          "not change",
+          "not shift",
+          "no shift",
+          "stay",
+          "as before",
+          "as entered",
+          "as typed",
+          "kept",
+          "not move",
+          "the new date",
+          "the entered date"
+        ],
+        [
+          "!",
+          "shifted back by",
+          "moves back by",
+          "becomes one day",
+          "becomes 1 day",
+          "day earlier",
+          "same week"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Not a Key Milestone rule: a saved date must stay as entered. Edit Plan belongs to ETM-7348; this Story names Edit Plan Save only as a trigger of note deletion."
+}

@@ -1,0 +1,41 @@
+{
+  "defect": "ETM-8433",
+  "story": "ETM-7899",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Work Header options in the Shutdown Logic Filter Panel are not in Master Data order.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7899",
+  "run": "STORY-ETM-7899",
+  "frozen": "evals/exams/_story-ETM-7899/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "filter",
+        "expand `work header`",
+        "expand work header"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "work header"
+        ],
+        [
+          "master data",
+          "mechanical (pm)",
+          "canonical"
+        ],
+        [
+          "order",
+          "sort",
+          "sequence"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 2.2: Work Header list sorted by the Master Data sequence, not row order. The Story does not list the sequence; the defect does."
+}

@@ -1,0 +1,40 @@
+{
+  "defect": "ETM-7863",
+  "story": "ETM-7315",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "In the exported Excel, the 'No equipment assigned.' placeholder row under an empty Work Header has the wrong colour.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7315",
+  "run": "STORY-ETM-7315",
+  "frozen": "evals/exams/_story-ETM-7315/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "xlsx",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "no equipment",
+          "placeholder",
+          "empty work header",
+          "empty category",
+          "no item"
+        ],
+        [
+          "8c8c8c",
+          "gray",
+          "grey"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 4.2: italic light gray #8C8C8C on white. Later Story edit (27 Oct) changed the text to 'No equipment added.' and dropped the hex codes; the colour rule stays. Withhold docs/modules/equipment-mob-plan.md from the designer (it holds BA answers on ETM-7315 learned after these defects), as for ETM-7314."
+}
