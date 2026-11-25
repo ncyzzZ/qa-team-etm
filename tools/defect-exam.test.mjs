@@ -79,3 +79,21 @@ test('ETM-8664: the same steps with the wrong expected result are MISSED (exam r
   const txt = '### TC-033 Update Progress after collapse\n1. Look at `Update Progress`. -> It is disabled.\n2. Collapse one group. -> `Update Progress` is enabled.\n3. Expand the same group. -> `Update Progress` stays enabled (no compare-back to the saved state).';
   assert.deepEqual(ids(txt, 'ETM-8664'), []);
 });
+test('ETM-8877: the short form EP and "equal step 1" are understood (re-exam 2026-11-25, TC-031)', () => {
+  const txt = '### TC-031 more than one pasted row (BND)\nPrecondition: common. EP. Clipboard = 3 rows of 2 columns.\n1. Record the weekly Plan (%) of the anchor activity and the next two activities. -> Values written down.\n3. Press Ctrl+V. -> The anchor row shows `10.0` and `20.0`.\n4. Look at the next two activities. -> Their weekly Plan (%) equal step 1.';
+  assert.deepEqual(ids(txt, 'ETM-8877'), ['TC-031']);
+  assert.deepEqual(ids(txt.replace('EP.', 'TL.'), 'ETM-8877'), []);
+});
+test('regex words do not match inside other words', () => {
+  assert.equal(score('### TC-1 x\n1. Next step. -> ok', { block: [['re:\\bEP\\b']], steps: [] }).caught_by.length, 0);
+});
+test('ETM-8664: "does not go back to disabled" and "disabled again after the save" are not counted (re-exam 2026-11-25, TC-034, TC-012)', () => {
+  const wrong = '### TC-034 collapse\n2. Collapse group 1. -> Update Progress is enabled.\n3. Click the chevron of the same group. -> The group expands again.\n4. Look at `Update Progress`. -> The button is still enabled (it does not go back to disabled).';
+  const save = '### TC-012 button\n2. Collapse group 1. -> Update Progress is enabled.\n3. Click Update Progress. -> Saved.\n4. Wait until the save response is back and look at the button. -> `Update Progress` is disabled again (no unsaved change).\nClean up: expand the group again and Update Progress.';
+  assert.deepEqual(ids(wrong, 'ETM-8664'), []);
+  assert.deepEqual(ids(save, 'ETM-8664'), []);
+});
+test('ETM-8429: "TM-B" names the second user (re-exam 2026-11-25, TC-052)', () => {
+  const txt = '### TC-052 conflict modal\n2. TM-B updates the Actual (%) of any activity on the Timeline and clicks `Update Progress`. -> TM-B sees `Update Success`.\n3. TM-A clicks `Save`. -> A modal opens with the title `Progress has been updated`.';
+  assert.deepEqual(ids(txt.replace('### TC-052 conflict modal', '### TC-052 conflict modal on Edit Plan'), 'ETM-8429'), ['TC-052']);
+});

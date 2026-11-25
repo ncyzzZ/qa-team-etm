@@ -12,7 +12,8 @@
     "_how": "See ETM-9229/exam.json.",
     "block": [
       [
-        "Edit Plan"
+        "Edit Plan",
+        "re:\\bEP\\b"
       ],
       [
         "weekly"
@@ -50,7 +51,13 @@
           "not pasted",
           "not applied",
           "equal the values recorded",
-          "stay the same"
+          "stay the same",
+          "equal step",
+          "equal the recorded",
+          "same as recorded",
+          "match step",
+          "equal to step",
+          "match the recorded"
         ],
         [
           "row",

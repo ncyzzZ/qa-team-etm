@@ -18,7 +18,8 @@ export const tcBlocks = txt => {
   }
   return out;
 };
-const hit = (txt, group) => group.some(w => txt.toLowerCase().includes(w.toLowerCase()));
+// a group ['!', ...words] matches when NONE of the words is there; a word is a case-insensitive substring; 're:<regex>' is a case-insensitive regex (for short tokens such as \bEP\b)
+const hit = (txt, group) => group[0] === '!' ? !hit(txt, group.slice(1)) : group.some(w => w.startsWith('re:') ? new RegExp(w.slice(3), 'i').test(txt) : txt.toLowerCase().includes(w.toLowerCase()));
 export function catches(block, sig) {
   if (sig.any) { for (const alt of sig.any) { const l = catches(block, alt); if (l) return l; } return null; }
   const all = block.lines.join('\n');

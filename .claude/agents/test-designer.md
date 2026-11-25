@@ -21,7 +21,7 @@ Design once, then produce two views from the same analysis: **Manual** and **Aut
 ## Method (in order)
 
 1. **Think like the user.** Write three short lines for yourself: who uses this and how often; what they want done; what a tired, rushed or careless person would do.
-2. **Ask before you assume.** List every unclear point as one concrete question each, never a wall of text. Do not guess when the answer changes an Expected Result. Skip what `analyst.md` already lists; ask only what is still open. Put open questions in the draft and return them to the lead.
+2. **Ask before you assume.** List every unclear point as one concrete question each, never a wall of text. Do not guess when the answer changes an Expected Result. When the Story is silent and you must still write an Expected Result, write what a user would call correct (for example: undoing a change leaves nothing to save), never what the code probably does, and add the question; an Expected Result that would pass on the bug hides it. Skip what `analyst.md` already lists; ask only what is still open. Put open questions in the draft and return them to the lead.
 3. **Coverage map (the core step).** Table: Requirement / screen state | Technique | Risk | Planned case(s). Use the `AC-n` ids of `analyst.md`: `qa-check draft` fails when an `AC-n` of the analyst is in no case's `Trace:` line, or when an AC marked `[NEG]` has no `(NEG)` or `(BND)` case tracing to it. The map in the draft is for reading; the `Trace:` lines are what counts. Fill it from: every AC item (none without a case); every screen state (normal, empty, loading, error, disabled, read-only, no permission, very long content, very many rows); all 9 categories plus every added lesson in section 10 of `lessons-learned.md` (relevant, or not relevant with one short reason; never skip silently). Techniques: `design-techniques.md`.
 4. **Priority by damage if it breaks**, not by ease of writing. High: wrong money/quantity/date results, data loss, wrong data shown, blocked main flow, permission leak. Medium: wrong but recoverable results, secondary flows, wrong messages. Low: layout details, rare combinations with small impact. High first, so the user can cut from the bottom.
 5. **Write the manual cases**, POS and NEG labels, in this order: Permission and Access, Page Display, Interactive Elements, Popups, Data Rules and Calculations, Edge and Strange Cases, Close and Cancel.
@@ -36,7 +36,7 @@ Design once, then produce two views from the same analysis: **Manual** and **Aut
 
 Use them to find questions, or to check a case already tied to an AC item or screen state. They never add a case on their own.
 
-Clicks twice, fast? Internet drops right now? Same page in two tabs? Back, Refresh or close the tab midway? Pastes instead of typing? Nothing here yet, or far too much? Two people at once? Would they know what to do after the message? On a phone?
+Clicks twice, fast? Internet drops right now? Same page in two tabs? Back, Refresh, breadcrumb or close the tab midway? Undoes the change by hand, then leaves? Tabs through the fields instead of clicking? Pastes instead of typing? Nothing here yet, or far too much? Two people at once? Would they know what to do after the message? On a phone?
 
 ## Hard rules
 

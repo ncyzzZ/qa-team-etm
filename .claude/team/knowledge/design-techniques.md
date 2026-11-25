@@ -29,6 +29,24 @@ When something moves through statuses (draft, submitted, approved, closed):
 - going back, and repeating the same change twice
 - what each status allows the user to do (edit, delete, view only)
 
+## Unsaved changes (dirty state)
+When an action can make the page "changed" (enables Save or Update, or shows an
+"unsaved" warning on leaving), follow it to the end for every role:
+- the action, then undo it by hand (type then delete, tick then untick, drag then
+  drag back): is the page back to "not changed" (button disabled again)?
+- the action, then leave the page (breadcrumb, menu, tab, Back): is the warning
+  shown only when there is something to save? A role that cannot save must
+  never get it.
+- a view-only action (collapse, sort, scroll, splitter) on a page that keeps no
+  view state must never count as a change.
+
+## Leaving and coming back
+When a state must survive (filter, selection, scroll, collapse) or must be reset
+(a screen that always opens fresh), test each way the user really leaves and
+returns, not only one: reload, browser Back, the breadcrumb, in-app links or
+tabs, opening a detail or edit page and returning from it. Also set the state on
+one screen and open the related screen that must ignore it.
+
 ## Roles and permission
 For every role: can open, can see, can change, can delete, cannot do. Also
 test a role that has no access trying a direct link.
@@ -42,6 +60,9 @@ connection, expired login, two tabs, two users. Use `lessons-learned.md`.
 Pick a real user type (new, in a hurry, careless, on a phone, uses the
 keyboard only). Write at least one case for how that person would really use
 it, not how it was designed to be used.
+Keyboard use is implied by every screen with inputs: write a case for Tab and
+Enter order between the fields the user fills in one go (for example the cells of one row). It is not a "Suggestion (not in Story)", unless the module notes say keyboard
+use is not wanted for that screen.
 
 ## Screen states
 For every screen: normal, empty, loading, error, disabled, read-only, no

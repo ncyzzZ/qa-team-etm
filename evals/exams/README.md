@@ -35,3 +35,19 @@ Exams come from two sources: defects of Stories the team designed (`baseline-dra
 Every score above was checked by reading the draft. Three signatures were too narrow at first (ETM-8412, ETM-8429 "tab B", ETM-8430 "session B") and one too wide (ETM-8429 counted a case that expects no dialog); each fix has a test.
 
 Saved drafts: `<DEFECT>/runs/<date>-draft-tc.md`. Re-score one with `score <DEFECT> --draft <file>`.
+
+### Run 2 (2026-11-25, after the design-techniques rules "Unsaved changes" and "Leaving and coming back" and the test-designer rule on Expected Results the Story does not give)
+
+| Exam | Run 1 | Run 2 | Note (checked by reading) |
+|---|---|---|---|
+| ETM-9229 | CAUGHT | MISSED | TC-022 searches with a filter on but never clears the search: same inputs, different result. |
+| ETM-8902 | MISSED | MISSED | TC-023 still uses the browser Back only. |
+| ETM-8877 | CAUGHT | CAUGHT (TC-031) | |
+| ETM-8664 | MISSED | MISSED | TC-034 again expects "still enabled" after expanding back; the new rule did not change it. |
+| ETM-8666 | MISSED | MISSED | the right answer is in Open questions ("assumed no warning"), not in a case step. |
+| ETM-8412 | half | CAUGHT both halves | TC-012 sets the collapse on the Timeline and opens Edit Plan (the new "related screen" rule). |
+| ETM-8429 | CAUGHT | CAUGHT (TC-052) | |
+| ETM-8430 | CAUGHT | CAUGHT (TC-049) | |
+| ETM-8497 | MISSED | MISSED | `docs/modules/shutdown-timeline.md`: keyboard-only "Not wanted" for ETM-7348 (user, 3 Nov). The designer followed a user decision; do not count this one against it. |
+
+4/9 (3/8 without ETM-8497) against 5/9 in run 1. One run per exam is too noisy to show a rule helps; compare several runs per exam before keeping or dropping a rule.

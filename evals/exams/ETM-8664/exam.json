@@ -46,6 +46,17 @@
           "no change",
           "no net",
           "re-"
+        ],
+        [
+          "!",
+          "still enabled",
+          "stays enabled",
+          "does not go back",
+          "not go back",
+          "not disabled",
+          "save response",
+          "after save",
+          "is saved"
         ]
       ]
     ]
