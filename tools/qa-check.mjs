@@ -2,7 +2,7 @@
 // qa-check.mjs - cheap, token-free checks of what the QA agents produce. Zero dependencies.
 //
 //   node tools/qa-check.mjs draft    <KEY | path/to/draft-tc.md> [--json]
-//   node tools/qa-check.mjs spec     <spec.ts ...> [--tests <tests.md>]
+//   node tools/qa-check.mjs spec     <spec.ts ...> [--tests <tests.md>] [--live]   (--live: G6-live also on committed specs)
 //   node tools/qa-check.mjs work     <KEY> <analyst|inspector|designer|reviewer|automator>
 //   node tools/qa-check.mjs manifest <tc-manifest.json>
 //   node tools/qa-check.mjs diff     <KEY> <readback.json>     (Xray readback vs draft: [{key, summary, steps}])
@@ -22,6 +22,7 @@ import { fileURLToPath } from 'node:url';
 import { load as loadState, resolveFile, SINGLE_KINDS, LIST_KINDS } from './state/core.mjs';
 import { resolveRepos } from './heal/config.mjs';
 import { parseManualSteps, checkManual, xrayStepCounts } from './manual/steps.mjs';
+import { scanSpec, rowsFor, judge } from './live-check.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const WORK = (key) => path.join(ROOT, '.claude', 'team', 'work', key);
 const [cmd, ...rest] = process.argv.slice(2);
@@ -222,6 +223,28 @@ function cardDataFor(specFile, cards) {
   return true; // repo not found (fixture outside PW_REPO): do not block
 }
 
+/** True when the spec is new or changed in its git repo (being written or fixed now). Not a repo / git missing: true. */
+function specInProgress(f) {
+  const r = spawnSync('git', ['status', '--porcelain', '--', path.basename(f)], { cwd: path.dirname(path.resolve(f)), encoding: 'utf8' });
+  if (r.status !== 0) return true;
+  return r.stdout.trim().length > 0;
+}
+// Gate G6-live (automator step 1b, tools/live-check.mjs): a filter / search / delete / paste / drag step needs a row in
+// work/<KEY>/live-check.md saying where the page fact came from. Enforced on specs being written or fixed (git: new or changed);
+// committed, untouched specs only get one summary warning, so old cards are not blocked.
+function liveCheck(f, name, text) {
+  const tests = scanSpec(text).filter((t) => t.kinds.length && !t.skipped && t.key);
+  if (!tests.length) return;
+  const rows = rowsFor(cardsOf(f, text));
+  const force = flag('--live') || process.env.QA_CHECK_LIVE === '1';
+  if (!force && !specInProgress(f)) {
+    const open = tests.filter((t) => judge(t, rows).some((p) => p.lvl === 'ERR')).length;
+    if (open) warn(`${name}: ${open} test(s) with filter/search/delete/paste/drag steps have no live-check.md rows (enforced once the spec is changed; --live to check now)`);
+    return;
+  }
+  for (const t of tests) for (const p of judge(t, rows)) (p.lvl === 'ERR' ? err : warn)(`${name}: ${p.msg}`);
+}
+
 function checkSpec() {
   const files = pos;
   if (!files.length) { console.error('Usage: qa-check spec <spec.ts ...> [--tests tests.md]'); process.exit(2); }
@@ -267,6 +290,7 @@ function checkSpec() {
     hits(/\b(password|passwd|secret|token|api[_-]?key)\s*[:=]\s*(['"`])(?!\$\{)[^'"`\s]{4,}\2/gi, 'looks like a hard-coded credential (use .env)');
     hits(/data-testid/g, 'the ETM app has no data-testid: use data-id, data-column, roles, text', warn);
     falsePass(name, text);
+    liveCheck(f, name, text);
     const nExpect = (text.match(/\bexpect(?:\.soft)?\(/g) || []).length;
     const nMsg = (text.match(/\bexpect(?:\.soft)?\([^()]*(?:\([^()]*\)[^()]*)*,\s*(['"`])/g) || []).length;
     if (nExpect && nMsg < nExpect / 2) warn(`${name}: only ${nMsg} of ${nExpect} expect() have a plain-language message (the report shows it to non-testers)`);
