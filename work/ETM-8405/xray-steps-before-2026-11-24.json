@@ -1,0 +1,15 @@
+{
+ "saved": "2026-11-24, before the step text edit approved in chat (\"ใช่ แก้ Xray\"). Only the steps that change; step count and order do not change.",
+ "ETM-8645": [
+  {"n": 13, "id": "b8c9aaf5-7146-456a-a772-ae224e149054", "action": "Select the Actual (%) cells of week 01 Jun and 08 Jun 2026 and copy them.", "data": "", "result": "The values `7.5` and `15.5` are on the clipboard."},
+  {"n": 14, "id": "a4646fdc-e3e4-4d90-a88a-5d0600370184", "action": "Click the weekly Plan (%) cell of week 01 Jun 2026 and paste.", "data": "", "result": "The Plan cells of week 01 Jun and 08 Jun 2026 show `7.5` and `15.5` (they changed from `1.0` and `2.0`)."},
+  {"n": 15, "id": "4a236368-b753-4883-ad01-93e8596e6e8a", "action": "Look at the Plan (%) field of `Piping Inspection`.", "data": "", "result": "It shows `43.0` (7.5 + 15.5 + 20.0)."},
+  {"n": 16, "id": "d18d74f3-b2f6-4bfd-b469-336c18830ae5", "action": "[NEG check] Click the Actual (%) cell of week 01 Jun 2026 and paste.", "data": "", "result": "The Actual cells still show `7.5` and `15.5` and the Plan cells still show `7.5`, `15.5` and `20.0`."},
+  {"n": 18, "id": "d1a4ad64-1b55-4df4-9bbe-24879db1f24d", "action": "Click `OK`.", "data": "", "result": "The modal closes, the week 08 Jun 2026 cell is blank and the Plan (%) field shows `27.5` (7.5 + 20.0)."},
+  {"n": 20, "id": "b242db0a-d837-4ed3-ade8-ff121d0bbb22", "action": "Click `OK`.", "data": "", "result": "The modal closes, the week 15 Jun 2026 cell is blank and the Plan (%) field shows `7.5`."}
+ ],
+ "ETM-8643": [
+  {"n": 18, "id": "f52122e0-0167-461e-bcf4-9f358fc3d613", "action": "[Visual check, user decision, not yet confirmed by BA] Look at the Actual bar of week 15 Jun 2026.", "data": "", "result": "The bar is Red `#F5222D` (cumulative Actual `5.0 + 10.0 + 5.0 = 20.0` is below cumulative Plan `0.0 + 30.0 + 0.0 = 30.0`; the blank Plan week adds `0.0`)."},
+  {"n": 21, "id": "3fa8fc65-304a-44fa-a738-68c5fc38ad70", "action": "[Visual check, user decision, not yet confirmed by BA] Look at the Actual bar of week 15 Jun 2026.", "data": "", "result": "The bar is Green `#95DE64` (cumulative Actual `5.0 + 25.0 + 5.0 = 35.0` is above cumulative Plan `30.0`)."}
+ ]
+}

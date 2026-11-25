@@ -33,3 +33,16 @@ Shutdown Logic `S26 Row Colour` (event NN TEST QA), Turnaround Manager.
 - Passed: ask the user once, then (jira-xray-logger) set 8856 / 8859 steps back to PASSED in ETM-8875 and add "Retest: Passed" comment with the pictures embedded on ETM-9219 itself.
 - Failed: comment on ETM-9219 with the new build and pictures, keep it open. Ask first.
 - Open point to raise with BA if seen: does No Color show a frame on a clean row (step 5)? The defect expects yes; 8856 step 16 only checks the 12 colour cells.
+
+## Result 25 Nov 2026 (run `2026-11-25_132646_ETM-8034`, spec hex switched to the Figma values)
+- ETM-8856 PASSED: steps 12, 13, 16 (current colour framed, others not). ETM-9219 fixed.
+- ETM-8858 PASSED: 24 Figma hex on every level, Save + reload. ETM-10034 fixed.
+- ETM-8859 FAILED at step 20: after steps 15-18 (choose FFFB8F twice, Undo, Redo) and Save ("Save Success"), reload shows the default colours (bg F2F8FA, text 595959) instead of FFFB8F / 1677FF. Step 14 (only FFE7BA framed) passed. Retry attempt broke earlier (`window.bryntum` undefined after load). Verdict needed: app (save after Undo/Redo lost) or script. Not retried again today.
+- Nothing written to Jira / Xray. Question queued on the board (`ask --later`).
+
+## Manual check of ETM-8859 steps 15-20 (25 Nov 2026, ~13:55, TM, plan S26 Row Colour, Work "44443 : Maimai")
+- 11-12: text 1677FF, highlight FFE7BA. 15: FFFB8F. 16: FFFB8F again (no change, no extra undo step). 17 Undo: FFE7BA. 18 Redo: FFFB8F. All correct.
+- 19 Save: "Save Success" (POST gantts 200). 20 Reload: row still FFFB8F / 1677FF on every cell. PASS by hand.
+- So the app keeps the colours; the script failure at step 20 was not reproduced. Likely script/env timing: the first page load hung today (Gantt never rendered, `window.bryntum` undefined) until a reload, same as the script's retry.
+- Row put back to No Color / No Color and saved after the check (start state).
+- Pictures: `manual-8859-step15-20/` (18-after-redo, 19-after-save, 20-after-reload).

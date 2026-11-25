@@ -106,8 +106,8 @@
   "raised": "2026-11-17",
   "story_status": "In Development",
   "outcome": "confirmed",
-  "outcome_date": "2026-11-19",
-  "note": "answered (user said all BA questions were answered, 2026-11-19); whether the AC changed is not recorded",
+  "outcome_date": "2026-11-24",
+  "note": "No BA reply; answered by existing AC: ETM-7349 AC 3.1 (\"Numeric Entry Present\" bar rule + colour formula), ETM-7346 AC 4.1, ETM-8405 AC 2.1; the user accepted ETM-7346 AC 4.1 as the answer (chat 2026-11-24 \"ใช้ AC 4.1\"): a week with a recorded Actual always shows a bar, Green when CumActual >= CumPlan, Red below, blank Plan counted as 0.0. ETM-8643 steps 18/21 text \"not yet confirmed by BA\" to be updated in Xray (after a yes).",
   "later_defect": null,
   "backfilled": true
  },
@@ -121,7 +121,7 @@
   "story_status": "In Development",
   "outcome": "confirmed",
   "outcome_date": "2026-11-19",
-  "note": "answered (user said all BA questions were answered, 2026-11-19); whether the AC changed is not recorded",
+  "note": "Body text `Are you sure you want to change the shutdown size? This action will update some data.` from ETM-7984 AC 1.4 (checked 2026-11-24). The Story points to Confirmation&Result row 18, not 16; the SharePoint Excel fix is for BA (round 4 Q2).",
   "later_defect": null,
   "backfilled": true
  },
@@ -292,5 +292,31 @@
   "note": "Story description changed 2026-11-17: Mockup not required: keep current Edit Plan UI; double-click editable weekly cell to edit. (checked against the Jira changelog 2026-11-19)",
   "later_defect": null,
   "backfilled": true
+ },
+ {
+  "id": "F-22",
+  "q": "R4-1",
+  "ac": "AC-7",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Ready for UAT",
+  "outcome": "ac-changed",
+  "outcome_date": "2026-11-24",
+  "note": "AC 2.2/2.4, BA Q9 and ETM-7347 say the Group summary updates; D-1 (user, 18 and 24 Nov) says no summary on the Edit Plan group row. ETM-8640 s6/s17 and the script follow D-1. Waiting for BA. 2026-11-24 BA answer file: proposes AC 2.2 = \"Total Progress -> Plan (%) must update accordingly\" (no Group summary), same as D-1; Story edit pending BA approval. TC/script already match. Set ac-changed when the Story text changes. 2026-11-24 14:23 BA changed the Story: AC 2.2 = \"Total Progress -> Plan (%) must update accordingly. The Activity Group row does not show a summary.\"; AC 2.4 no longer mentions the Group summary. TC 8640 and the script match.",
+  "later_defect": null
+ },
+ {
+  "id": "F-23",
+  "q": "R4-2",
+  "ac": null,
+  "kind": "question",
+  "impact": "low",
+  "raised": "2026-11-24",
+  "story_status": "Ready for UAT",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "Excel row 18 vs 16 for the Change Shutdown Size? text; BA to fix the SharePoint file.",
+  "later_defect": null
  }
 ]

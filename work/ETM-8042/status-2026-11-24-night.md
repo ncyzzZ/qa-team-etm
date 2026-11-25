@@ -29,3 +29,5 @@ Evidence of the 8839 drawer check: manual-check-8839-drawer/.
 - 25 Nov: comment 600433 added on ETM-9221 (Deployed to QA) with the Extend-on-day-1 finding + 2 embedded pictures (user: "เพิ่มใน 9221").
 
 - 2026-11-25 13:24: ETM-9221 comment 600492 added, @mentions the assignee (thanawich klongsard), points to comment 600433 and the 8840/8838 block.
+
+- 2026-11-25: Xray ETM-8873 push 8835, 8837 = PASSED (user chat: Push). Now 14 PASSED, 1 FAILED (8849), 9 TO DO.

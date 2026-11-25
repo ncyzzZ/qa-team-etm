@@ -1,0 +1,99 @@
+{
+ "id": "ETM-8738",
+ "kind": "manual",
+ "result": "agree-with-warnings",
+ "firstOverall": "cannot-tell",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 8,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 9,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 10,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 11,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 12,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  }
+ ],
+ "warnings": [
+  "step 2: picture blank, cut or not full screen",
+  "step 5: picture blank, cut or not full screen",
+  "step 7: picture blank, cut or not full screen",
+  "step 8: picture blank, cut or not full screen",
+  "step 9: picture blank, cut or not full screen",
+  "step 10: picture blank, cut or not full screen",
+  "step 11: picture blank, cut or not full screen",
+  "Core AC 2 comparison (steps 5, 8-10) has no evidence: no previous build, no saved ETM-2615 results; AC 2 unproven.",
+  "Step 7: only rows 4-8 visible; the 50-row claim rests on a store read, not on pictures.",
+  "Paste wrote Description into Work Header rows (e.g. 'PLCPP2 FSD 5000 0091 : Large paste 2'); BA question R3-3 still open.",
+  "Step 12 expects 'first 50 Lv4 rows' but range covered 25 Lv4 + 25 parent rows; wording does not match step 7.",
+  "Step 4: 20.6 s with a 7.8 s stall is only in the note text; no before time to compare.",
+  "Note boxes cover rows 2-7 in several pictures, hiding part of the pasted range.",
+  "Step 2 picture cannot show the clipboard; navigator.clipboard.writeText is a script action, not a user step."
+ ],
+ "summary": "ภาพยืนยันได้ว่าวางข้อมูลได้ ไม่มี error และ reload แล้วค่ากลับเหมือนเดิม (เห็นแค่แถว 1-8) แต่ส่วนหลักของ AC 2 (เทียบกับ build เก่า) ไม่มีหลักฐานเลย จึงสรุปได้แค่ cannot-tell และยังมีคำถาม BA R3-3 เรื่อง Description ที่ถูกวางลงแถว Work Header ค้างอยู่",
+ "sourceHash": "fced114e8b01"
+}

@@ -1,0 +1,8 @@
+{
+  "ETM-8859": {
+    "verdict": "script",
+    "source": "chat",
+    "evidence": "user chat 2026-11-25: 'ใช่ script/env' after manual steps 15-20 passed (work/ETM-8034/manual-8859-step15-20)",
+    "at": "2026-11-25T06:59:22.587Z"
+  }
+}

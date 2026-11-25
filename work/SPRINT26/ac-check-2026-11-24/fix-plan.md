@@ -62,6 +62,15 @@ Source: the per-card files in this folder (read-only audit, same day). Nothing i
 | 7343 | ETM-8724 empty value cannot exist (NOT NULL): not applicable? |
 | all | write each answer to `work/<KEY>/ba-answers.md` (missing on 8049, 8391, 8394, 8521) |
 
+## Corrections from the card sessions (2026-11-24)
+
+- 8049: 8781 "0 rows" was a script bug (checked live, fixed: wait for rows), not an app bug. Q26-Q28 are already in `work/ETM-8049/questions-for-BA.md` / `.en.md` and findings F-26..F-28.
+- 8388: 8723 step 19 fixed in the spec (uncommitted) and in Xray today (old text in `work/ETM-8388/xray-8723-step19-before-2026-11-24.json`). 8711 is PASSED from a macOS run; the non-Mac skip is never pushed.
+
+- Audit correction: `partial` and `not-checked` are already in NOT_PROVEN (`pageFixtures.ts:19`), so they never false-pass; only `note` (and `ba-confirm`) can.
+- 8042 (10:35): script part A done (8840 Plan A Active again, 8836 date compare, 8839 real controls + gunzip, `note` -> `not-checked`), Q11 added; `rampDownUp.helpers.ts` not touched (last edit 23 Nov). Open: step alignment 8829/8848, 8838/8840 expected results, security fixme, Xray 8840 s7 (yes needed).
+- 8392: part A done (Snap A/D reports, 8688/8797/8690/8692/8693 steps = Xray, dev answer file restored). Open: re-run 8675/8684/8686/8798, Xray 8677 s2 and 8690/8692 "PDF" -> ZIP (yes needed).
+
 ## Suggested order
 
 1. Commit or stash the current Playwright work per card (I-2), agree one writer per card (I-1).

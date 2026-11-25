@@ -111,3 +111,30 @@ Legend: ✅ answered · 🟡 proposed, BA must confirm · ❓ open
 - So `03/06/2026` -> `03 Jun 2026` is correct. Invalid (31/02/2026, text, dot delimiter, 5/7-digit numbers) -> cell blank + red, Save disabled (AC 5).
 - ETM-8388 AC 3.1 and round 1 Q4 ("only D Mon YYYY") are outdated. ETM-8720 TC must be rewritten; not a defect.
 - Q2 (8722, round 2): new activities created by a paste stay quiet (no red) on their empty Start/End Date until the user touches a date, same as Add Activity (ETM-7310 pattern); Save stays disabled. TC ETM-8722 step 4 must change; not a defect.
+
+# Round 3 / Sprint 26 audit items: BA answers 2026-11-24
+Source: `work/SPRINT26/ba-answers-all-2026-11-24.md`, section "Audit items" (answered by BA 2026-11-24, DEC-082..084; story edits pending BA approval).
+- **R3-1 AC 3.1 date formats:** a pasted Start/End Date accepts any format allowed by ETM-7902 (day first), shown as `DD Mmm YYYY` (e.g. `03 Jun 2026`). BA will add this to AC 3.1 (edit pending). ETM-8720 already follows it; no TC change.
+- **R3-2 new rows quiet:** unchanged from round 2 (quiet until a date is touched); AC text edit still pending.
+- **R3-3 S-5 paste into weekly cells:** same as the weekly Plan (%) rules: valid numbers accepted (more than 1 decimal truncated, DEC-008); above 100.0 set to 100.0 (DEC-036/042); negative / non-numeric cleared with `Paste Validation Failed` (DEC-043); weekly Actual past the Current Week cut off (DEC-011). Weekly Actual follows the same. Not said explicitly: a truly empty clipboard cell (no text). QA reading: empty = clearing the cell -> blank, no modal (ETM-7349 AC 2.4, ETM-8405 AC 1.5), which is what QA sees today.
+- **R3-4 S-2 line break in a clipboard cell:** BA decided: the line break is replaced by a space (text fields). App on QA (20 Nov, ETM-8719 row 13) keeps the line break (`Pipe` + line break + `Test`) -> does not match; needs a rerun and the user's decision before any defect.
+
+# Story re-read after the BA edit (Jira updated 2026-11-24 14:24)
+- AC 1.5 now says: a clipboard cell with a line break -> the line break is replaced by a space. Matches ETM-8719 (changed today).
+- AC 1.5 now says for weekly cells (Plan % and Actual %): >1 decimal truncated, >100.0 set to 100.0, negative / non-numeric cleared + `Paste Validation Failed`, weekly Actual after the current week dropped. Matches ETM-8716, 8717, 8723, 8727.
+  Still not written: a truly empty clipboard cell. AC 2.2 (Timeline weekly Actual) points to ETM-7349 AC 2.4 "invalid input leaves the cell blank". QA keeps: empty = clearing -> blank, not red, no modal (ETM-8716 s18-19, ETM-8723 s16-17), which matches the app on 20 and 24 Nov.
+- AC 3.1 now lists the ETM-7902 day-first formats. Matches ETM-8720.
+- AC 3.1 still says "An empty mandatory cell shows the red background" with no exception for activities created by a paste (BA chat 20 Nov: quiet until a date is touched; ETM-8722 step 4 follows the chat). The written AC and the TC still disagree here.
+
+# R2-2 / R3-2 replaced (2026-11-24)
+- The 20 Nov BA chat answer "new activities created by a paste stay quiet (not red) until a date is touched" is **replaced**.
+- User decision 24 Nov (relayed from the Sprint 26 lead chat): "ยึดล่าสุด ที่ ba ตอบ" -> follow the Story AC 3.1 as edited by BA on 24 Nov 14:23: an empty mandatory cell shows the red background and disables Save, also in a row created by a paste.
+- ETM-8722 step 4 changes to: the empty Start Date and End Date of the new activities show the red background `#FFCCC7`; Save is disabled.
+
+# User answers 2026-11-24 pm (source: work/SPRINT26/questions-for-BA-2026-11-24-pm.md, user: "ข้อ 1 ถูกแล้ว ข้อ 2 ก็ถูก")
+- Q1: an empty mandatory cell in a row created by a paste is red (AC 3.1). The app shows no red -> ETM-8722 step 4 is a defect candidate (defect only after the user's yes).
+- Q2: a truly empty clipboard cell leaves the weekly cell blank, not red, no modal. ETM-8716 s18-19, ETM-8723 s16-17 and ETM-8727 stay as they are. Settled.
+
+# ETM-8722 step 4 decided (2026-11-24, user, after a hand test)
+- Not a defect. The paste covered only Activity and Action By, so the new rows' Start / End Date were not part of the paste and stay white. When a paste covers the date columns and leaves them empty or invalid, they are red (seen in the same hand test). This is how AC 3.1 is read for paste-created rows.
+- ETM-8722 step 4 expects: empty, not red, Save disabled (decision D-5). Evidence: work/ETM-8388/ETM-8722-manual-new-rows-not-red-2026-11-24.png

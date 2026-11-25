@@ -1,0 +1,263 @@
+ETM-8945	Open	2026-11-24T16:07	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the tree and Histogram load completely when the logic opens
+ETM-8946	Open	2026-11-24T16:08	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Save, Undo and Redo are disabled when the logic opens with no edits
+ETM-8947	Open	2026-11-24T16:08	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the timeline starts at the Plan Ramp Down when the logic opens
+ETM-8948	Open	2026-11-24T16:08	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the zoom level and scroll positions stay the same after Save (zoomed in)
+ETM-8949	Open	2026-11-24T16:08	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify expanded column groups and the view position stay the same after Save (not zoomed) (Known defect SL-LOAD-04b)
+ETM-8950	Open	2026-11-24T16:08	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify bars stay on their dates after zooming out
+ETM-8951	Open	2026-11-24T16:08	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify bars stay on their dates after zooming in
+ETM-8952	Open	2026-11-24T16:09	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the splitter between the Gantt and the Histogram can be dragged
+ETM-8953	Open	2026-11-24T16:09	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Gantt and Histogram panes can be collapsed and restored
+ETM-8954	Open	2026-11-24T16:09	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify bars are drawn fully after deleting and undoing a row while the Gantt pane is collapsed
+ETM-8955	Open	2026-11-24T16:09	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify an empty logic shows the empty message in the Gantt and the Histogram
+ETM-8956	Open	2026-11-24T16:10	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify F5 resets zoom and position but keeps the saved filter
+ETM-8957	Open	2026-11-24T16:10	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify opening the logic does not reschedule any task
+ETM-8958	Open	2026-11-24T16:10	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a task with no common working time shows the popup once and blocks Save
+ETM-8959	Open	2026-11-24T16:10	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the timeline does not jump when the loading screen goes away
+ETM-8960	Open	2026-11-24T16:10	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a bar split into many segments is drawn correctly (No.22)
+ETM-8961	Open	2026-11-24T16:11	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a bar split into many segments is drawn correctly (No.24)
+ETM-8962	Open	2026-11-24T16:11	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Duration cell shows working hours
+ETM-8963	Open	2026-11-24T16:11	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Details column group can be expanded and folded
+ETM-8964	Open	2026-11-24T16:11	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Scheduled column group can be expanded and folded
+ETM-8965	Open	2026-11-24T16:11	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Dependencies column group can be expanded and folded
+ETM-8966	Open	2026-11-24T16:11	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Location column group can be expanded and folded
+ETM-8967	Open	2026-11-24T16:12	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the page blocks saving when the Gantt data fails to load
+ETM-8968	Open	2026-11-24T16:12	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the page blocks saving when the filter data fails to load
+ETM-8969	Open	2026-11-24T16:12	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the page blocks saving when the calendar presets fails to load
+ETM-8970	Open	2026-11-24T16:12	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the page blocks saving when a Master Data list fails to load
+ETM-8971	Open	2026-11-24T16:12	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify opening the logic by direct URL shows the same data as opening from the list
+ETM-8972	Open	2026-11-24T16:13	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify opening the logic by direct URL shows the same data as opening from the list
+ETM-8973	Open	2026-11-24T16:13	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Turnaround Manager can open an inactive logic
+ETM-8974	Open	2026-11-24T16:13	Dechathon Thanasutthiphat	NEG	[FE][MT][Job Owner] Verify a Job Owner cannot open an inactive logic by URL
+ETM-8975	Open	2026-11-24T16:13	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the URL of a deleted active logic shows a not found page
+ETM-8976	Open	2026-11-24T16:14	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the URL of a deleted inactive logic shows a not found page
+ETM-8977	Open	2026-11-24T16:14	Dechathon Thanasutthiphat	NEG	[FE][MT][Job Owner] Verify the URL of a deleted active logic shows a not found page
+ETM-8978	Open	2026-11-24T16:14	Dechathon Thanasutthiphat	NEG	[FE][MT][Job Owner] Verify the URL of a deleted inactive logic shows a not found page
+ETM-8979	Open	2026-11-24T16:14	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the text on the bars
+ETM-8980	Open	2026-11-24T16:15	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the No. column stays fixed on the left
+ETM-8981	Open	2026-11-24T16:15	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Ramp Down and Ramp Up lines show the Plan dates
+ETM-8982	Open	2026-11-24T16:15	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify the Ramp Down and Ramp Up lines show the Plan dates
+ETM-8983	Open	2026-11-24T16:15	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Ramp lines stay at the right time at every zoom level
+ETM-8984	Open	2026-11-24T16:15	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the timeline scrollbar grows on hover and drag
+ETM-8985	Open	2026-11-24T16:16	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the scrollbar of the left table grows on hover and drag
+ETM-8986	Open	2026-11-24T16:16	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the scrollbar of the Histogram grows on hover and drag
+ETM-8987	Open	2026-11-24T16:16	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the left table scrollbar is hidden when the content fits
+ETM-8988	Open	2026-11-24T16:16	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Gantt and Histogram resize with the browser window
+ETM-8989	Open	2026-11-24T16:16	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Details group column order and that a Priority edit is kept after folding
+ETM-8990	Open	2026-11-24T16:16	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the bar text updates at once when Duration is edited
+ETM-8991	Open	2026-11-24T16:17	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify no cell of a Work Breakdown row can be edited
+ETM-8992	Open	2026-11-24T16:17	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify no cell of a Work row can be edited
+ETM-8993	Open	2026-11-24T16:17	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify no cell of a Work Header row can be edited
+ETM-8994	Open	2026-11-24T16:17	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot drag a Work Breakdown bar
+ETM-8995	Open	2026-11-24T16:17	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot resize a Work Breakdown bar
+ETM-8996	Open	2026-11-24T16:17	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot drag a Work bar
+ETM-8997	Open	2026-11-24T16:18	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot reorder rows by dragging
+ETM-8998	Open	2026-11-24T16:18	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot draw a link on the Gantt
+ETM-8999	Open	2026-11-24T16:18	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify right-clicking a bar opens no menu
+ETM-9000	Open	2026-11-24T16:18	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify right-clicking a table cell opens no menu
+ETM-9001	Open	2026-11-24T16:18	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify right-clicking a link line opens no menu
+ETM-9002	Open	2026-11-24T16:19	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify right-clicking the Histogram opens no menu
+ETM-9003	Open	2026-11-24T16:19	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify the + and × buttons are hidden in the Manpower Resource and Predecessor cells
+ETM-9004	Open	2026-11-24T16:19	Dechathon Thanasutthiphat	NEG	[FE][MT][Job Owner] Verify no cell is shown grey as not editable in view-only mode (Known defect SL-RO-07)
+ETM-9005	Open	2026-11-24T16:19	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify all viewing functions work for a Job Owner
+ETM-9006	Open	2026-11-24T16:20	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot paste into cells
+ETM-9007	Open	2026-11-24T16:20	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot copy or cut cells
+ETM-9008	Open	2026-11-24T16:20	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify double-clicking a Work Breakdown bar does not open the Setting modal
+ETM-9009	Open	2026-11-24T16:20	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify double-clicking a Work bar does not open the Setting modal
+ETM-9010	Open	2026-11-24T16:20	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify double-clicking a Work Header bar does not open the Setting modal
+ETM-9011	Open	2026-11-24T16:20	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify double-clicking a split bar segment does not open the Setting modal
+ETM-9012	Open	2026-11-24T16:21	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot move or split segments of a Manual Adjust task
+ETM-9013	Open	2026-11-24T16:21	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot select a link line
+ETM-9014	Open	2026-11-24T16:21	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify the Manpower Resource table under the Gantt can be viewed but not edited
+ETM-9015	Open	2026-11-24T16:21	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify SIMOP, Undo and Redo are hidden and Ctrl+Z does nothing
+ETM-9016	Open	2026-11-24T16:21	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner can see SIMOP but cannot edit it
+ETM-9017	Open	2026-11-24T16:21	Dechathon Thanasutthiphat	NEG	[FE][MT][User without View Shutdown Logic permission] Verify a user without view permission cannot open the Shutdown Logic page
+ETM-9018	Open	2026-11-24T16:22	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner sees the same data as a Turnaround Manager
+ETM-9019	Open	2026-11-24T16:22	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify which toolbar buttons a Job Owner can and cannot see
+ETM-9020	Open	2026-11-24T16:22	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner does not see a finished Optimize result
+ETM-9021	Open	2026-11-24T16:22	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner can expand and fold column groups
+ETM-9022	Open	2026-11-24T16:22	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner can use Custom View but it is not saved
+ETM-9023	Open	2026-11-24T16:23	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner can fold and expand rows by hand but it is not saved
+ETM-9024	Open	2026-11-24T16:23	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Turnaround Manager can fold rows and the fold state can be saved
+ETM-9025	Open	2026-11-24T16:23	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner can see the C and D labels and use the Focus toggles
+ETM-9026	Open	2026-11-24T16:23	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify View Only Used Resource and the filter work but are not saved for a Job Owner
+ETM-9027	Open	2026-11-24T16:23	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot paste a date into the Start Date cell
+ETM-9028	Open	2026-11-24T16:24	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot paste a deck name into the Working Location (Deck) cell
+ETM-9029	Open	2026-11-24T16:24	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner cannot paste a resource name into the Manpower Resource cell
+ETM-9030	Open	2026-11-24T16:24	Dechathon Thanasutthiphat	POS	[FE][MT][Job Owner] Verify a Job Owner can leave the page without an unsaved-change warning
+ETM-9031	Open	2026-11-24T16:24	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify clicking the No. cell selects the row and filters the Histogram
+ETM-9032	Open	2026-11-24T16:24	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a single click on a bar selects the row
+ETM-9033	Open	2026-11-24T16:24	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a double-click on a bar opens the Setting modal without changing the selection
+ETM-9034	Open	2026-11-24T16:25	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify clicking an empty area of a row on the timeline selects the row
+ETM-9035	Open	2026-11-24T16:25	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify clicking the Remark cell of another row does not change the selected row
+ETM-9036	Open	2026-11-24T16:25	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify clicking the Manpower Resource cell of another row does not change the selected row
+ETM-9037	Open	2026-11-24T16:25	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify clicking the Duration cell of another row does not change the selected row
+ETM-9038	Open	2026-11-24T16:25	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify selecting a Platform row does not change its bar colour
+ETM-9039	Open	2026-11-24T16:25	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify selecting a Work Header row does not change its bar colour
+ETM-9040	Open	2026-11-24T16:26	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify clicking one segment of a split bar selects the row
+ETM-9041	Open	2026-11-24T16:26	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify double-clicking one segment of a split bar opens the Setting modal
+ETM-9042	Open	2026-11-24T16:26	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify double-clicking the connector between segments opens only one modal
+ETM-9043	Open	2026-11-24T16:26	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify deleting the selected row clears the selection and the Histogram filter
+ETM-9044	Open	2026-11-24T16:26	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Undo of an edit on another row keeps the selection
+ETM-9045	Open	2026-11-24T16:26	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a filter that hides the selected row does not leave a hidden selection
+ETM-9046	Open	2026-11-24T16:27	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify which cells of a Work Breakdown row can be edited
+ETM-9047	Open	2026-11-24T16:27	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify which cells of a Work row can be edited
+ETM-9048	Open	2026-11-24T16:27	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify which cells of Work Header and Platform rows can be edited
+ETM-9049	Open	2026-11-24T16:27	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a task with no common working time allows only Manpower Resource edits
+ETM-9050	Open	2026-11-24T16:27	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Manual Adjust task has the same editable cells as a normal task
+ETM-9051	Open	2026-11-24T16:28	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Resource Calendar task has the same editable cells as a normal task
+ETM-9052	Open	2026-11-24T16:28	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Custom Calendar task has the same editable cells as a normal task
+ETM-9053	Open	2026-11-24T16:28	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify read-only cells are grey and editable cells are not
+ETM-9054	Open	2026-11-24T16:28	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a single click does not open a cell for editing
+ETM-9055	Open	2026-11-24T16:28	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a longer Duration pushes the Hard-linked tasks after it
+ETM-9056	Open	2026-11-24T16:29	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Save turns off by itself when a Duration is set back to the original value
+ETM-9057	Open	2026-11-24T16:29	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a later Start keeps the working Duration and moves the next tasks
+ETM-9058	Open	2026-11-24T16:29	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a new End sets Duration in working hours, not clock hours
+ETM-9059	Open	2026-11-24T16:29	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Start cannot open a gap after a Hard predecessor
+ETM-9060	Open	2026-11-24T16:29	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify one Esc cancels a Start Date edit
+ETM-9061	Open	2026-11-24T16:30	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify one Esc cancels an End Date edit
+ETM-9062	Open	2026-11-24T16:30	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an empty Start Date turns the cell red and keeps the bar
+ETM-9065	Open	2026-11-24T16:30	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an empty End Date turns the cell red and keeps the bar
+ETM-9066	Open	2026-11-24T16:30	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an empty Duration turns the cell red and keeps the bar
+ETM-9067	Open	2026-11-24T16:30	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Start Date with a wrong format turns the cell red
+ETM-9068	Open	2026-11-24T16:31	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify one Esc cancels a Duration edit (Known defect SL-CELL-17)
+ETM-9069	Open	2026-11-24T16:31	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Start edit on a Manual Adjust task moves the whole bar and rounds down to 15 minutes (Known defect BUG-03)
+ETM-9070	Open	2026-11-24T16:31	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Start edit on a Manual Adjust task rounds up to 15 minutes (Known defect BUG-03)
+ETM-9071	Open	2026-11-24T16:31	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Start in non-working time moves to the first working time
+ETM-9072	Open	2026-11-24T16:32	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Start in the lunch break moves to the end of the break
+ETM-9073	Open	2026-11-24T16:32	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Start edit on a Custom Calendar task splits by the preset hours
+ETM-9074	Open	2026-11-24T16:32	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify an End before Start on a Manual Adjust task shrinks it to 0 hours
+ETM-9075	Open	2026-11-24T16:32	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End before Start is rejected when it breaks a Hard predecessor
+ETM-9076	Open	2026-11-24T16:32	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify an End in non-working time moves back to the end of the last working period
+ETM-9077	Open	2026-11-24T16:33	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End before Start on a Resource Calendar task makes Start = End with no popup (Known defect BUG-06)
+ETM-9078	Open	2026-11-24T16:33	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End before Start is rejected when it breaks an SS Hard link
+ETM-9079	Open	2026-11-24T16:33	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End equal to Start makes a 0-hour task with no popup (Known defect BUG-06)
+ETM-9080	Open	2026-11-24T16:33	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Duration rounds to steps of 0.25 hours (2.1 to 2.00)
+ETM-9081	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Duration rounds to steps of 0.25 hours (2.13 to 2.25)
+ETM-9082	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Duration is capped at 999.75 hours
+ETM-9083	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a negative Duration becomes 0 and pulls the Hard successors back
+ETM-9084	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Duration 0 on a multi-segment task pulls the next tasks back
+ETM-9085	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a shorter Duration on an FF-linked task moves Start later and keeps End
+ETM-9086	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a shorter Duration on an SF-linked task moves Start later and keeps End
+ETM-9087	Open	2026-11-24T16:34	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a longer Duration on a Must Finish On task moves Start earlier (Known defect BUG-14)
+ETM-9088	Open	2026-11-24T16:35	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Start before the Hard predecessor ends is rejected
+ETM-9089	Open	2026-11-24T16:35	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a task with an SS Hard link cannot change its Start
+ETM-9090	Open	2026-11-24T16:35	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a task with an SS Normal link can move its Start later
+ETM-9091	Open	2026-11-24T16:36	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Start in non-working time after a Hard predecessor returns to the same place
+ETM-9092	Open	2026-11-24T16:36	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End edit is rejected when it pushes the next task off Must Start On
+ETM-9093	Open	2026-11-24T16:36	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Start edit is rejected when it pushes an SS successor off Must Start On
+ETM-9094	Open	2026-11-24T16:36	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End edit is reverted when an FF successor breaks Finish No Later Than
+ETM-9095	Open	2026-11-24T16:36	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Duration cell shows working hours in edit mode
+ETM-9096	Open	2026-11-24T16:37	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify typing the same value again changes nothing
+ETM-9097	Open	2026-11-24T16:37	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a red cell clears when a valid value is typed
+ETM-9098	Open	2026-11-24T16:37	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Esc on a red cell clears the red state
+ETM-9099	Open	2026-11-24T16:37	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify accepted date formats in the Start Date cell (day before month)
+ETM-9100	Open	2026-11-24T16:37	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify impossible or wrong dates turn the Start Date cell red
+ETM-9101	Open	2026-11-24T16:38	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Duration 45 is accepted on a task that works 1 hour a day (Known defect SL-CELL-51)
+ETM-9102	Open	2026-11-24T16:38	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Enter saves and opens the same cell on the next row
+ETM-9103	Open	2026-11-24T16:38	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Enter only selects the next cell when that cell cannot be edited
+ETM-9104	Open	2026-11-24T16:38	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Enter on the last row saves without errors
+ETM-9105	Open	2026-11-24T16:38	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify two rows edited in a row with Enter give two Undo entries (Known defect SL-CELL-53)
+ETM-9106	Open	2026-11-24T16:38	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Tab skips the cells that cannot be edited
+ETM-9107	Open	2026-11-24T16:39	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Custom Calendar task with no working days treats an End edit like Manual Adjust
+ETM-9108	Open	2026-11-24T16:39	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a deck added to a Work Breakdown is merged into the Work row
+ETM-9109	Open	2026-11-24T16:39	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a free-text deck is placed last in the Work row
+ETM-9110	Open	2026-11-24T16:39	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a new deck name cannot be typed in the table
+ETM-9111	Open	2026-11-24T16:39	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify adding a resource re-splits the bar by the shared shift and moves the next tasks
+ETM-9112	Open	2026-11-24T16:40	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify removing the last resource puts the task in RESOURCE_ERROR
+ETM-9113	Open	2026-11-24T16:40	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify adding a resource back clears RESOURCE_ERROR
+ETM-9114	Open	2026-11-24T16:40	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a new Functional Location clears the Equipment Number
+ETM-9115	Open	2026-11-24T16:40	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Description, Remark, Priority and Activity Group can be edited
+ETM-9116	Open	2026-11-24T16:40	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Description accepts Thai but blocks some special characters
+ETM-9117	Open	2026-11-24T16:40	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Work Number of a Work row allows 20 characters and cannot be empty
+ETM-9118	Open	2026-11-24T16:41	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Remark allows 500 and Activity Group allows 200 characters, and both may be empty
+ETM-9119	Open	2026-11-24T16:41	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify every Priority can be selected but cannot be cleared, and it is saved per level
+ETM-9120	Open	2026-11-24T16:41	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify all decks cannot be removed
+ETM-9121	Open	2026-11-24T16:41	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify more than 5 resources are not allowed
+ETM-9122	Open	2026-11-24T16:41	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Manpower Resource cannot be empty
+ETM-9123	Open	2026-11-24T16:42	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a new resource gets quantity 1 and existing quantities stay
+ETM-9124	Open	2026-11-24T16:42	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify resources can be removed one by one with ×
+ETM-9125	Open	2026-11-24T16:42	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify removing a resource is reverted when the task breaks its constraint
+ETM-9126	Open	2026-11-24T16:42	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify adding a resource is reverted when the task breaks its constraint (Known defect DF-4)
+ETM-9127	Open	2026-11-24T16:42	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the + buttons open the Setting modal on the matching tab
+ETM-9128	Open	2026-11-24T16:42	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify how resource names are shown in the Manpower Resource cell
+ETM-9129	Open	2026-11-24T16:43	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a double-click on empty space in Manpower Resource opens the selection list
+ETM-9130	Open	2026-11-24T16:43	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the Description editor does not reuse text from the previous row (Known defect SL-CELL-73)
+ETM-9131	Open	2026-11-24T16:43	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify adding a resource to a Manual Adjust task does not re-split the bar
+ETM-9132	Open	2026-11-24T16:43	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify adding a resource to a Custom Calendar task does not re-split the bar
+ETM-9133	Open	2026-11-24T16:43	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Description of a Work Breakdown and of a Work are saved to their own fields
+ETM-9134	Open	2026-11-24T16:44	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Start Date cell is a plain text box
+ETM-9135	Open	2026-11-24T16:44	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify year-end and leap-year dates in the Start Date cell
+ETM-9136	Open	2026-11-24T16:44	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Tab saves the Start Date edit
+ETM-9137	Open	2026-11-24T16:44	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a click outside saves the Start Date edit
+ETM-9138	Open	2026-11-24T16:44	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a red cell shows the last valid value when opened again
+ETM-9139	Open	2026-11-24T16:45	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Priority cell on each level
+ETM-9140	Open	2026-11-24T16:45	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Priority options and how a choice is confirmed or cancelled
+ETM-9141	Open	2026-11-24T16:45	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify old data with an empty Priority
+ETM-9142	Open	2026-11-24T16:46	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify parent and child Priorities are independent
+ETM-9143	Open	2026-11-24T16:46	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a 0-hour task can move its Start
+ETM-9144	Open	2026-11-24T16:46	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an End before Start on a 0-hour task makes Start = End with no popup (Known defect BUG-06)
+ETM-9145	Open	2026-11-24T16:46	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a wrong date format on a 0-hour task turns the cell red
+ETM-9146	Open	2026-11-24T16:47	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify code and SQL text in text cells is stored as plain text
+ETM-9147	Open	2026-11-24T16:47	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify long text shows … in the table but is complete in edit mode
+ETM-9148	Open	2026-11-24T16:47	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify Duration accepts numbers only
+ETM-9149	Open	2026-11-24T16:47	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify the Equipment Number list is sorted in ascending order
+ETM-9150	Open	2026-11-24T16:47	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify table edits show in the Work Setting modal
+ETM-9151	Open	2026-11-24T16:48	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify adding a resource with no common shift puts the task in RESOURCE_ERROR
+ETM-9152	Open	2026-11-24T16:48	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging a bar 2 hours later moves the whole Hard chain
+ETM-9153	Open	2026-11-24T16:48	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a flush Normal successor follows a dragged bar
+ETM-9154	Open	2026-11-24T16:49	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Normal successor with a gap does not follow a small drag
+ETM-9155	Open	2026-11-24T16:49	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging a bar away and back changes nothing
+ETM-9156	Open	2026-11-24T16:49	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify dragging a Hard successor away shows a tooltip and snaps back
+ETM-9157	Open	2026-11-24T16:49	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a drag rejected by a Hard link shows no popup
+ETM-9158	Open	2026-11-24T16:49	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a drag rejected by the task's own constraint shows no popup
+ETM-9159	Open	2026-11-24T16:50	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a drag rejected by the parent's constraint shows no popup
+ETM-9160	Open	2026-11-24T16:50	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a resize rejected by a Hard link shows no popup
+ETM-9161	Open	2026-11-24T16:50	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify dragging past a Start No Later Than shows a tooltip and snaps back
+ETM-9162	Open	2026-11-24T16:50	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify pressing Esc during a drag cancels it
+ETM-9163	Open	2026-11-24T16:50	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify pressing Esc while the red tooltip shows does not open a popup
+ETM-9164	Open	2026-11-24T16:51	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify resizing a bar 1 hour longer moves its Hard successors
+ETM-9165	Open	2026-11-24T16:51	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a RESOURCE_ERROR task cannot be resized
+ETM-9166	Open	2026-11-24T16:52	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify one segment of a Manual Adjust task can be dragged alone
+ETM-9167	Open	2026-11-24T16:52	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify one segment of a Resource Calendar task cannot be dragged alone
+ETM-9168	Open	2026-11-24T16:52	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Platform bar cannot be dragged or resized
+ETM-9169	Open	2026-11-24T16:52	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Work Header bar cannot be dragged or resized
+ETM-9170	Open	2026-11-24T16:52	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a Work bar cannot be dragged or resized
+ETM-9171	Open	2026-11-24T16:53	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Work Breakdown rows can be reordered by dragging
+ETM-9172	Open	2026-11-24T16:53	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a reordered Platform keeps its order after Save
+ETM-9173	Open	2026-11-24T16:53	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a reordered Work Header keeps its order after Save
+ETM-9174	Open	2026-11-24T16:53	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a reordered Work keeps its order after Save
+ETM-9176	Open	2026-11-24T16:53	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging No.18 1 hour later moves each linked task by its link type
+ETM-9178	Open	2026-11-24T16:54	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify an SS Normal successor dragged before its predecessor is pushed back
+ETM-9181	Open	2026-11-24T16:54	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify an SS Normal successor can be dragged later
+ETM-9182	Open	2026-11-24T16:54	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging No.19 moves its Hard successor and its flush Normal successor
+ETM-9183	Open	2026-11-24T16:54	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Normal successor with a gap does not follow until it is reached
+ETM-9184	Open	2026-11-24T16:55	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Normal successor with a gap is pushed when reached
+ETM-9185	Open	2026-11-24T16:55	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging earlier pulls Hard and flush Normal successors
+ETM-9189	Open	2026-11-24T16:55	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging earlier does not pull a Normal successor with a gap
+ETM-9190	Open	2026-11-24T16:55	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a drag into non-working time returns the bar to its slot
+ETM-9191	Open	2026-11-24T16:55	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging No.18 1 working hour earlier
+ETM-9192	Open	2026-11-24T16:56	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a drag is discarded when a downstream task would break its constraint
+ETM-9193	Open	2026-11-24T16:56	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a drag is discarded when a pushed task would open a gap on another Hard link
+ETM-9194	Open	2026-11-24T16:56	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify dragging an SF Hard predecessor is discarded when the successor cannot follow
+ETM-9195	Open	2026-11-24T16:56	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging a whole Manual Adjust bar moves it by clock time
+ETM-9196	Open	2026-11-24T16:56	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a single-bar Manual Adjust task is not split after a drag
+ETM-9197	Open	2026-11-24T16:57	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a middle segment of a Manual Adjust task can be resized freely
+ETM-9198	Open	2026-11-24T16:57	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Manual Adjust segments merge when dragged together and Undo splits them back
+ETM-9199	Open	2026-11-24T16:57	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a Custom Calendar task re-splits by its preset after a drag
+ETM-9200	Open	2026-11-24T16:57	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify resizing the last segment of a split Resource Calendar task
+ETM-9201	Open	2026-11-24T16:57	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify resizing a Custom Calendar task re-splits by its schedule
+ETM-9202	Open	2026-11-24T16:58	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify resizing a Manual Adjust task does not split it
+ETM-9203	Open	2026-11-24T16:58	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a bar cannot be resized from its left edge on any calendar
+ETM-9204	Open	2026-11-24T16:58	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the first segment of a Resource Calendar task cannot be resized
+ETM-9205	Open	2026-11-24T16:59	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging a Hard-linked RESOURCE_ERROR task shows a tooltip and snaps back
+ETM-9206	Open	2026-11-24T16:59	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a task with an FF Hard link cannot be resized
+ETM-9207	Open	2026-11-24T16:59	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a task with an SF Hard link cannot be resized
+ETM-9208	Open	2026-11-24T16:59	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a task with Must Finish On cannot be resized
+ETM-9209	Open	2026-11-24T16:59	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a child cannot be resized past its parent's Must Finish On
+ETM-9211	Open	2026-11-24T17:00	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a child cannot be dragged so its parent breaks Start No Earlier Than
+ETM-9212	Open	2026-11-24T17:00	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify the tooltip when a child drag breaks the parent's Start No Earlier Than
+ETM-9213	Open	2026-11-24T17:00	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify Undo and Redo of a drag that moves many tasks
+ETM-9214	Open	2026-11-24T17:00	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify a drag after Undo gives the same result again
+ETM-9215	Open	2026-11-24T17:00	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a row cannot be dragged under another parent
+ETM-9216	Open	2026-11-24T17:00	Dechathon Thanasutthiphat	NEG	[FE][MT][Turnaround Manager] Verify a row cannot be dropped onto a sibling row
+ETM-9217	Open	2026-11-24T17:01	Dechathon Thanasutthiphat	POS	[FE][MT][Turnaround Manager] Verify dragging inside the Description cell does not reorder or scroll

@@ -1,0 +1,60 @@
+[
+ {
+  "test": "ETM-8721",
+  "no": 21,
+  "stepId": "725902d0-3992-4edb-a0f7-5280861abfa0",
+  "action": "Record whether the modal `Paste Validation Failed` is shown (not defined by BA, Suggestion S-5).",
+  "data": "",
+  "result": "The modal state is written down for BA."
+ },
+ {
+  "test": "ETM-8721",
+  "no": 22,
+  "stepId": "d1c53e67-9a1c-45b0-b976-ae190467fa3a",
+  "action": "Close the modal if it is shown (button `OK`).",
+  "data": "",
+  "result": "The modal is closed or was not shown."
+ },
+ {
+  "test": "ETM-8719",
+  "no": 1,
+  "stepId": "391eaf1a-391a-4287-9f41-5fbfe3774f05",
+  "field": "data",
+  "note": "last table row was: | Activity | `Pipe`, line break, `Test` (one Excel cell with a line break) | recorded only (not defined by BA, Suggestion S-2) | recorded only |"
+ },
+ {
+  "test": "ETM-8719",
+  "no": 4,
+  "stepId": "cb2180c9-6788-45a1-b16e-ac5a9d6b76be",
+  "action": "For the line-break row, write down the cell text, the number of rows and whether the modal is shown.",
+  "result": "The cell text, the row count and the modal state are written down for BA."
+ },
+ {
+  "test": "ETM-8716",
+  "no": 18,
+  "stepId": "00ee739c-2c10-4687-9e41-f9b99d2e9921",
+  "action": "Record whether the modal `Paste Validation Failed` is shown (not defined by BA, Suggestion S-5).",
+  "result": "The modal state is written down for BA."
+ },
+ {
+  "test": "ETM-8716",
+  "no": 19,
+  "stepId": "bd553acc-979a-4635-a566-3ab593181b15",
+  "action": "Close the modal if it is shown (button `OK`).",
+  "result": "The modal is closed or was not shown."
+ },
+ {
+  "test": "ETM-8723",
+  "no": 16,
+  "stepId": "881c2b00-8662-4aa9-83ff-7a1cd5e2c178",
+  "action": "Record whether the modal `Paste Validation Failed` is shown (not defined by BA, Suggestion S-5).",
+  "result": "The modal state is written down for BA."
+ },
+ {
+  "test": "ETM-8723",
+  "no": 17,
+  "stepId": "02b22106-ee90-4222-bac9-0f16998fc841",
+  "action": "Close the modal if it is shown (button `OK`).",
+  "result": "The modal is closed or was not shown."
+ }
+]
