@@ -142,3 +142,15 @@ rule of the Story:
   was changed. A rule tested on one screen does not prove the others (defect
   exam ETM-8370, 2026-11-25: the Status was right on the list but wrong on
   Edit Plan, and no case opened Edit Plan to read it).
+- A column or field with a fixed list of values (Yes/No, a status, a type, a
+  priority) that is shown somewhere else (an export, a report, a detail page):
+  set it to each value of the list, or at least to every non-default value,
+  then read it in every place it is shown. A row that is empty or left at the
+  default does not prove the mapping (defect exam ETM-6890, 2026-11-25: Hot
+  Bed was read only on an empty row; the export wrote `N` instead of `No`).
+- A case that checks an error or validation message for one cell or field
+  also says that no other message is shown for that cell (the number of
+  messages, or "only this message"). "The message is shown" passes when two
+  or three messages pile up on the same cell (defect exam ETM-7450 / ETM-7456,
+  2026-11-25: a blank mandatory cell and text in a number field each got
+  extra messages).
