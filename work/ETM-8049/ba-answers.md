@@ -45,3 +45,12 @@ Side note: Deck max length is 30 in ETM-8049/686/1230/1106 but `[String] 50` in 
 | Q29 | X and Y can only be selected, not typed, so there is no `a` → `A` case. Drop that part of TC-013 and TC-014. |
 
 BA also updated ETM-8049 AC 6.1 in Jira at 14:23.
+
+## BA answers 2026-11-25 (the user answered as BA in the lead chat)
+
+| Q | BA answer | What it means for the tests |
+|---|---|---|
+| Q33 | "แปลงค่าตาม master กรณีที่ค่าเป็นแบบเดียวกับ master แต่ถ้า free text ก็ยึดตามนั้น": a value that matches Master Data (any letter case) is converted to the Master Data spelling; free text stays as typed. | Question 2 = yes: a new entry `main deck` must become `Main Deck` even when the event holds the old `main deck`. ETM-9225 stays open. TC-020 (ETM-8793) expected result unchanged. Question 1 (does such old lower-case data exist in production) was NOT answered: keep the note that the old value was set in the QA database. |
+| Q34 | "3a": one Create Work / Edit Work Breakdown cell may hold `Dock Area` and `DOCK AREA` together. | TC-015 (ETM-8788) expected result unchanged (`Main Deck, Cellar Deck, Dock Area, DOCK AREA`). The current behaviour (second case variant not added) is a defect of the same kind as ETM-9223. Logging it needs the user's yes on the board; not logged yet. |
+
+Spec change (25 Nov 2026): `verifyWorklistWorkingLocationEntry.spec.ts` assert messages of ETM-8788 step "type DOCK AREA" and ETM-8793 step "type main deck" now cite Q34 / Q33. Expected values not changed.

@@ -1,0 +1,56 @@
+{
+  "defect": "ETM-6664",
+  "story": "ETM-5615",
+  "in_story": true,
+  "found_by": "another tester (Dechathon)",
+  "bug": "Filtering to zero rows shows \"No data found matching your filter.\" instead of \"No data available.\"",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5615",
+  "run": "STORY-ETM-5615",
+  "frozen": "evals/exams/_story-ETM-5615/story.md: Jira description version before the Story's first defect (2026-09-23T13:24, changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "filter"
+      ],
+      [
+        "untick",
+        "uncheck",
+        "deselect",
+        "clear",
+        "0 selected",
+        "zero",
+        "no row",
+        "no match",
+        "nothing match",
+        "0 rows",
+        "none match"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "no data available"
+        ],
+        [
+          "!",
+          "not shown",
+          "not displayed",
+          "disappear",
+          "is gone",
+          "no longer",
+          "hidden"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: open the Filter Panel and untick every option of one section (local filter, no Save)"
+  },
+  "note": "AC 0 \"Empty State\": exact text No data available. AC 3.2.3 still says \"pending UI design\"; AC 0 is the newer rule. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

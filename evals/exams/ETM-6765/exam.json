@@ -1,0 +1,51 @@
+{
+  "defect": "ETM-6765",
+  "story": "ETM-6378",
+  "in_story": true,
+  "found_by": "the user (Nuchanart)",
+  "bug": "POB Chart: the Data Table date columns are narrower than the chart and do not line up under the same dates.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6378",
+  "run": "STORY-ETM-6378",
+  "frozen": "evals/exams/_story-ETM-6378/story.md: Jira description version before the Story's first defect (2026-09-25T17:14, changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "chart"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "align",
+          "line up",
+          "lines up",
+          "lined up",
+          "directly under",
+          "directly below",
+          "same x",
+          "same position",
+          "same width"
+        ],
+        [
+          "date",
+          "column",
+          "x-axis",
+          "x axis"
+        ],
+        [
+          "table"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: Manpower Mob Plan with at least one POB graph, Hide Table off"
+  },
+  "note": "AC 2.5: X-axis date points and table date columns strictly aligned. Only the alignment half is used; the Name counter of Add Data belongs to ETM-6381. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

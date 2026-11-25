@@ -1,0 +1,46 @@
+{
+  "defect": "ETM-6852",
+  "story": "ETM-5614",
+  "in_story": true,
+  "found_by": "another tester (Dechathon)",
+  "bug": "A Resource with no personnel shows the placeholder \"No people assigned.\" instead of \"No personnel assigned\".",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5614",
+  "run": "STORY-ETM-5614",
+  "frozen": "evals/exams/_story-ETM-5614/story.md: Jira description version before the Story's first defect (2026-09-16T16:16, changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "resource",
+        "category"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "no personnel assigned"
+        ],
+        [
+          "!",
+          "not shown",
+          "not displayed",
+          "not rendered",
+          "disappear",
+          "is gone",
+          "no longer",
+          "hidden",
+          "removed"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: needs a plan with a Resource that has zero personnel (e.g. Production)"
+  },
+  "note": "AC 2.4 exact text. Found 2 weeks after the Story was Done. The withheld module doc gives the wrong text as the expected one. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

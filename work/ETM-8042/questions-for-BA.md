@@ -63,3 +63,4 @@ Test cases are drafted (23). Only the points below are still waiting.
     (a) Clear the part and disable Save (Q11, AC 1.2): the current app is a **defect**.
     (b) Put back the previous valid value: AC 1.2 and ETM-8851 are updated, no defect.
     Also: should Start and End behave the same (Start puts the value back only on the next click, End already on Tab)?
+    — BA 25 Nov: (b), previous value put back, no defect. Start/End timing not answered (both accepted).

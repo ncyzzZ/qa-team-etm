@@ -1,0 +1,82 @@
+{
+  "defect": "ETM-6772",
+  "story": "ETM-6378",
+  "in_story": "partly",
+  "found_by": "the user (Nuchanart)",
+  "bug": "Add Data stays enabled when the POB Chart already has the maximum of 10 Data Groups.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6378",
+  "run": "STORY-ETM-6378",
+  "frozen": "evals/exams/_story-ETM-6378/story.md: Jira description version before the Story's first defect (2026-09-25T17:14, changelog), comments before it; no analyst.md",
+  "catch": {
+    "any": [
+      {
+        "block": [
+          [
+            "10 graph",
+            "10 data",
+            "ten graph",
+            "10/10",
+            "maximum of 10",
+            "max 10",
+            "max. 10",
+            "10 lines",
+            "10 individual",
+            "10 configured",
+            "all 10",
+            "10 groups"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "add data"
+            ],
+            [
+              "disabled",
+              "greyed",
+              "grayed",
+              "not clickable",
+              "cannot be clicked",
+              "inactive",
+              "not enabled"
+            ]
+          ]
+        ]
+      },
+      {
+        "steps": [
+          [
+            [
+              "11th",
+              "eleventh",
+              "11 graph",
+              "11 data",
+              "an 11",
+              "graph 11"
+            ],
+            [
+              "cannot",
+              "not possible",
+              "blocked",
+              "disabled",
+              "not allowed",
+              "prevent",
+              "not added",
+              "no "
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM",
+    "walk": "read-only: needs a plan whose POB Chart already has 10 graphs (open Add Data, do not save)"
+  },
+  "note": "AC 2.1: up to a maximum of 10 graphs. The Add Data button state is defined in ETM-6381, so the disabled state at 10 is implied here. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

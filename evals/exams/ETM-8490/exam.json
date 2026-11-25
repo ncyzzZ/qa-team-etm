@@ -1,0 +1,36 @@
+{
+  "defect": "ETM-8490",
+  "story": "ETM-7984",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Red Total Plan (%) cell after a size change with a custom activity: tooltip says \"The overall progress must not exceed 100%.\" instead of \"Overall planned progress must equal 100%.\"",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7984",
+  "run": "STORY-ETM-7984",
+  "frozen": "evals/exams/_story-ETM-7984/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "plan (%)",
+        "plan %",
+        "total"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "hover",
+          "tooltip",
+          "mouse over"
+        ],
+        [
+          "planned progress must equal 100"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 6.3 gives the tooltip for the template total != 100; the same text for any total != 100 after a size change is implied."
+}

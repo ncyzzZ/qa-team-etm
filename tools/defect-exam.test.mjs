@@ -308,3 +308,63 @@ test('sixth set: a failed run saved and reloaded is not ETM-7565', () => {
   // ETM-6373 fix-round TC-004 step 7: expects the dates from before the run, which is what the bug shows
   assert.deepEqual(ids('### TC-004 Failed run\n6. Click `Save`. -> Saved.\n7. Reload the page. -> The plan shows the same task dates and times as before the run, with no day shift.', 'ETM-7565'), []);
 });
+
+const set7 = {
+  'ETM-8470': ['### TC-1 Edits survive a size change\n1. Edit the Activity text of task 2 to `QA edited` and drag task 1 to position 3. -> Shown.\n2. Change Shutdown Size to Medium SD and confirm. -> Dates recalculated.\n3. Look at task 2 and the order. -> The edited Activity text and the dragged order are kept.',
+               '### TC-1 Size change recalculates\n1. Change Shutdown Size to Medium SD and confirm. -> Start and End Dates of default tasks are recalculated.'],
+  'ETM-8471': ['### TC-1 Deleted items come back at the bottom\n1. Delete task `Estimate Manpower` and confirm. -> Removed.\n2. Change Shutdown Size and confirm. -> Recalculated.\n3. Look at the group. -> `Estimate Manpower` is back as the last task of its group.',
+               '### TC-1 Deleted items come back\n1. Delete task `Estimate Manpower` and confirm. -> Removed.\n2. Change Shutdown Size and confirm. -> `Estimate Manpower` is back in its group.'],
+  'ETM-8490': ['### TC-1 Total not 100\n1. Add a custom activity with Plan (%) 5.0 and change Shutdown Size. -> Total Plan (%) is 105.0, red.\n2. Hover the red Total Plan (%) cell. -> Tooltip `Overall planned progress must equal 100%.`',
+               '### TC-1 Total not 100\n1. Add a custom activity with Plan (%) 5.0 and change Shutdown Size. -> The Total Plan (%) cell is red and Save is disabled.'],
+  'ETM-7272': ['### TC-1 Work order\n1. Note the Work order on the Worklist page and click Export. -> File downloads.\n2. Read the Work rows of the file. -> The Work rows are in the same order as the Worklist page.',
+               '### TC-1 Breakdowns follow their Work\n1. Click Export and read the rows. -> Each Work row is followed by its Work Breakdown rows.'],
+  'ETM-7281': ['### TC-1 Dropdowns on a large export\n1. Export a plan with 3,500 rows and open the file. -> Opens.\n2. Click the Priority cell of the last data row. -> The dropdown list is there, the same as on row 4.',
+               '### TC-1 Dropdowns kept\n1. Export and open the file. -> Opens.\n2. Click the Priority cell of row 4. -> The dropdown list opens.'],
+  'ETM-7294': ['### TC-1 Same active-cell look\n1. Click one cell on Shutdown Logic, Create Work, Edit Work Breakdown and Manpower Mob Plan. -> The selected cell has the same border and background on every page.',
+               '### TC-1 Active cell\n1. Click one cell on Create Work. -> The cell is selected.'],
+  'ETM-7352': ['### TC-1 PDF shows the tasks\n1. Export Current Execution Date and open the PDF. -> Opens.\n2. Look at the Gantt pages. -> Every task row and bar of the Daily Report page is listed in the PDF.',
+               '### TC-1 PDF headers\n1. Export Current Execution Date and open the PDF. -> The Gantt header row has background #E3EFF3.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set7)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('seventh set: column-header order is not the Work order (ETM-7272)', () => {
+  assert.deepEqual(ids('### TC-005 Template\n3. Open `Worklist_Data`. -> The column headers are the same as in the Import template V2 (same names and same order).', 'ETM-7272'), []);
+});
+test('seventh set: "Key Activities" in a precondition is not a task row (ETM-7352)', () => {
+  assert.deepEqual(ids('### TC-010 Strange text\nPrecondition: values typed in Key Activities and Note; each one on separate rows.\n2. Check each field in the PDF. -> Every value is shown exactly as on screen.', 'ETM-7352'), []);
+});
+
+// Manpower Mob Plan set (ETM-5614 / 5615 / 6378), read-only screens for the planner
+const setMmp = {
+  'ETM-6366': ['### TC-1 Collapse Reservation\n1. Click the chevron of the `Reservation` group header. -> The group collapses; only `Dlog Status` stays visible, `Booking No.` is hidden.',
+               '### TC-1 Collapse Reservation\n1. Click the chevron of the `Reservation` group header. -> The group collapses to one column.'],
+  'ETM-6852': ['### TC-1 Empty Resource\nPrecondition: Resource `Production` has no personnel.\n1. Look under the `Production` category row. -> A placeholder row shows `No personnel assigned`.',
+               '### TC-1 Empty Resource\nPrecondition: Resource `Production` has no personnel.\n1. Look under the `Production` category row. -> A placeholder row is shown.'],
+  'ETM-6664': ['### TC-1 Filter to nothing\n1. Open the Filter Panel, expand `Company` and untick `Select All`. -> 0 selected.\n2. Look at the grid. -> The empty state `No data available.` is shown.',
+               '### TC-1 Filter to nothing\n1. Open the Filter Panel, expand `Company` and untick `Select All`. -> The grid shows no personnel rows.'],
+  'ETM-6666': ['### TC-1 Mob Date picker\n1. Open the Filter Panel, expand `Mob Date` and click the date input. -> The calendar opens on the month of the first schedule day (earliest Task Start - 7 days), not the current month.',
+               '### TC-1 Mob Date picker\n1. Open the Filter Panel, expand `Mob Date` and click the date input. -> A calendar opens.\n2. Pick a date. -> Rows with that Mob Date are shown.'],
+  'ETM-6634': ['### TC-1 Name options order\nPrecondition: names `Apple`, `apple`, `BANANA`, `banana`.\n1. Open the Filter Panel and expand `Name`. -> Options are in A-Z dictionary order, upper and lower case mixed (`apple` next to `Apple`).',
+               '### TC-1 Name search\n1. Open the Filter Panel and type `APP` in the Name search. -> `Apple` and `apple` show (search ignores case, list order A-Z).'],
+  'ETM-6765': ['### TC-1 Table under chart\n1. Look at the POB Chart and the Data Table below. -> Each table date column lines up directly under the same date on the chart X-axis.',
+               '### TC-1 Scroll\n1. Scroll the POB Chart sideways. -> The Data Table scrolls with it.'],
+  'ETM-6772': ['### TC-1 Ten graphs\nPrecondition: the POB Chart has 10 graphs (maximum of 10).\n1. Look at `Add Data`. -> It is disabled (greyed out).',
+               '### TC-1 Ten graphs\nPrecondition: the POB Chart has 10 graphs (maximum of 10).\n1. Look at the legend. -> 10 entries.'],
+  'ETM-6774': ['### TC-1 Tooltip with 10 graphs\nPrecondition: 10 graphs ticked.\n1. Hover a date low in the chart. -> The tooltip is fully visible with one line per ticked graph.',
+               '### TC-1 Tooltip\nPrecondition: 2 graphs ticked.\n1. Hover a date. -> The tooltip shows the values.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(setMmp)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('Manpower Mob Plan set: cases that expect the bug are not counted', () => {
+  assert.deepEqual(ids('### TC-1 x\nPrecondition: Resource `Production` has personnel.\n1. Look under `Production`. -> `No personnel assigned` is not shown.', 'ETM-6852'), []);
+  assert.deepEqual(ids('### TC-1 x\n1. Untick every Company option in the filter. -> `No data found matching your filter.` is shown.', 'ETM-6664'), []);
+  assert.deepEqual(ids('### TC-1 x\nPrecondition: 10 graphs.\n1. Hover a date. -> The legend lists every graph.', 'ETM-6774'), []);
+});

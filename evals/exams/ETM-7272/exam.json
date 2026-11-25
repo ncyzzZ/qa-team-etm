@@ -1,0 +1,54 @@
+{
+  "defect": "ETM-7272",
+  "story": "ETM-6844",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Exported Work rows are not in the order shown on the Worklist page (only the order half of the defect is used; the cell formats are not in the Story).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6844",
+  "run": "STORY-ETM-6844",
+  "frozen": "evals/exams/_story-ETM-6844/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "order",
+          "sequence",
+          "sorted"
+        ],
+        [
+          "work row",
+          "works",
+          "each work",
+          "work records",
+          "the work"
+        ],
+        [
+          "page",
+          "screen",
+          "worklist page",
+          "web",
+          "table",
+          "grid",
+          "same as"
+        ],
+        [
+          "!",
+          "header",
+          "column name",
+          "tab name"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: each Work row followed by its breakdowns; the Work order is not given. The screen order is the expected one (rule: a value or list shown on several screens). Column-header order (\"same names and same order\" as the template) is not the Work order (ETM-6844 first draft TC-005, read by hand)."
+}

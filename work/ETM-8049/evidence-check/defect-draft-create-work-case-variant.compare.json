@@ -1,0 +1,20 @@
+{
+ "id": "defect-draft-create-work-case-variant",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "step 2: picture blank, cut or not full screen",
+  "Picture 1 shows only one tag; the three earlier tags (Main Deck, Cellar Deck, Dock Area) are not visible, so steps 2-4 are unproven.",
+  "The one visible tag reads 'DOCK AREA', not 'Dock Area'; the picture does not show 'variant not added', it may show a replaced tag or a lost entry.",
+  "Typed 'DOCK AREA' is still in the input: picture may be taken before Enter was processed.",
+  "Deck column header is hidden by the dropdown; the cell is not proven to be Deck.",
+  "Picture 2 shows the worklist without a Deck column or the new work; it does not show the after-Save result.",
+  "Xray backup is the pre-2026-11-24 version; the step 8 wording quoted in the brief could not be checked against it.",
+  "AC 6.2 text was not found in the card files; only BA answers back the expected result."
+ ],
+ "summary": "ภาพไม่พิสูจน์ defect: ภาพ 1 เห็น tag เดียวคือ 'DOCK AREA' ไม่เห็น Main Deck/Cellar Deck/Dock Area และข้อความยังค้างในช่อง ส่วนภาพ 2 เป็น worklist ที่ไม่มีคอลัมน์ Deck ต้องถ่ายภาพเต็มจอใหม่ให้เห็น tag ครบทั้งก่อนและหลังกด Enter ครั้งที่ 4 และค่าหลัง Save",
+ "sourceHash": "d0ffc0b79f44"
+}

@@ -31,3 +31,5 @@ Evidence of the 8839 drawer check: manual-check-8839-drawer/.
 - 2026-11-25 13:24: ETM-9221 comment 600492 added, @mentions the assignee (thanawich klongsard), points to comment 600433 and the 8840/8838 block.
 
 - 2026-11-25: Xray ETM-8873 push 8835, 8837 = PASSED (user chat: Push). Now 14 PASSED, 1 FAILED (8849), 9 TO DO.
+
+- 2026-11-25 14:44: BA Q12 = (b) recorded (ba-answers Round 7, F-12 confirmed). Spec 8851 changed to "previous value put back". Rerun 2026-11-25_144446: retry 0 env (Planning tab did not load), retry 1 FAILED: in Create Plan, Start with End still empty is CLEARED after an invalid paste (also seen 24 Nov 22:03, Start check passed with ""), while End reverts to 25 Feb 18:00. Edit Plan (manual 24 Nov, both sides filled) reverts Start too. Open: is clearing Start in Create Plan (End empty, Save disabled anyway) acceptable under (b)? Not a heal (env + assertion).

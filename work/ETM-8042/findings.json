@@ -156,9 +156,9 @@
     "impact": "medium",
     "raised": "2026-11-24",
     "story_status": "In Testing",
-    "outcome": null,
-    "outcome_date": null,
-    "note": "ETM-8851 re-proved by hand 24 Nov: invalid paste/type reverts to the previous value, not cleared (BA Q11 said cleared). Asked BA (user chose 'ask BA first' over a defect). Evidence manual-8851-recheck/.",
+    "outcome": "confirmed",
+    "outcome_date": "2026-11-25",
+    "note": "ETM-8851 re-proved by hand 24 Nov: invalid paste/type reverts to the previous value, not cleared (BA Q11 said cleared). Asked BA (user chose 'ask BA first' over a defect). Evidence manual-8851-recheck/. BA 25 Nov: Q12 = (b), putting back the previous value is intended; no defect, ETM-8851 expected updated. Start/End timing not answered, both accepted.",
     "later_defect": null
   }
 ]

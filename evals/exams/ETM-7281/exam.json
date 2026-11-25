@@ -1,0 +1,49 @@
+{
+  "defect": "ETM-7281",
+  "story": "ETM-6844",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Export with more than 3,000 rows: dropdown lists (data validation) missing from row 3,001 onward.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6844",
+  "run": "STORY-ETM-6844",
+  "frozen": "evals/exams/_story-ETM-6844/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "dropdown",
+          "data validation",
+          "drop-down",
+          "list"
+        ],
+        [
+          "every row",
+          "all rows",
+          "last row",
+          "each row",
+          "every data row",
+          "all data rows",
+          "row 3",
+          "3,000",
+          "3000",
+          "bottom row",
+          "last data row",
+          "large",
+          "1,000",
+          "many rows"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC: dropdown validation preserved across all dropdown columns. That it is on every row of a large export is implied."
+}

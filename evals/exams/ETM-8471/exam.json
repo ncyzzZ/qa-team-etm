@@ -1,0 +1,47 @@
+{
+  "defect": "ETM-8471",
+  "story": "ETM-7984",
+  "in_story": true,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "After a Shutdown Size change, deleted default tasks and a deleted Activity Group come back at their template position, not at the bottom.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7984",
+  "run": "STORY-ETM-7984",
+  "frozen": "evals/exams/_story-ETM-7984/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "shutdown size"
+      ],
+      [
+        "delete",
+        "deleted",
+        "removed"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "bottom",
+          "at last",
+          "last task",
+          "last group",
+          "end of",
+          "last row",
+          "last position",
+          "last two",
+          "appended"
+        ],
+        [
+          "!",
+          "not at the bottom",
+          "template position"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 4.1 / 4.2: missing template items are added at the bottom (At Last), in template order."
+}

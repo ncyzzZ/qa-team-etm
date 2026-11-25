@@ -8,13 +8,13 @@
   },
   "ETM-8677": {
    "status": "passed",
-   "t": "2026-11-24T16:06:05.468Z",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
   "ETM-8679": {
    "status": "passed",
-   "t": "2026-11-24T16:06:05.468Z",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
@@ -40,27 +40,25 @@
   },
   "ETM-8688": {
    "status": "passed",
-   "t": "2026-11-24T16:06:05.468Z",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
   "ETM-8690": {
-   "status": "skipped",
-   "why": "precondition",
-   "t": "2026-11-24T16:06:05.468Z",
+   "status": "failed",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
   "ETM-8692": {
-   "status": "skipped",
-   "why": "precondition",
-   "t": "2026-11-24T16:06:05.468Z",
+   "status": "failed",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
   "ETM-8693": {
-   "status": "passed",
-   "t": "2026-11-24T16:06:05.468Z",
+   "status": "failed",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
@@ -86,7 +84,7 @@
   },
   "ETM-8797": {
    "status": "passed",
-   "t": "2026-11-24T16:06:05.468Z",
+   "t": "2026-11-25T07:46:43.100Z",
    "run": "2026-11-24_215422_ETM-8392_manual",
    "source": "manual-agent"
   },
@@ -101,5 +99,5 @@
    "run": "2026-11-24_151159_ETM-8392"
   }
  },
- "updated": "2026-11-24T16:06:05.468Z"
+ "updated": "2026-11-25T07:46:43.100Z"
 }

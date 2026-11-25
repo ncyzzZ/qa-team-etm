@@ -1,0 +1,107 @@
+{
+  "defect": "ETM-6666",
+  "story": "ETM-5615",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon)",
+  "bug": "Mob / Onboard / Demob Date filter pickers open on the current month (with a Today button) instead of the month of the first schedule day (earliest Task Start - 7 days).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5615",
+  "run": "STORY-ETM-5615",
+  "frozen": "evals/exams/_story-ETM-5615/story.md: Jira description version before the Story's first defect (2026-09-23T13:24, changelog), comments before it; no analyst.md",
+  "catch": {
+    "any": [
+      {
+        "block": [
+          [
+            "mob date",
+            "onboard date",
+            "demob date",
+            "date filter"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "picker",
+              "calendar",
+              "date input",
+              "date field",
+              "from",
+              "to"
+            ],
+            [
+              "opens on",
+              "opens at",
+              "opens to",
+              "opens in",
+              "lands on",
+              "starts on",
+              "shows the month",
+              "initial month",
+              "first month",
+              "month shown",
+              "displays the month",
+              "month of"
+            ],
+            [
+              "earliest",
+              "first day",
+              "first date",
+              "first schedule",
+              "schedule start",
+              "- 7",
+              "-7",
+              "minus 7",
+              "7 days before",
+              "plan window",
+              "plan month",
+              "event month",
+              "ramp down",
+              "not the current month",
+              "not today"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "mob date",
+            "onboard date",
+            "demob date",
+            "date filter"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "today"
+            ],
+            [
+              "button",
+              "link",
+              "shortcut"
+            ],
+            [
+              "no ",
+              "not ",
+              "without",
+              "absent",
+              "hidden",
+              "is not"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: open the Filter Panel, expand Mob Date, click the date input; needs a plan not in the current month"
+  },
+  "note": "AC 0: \"Date boundary is same as schedule section (Earliest Task Start - 7 days to Latest Task End + 7 days)\". The opening month and no Today button are implied, not written. Either half counts. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

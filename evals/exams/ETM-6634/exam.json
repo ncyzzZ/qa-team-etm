@@ -1,0 +1,49 @@
+{
+  "defect": "ETM-6634",
+  "story": "ETM-5615",
+  "in_story": true,
+  "found_by": "another tester (Dechathon); the defect title names ETM-5616, the sort rule is ETM-5615 AC 0 / 2.2.1",
+  "bug": "Filter Panel options are sorted by raw character code (all upper-case values first, then lower-case) instead of dictionary order.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5615",
+  "run": "STORY-ETM-5615",
+  "frozen": "evals/exams/_story-ETM-5615/story.md: Jira description version before the Story's first defect (2026-09-23T13:24, changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "filter"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "sort",
+          "order",
+          "a-z",
+          "a to z",
+          "dictionary",
+          "alphabetical"
+        ],
+        [
+          "case",
+          "upper",
+          "lower",
+          "capital"
+        ],
+        [
+          "!",
+          "search"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: open the Filter Panel, expand Name / Company; needs values that differ by letter case"
+  },
+  "note": "AC 0 and 2.2.1: Sort A-Z (Dictionary Style). A sort check counts only when it uses mixed letter case (the in-filter search being case-insensitive does not count). docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

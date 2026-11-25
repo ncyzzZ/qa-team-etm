@@ -38,3 +38,13 @@ Earlier the same day, Q1 and Q3 had been matched to the Story (`work/SPRINT26/ba
   - A deleted Work keeps its status and gets `sdw_is_delete = 'Y'`. The DB has no `D` status.
 - Breakdown Status codes: `UPDATED`, `REVIEWED`, `REQUIRED`.
 - A frozen Worklist has `shutdown_worklist.swl_status = 'F'`. Event, plan and Worklist come from `shutdown_map` (`sde_id`, `spl_id`, `swl_id`).
+
+## Round 4 (questions-for-BA-round4.md): answered 2026-11-25 (user, as BA, in the lead chat)
+1. ✅ **ETM-8766: Revise with the UUID of a breakdown under a deleted Work.** Answer "6a": the message must be "The UUID you entered is not exist in the system." (AC 3.4). The app shows "already associated with another work" → **defect** on ETM-8766. The Test and the script stay as they are.
+2. ✅ **ETM-8767: breakdowns of a deleted Work.** "ต้องถูก flag ว่าถูกลบ": they must be flagged deleted, together with the Work. Today the breakdown row stays in `shutdown_activity_breakdown` (the table has no delete column) → **defect** on ETM-8767. The script check `expectBreakdownGone` now accepts the row gone, or a flag column ending in `is_delete` = 'Y'.
+3. ✅ Follows from 2: Q1 and Q2 likely have the same cause (the undeleted breakdown still "belongs" to a Work). Say so in both defects.
+
+## Round 5 (questions-for-BA-round5.md, Defect ETM-9233): answered 2026-11-25
+1. ✅ **(c)** `Action` stays blank in the export, and the user must fill it. A blank `Action` gives the mandatory Error. → **ETM-9233 is not a defect.** ETM-8755 step 3 becomes "fill `Action = Revise` on every row, then upload". The script already does this, and ETM-8755 passed in run 2026-11-25_140423.
+2. ✅ "ใช่ ออกหมด": the export holds the whole Worklist and ignores the search and column filters. This is correct. ETM-8755 step 1 wording: "Export the Worklist (the file holds every Work; keep only the seven Works)".
+3. Not needed (Q1 is not (b)).

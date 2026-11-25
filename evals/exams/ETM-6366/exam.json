@@ -1,0 +1,92 @@
+{
+  "defect": "ETM-6366",
+  "story": "ETM-5614",
+  "in_story": true,
+  "found_by": "another tester (Dechathon)",
+  "bug": "Collapsing the Reservation column group leaves Booking No. visible instead of Dlog Status.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5614",
+  "run": "STORY-ETM-5614",
+  "frozen": "evals/exams/_story-ETM-5614/story.md: Jira description version before the Story's first defect (2026-09-16T16:16, changelog), comments before it; no analyst.md",
+  "catch": {
+    "any": [
+      {
+        "block": [
+          [
+            "reservation"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "reservation"
+            ],
+            [
+              "collaps"
+            ],
+            [
+              "dlog status"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "reservation"
+          ],
+          [
+            "dlog status"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "collaps"
+            ],
+            [
+              "each group",
+              "every group",
+              "all groups",
+              "each column group",
+              "every column group",
+              "all column groups",
+              "all 4",
+              "all four",
+              "each of the 4",
+              "each of the four"
+            ]
+          ],
+          [
+            [
+              "reservation"
+            ],
+            [
+              "dlog status"
+            ],
+            [
+              "only",
+              "remain",
+              "stays",
+              "visible",
+              "shown",
+              "kept",
+              "left",
+              "hidden",
+              "hides"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: click the Reservation group chevron in the table header"
+  },
+  "note": "AC 3.2.2 item 4: collapsed Reservation shows only Dlog Status. The Story also lists Hot Bed under Reservation in AC 3.1 (stale); not used. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

@@ -1,0 +1,47 @@
+{
+  "defect": "ETM-7352",
+  "story": "ETM-7321",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Exported Daily Report PDF (Current Execution Date): page 2 shows only headers and the timeline, no task rows or bars, while the page shows the tasks.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7321",
+  "run": "STORY-ETM-7321",
+  "frozen": "evals/exams/_story-ETM-7321/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "pdf"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "task row",
+          "task rows",
+          "tasks",
+          "task data",
+          "gantt row",
+          "task bars",
+          "each task",
+          "every task"
+        ],
+        [
+          "same as",
+          "match",
+          "as on the",
+          "as shown on",
+          "equal",
+          "every",
+          "all ",
+          "each",
+          "listed"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: header colour; regression rule says Gantt rendering must stay intact. That the PDF shows the same tasks as the page is implied (rule: a value shown on several screens). \"Key Activities\" (Executive Notes header) is not a task row (ETM-7321 first draft TC-010 precondition, read by hand)."
+}

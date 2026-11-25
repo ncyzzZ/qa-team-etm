@@ -47,3 +47,4 @@ Shutdown Logic `S26 Row Colour` (event NN TEST QA), Turnaround Manager.
 - Row put back to No Color / No Color and saved after the check (start state).
 - Pictures: `manual-8859-step15-20/` (18-after-redo, 19-after-save, 20-after-reload).
 - 25 Nov 14:07 (user OK in chat): Xray ETM-8875 8856 + 8858 PASSED with evidence; "Retest: Passed" comment with 3 pictures on ETM-9219 (comment 600526) and ETM-10034 (comment 600527). Status still Deployed to QA, no [QA] Retest sub-task yet.
+- 25 Nov 14:11 (user: ทำเลย): ETM-9219 and ETM-10034 moved to Ready for UAT; [QA] Retest sub-tasks ETM-10046 / ETM-10047 Done, 15m worklog each, no estimate.

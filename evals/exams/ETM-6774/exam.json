@@ -1,0 +1,86 @@
+{
+  "defect": "ETM-6774",
+  "story": "ETM-6378",
+  "in_story": false,
+  "found_by": "another tester (Dechathon)",
+  "bug": "POB Chart hover tooltip with many graphs is clipped at the bottom of the chart area; later lines cannot be read.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6378",
+  "run": "STORY-ETM-6378",
+  "frozen": "evals/exams/_story-ETM-6378/story.md: Jira description version before the Story's first defect (2026-09-25T17:14, changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "tooltip"
+      ],
+      [
+        "10 graph",
+        "10 data",
+        "ten graph",
+        "10/10",
+        "maximum of 10",
+        "max 10",
+        "all 10",
+        "10 lines",
+        "10 checked",
+        "10 ticked",
+        "5 graph",
+        "6 graph",
+        "7 graph",
+        "8 graph",
+        "9 graph",
+        "many graph",
+        "several graph",
+        "five graph",
+        "many lines",
+        "long list"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "tooltip"
+        ],
+        [
+          "whole",
+          "fully",
+          "entire",
+          "not cut",
+          "not clipped",
+          "not hidden",
+          "inside",
+          "within",
+          "every line",
+          "all lines",
+          "each line",
+          "every graph",
+          "all graphs",
+          "each graph",
+          "each checked",
+          "every checked",
+          "all checked",
+          "all 10",
+          "10 lines",
+          "every ticked",
+          "each ticked",
+          "one line per",
+          "a line for each",
+          "a line for every"
+        ],
+        [
+          "!",
+          "legend"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "planner": {
+    "page": "/shutdown-event-list/events/<eventId>/planning/<planId>/manpower-mob/<itemId> (Manpower Mob Plan sub-item of a Plan; open from Shutdown Event > Planning tab)",
+    "role": "TM or JO",
+    "walk": "read-only: hover a date low in the chart on a plan with 5+ graphs ticked"
+  },
+  "note": "The Story has no tooltip rule. Counts only a hover case with many graphs where every line must be readable. docs/modules/manpower-mob-plan.md withheld (Sprint 21 notes: says the placeholder is \"No people assigned.\", \"no Filter\", \"no chart panel\"). The team's own Tests for this Story are in Xray only (no draft in the repo), so no baseline."
+}

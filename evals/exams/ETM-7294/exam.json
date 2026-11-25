@@ -1,0 +1,48 @@
+{
+  "defect": "ETM-7294",
+  "story": "ETM-6928",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Selected-cell style after a single click differs between the editable-table pages (Shutdown Logic reference vs Manpower Mob Plan, Create Work, Edit Breakdown, Edit Organic Crew). Only the style half is used.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6928",
+  "run": "STORY-ETM-6928",
+  "frozen": "evals/exams/_story-ETM-6928/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "click",
+        "select",
+        "focus"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "style",
+          "border",
+          "background",
+          "highlight",
+          "look",
+          "outline"
+        ],
+        [
+          "same",
+          "every page",
+          "each page",
+          "all pages",
+          "consistent",
+          "identical",
+          "other pages",
+          "four pages",
+          "all four",
+          "each of the"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story lists four pages with one shortcut behaviour; the same look of the active cell on each page is implied (rule: the same thing shown on several screens)."
+}

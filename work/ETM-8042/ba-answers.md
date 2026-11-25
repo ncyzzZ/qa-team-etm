@@ -57,3 +57,7 @@ Fact (BA answer file given by the user, 2026-11-18; Dev still to confirm items m
 - Q9 (S-Curve end): the Planned S-Curve ends on the **last execution day = snapshot Ramp Up Date + extended days** (ETM-8042 AC 8.1, ETM-4125 AC 8, ETM-4127 AC 3). It is NOT the last task end and NOT the Event Planned end as such. Old Daily Report: snapshot = Event Planned end (DEC-048). An S-Curve ending on 12 Apr 2027 (last task end) is a **defect**.
 - Q10 (Excel disabled on a 3-year range): QA asks Dev why Excel is disabled. Still open; defect candidate (no maximum timeframe in ETM-5492; ETM-3461 AC 1.2 disables Excel only with unsaved edits).
 - Q11 (invalid pasted date): the picker **clears that part and disables Save**. The app is correct; S1 / DEC-052 are updated. ETM-8851 as changed on 20 Nov is right.
+
+## Round 7 — BA answer 2026-11-25 (user typed in the lead chat, answering as BA)
+- Q12 (invalid typed/pasted date, ETM-8851, AC 1.2) = **(b)**: the picker puts back the previous valid value. Not a defect. This REPLACES Q11 ("clears that part and disables Save"). AC 1.2 / S1 wording and the ETM-8851 Xray expected result should say "previous value is put back".
+- Q12 second part (Start puts the value back on the next click, End already on Tab): not answered. QA treats both as acceptable and only checks the value after leaving the field.

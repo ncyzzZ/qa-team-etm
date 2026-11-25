@@ -27,3 +27,11 @@
 ## 2026-11-24 after 13:30 (BA correction; Story updated in Jira 14:23)
 - **R2-4 replaced** (was "(c) cleared and red"): keep the current behaviour. A field that must have a value (e.g. Duration) with an invalid pasted value is cleared and red, and Export / Optimize / Save are disabled until fixed. Manpower Resource `[0]`, `[100]`, `[1.5]` becomes `[1]`. ETM-8759 and ETM-8762 are not defects. Now in Story AC 2.1.
 - **AC 1.3 updated** with R2-2: roll-up to the Work row = Start / End span + Manpower sum; POB / Man-hours checked in the Work Breakdown Edit modal; Work Header and Platform show "-".
+
+## 2026-11-25 (round 3, typed by the user in the lead chat as BA, relayed by the lead session)
+- R3-1 "11a": the layout of non-adjacent copied cells must be kept. Current behaviour (packed into one column) is a **defect** on ETM-8737 step 7. Logging it needs its own yes.
+- R3-2 "12b (ก็เหมือนการลากออกไง)": the 15-minute gap between A's end and B's start after a Start paste is expected, same as dragging the bar. ETM-8743 step 6: B starts at or after A's end (no "no working time between" check).
+- R3-3 "13a": a pasted Description on Work Header / Work rows is correct. ETM-8738 step 7 passes on that point; ETM-8740 / 8762 may treat parent Description as pasted.
+- R3-4 "14b": dropping a cyclic Predecessor silently is correct. ETM-8763 steps 2-5 change: the cell shows "-", no cycle in the dependencies, Save stays enabled, no message.
+- R3-5.1: no rule given ("ไปหาเองสิ"). QA finds the constraint itself (FE source, read only); see triage-2026-11-24.md.
+- R3-5.2 "ถูก": one conflicting Start undoes the whole block (pop-up "Unable to Apply Scheduled Time"). ETM-8736 Expected Result changes.
