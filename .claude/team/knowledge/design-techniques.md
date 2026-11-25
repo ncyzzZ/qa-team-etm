@@ -39,6 +39,11 @@ When an action can make the page "changed" (enables Save or Update, or shows an
   never get it.
 - a view-only action (collapse, sort, scroll, splitter) on a page that keeps no
   view state must never count as a change.
+- Save (or Update) is disabled when a page, drawer or panel opens, and stays
+  disabled until a value really changes, unless the Story says otherwise. A
+  case never expects Save enabled right after opening, and never only "writes
+  the Save state down": it states disabled (defect exam ETM-6886, 2026-11-25:
+  Edit Data opened with Save enabled; the draft expected it).
 
 ## Leaving and coming back
 When a state must survive (filter, selection, scroll, collapse) or must be reset
@@ -109,7 +114,10 @@ question.
   resizing keep both sides on the same rows; a widened column keeps its
   alignment rule.
 - Someone else changes or deletes the object while it is open (second tab or
-  user): the next Save, Export or edit shows the proper message.
+  user): the next Save, Export or edit shows the proper message. Do it for the
+  object and for each parent it belongs to (a graph, its plan, its event; a
+  row, its table's page): each gives its own message (defect exam ETM-6806,
+  2026-11-25: only the graph was deleted in the case; the bug was the plan).
 - Strange input in EVERY free-text field the Story adds or shows (names,
   codes and numbers such as WIN#, not only Remark): special characters
   (\ / : * ? " < > | & # % '), leading and trailing spaces, a very long
