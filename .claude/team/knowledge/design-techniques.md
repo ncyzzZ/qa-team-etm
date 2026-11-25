@@ -154,3 +154,16 @@ rule of the Story:
   or three messages pile up on the same cell (defect exam ETM-7450 / ETM-7456,
   2026-11-25: a blank mandatory cell and text in a number field each got
   extra messages).
+- An export, a PDF, a report or a second screen built from a source screen:
+  check it holds the same rows as the source (every row, none extra, none
+  empty) in the same order as the source shows them, with data large enough
+  to cross any page or batch size (several pages of a PDF, thousands of
+  rows in a file). Checking one row, or the hierarchy only, passes when rows
+  are missing, empty or re-ordered (defect exams ETM-7272 / ETM-7352 /
+  ETM-7281, 2026-11-25: Work order differed from the page; a PDF page had no
+  task rows; dropdowns stopped after row 3,000).
+- A control or behaviour shared by several pages (the selected cell of an
+  editable table, a date picker, a filter panel, a toolbar button): put the
+  same action on each page in one case and check it looks and acts the same
+  on each (defect exam ETM-7294, 2026-11-25: the selected-cell style differed
+  on four pages).
