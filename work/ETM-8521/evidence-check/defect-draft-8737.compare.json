@@ -1,0 +1,18 @@
+{
+ "id": "defect-draft-8737",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Histogram not collapsed in either picture (team rule); does not change the result shown.",
+  "No xray-steps-*.json backup for ETM-8737; step 7 text known only from the BA question file.",
+  "'Skipped positions stay blank' is ambiguous: should row 19 Duration 150.00 be cleared or kept? Say 'not changed' in the draft.",
+  "Picture 2 shows only rows 19-21; other rows after paste not visible, cannot prove nothing else changed.",
+  "BA answer was typed by the user acting as BA in the lead chat, not by the BA directly.",
+  "Steps call rows 12/13 and 19/20 'Work Breakdown' rows; picture does not show row type, check for the developer."
+ ],
+ "summary": "ภาพยืนยันว่าเป็น defect: หลัง paste ค่า 12 ไปลงช่อง Description ของแถว 20 แทน Duration (Duration ยังเป็น 24.00) ขัดกับคำตอบ BA R3-1 = a ควรแก้ข้อความ 'stay blank' ให้ชัดว่าหมายถึงไม่เปลี่ยนค่า และ histogram ยังไม่ได้ย่อในภาพ",
+ "sourceHash": "5a879cdd91b9"
+}
