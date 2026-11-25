@@ -1,0 +1,35 @@
+{
+  "defect": "ETM-8497",
+  "story": "ETM-7348",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "On Edit Plan, pressing Tab after entering a Start Date does not move focus to End Date.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7348",
+  "run": "STORY-ETM-7348",
+  "frozen": "evals/exams/_story-ETM-7348/story.md: Jira description (last changed 2026-11-11) and comments written before the first exam defect of the Story; no analyst.md (the team never worked this Story)",
+  "catch": {
+    "block": [
+      [
+        "Start Date"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "press tab",
+          "tab key",
+          "presses tab",
+          "pressing tab",
+          "`tab`"
+        ],
+        [
+          "end date"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Keyboard order is not in the AC text; this exam measures whether the designer thinks of it."
+}

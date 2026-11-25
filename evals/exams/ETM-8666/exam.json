@@ -1,0 +1,46 @@
+{
+  "defect": "ETM-8666",
+  "story": "ETM-7345",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "A Job Owner who only collapses/expands an Activity Group gets the Unsaved Change modal when leaving the page.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7345",
+  "run": "STORY-ETM-7345",
+  "frozen": "evals/exams/_story-ETM-7345/story.md: Jira description (last changed 2026-11-11) and comments written before the first exam defect of the Story; no analyst.md (the team never worked this Story)",
+  "catch": {
+    "block": [
+      [
+        "Job Owner"
+      ],
+      [
+        "collapse",
+        "expand"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "leave",
+          "navigate",
+          "another page",
+          "breadcrumb",
+          "menu",
+          "go to"
+        ]
+      ],
+      [
+        [
+          "unsaved"
+        ],
+        [
+          "no ",
+          "not ",
+          "without"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

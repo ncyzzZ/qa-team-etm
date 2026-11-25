@@ -20,6 +20,7 @@ export const tcBlocks = txt => {
 };
 const hit = (txt, group) => group.some(w => txt.toLowerCase().includes(w.toLowerCase()));
 export function catches(block, sig) {
+  if (sig.any) { for (const alt of sig.any) { const l = catches(block, alt); if (l) return l; } return null; }
   const all = block.lines.join('\n');
   if (!(sig.block || []).every(g => hit(all, g))) return null;
   const lines = [];
@@ -34,24 +35,28 @@ export function score(txt, sig) {
 
 const load = d => { const f = path.join(EXAMS, d, 'exam.json'); if (!fs.existsSync(f)) { console.error(`No exam: ${f}`); process.exit(2); } return JSON.parse(fs.readFileSync(f, 'utf8')); };
 const list = () => fs.existsSync(EXAMS) ? fs.readdirSync(EXAMS).filter(d => fs.existsSync(path.join(EXAMS, d, 'exam.json'))) : [];
-const workDir = d => path.join(ROOT, '.claude', 'team', 'work', `EXAM-${d}`);
+const workDir = (d, ex = load(d)) => path.join(ROOT, '.claude', 'team', 'work', `EXAM-${ex.run || d}`);
+const inDir = (d, ex) => path.join(EXAMS, ex.inputs_dir || d);
+const group = (d, ex) => ex.run ? list().filter(e => load(e).run === ex.run) : [d];
 
 function leaks(d, ex) {
   const where = [];
-  for (const i of ex.inputs) { const t = fs.readFileSync(path.join(EXAMS, d, i), 'utf8'); if (t.includes(ex.defect)) where.push(`input ${i}`); }
+  const keys = group(d, ex).map(e => load(e).defect);
+  for (const i of ex.inputs) { const t = fs.readFileSync(path.join(inDir(d, ex), i), 'utf8'); for (const k of keys) if (t.includes(k)) where.push(`input ${i} names ${k}`); }
   const kdir = path.join(ROOT, '.claude', 'team', 'knowledge');
-  const scan = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => /\.(md|jsonl)$/.test(f)).filter(f => fs.readFileSync(path.join(dir, f), 'utf8').includes(ex.defect)).map(f => path.relative(ROOT, path.join(dir, f))) : [];
+  const scan = (dir) => fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => /\.(md|jsonl)$/.test(f)).filter(f => { const t = fs.readFileSync(path.join(dir, f), 'utf8'); return keys.some(k => t.includes(k)); }).map(f => path.relative(ROOT, path.join(dir, f))) : [];
   return { inputs: where, knowledge: [...scan(kdir), ...scan(path.join(ROOT, 'docs', 'modules'))] };
 }
 
 function runScore(d, { draft, baseline } = {}) {
   const ex = load(d);
-  const file = draft ? path.resolve(draft) : baseline ? path.join(EXAMS, d, ex.baseline) : path.join(workDir(d), 'draft-tc.md');
+  if (baseline && !draft && !ex.baseline) return { exam: d, story: ex.story, file: '(no team draft: the team never designed this Story)', missing: true, pass: false, no_baseline: true };
+  const file = draft ? path.resolve(draft) : baseline ? path.join(EXAMS, d, ex.baseline) : path.join(workDir(d, ex), 'draft-tc.md');
   if (!fs.existsSync(file)) return { exam: d, file: path.relative(ROOT, file), missing: true, pass: false };
   const r = score(fs.readFileSync(file, 'utf8'), ex.catch);
   return { exam: d, story: ex.story, file: path.relative(ROOT, file), ...r, pass: r.caught_by.length > 0 };
 }
-const show = r => r.missing ? `  ${r.exam.padEnd(9)} NO DRAFT   ${r.file}` :
+const show = r => r.no_baseline ? `  ${r.exam.padEnd(9)} -          ${r.file}` : r.missing ? `  ${r.exam.padEnd(9)} NO DRAFT   ${r.file}` :
   `  ${r.exam.padEnd(9)} ${(r.pass ? 'CAUGHT' : 'MISSED').padEnd(10)} ${r.cases} TCs, caught by: ${r.caught_by.map(c => c.tc).join(', ') || '-'}   (${r.file})`;
 function save(results, tag) {
   const dir = path.join(EXAMS, 'results'); fs.mkdirSync(dir, { recursive: true });
@@ -65,15 +70,16 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (cmd === 'prepare' && d) {
     const ex = load(d); const lk = leaks(d, ex);
     if (lk.inputs.length) { console.error(`[exam] inputs name the defect (${lk.inputs.join(', ')}): fix the frozen inputs first.`); process.exit(1); }
-    const w = workDir(d); fs.rmSync(w, { recursive: true, force: true }); fs.mkdirSync(w, { recursive: true });
-    for (const i of ex.inputs) fs.copyFileSync(path.join(EXAMS, d, i), path.join(w, i));
+    const w = workDir(d, ex); fs.rmSync(w, { recursive: true, force: true }); fs.mkdirSync(w, { recursive: true });
+    for (const i of ex.inputs) fs.copyFileSync(path.join(inDir(d, ex), i), path.join(w, i));
+    if (ex.run) console.log(`[exam] one draft serves ${group(d, ex).join(', ')}`);
     const rel = path.relative(ROOT, w);
     console.log(`[exam] ${d}: inputs copied to ${rel}/ (${ex.inputs.join(', ')})`);
     if (lk.knowledge.length) console.log(`[exam] note: ${lk.knowledge.join(', ')} name ${ex.defect}. The designer reads them, so this run measures "with lessons". Say so in the result.`);
-    console.log(`\nBrief for the test-designer agent (copy as is):\n---\nExam run, not card work. Write ${rel}/draft-tc.md for Story ${ex.story} from ${rel}/story.md and ${rel}/analyst.md, the module docs and .claude/team/knowledge/, as your agent file says.\nDo NOT read anything under work/${ex.story}/, .claude/team/work/${ex.story}/, evals/exams/, Jira or Xray. Do not run team.mjs, tests, Jira or Xray. Do not ask questions; list them under Open questions.\n---\nThen: node tools/defect-exam.mjs score ${d}`);
+    console.log(`\nBrief for the test-designer agent (copy as is):\n---\nExam run, not card work. Write ${rel}/draft-tc.md for Story ${ex.story} from ${ex.inputs.map(i => `${rel}/${i}`).join(' and ')}, the module docs and .claude/team/knowledge/, as your agent file says.\nDo NOT read anything under work/${ex.story}/, .claude/team/work/${ex.story}/, evals/exams/, Jira or Xray. Do not run team.mjs, tests, Jira or Xray. Do not ask questions; list them under Open questions.\n---\nThen: ${group(d, ex).map(e => `node tools/defect-exam.mjs score ${e}`).join('; ')}`);
     process.exit(0);
   }
   if (cmd === 'score' && d) { const r = runScore(d, { draft, baseline }); console.log(show(r)); if (r.caught_by?.length) for (const c of r.caught_by) for (const l of c.lines) console.log(`      ${c.tc}: ${l.slice(0, 160)}`); save([r], `${d}${baseline ? '-baseline' : ''}`); process.exit(r.pass ? 0 : 1); }
-  if (cmd === 'all') { const rs = list().map(e => runScore(e, { baseline })); rs.forEach(r => console.log(show(r))); console.log(`  ${rs.filter(r => r.pass).length}/${rs.length} caught`); save(rs, `all${baseline ? '-baseline' : ''}`); process.exit(rs.every(r => r.pass) ? 0 : 1); }
+  if (cmd === 'all') { const all = list().map(e => runScore(e, { baseline })); all.forEach(r => console.log(show(r))); const rs = all.filter(r => !r.no_baseline); console.log(`  ${rs.filter(r => r.pass).length}/${rs.length} caught${all.length > rs.length ? ` (${all.length - rs.length} with no team draft)` : ''}`); save(all, `all${baseline ? '-baseline' : ''}`); process.exit(rs.every(r => r.pass) ? 0 : 1); }
   console.error('Usage: node tools/defect-exam.mjs list | prepare <DEFECT> | score <DEFECT> [--draft f] [--baseline] | all [--baseline]'); process.exit(2);
 }

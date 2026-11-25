@@ -1,0 +1,78 @@
+{
+  "defect": "ETM-8412",
+  "story": "ETM-7348",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Edit Plan keeps the collapse state from the View page (must always open expanded), and collapse/expand on Edit Plan enables Save.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7348",
+  "run": "STORY-ETM-7348",
+  "frozen": "evals/exams/_story-ETM-7348/story.md: Jira description (last changed 2026-11-11) and comments written before the first exam defect of the Story; no analyst.md (the team never worked this Story)",
+  "catch": {
+    "_how": "either part catches the defect",
+    "any": [
+      {
+        "block": [
+          [
+            "Edit Plan"
+          ],
+          [
+            "collapse"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "collapse"
+            ],
+            [
+              "view",
+              "timeline tab",
+              "timeline screen",
+              "timeline page"
+            ]
+          ],
+          [
+            [
+              "expanded",
+              "expand"
+            ],
+            [
+              "all",
+              "every"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "Edit Plan"
+          ],
+          [
+            "collapse"
+          ],
+          [
+            "expand"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "save"
+            ],
+            [
+              "still disabled",
+              "stays disabled",
+              "remains disabled",
+              "not enabled",
+              "still not enabled"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null
+}

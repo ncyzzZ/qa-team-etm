@@ -1,0 +1,55 @@
+{
+  "defect": "ETM-8664",
+  "story": "ETM-7345",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Update Progress stays enabled after an Activity Group is collapsed and expanded back to its original state (no net change).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7345",
+  "run": "STORY-ETM-7345",
+  "frozen": "evals/exams/_story-ETM-7345/story.md: Jira description (last changed 2026-11-11) and comments written before the first exam defect of the Story; no analyst.md (the team never worked this Story)",
+  "catch": {
+    "block": [
+      [
+        "Update Progress"
+      ],
+      [
+        "collapse"
+      ],
+      [
+        "expand"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "collapse",
+          "expand",
+          "toggle"
+        ],
+        [
+          "again",
+          "back",
+          "original",
+          "re-"
+        ]
+      ],
+      [
+        [
+          "disabled"
+        ],
+        [
+          "again",
+          "back",
+          "original",
+          "no change",
+          "no net",
+          "re-"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC says a toggle marks the page dirty; that going back to the original state clears it is implied, not written."
+}

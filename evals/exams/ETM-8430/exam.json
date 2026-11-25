@@ -1,0 +1,65 @@
+{
+  "defect": "ETM-8430",
+  "story": "ETM-7348",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Two Turnaround Managers on Edit Plan: the second Save is blocked by 'Plan has Been Changed' instead of Last-Write-Wins.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7348",
+  "run": "STORY-ETM-7348",
+  "frozen": "evals/exams/_story-ETM-7348/story.md: Jira description (last changed 2026-11-11) and comments written before the first exam defect of the Story; no analyst.md (the team never worked this Story)",
+  "catch": {
+    "block": [
+      [
+        "Edit Plan"
+      ],
+      [
+        "user b",
+        "second user",
+        "other user",
+        "another user",
+        "another session",
+        "second session",
+        "second browser",
+        "user 2",
+        "second tab",
+        "other session",
+        "session b",
+        "tab b",
+        "two sessions",
+        "two tabs",
+        "two browser",
+        "two turnaround",
+        "two users"
+      ],
+      [
+        "last-write",
+        "lww",
+        "last write",
+        "wins",
+        "second save",
+        "later save"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "save"
+        ],
+        [
+          "success",
+          "saved",
+          "saves",
+          "no conflict",
+          "no modal",
+          "wins",
+          "is kept",
+          "not blocked",
+          "without being blocked"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

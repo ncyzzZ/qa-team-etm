@@ -42,3 +42,40 @@ test('ETM-8877: a multi-row paste on the Timeline (no Edit Plan) is not counted'
   const txt = '### TC-022 Timeline weekly\n1. Set the clipboard to 3 rows of weekly Plan (%) values. -> Holds 3 rows.\n2. Look at activities 2 and 3. -> They are unchanged.';
   assert.equal(score(txt, sig).caught_by.length, 0);
 });
+
+const sigOf = d => JSON.parse(fs.readFileSync(path.join(EX, d, 'exam.json'), 'utf8')).catch;
+const ids = (txt, d) => score(txt, sigOf(d)).caught_by.map(c => c.tc);
+const cases = {
+  'ETM-8902': ['### TC-1 Blank filter\n1. Tick only `-` in the Remark filter. -> Blank rows.\n2. Open a work\'s edit page. -> Edit page.\n3. Click the worklist link in the breadcrumb. -> The worklist shows the same rows with `-` still ticked.',
+               '### TC-1 Blank filter\n1. Tick only `-` in the Remark filter. -> Blank rows.\n2. Open another page and go back with the browser Back button. -> The worklist shows the same rows.'],
+  'ETM-8664': ['### TC-1 Update Progress\n1. Collapse group A. -> Update Progress is enabled.\n2. Expand group A again. -> Update Progress is disabled again (no net change).',
+               '### TC-1 Update Progress\n1. Look at Update Progress. -> It is disabled.\n2. Collapse group A. -> Update Progress is enabled.\n3. Expand group B. -> Group B rows show.'],
+  'ETM-8666': ['### TC-1 Job Owner view\n1. As Job Owner collapse and expand a group. -> Rows hide and show.\n2. Click the breadcrumb to leave the page. -> The next page opens with no Unsaved Change modal.',
+               '### TC-1 Job Owner view\n1. As Job Owner collapse a group. -> Rows hide.\n2. Expand it. -> Rows show.'],
+  'ETM-8412': ['### TC-1 Edit Plan\n1. Collapse group A on the Timeline tab. -> Collapsed.\n2. Click Edit Plan. -> All groups are expanded.',
+               '### TC-1 Edit Plan\n1. On Edit Plan collapse group A. -> Rows hide.\n2. Expand it. -> Rows show.'],
+  'ETM-8497': ['### TC-1 Edit Plan dates\n1. Type 03 Jun 2026 in Start Date and press Tab. -> Focus moves to End Date.',
+               '### TC-1 Edit Plan dates\n1. Type 03 Jun 2026 in Start Date. -> Shown.\n2. Open the Timeline tab. -> End Date unchanged.'],
+  'ETM-8429': ['### TC-1 Edit Plan conflict\n1. User B types Actual (%) on the Timeline and clicks Update Progress. -> Update Success.\n2. User A clicks Save on Edit Plan. -> The modal Progress has been updated opens; OK reloads.',
+               '### TC-1 Edit Plan save\n1. Click Update Progress. -> Update Success.\n2. Click Save on Edit Plan. -> Save Success.'],
+  'ETM-8430': ['### TC-1 Edit Plan two users\nLast-Write-Wins between two users.\n1. User A clicks Save. -> Save Success.\n2. User B clicks Save. -> Save Success, no conflict modal; B\'s name is kept.',
+               '### TC-1 Edit Plan\n1. Click Save. -> Save Success.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(cases)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('ETM-8902: the original ETM-8391 draft has no case for it', () => {
+  assert.equal(score(fs.readFileSync(path.join(EX, 'ETM-9229', 'baseline-draft-tc.md'), 'utf8'), sigOf('ETM-8902')).caught_by.length, 0);
+});
+test('ETM-8429: a Last-Write-Wins case that expects NO dialog is not counted (exam run 2026-11-25, TC-047)', () => {
+  const txt = '### TC-047 two sessions on Edit Plan\n3. Click `Save` in session A. -> A saves with the success toast.\n4. Click `Save` in session B. -> B saves without being blocked (no progress was changed on the Timeline, so no conflict dialog).';
+  assert.deepEqual(ids(txt, 'ETM-8429'), []);
+  assert.deepEqual(ids(txt.replace('### TC-047 two sessions on Edit Plan', '### TC-047 two sessions on Edit Plan, Last-Write-Wins'), 'ETM-8430'), ['TC-047']);
+});
+test('ETM-8664: the same steps with the wrong expected result are MISSED (exam run 2026-11-25, TC-033)', () => {
+  const txt = '### TC-033 Update Progress after collapse\n1. Look at `Update Progress`. -> It is disabled.\n2. Collapse one group. -> `Update Progress` is enabled.\n3. Expand the same group. -> `Update Progress` stays enabled (no compare-back to the saved state).';
+  assert.deepEqual(ids(txt, 'ETM-8664'), []);
+});

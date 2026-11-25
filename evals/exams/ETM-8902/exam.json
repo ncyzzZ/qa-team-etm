@@ -1,0 +1,55 @@
+{
+  "defect": "ETM-8902",
+  "story": "ETM-8391",
+  "found_by": "by hand, outside any designed Test (retest file: 'no Test step covers this flow'); the original draft has no case for it",
+  "bug": "With the Remark filter set to Blank (-), opening a work's edit page and coming back through the breadcrumb shows an empty Worklist page.",
+  "inputs": [
+    "story.md",
+    "analyst.md"
+  ],
+  "frozen": "same inputs as ETM-9229 (ETM-8391 story.md and analyst.md, 2026-11-24, written before the defect)",
+  "catch": {
+    "_how": "Strict on the route: browser Back from another page is a different path from the in-app breadcrumb, so it does not count.",
+    "block": [
+      [
+        "filter"
+      ],
+      [
+        "`-`",
+        "blank"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "breadcrumb",
+          "edit page",
+          "edit work"
+        ],
+        [
+          "worklist",
+          "table",
+          "page"
+        ]
+      ],
+      [
+        [
+          "breadcrumb",
+          "back"
+        ],
+        [
+          "kept",
+          "still",
+          "same",
+          "not empty",
+          "shown again",
+          "stays",
+          "remain"
+        ]
+      ]
+    ]
+  },
+  "baseline": "baseline-draft-tc.md",
+  "run": "ETM-9229",
+  "inputs_dir": "ETM-9229"
+}

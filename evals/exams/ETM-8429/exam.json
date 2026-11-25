@@ -1,0 +1,50 @@
+{
+  "defect": "ETM-8429",
+  "story": "ETM-7348",
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Saving Edit Plan after another user updated progress on the Timeline shows no conflict modal (AC: 'Progress has been updated' modal, OK reloads).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7348",
+  "run": "STORY-ETM-7348",
+  "frozen": "evals/exams/_story-ETM-7348/story.md: Jira description (last changed 2026-11-11) and comments written before the first exam defect of the Story; no analyst.md (the team never worked this Story)",
+  "catch": {
+    "block": [
+      [
+        "Edit Plan"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "progress"
+        ],
+        [
+          "user b",
+          "second user",
+          "other user",
+          "another user",
+          "another session",
+          "second session",
+          "user 2",
+          "second tab",
+          "other session",
+          "session b",
+          "tab b"
+        ]
+      ],
+      [
+        [
+          "save"
+        ],
+        [
+          "progress has been updated",
+          "plan has been changed",
+          "reload"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}
