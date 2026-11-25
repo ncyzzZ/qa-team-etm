@@ -431,3 +431,6 @@ for (const [d, [hitTxt, nearTxt]] of Object.entries(set9)) {
     assert.deepEqual(ids(nearTxt, d), []);
   });
 }
+test('ninth set: Set Route opened with saved routes counts for ETM-6211', () => {
+  assert.deepEqual(ids('### TC-027 Save until change\nPrecondition: common, saved routes exist\n1. Open `Set Route`. -> The panel `Save` is disabled.', 'ETM-6211'), ['TC-027']);
+});

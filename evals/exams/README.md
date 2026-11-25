@@ -232,3 +232,29 @@ Rule added after the seventh set (commit cc040d7, check 5): "an export or second
 | ETM-7984/6844/6928/7321 (never used for a rule; with the two rules from the 6th set) | 3/7 | 3/7 |
 | ETM-6394/6379/6506 (never used for a rule; with the rule from the 7th set) | 2/5 | 2/5 |
 | All unseen sets (3rd, 4th first run, 5th to 8th) | 23/47 | 25/47 |
+
+### Manpower Mob Plan set with Playwright's planner (2026-11-25): ETM-5614, ETM-5615, ETM-6378
+
+Question: does a planner agent that walks the real screen first (Playwright `init-agents` planner, ETM rules, READ ONLY on QA)
+help the designer catch more? Steps: fresh designer draft from the frozen Story -> planner walks Manpower Mob Plan on QA
+(TM and JO, 43 min, 100 tool calls, about 250k tokens) and writes one plan per Story -> the designer revises its draft with
+the plan (the Story stays the source of every Expected Result; screen differences become Open questions). Every score read by hand.
+
+| Defect | Story | First draft | After planner | Note |
+|---|---|---|---|---|
+| ETM-6366 collapse Reservation keeps Booking No. | 5614 | CAUGHT (TC-006 s4) | CAUGHT | signature took "chevron" after reading |
+| ETM-6852 "No people assigned." | 5614 | CAUGHT (TC-026) | CAUGHT | signature block widened after reading |
+| ETM-6634 options sorted upper case first | 5615 | CAUGHT (TC-015 s7) | CAUGHT | Filter Panel called "the Panel" |
+| ETM-6664 zero rows message | 5615 | CAUGHT (TC-022) | CAUGHT | |
+| ETM-6666 date picker opens on current month | 5615 | MISSED (TC-009 "a calendar opens") | CAUGHT (TC-018 s2) | **leak**: QA has the fix, the planner saw "opens on the plan's month" and the designer copied it |
+| ETM-6765 table dates under chart dates | 6378 | CAUGHT (TC-012) | CAUGHT | |
+| ETM-6772 Add Data enabled at 10 graphs | 6378 | MISSED (expects "stays enabled") | MISSED | no plan on QA had 10 graphs |
+| ETM-6774 tooltip cut off with many graphs | 6378 | MISSED | MISSED | TC-027 tooltip added, but with one graph |
+
+**5/8 -> 6/8, or 5/8 -> 5/8 without the leaked catch.** The planner cannot show what QA data does not have (10 graphs, many
+graphs ticked), and on a fixed build it shows the fixed behaviour, so on old defects it can only leak, not prove. What it did
+bring: 12+ "differs from Story" points on today's QA that the Story-only drafts could not see (groups open collapsed, no zero-result
+message, JO sees no Add Data but page Save enabled by a filter, picker format dd/MM/yyyy and no range limit, chart and schedule
+2 px / different widths). Those are review findings for the current build, not exam catches.
+Run note: the ETM-5615 draft folder was re-created by a `prepare` before the fix round, so its "after planner" draft was
+written new from the Story and the plan (37 cases) instead of revised; the first draft is in `runs/2026-11-25-draft-tc.md`.
