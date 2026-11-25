@@ -90,6 +90,16 @@ Every Defect/Bug that has images must have them embedded inline in the Descripti
 
 No extra screenshots, hovers or zooms "just to check": every `computer` screenshot is the costliest part.
 
+## Step 6b - Attach the dev brief (.md) when the Defect/Bug is opened (user rule, 25 Nov 2026)
+
+Every Defect or Bug gets a dev brief, attached as a file at the time it is opened, not later.
+
+1. Before creating the issue, write `work/<Story KEY>/dev-brief-<placeholder>.md` in English with these 8 sections (same as the existing briefs, e.g. `work/ETM-8391/dev-brief-ETM-9229.md`): `## 1. What is wrong`, `## 2. Where` (page, URL pattern, environment, role, data), `## 3. Steps to reproduce`, `## 4. Actual vs Expected` (table), `## 5. Rule source` (exact AC / BA words, Xray Test and step), `## 6. Hints for the fix (guess)` (only from the local FE source or the network, marked as a guess), `## 7. How QA will retest`, `## 8. Out of scope / do not change`. It holds no password, token or personal data.
+2. Show it with the bilingual draft (Step 1); the user's yes to log the defect covers attaching it.
+3. After Step 4 created the key, rename the file to `dev-brief-<DEFECT KEY>.md` and put the key in its title line.
+4. Attach it as a plain file in the same browser visit as Step 6: the page-level "Add Attachment" (paperclip) input of the issue, `file_upload` with the `.md` path. It is an attachment, not embedded in the Description.
+5. Check the Attachments list shows `dev-brief-<DEFECT KEY>.md` (text check). In the Step 9 summary say it was attached; if the browser step failed, say so and give the path so the user can attach it.
+
 ## Step 7 - Xray step-level linking (mandatory on every defect)
 
 Do this every time, right after the Defect/Bug is created and linked to its Story, not only when the user mentions a Test Execution (corrected 1 Oct 2026 on ETM-6871). A defect with no TC link is incomplete.

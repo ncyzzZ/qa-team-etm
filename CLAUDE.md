@@ -27,6 +27,7 @@ These came from corrections by the QA lead. They are here so everyone who pulls 
 - **Only two roles on QA: TM and JO.** TM (Turnaround Manager) can do everything and has "View All Daily Report Item"; JO (Job Owner) is view only, has "View Active Daily Report Item", and cannot open a plan that is not Active. There is no third account: do not ask for one. Only one Plan per event can be Active; turning one on sets the old one Inactive and affects other testers, so ask first.
 - **Shutdown Logic: collapse the histogram first.** Before testing the Shutdown Logic page (scripts and manual runs) collapse the Manpower Resource histogram (button `aria-label="Hide histogram"` inside `data-testid="sl-splitter-horizontal"`, shown on hover). It is not remembered: collapse it after every load or reload. Open it only for steps that need it. In specs put it in the page-ready helper; in manual-steps files write it in the intro.
 - **Questions for the BA** are English, saved as `work/<KEY>/questions-for-BA.md` and sent as a file; chat replies stay short Thai.
+- **Dev brief with every defect:** when a Defect or Bug is logged, write `work/<KEY>/dev-brief-<DEFECT>.md` (8 sections, `log-defect-jira-etm` Step 6b) and attach the `.md` file to the issue when it is opened.
 - **Retest passed:** embed the evidence pictures in the "Retest: Passed" comment on the Defect itself, not only in Xray (details in `log-defect-jira-etm`).
 - New rule from the lead: add it here (or to the skill it belongs to) and commit, so the team gets it on `git pull`. Not only in personal memory.
 
