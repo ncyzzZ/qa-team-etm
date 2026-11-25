@@ -1,0 +1,36 @@
+{
+  "id": "c1-filter-case",
+  "sourceHash": "fed81e63cf1f",
+  "overall": "not-proven",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Worklist: QA ETM-8049 Any (Initial), full screen. Group Mechanical (PM) has WK-1-A, WK-2-A, WK-3-A with Job Description 'QA ETM-8049 WK-1-A/WK-2-A/WK-3-A'. Job Description filter popup is open, search box holds 'wk-2', list shows 'No matches.', Reset and Apply buttons. Total Results: 3.",
+      "verdict": "fail",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Same page and rows. Job Description filter popup, search box holds 'WK-2'; list shows Select All (ticked) and 'QA ETM-8049 WK-2-A' (ticked). Total Results: 3.",
+      "verdict": "pass",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "AC 3.1 (story.md): filter has a search box 'same as other columns (ETM-434 AC5)' - says nothing about letter case",
+    "questions-for-BA Q5 asked if the filter search is case-insensitive; ba-answers.md: Q1-Q13 answered 2026-11-19 but text not recorded",
+    "docs/modules/equipment-mob-plan.md line 74: text search case-insensitive (ETM-7314) - another screen, not the Worklist",
+    "Xray ETM-8781 / ETM-8783 steps: no backup file in work/ETM-8049 to check",
+    "'worked like this before this build': no source"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Pictures clearly show case-sensitive search: 'wk-2' gives No matches, 'WK-2' finds QA ETM-8049 WK-2-A.",
+    "No written source says the Worklist filter search ignores case; AC 3.1 only says 'same as other columns', and the Q5 answer was not recorded.",
+    "Before logging, prove a sourced baseline: picture of another Worklist column (e.g. Work Number) searching 'wk-2' with this build, or get Q5 answer in writing.",
+    "Claims for 'deck' and 'main' searches and Plan 'QA ETM-8049 Case' are not shown in any picture.",
+    "Xray ETM-8781/8783 expected steps not checked: no step backup available to me.",
+    "'Worked before this build' has no evidence (no older build picture or log)."
+  ],
+  "summary": "รูปยืนยันว่าช่องค้นหาใน filter Job Description แยกตัวพิมพ์เล็ก-ใหญ่ ('wk-2' ไม่เจอ, 'WK-2' เจอ) แต่ Expected ว่าต้องไม่แยก case ยังไม่มีแหล่งอ้างอิงที่เขียนไว้ (AC 3.1 ไม่พูดเรื่อง case, คำตอบ BA Q5 ไม่ได้บันทึก) จึงยังเป็น not-proven: ควรได้คำตอบ BA Q5 เป็นลายลักษณ์อักษร หรือรูปคอลัมน์อื่นที่ค้นหาแบบไม่แยก case ก่อน log defect"
+}

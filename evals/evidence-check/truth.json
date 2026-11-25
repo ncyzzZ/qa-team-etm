@@ -1,0 +1,32 @@
+{
+ "c1-filter-case": {
+  "key": "ETM-8049",
+  "truth": "defect-proven",
+  "note": "ETM-9231 logged, real regression; Xray backups of ETM-8781/8783 were never saved, AC 3.1 only says same as other columns"
+ },
+ "c2-helipad": {
+  "key": "ETM-8049",
+  "truth": "defect-proven",
+  "note": "ETM-9223 logged; BA Q27 says both accepted"
+ },
+ "c3-main-deck": {
+  "key": "ETM-8049",
+  "truth": "ui-not-reachable",
+  "note": "ETM-9225: main deck seeded in DB, not makeable on screen (team rule after this case)"
+ },
+ "c4-export-import": {
+  "key": "ETM-8394",
+  "truth": "not-a-defect",
+  "note": "ETM-9233: lead decided Action blank on purpose, user must fill it (deleted)"
+ },
+ "c5-platform-box": {
+  "key": "ETM-8449",
+  "truth": "not-proven",
+  "note": "ETM-9175 was logged 24 Nov, but its only picture (test-failed-1.png) is the page still loading (spinner), so the evidence never showed the bug; the 25 Nov cascade ruling (system correct) also covers - at a level hiding the levels below. Was scored as defect-proven before the picture was read."
+ },
+ "c6-workheader-plus": {
+  "key": "ETM-8449",
+  "truth": "not-proven",
+  "note": "ETM-9177: rule sources conflict (code/BA F-2/user F-6); lead later found F-6 misread (AI miss M-12)"
+ }
+}

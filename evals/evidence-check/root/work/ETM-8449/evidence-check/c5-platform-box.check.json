@@ -1,0 +1,29 @@
+{
+  "id": "c5-platform-box",
+  "sourceHash": "33657a75add1",
+  "overall": "not-proven",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Shutdown Logic page still loading: grey skeleton bars where the header/plan name should be, toolbar with Focus Critical Path and Focus Dropped Task off, SIMOP greyed, and a loading spinner in an empty table area. No rows, no Custom View panel, no level boxes, no row count.",
+      "verdict": "cannot-tell",
+      "pictureOk": false
+    }
+  ],
+  "expectedSources": [
+    "User answer in chat F-6 2026-11-24 (ba-answers-as-of-2026-11-24.md): Platform box cannot switch +/-, Platform rows can never be hidden",
+    "Xray ETM-8632 step 3 (named in brief; Xray step backup not available to this check)",
+    "No source found for the count 22,442 rows (not in story.md, analyst.md or BA answers)"
+  ],
+  "uiReachable": "unknown",
+  "problems": [
+    "The only picture shows a loading spinner: no Custom View panel, no Platform box, no rows. Actual behaviour is not shown.",
+    "Need before/after full-screen pictures: Custom View with Platform box '-' before click, and state after click.",
+    "The 22,442 row count has no source I could find; give its origin or drop it.",
+    "Rule F-6 comes from the user relaying BA in chat, not a Story AC; ETM-2431 AC 2 says box is strictly + or -.",
+    "Allowed BA file already calls this a 'defect candidate'; I ignored that and judged only the picture.",
+    "Failure screenshot during load may mean a timeout/environment issue (PLAN-20K is large), not the Platform box behaviour.",
+    "PLAN-20K data origin not stated; unknown whether it was made through the UI or an import."
+  ],
+  "summary": "ภาพเดียวที่มีเป็นหน้า Shutdown Logic ที่ยังโหลดไม่เสร็จ (มีแค่ spinner) ไม่เห็น Custom View, กล่อง Platform หรือจำนวนแถว จึงพิสูจน์ defect ไม่ได้ ต้องถ่ายภาพก่อน/หลังคลิกใหม่ และเลข 22,442 แถวยังไม่มีแหล่งอ้างอิง"
+}

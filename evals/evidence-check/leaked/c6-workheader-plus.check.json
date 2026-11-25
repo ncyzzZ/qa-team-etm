@@ -1,0 +1,35 @@
+{
+  "id": "c6-workheader-plus",
+  "sourceHash": "7efecfb89680",
+  "overall": "not-a-defect",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Shutdown Logic 'New Plan 20,000 Work', Filter Panel open with Select All and every Platform checked (not CBWA only). Grid: row 1 CBWA expanded, rows 2 'Mechanical (PM)' and 103 'Valve and Actuator Replacement' collapsed (right chevrons). Manpower Resource histogram open. No row count shown.",
+      "verdict": "cannot-tell",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Same page, Custom View panel: Platform '-', Work Header '-' (pale, looks hovered/just clicked), Work '+', Work Breakdown '+'. Grid shows only Platform CBWA and Work Header rows (2, 103) collapsed; no Work or Work Breakdown rows. No row count shown.",
+      "verdict": "pass",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "Draft expected 'all 708 / 22,442 rows come back' has no valid source: it contradicts BA/user ruling 2026-11-25 (ba-answers.md F-2/F-6 cascade)",
+    "ba-answers.md 2026-11-25 F-2/F-6: '+' at a level shows that level and levels above only (cascade as ETM-2431); F-2 P+H+W and F-6 'lower levels keep their own box' are replaced",
+    "ETM-8449 AC2 (story.md): no functional regression, behaviour as before",
+    "ETM-2431 cascade (code comment quoted in brief): expand at level b expands parents at childLevel <= b"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Expected Result in the brief uses the user rule F-6 and BA F-2, both superseded on 25 Nov 2026 by the cascade ruling.",
+    "Under the cascade rule, '+' of Work Header shows Platform + Work Header only; pic 2 shows exactly that, Work/Work Breakdown boxes '+'.",
+    "Brief's own rule sources contradict each other (F-2 P+H+W vs F-6 all rows vs ETM-2431 cascade).",
+    "Pic 1 filter shows all Platforms checked, not CBWA only; no row counts visible, so 708/22,442 cannot be checked.",
+    "Histogram not collapsed in either picture (team rule for Shutdown Logic).",
+    "No picture of step 2 result before '+' was clicked; pic 2 order relative to steps is not labelled."
+  ],
+  "summary": "ไม่ใช่ defect: ภาพ 2 หลังกด + ของ Work Header แสดง Platform + Work Header เท่านั้น (Work/Work Breakdown เป็น +) ตรงกับกฎ cascade ที่ BA/user ยืนยัน 25 พ.ย. ส่วน Expected 'แถวกลับมาครบ' อ้าง F-2/F-6 ที่ถูกแทนแล้ว; ภาพไม่มีจำนวนแถวและไม่ได้ filter CBWA จริง"
+}

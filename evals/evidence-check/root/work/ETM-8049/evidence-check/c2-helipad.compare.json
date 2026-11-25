@@ -1,0 +1,17 @@
+{
+ "id": "c2-helipad",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Picture does not show the file content; that R5/R6 hold 'Helipad,helipad' rests on the brief, not the screen.",
+  "Brief's AC 6.2 quote differs from local story.md (old 'earliest-created work' text); the rule rests on BA Q14/Q15/Q27, not the quoted text.",
+  "If 'Helipad' is a Master Data value, AC 6.1 converts both to one spelling, making a real duplicate. Master Data list not checked.",
+  "Earlier source (ETM-1106 AC 4.5, ETM-1230 AC 3.1) says in-cell case variants are duplicates; BA Q27 overrides it but the conflict should be cited in the defect.",
+  "Only the validation screen is shown; the 'Work and WB created' part cannot be shown since import was blocked (consistent with failure)."
+ ],
+ "summary": "ภาพแสดง Import ถูกปฏิเสธที่ R5/R6 Deck ด้วยข้อความ 'contain duplicates' ขัดกับคำตอบ BA Q27 (24 พ.ย.) ที่ว่า Import ต้องรับ Helipad และ helipad แยกกัน จึงถือว่าพิสูจน์ defect ได้ แต่ควรยืนยันว่า Helipad ไม่ใช่ค่า Master Data และ AC 6.2 ที่อ้างในบรีฟไม่ตรงกับ story.md ในเครื่อง",
+ "sourceHash": "5f258400126e"
+}

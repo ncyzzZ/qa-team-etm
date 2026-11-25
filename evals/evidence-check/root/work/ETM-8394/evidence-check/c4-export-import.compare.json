@@ -1,0 +1,18 @@
+{
+ "id": "c4-export-import",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "Core expectation (blank Action accepted or filled by export) has no answered source; brief's own open Q1 option (c) means not a defect.",
+  "AC 4 / DEC-058 may assume the user sets Action = Revise; ETM-6843 makes Action mandatory. Wait for BA Q1 before logging.",
+  "No picture proves the uploaded file is the unmodified export: no download, file name or Action column shown.",
+  "Pic 1 shows Total Results 229; brief says 84 Works + 222 Breakdowns (306). Error count 298 also unexplained.",
+  "All visible Works are 'N' (New); no Change Requested or Reviewed Work shown, so the status-keeping part is untested.",
+  "Brief says 'Confirm' button; screen shows 'Import'. Steps should use the real label."
+ ],
+ "summary": "ภาพยืนยันว่า import ไฟล์ที่ export มาแล้วขึ้น 298 error 'Action: This field is mandatory' และปุ่ม Import ถูกปิด แต่ Expected ว่าไฟล์ต้อง import ได้ทันทียังไม่มีแหล่งที่ยืนยัน (BA Q1 ยังไม่ตอบ, ตัวเลือก c = ไม่ใช่ defect) และไม่มีภาพพิสูจน์ว่าไฟล์ไม่ถูกแก้ จึงยังไม่ควร log defect",
+ "sourceHash": "313a12c5445b"
+}

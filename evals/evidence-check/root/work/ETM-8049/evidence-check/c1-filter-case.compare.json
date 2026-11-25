@@ -1,0 +1,18 @@
+{
+ "id": "c1-filter-case",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "Pictures clearly show case-sensitive search: 'wk-2' gives No matches, 'WK-2' finds QA ETM-8049 WK-2-A.",
+  "No written source says the Worklist filter search ignores case; AC 3.1 only says 'same as other columns', and the Q5 answer was not recorded.",
+  "Before logging, prove a sourced baseline: picture of another Worklist column (e.g. Work Number) searching 'wk-2' with this build, or get Q5 answer in writing.",
+  "Claims for 'deck' and 'main' searches and Plan 'QA ETM-8049 Case' are not shown in any picture.",
+  "Xray ETM-8781/8783 expected steps not checked: no step backup available to me.",
+  "'Worked before this build' has no evidence (no older build picture or log)."
+ ],
+ "summary": "รูปยืนยันว่าช่องค้นหาใน filter Job Description แยกตัวพิมพ์เล็ก-ใหญ่ ('wk-2' ไม่เจอ, 'WK-2' เจอ) แต่ Expected ว่าต้องไม่แยก case ยังไม่มีแหล่งอ้างอิงที่เขียนไว้ (AC 3.1 ไม่พูดเรื่อง case, คำตอบ BA Q5 ไม่ได้บันทึก) จึงยังเป็น not-proven: ควรได้คำตอบ BA Q5 เป็นลายลักษณ์อักษร หรือรูปคอลัมน์อื่นที่ค้นหาแ",
+ "sourceHash": "fed81e63cf1f"
+}

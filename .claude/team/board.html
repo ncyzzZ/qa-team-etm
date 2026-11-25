@@ -120,6 +120,12 @@
   .mopts .opt { background:var(--inset); color:var(--strong); border:3px solid var(--edge); font-size:17px; padding:8px 18px; }
   .mopts button { background:var(--inset); color:var(--strong); border:3px solid var(--edge); font:inherit; font-size:17px; padding:8px 18px; cursor:pointer; }
   .mopts button:hover { border-color:var(--neon); }
+  .mcard { border:3px solid var(--edge); background:var(--inset); padding:10px 12px; margin:0 0 14px; font-size:15px; line-height:1.45; }
+  .mcard dl { display:grid; grid-template-columns:max-content 1fr; gap:4px 10px; margin:0; }
+  .mcard dt { color:var(--soft); } .mcard dd { margin:0; color:var(--strong); }
+  .mcard img { max-width:100%; max-height:38vh; display:block; margin-top:8px; border:2px solid var(--edge); }
+  .mcard .ck-agree { color:#3c3; } .mcard .ck-disagree, .mcard .ck-unsure { color:#f66; font-weight:bold; } .mcard .ck-agree-with-warnings { color:#fc3; }
+  .mcard .undo-no { color:#f66; font-weight:bold; }
   .mhint { margin:0 0 12px !important; font-size:16px !important; color:var(--soft); }
   @media (prefers-reduced-motion: reduce) { .chip i, .mem .dot { animation:none !important; } }
 #tabbar{display:flex;gap:8px;align-items:center;padding:6px 12px;background:#0003}
@@ -174,7 +180,7 @@
   <aside class="panel" id="actp"><h2>ACTIVITY</h2><ul id="log" aria-live="polite"></ul></aside>
 </main>
 <div id="modal" role="alertdialog" aria-labelledby="mt" aria-modal="true">
-  <div class="box" id="mbox"><button id="mclose" type="button" aria-label="ปิด" title="ปิด (ถามอีกครั้งเมื่อมีคำถามใหม่)">✕</button><h2 id="mt">WAITING FOR YOU</h2><p id="mx"></p><div id="mo" class="mopts"></div><p id="mh" class="mhint"></p><small>ป๊อปอัปนี้จะปิดเองเมื่อคุณตอบ (ที่นี่หรือในแชท)</small></div>
+  <div class="box" id="mbox"><button id="mclose" type="button" aria-label="ปิด" title="ปิด (ถามอีกครั้งเมื่อมีคำถามใหม่)">✕</button><h2 id="mt">WAITING FOR YOU</h2><p id="mx"></p><div id="mcard" class="mcard" hidden></div><div id="mo" class="mopts"></div><p id="mh" class="mhint"></p><small>ป๊อปอัปนี้จะปิดเองเมื่อคุณตอบ (ที่นี่หรือในแชท)</small></div>
 </div>
 <script>
 // Pixel art by Pixel Agents (MIT, see assets/LICENSE-pixel-agents.txt). Sheet rows: 0 front, 1 back, 2 side. Frames: 0-2 walk, 3-4 type, 5-6 read.
@@ -1229,11 +1235,26 @@ function copyText(v) {
   legacyCopy(v); return Promise.resolve();
 }
 function legacyCopy(v) { const t = document.createElement('textarea'); t.value = v; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch {} t.remove(); }
+// decision card: what the AI proposes, why, the independent check, the cost of a wrong answer, undo, one picture
+function showCard(c) {
+  const box = el('mcard');
+  if (!c) { box.hidden = true; box.innerHTML = ''; return; }
+  const UNDO = { yes: 'แก้กลับได้', partial: 'แก้กลับได้บางส่วน', no: 'แก้กลับไม่ได้' };
+  const dl = document.createElement('dl');
+  const row = (k, v, cls) => { if (!v) return; const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; if (cls) dd.className = cls; dl.append(dt, dd); };
+  row('AI เสนอ', c.propose); row('เพราะ', c.why);
+  if (c.check) row('ตัวตรวจอิสระ', c.check.line, 'ck-' + c.check.result);
+  row('ถ้าตอบผิด', c.ifWrong); row('แก้กลับ', UNDO[c.undo] || c.undo, c.undo === 'no' ? 'undo-no' : '');
+  box.innerHTML = ''; box.append(dl);
+  if (c.evidenceHref) { const a = document.createElement('a'); a.href = c.evidenceHref; a.target = '_blank'; a.rel = 'noopener'; const im = document.createElement('img'); im.src = c.evidenceHref; im.alt = 'หลักฐาน'; a.append(im); box.append(a); }
+  box.hidden = false;
+}
 function showAsk(ask) {
   const approve = ask.kind === 'approve';
   el('mbox').classList.toggle('appr', approve);
   el('mt').textContent = approve ? 'NEEDS YOUR APPROVAL' : 'WAITING FOR YOU';
   el('mx').textContent = ask.text;
+  showCard(ask.card);
   document.title = (Math.floor(Date.now() / 1000) % 2 ? '(!) ' : '') + (approve ? 'รอคุณอนุมัติ' : 'รอคำตอบจากคุณ');
   if (askKey === ask.at) return;
   askKey = ask.at;

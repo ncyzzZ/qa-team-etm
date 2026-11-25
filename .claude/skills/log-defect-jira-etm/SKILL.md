@@ -9,6 +9,8 @@ The project-specific process built up over real defect-logging sessions. This sk
 
 **Gate (TEAM.md Phase 7):** never create or change anything in Jira until the user said, in the chat, to log this defect. Show the evidence and the Step 1 draft first. The decision "script bug / wrong test / real app bug" is the user's; a defect is never pre-approved.
 
+**Independent evidence check (user rule, 25 Nov 2026).** Before asking to log: save the Step 1 draft as `work/<KEY>/defect-draft-<short>.md` (sections `**Environment:**`, `### Step to Reproduce`, `### Actual Result`, `### Expected Result`, picture paths), run `node tools/evidence-check.mjs brief <KEY> --defect <draft>`, call the `evidence-checker` agent with only KEY and the brief path, then `compare`. Ask with the decision card: `team.mjs ask --approve --gate defect --propose "log <summary>" --why ... --if-wrong "dev time on a non-bug / a wrong rule in Jira" --undo partial --evidence <picture> --check work/<KEY>/evidence-check/<ID>.compare.json`. Right before Step 4 run `node tools/evidence-check.mjs gate <KEY> <ID>`: BLOCKED (no check, or the draft or a picture changed after it) means check again, never log. When the checker disagrees, tell the user its reading in one line; the user decides.
+
 ## Token economy (read first, apply throughout)
 
 - Pass a narrow `fields` list on every `getJiraIssue` / `searchJiraIssuesUsingJql` call (never `"*all"` unless a specific field is needed).

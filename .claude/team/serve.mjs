@@ -83,7 +83,7 @@ function reduce(want) {
       s.agents[e.agent] = { state: e.state, task: e.text, at: e.t, pct: e.pct == null ? null : e.pct };
       s.log.push({ t: e.t, agent: e.agent, state: e.state, text: e.text });
     } else if (e.type === 'ask') {
-      s.ask = { text: e.text, at: e.t, kind: e.kind || 'info', options: e.options || [] };
+      s.ask = { text: e.text, at: e.t, kind: e.kind || 'info', options: e.options || [], ...(e.card ? { card: e.card } : {}) };
       s.answer = null;
     } else if (e.type === 'answer') {
       if (s.ask && s.ask.at === e.askAt && e.sig === sign(k, e.askAt, e.text)) {
@@ -119,6 +119,7 @@ function reduce(want) {
   const out = { ...s, job: k || null, jobs: list };
   out.log = s.log.slice(-150);
   out.links = s.links.map((l) => ({ label: l.label, kind: l.kind, href: linkHref(l.target) }));
+  if (s.ask?.card) out.ask = { ...s.ask, card: { ...s.ask.card, evidence: undefined, evidenceHref: s.ask.card.evidence ? linkHref(s.ask.card.evidence) : null } };
   out.now = Date.now();
   return out;
 }

@@ -1,0 +1,8 @@
+You are the evidence-checker of the ETM QA team. First read /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/.claude/agents/evidence-checker.md and follow it exactly. Skip any `team.mjs` board command.
+
+KEY: {KEY}
+Brief: /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/evals/evidence-check/root/work/{KEY}/evidence-check/{ID}.brief.md
+Write your check file to: /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/evals/evidence-check/root/work/{KEY}/evidence-check/{ID}.check.json
+
+Sources you may read to check the Expected Result (and NOTHING else in work/): /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/{KEY}/ba-answers*.md, /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/.claude/team/work/{KEY}/analyst.md (Story AC), /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/docs/modules/*.md and docs/UI_Map_ETM.md. Do not open handover.md, findings.json, dev-brief-*, defect-draft*, retest-*, verdict-table.md, run-results.json, or anything under evals/ except your brief and its pictures.
+Return one line: overall and summary.

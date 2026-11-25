@@ -1,0 +1,36 @@
+{
+  "id": "c4-export-import",
+  "sourceHash": "313a12c5445b",
+  "overall": "not-proven",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Worklist 'Wide Plan B - NN' (event NN TEST QA), tags Initial and Active. Export icon left of Create Work. Group Mechanical (PM), 7 Work rows visible, every visible Status is 'N'. Total Results: 229. No download, no tooltip, no file name shown.",
+      "verdict": "cannot-tell",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Import Work page. Red banner 'Data Validation Failed. 298 data validation errors were found in the file.' Table rows 5-15, cell C<n>, Field 'Action', 'This field is mandatory.' Import button grey (disabled). Uploaded file name not shown.",
+      "verdict": "fail",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "ETM-8394 AC 4 (story.md v4): 'export then import again keeps each Work's status', including Change Requested",
+    "ETM-8394 AC 3.3: unchanged values do not trigger status changes",
+    "BA answer Q6 2026-11-18 (DEC-058 rev 17:05): importing an exported file back unchanged keeps all statuses",
+    "BA answer Q2 2026-11-18 (DEC-059): Change Requested importable for round-trip use",
+    "No source for 'the file imports as-is with a blank Action': Action handling is open BA Q1 (round 5); option (c) makes it not a defect"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Core expectation (blank Action accepted or filled by export) has no answered source; brief's own open Q1 option (c) means not a defect.",
+    "AC 4 / DEC-058 may assume the user sets Action = Revise; ETM-6843 makes Action mandatory. Wait for BA Q1 before logging.",
+    "No picture proves the uploaded file is the unmodified export: no download, file name or Action column shown.",
+    "Pic 1 shows Total Results 229; brief says 84 Works + 222 Breakdowns (306). Error count 298 also unexplained.",
+    "All visible Works are 'N' (New); no Change Requested or Reviewed Work shown, so the status-keeping part is untested.",
+    "Brief says 'Confirm' button; screen shows 'Import'. Steps should use the real label."
+  ],
+  "summary": "ภาพยืนยันว่า import ไฟล์ที่ export มาแล้วขึ้น 298 error 'Action: This field is mandatory' และปุ่ม Import ถูกปิด แต่ Expected ว่าไฟล์ต้อง import ได้ทันทียังไม่มีแหล่งที่ยืนยัน (BA Q1 ยังไม่ตอบ, ตัวเลือก c = ไม่ใช่ defect) และไม่มีภาพพิสูจน์ว่าไฟล์ไม่ถูกแก้ จึงยังไม่ควร log defect"
+}

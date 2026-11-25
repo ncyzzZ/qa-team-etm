@@ -161,10 +161,22 @@ test('rowsFromResults + recordRunResults: an unconfirmed manual pass is recorded
   assert.equal(j.tests['ETM-3'].status, 'passed');
 });
 
-test('CLI --confirm writes confirmedBy into the verdict file', () => {
+test('CLI --confirm is refused without a fresh evidence check, and writes confirmedBy after one', async () => {
+  const { manualSource, brief, runCompare } = await import('../evidence-check.mjs');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mr-ec-'));
   const run = fs.mkdtempSync(path.join(os.tmpdir(), 'mr-c-'));
   fs.writeFileSync(path.join(run, 'verdict-ETM-2.json'), JSON.stringify(verdict(['pass', 'pass'])));
-  const r = spawnSync(process.execPath, [path.join(HERE, 'results.mjs'), run, '--confirm', 'ETM-2'], { encoding: 'utf8' });
+  const env = { ...process.env, EVIDENCE_CHECK_ROOT: root };
+  const cli = () => spawnSync(process.execPath, [path.join(HERE, 'results.mjs'), run, '--confirm', 'ETM-2'], { encoding: 'utf8', env });
+  let r = cli();
+  assert.notEqual(r.status, 0);
+  assert.match(r.stderr, /no fresh evidence check/);
+  const src = manualSource(run, 'ETM-2');
+  brief('ETM-1', src, root);
+  fs.writeFileSync(path.join(root, 'work', 'ETM-1', 'evidence-check', 'ETM-2.check.json'), JSON.stringify({ sourceHash: src.hash, overall: 'pass', uiReachable: 'yes', expectedSources: [],
+    steps: [{ n: 1, sees: 'a', verdict: 'pass' }, { n: 2, sees: 'b', verdict: 'pass' }] }));
+  runCompare('ETM-1', 'ETM-2', root);
+  r = cli();
   assert.equal(r.status, 0, r.stderr);
   assert.equal(JSON.parse(fs.readFileSync(path.join(run, 'verdict-ETM-2.json'), 'utf8')).confirmedBy, 'user');
 });

@@ -4,6 +4,8 @@
 //   node .claude/team/team.mjs set <agent> <working|waiting|done|blocked|idle> "text" [--pct 0-100]
 //   node .claude/team/team.mjs ask "question for the user"
 //   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
+//   node .claude/team/team.mjs ask --approve --gate defect --propose "log ETM-x" --why "..." --if-wrong "..." --undo no --evidence pic.jpg --check work/K/evidence-check/ID.compare.json "question"
+//        (decision card; --gate defect|confirm|push makes it mandatory, defect/confirm need a fresh evidence check)
 //   node .claude/team/team.mjs ask --later "a question that can wait"   (queued, not shown; urgent asks also pop a macOS notification)
 //   node .claude/team/team.mjs inbox [--send]   (list the queued questions; --send asks them all as ONE question)
 //   node .claude/team/team.mjs wait [--timeout <seconds>]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>;
@@ -35,6 +37,35 @@ let args = process.argv.slice(3);
 let JOB = process.env.TEAM_JOB || '';
 { const i = args.indexOf('--job'); if (i >= 0) { JOB = String(args[i + 1] || ''); args = args.filter((_, j) => j !== i && j !== i + 1); } }
 const text = (a) => a.join(' ').replace(/\s+/g, ' ').trim().slice(0, 300);
+
+const GATES = { defect: 'log a defect', confirm: 'confirm a manual Test as proposed', push: 'push results to Xray' };
+/** Build and check the decision card of an ask. Throws with the missing parts. */
+async function decisionCard(card, gateKind) {
+  if (!gateKind && !Object.keys(card).length) return null;
+  if (gateKind && !GATES[gateKind]) throw new Error(`--gate must be ${Object.keys(GATES).join(' | ')}`);
+  const miss = [];
+  if (gateKind) for (const f of ['propose', 'why', 'undo', 'ifWrong']) if (!card[f]) miss.push('--' + f.replace('ifWrong', 'if-wrong'));
+  if (card.undo && !['yes', 'no', 'partial'].includes(card.undo)) miss.push('--undo yes|no|partial');
+  if (['defect', 'confirm'].includes(gateKind) && !card.check) miss.push('--check work/<KEY>/evidence-check/<ID>.compare.json (tools/evidence-check.mjs)');
+  if (gateKind === 'defect' && !card.evidence) miss.push('--evidence <one picture>');
+  if (miss.length) throw new Error(`a --gate ${gateKind} question (${GATES[gateKind]}) needs: ${miss.join(', ')}`);
+  const out = { ...card, gate: gateKind || null };
+  if (card.evidence) {
+    out.evidence = path.resolve(card.evidence);
+    if (!fs.existsSync(out.evidence) || !/\.(png|jpe?g|webp|gif)$/i.test(out.evidence)) throw new Error(`--evidence ${card.evidence}: not a picture file`);
+  }
+  if (card.check) {
+    const f = path.resolve(card.check);
+    const id = path.basename(f).replace(/\.compare\.json$/, '');
+    const key = (f.match(/work[\\/](ETM-\d+)[\\/]evidence-check/) || [])[1];
+    if (!key) throw new Error(`--check ${card.check}: expected work/<KEY>/evidence-check/<ID>.compare.json`);
+    const ec = await import(new URL('../../tools/evidence-check.mjs', import.meta.url));
+    const g = ec.gate(key, id, path.resolve(dir, '..', '..'));
+    if (!g.ok) throw new Error(g.why);
+    out.check = { result: g.cmp.result, line: ec.checkLine(g.cmp).slice(0, 400) };
+  }
+  return out;
+}
 const add = (ev) => fs.appendFileSync(EVENTS, JSON.stringify({ t: Date.now(), ...(JOB ? { job: JOB } : {}), ...ev }) + '\n');
 const INBOX = path.join(dir, 'inbox.jsonl');
 const readInbox = () => { try { return fs.readFileSync(INBOX, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)); } catch { return []; } };
@@ -107,19 +138,27 @@ if (cmd === 'start') {
   }
   add({ type: 'set', agent, state, text: text(words), pct });
 } else if (cmd === 'ask') {
-  let kind = 'info', options = [], later = false;
-  const rest = [];
+  let kind = 'info', options = [], later = false, gateKind = '';
+  const rest = [], card = {};
+  const CARD_FLAGS = { '--propose': 'propose', '--why': 'why', '--if-wrong': 'ifWrong', '--undo': 'undo', '--evidence': 'evidence', '--check': 'check' };
   for (let i = 0; i < args.length; i++) {
     if (args[i] === '--approve') kind = 'approve';
     else if (args[i] === '--later') later = true;
+    else if (args[i] === '--gate') gateKind = String(args[++i] || '');
+    else if (CARD_FLAGS[args[i]]) card[CARD_FLAGS[args[i]]] = String(args[++i] || '').replace(/\s+/g, ' ').trim().slice(0, 400);
     else if (args[i] === '--options') { const raw = String(args[++i] || ''); options = raw.split(raw.includes('|') ? '|' : ',').map((s) => s.trim().slice(0, 40)).filter(Boolean).slice(0, 4); }   // "a|b|c", or "a,b,c" when no | is used
     else rest.push(args[i]);
   }
+  // Decision card (user, chat 2026-11-25, item 2): what the AI proposes, why, one picture, the cost of a wrong answer, undo.
+  // --gate defect|confirm|push makes the card mandatory; defect and confirm also need a fresh independent evidence check.
+  let cardOut = null;
+  try { cardOut = await decisionCard(card, gateKind); } catch (e) { console.error('DECISION CARD: ' + e.message); process.exit(1); }
   if (later) {   // not urgent: queue it; `inbox --send` asks all queued questions in one go (TEAM.md "Questions to the user")
     fs.appendFileSync(INBOX, JSON.stringify({ t: Date.now(), job: JOB || '', text: text(rest) }) + '\n');
     console.log(`INBOX: queued (${readInbox().length} waiting). Send them together with: team.mjs inbox --send`);
   } else {
-    add({ type: 'ask', text: text(rest), kind, options });
+    if (cardOut?.evidence) add({ type: 'link', label: 'หลักฐานของคำถาม', kind: 'evidence', target: cardOut.evidence });
+    add({ type: 'ask', text: text(rest), kind, options, ...(cardOut ? { card: cardOut } : {}) });
     add({ type: 'set', agent: 'lead', state: 'waiting', text: kind === 'approve' ? 'รออนุมัติ (บอร์ดหรือแชท)' : 'รอคำตอบจากคุณ' });
     notify(`${JOB ? JOB + ': ' : ''}${text(rest)}`);
   }

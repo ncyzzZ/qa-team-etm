@@ -1,0 +1,16 @@
+{ "id": "c5-platform-box", "sourceHash": "33657a75add1", "overall": "not-proven",
+  "steps": [
+    { "n": 1, "sees": "Shutdown Logic page still loading: header and toolbar (Focus Critical Path, Focus Dropped Task, SIMOP greyed) shown, plan name/filters are grey skeleton bars, table area empty with a loading spinner. No rows, no level boxes, no Custom View panel, no Platform box visible.", "verdict": "cannot-tell", "pictureOk": false }
+  ],
+  "expectedSources": [
+    "ba-answers.md F-6 user answer in chat 2026-11-24 (Platform box cannot switch +/-)",
+    "Xray ETM-8632 step 3 (cited by the brief, step text not read: no xray-steps backup checked)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "The only picture shows the page still loading; it does not show the Custom View panel, the Platform box or any rows.",
+    "Expected may be superseded: user ruling 25 Nov 2026 (ba-answers.md) says the system is correct, cascade as ETM-2431.",
+    "Row count 22,442 has no source in the files allowed; the picture shows no count.",
+    "Picture is test-failed-1.png at failure time; failure may be a load/timeout (environment), not app behaviour."
+  ],
+  "summary": "พิสูจน์ไม่ได้: รูปเดียวเป็นหน้า Shutdown Logic ที่ยังโหลดอยู่ (spinner) ไม่เห็น Custom View, กล่อง Platform หรือแถวใดๆ และ Expected อาจถูกแทนแล้วโดยคำตัดสินผู้ใช้ 25 พ.ย. (ระบบถูก, cascade ตาม ETM-2431)" }

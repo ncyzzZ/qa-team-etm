@@ -1,0 +1,36 @@
+{
+  "id": "c6-workheader-plus",
+  "sourceHash": "7efecfb89680",
+  "overall": "not-a-defect",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Shutdown Logic: New Plan 20,000 Work, full screen. Filter Panel open on the right: Platform list with Select All and every platform (CBWA, ETWA ... NTWB) ticked, so no CBWA-only filter. Grid shows row 1 CBWA (expanded, chevron down), row 2 Mechanical (PM) 8.00 and row 103 Valve and Actuator Replacement 46.50, both with right chevron (collapsed). Manpower Resource histogram is open and covers the lower half of the grid. Custom View boxes are not visible.",
+      "verdict": "cannot-tell",
+      "pictureOk": false
+    },
+    {
+      "n": 2,
+      "sees": "Same page and same grid rows as picture 1 (CBWA expanded; Mechanical (PM) and Valve and Actuator Replacement collapsed with right chevron; numbering jumps 2 to 103). Custom View panel open: Expand/Collapse by Data Level shows Platform '-', Work Header '-' drawn lighter, Work '+', Work Breakdown '+'. Histogram open, hiding the rest of the grid; no row count visible.",
+      "verdict": "fail",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "User chat answer F-6 2026-11-24 (ba-answers-as-of-2026-11-24.md) - user, not BA",
+    "BA answer F-2 2026-11-24: + of Work Header shows Platform, Work Header and Work; Work Breakdown stays hidden (contradicts draft's 'all rows')",
+    "BA answer F-1 2026-11-24: behaviour exactly as before (ETM-2431 / code: expand at level b expands parents with childLevel <= b)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Draft Expected 'all 708 / 22,442 rows come back' contradicts BA F-2: Work Breakdown stays hidden after + of Work Header.",
+    "Under F-6 the screen matches the shown boxes: Work and Work Breakdown boxes show +, so their rows hidden is consistent.",
+    "Screen matches 'as before' code rule (BA F-1): expanding Work Header level shows Platform and Work Header rows only.",
+    "Screen differs from BA F-2 only in Work rows missing; that is a different claim than the draft and conflicts with F-1.",
+    "No picture of step 1 or step 2 box states, so it is unknown whether step 2 changed the Work box to +.",
+    "Histogram not collapsed (team rule); it hides most of the grid, so no row count (708 / 22,442) can be read.",
+    "Picture 1 shows all platforms ticked, not the CBWA filter the steps mention; pictures carry no step labels.",
+    "BA F-2 and F-1/user F-6 disagree; the rule for + of Work Header needs one clear BA answer before any defect."
+  ],
+  "summary": "ภาพแสดงหลังกด + ของ Work Header เห็นเฉพาะแถว Platform และ Work Header (กล่อง Work/Work Breakdown เป็น +) ซึ่งตรงกับพฤติกรรมเดิมและกับสถานะกล่องตามกฎ F-6 ส่วน Expected ของ draft ที่ว่าทุกแถวต้องกลับมา ขัดกับคำตอบ BA F-2 (Work Breakdown ต้องซ่อน) จึงยังไม่ใช่ defect; ภาพเปิด histogram ทับ ไม่เห็นจำนวนแถว ควรขอ BA ยืนยันกฎให้ชัดก่อน"
+}

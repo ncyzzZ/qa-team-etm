@@ -122,6 +122,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     for (const test of rest.flatMap((a, i) => (a === '--confirm' ? [rest[i + 1]] : []))) {
       const f = path.join(runDir, `verdict-${test}.json`);
       if (!/^ETM-\d+$/.test(test || '') || !fs.existsSync(f)) throw new Error(`--confirm ${test}: no ${f}`);
+      // confirmed as proposed = the person accepts the agent's reading: only after a fresh blind evidence check (TEAM.md "Decision cards")
+      const card = JSON.parse(fs.readFileSync(f, 'utf8')).key;
+      const { gate } = await import('../evidence-check.mjs');
+      const g = /^ETM-\d+$/.test(card || '') ? gate(card, test) : { ok: false, why: 'the verdict file has no Story key' };
+      if (!g.ok) throw new Error(`--confirm ${test}: no fresh evidence check (${g.why}). Run evidence-check brief --manual, the evidence-checker, compare; or answer the steps with --decide`);
       fs.writeFileSync(f, JSON.stringify(confirm(JSON.parse(fs.readFileSync(f, 'utf8'))), null, 1) + '\n');
     }
     for (const [test, answers] of parseDecide(rest)) {

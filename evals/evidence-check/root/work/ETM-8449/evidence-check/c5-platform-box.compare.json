@@ -1,0 +1,21 @@
+{
+ "id": "c5-platform-box",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "UI reachability of the data not shown",
+  "step 1: picture blank, cut or not full screen",
+  "The only picture shows a loading spinner: no Custom View panel, no Platform box, no rows. Actual behaviour is not shown.",
+  "Need before/after full-screen pictures: Custom View with Platform box '-' before click, and state after click.",
+  "The 22,442 row count has no source I could find; give its origin or drop it.",
+  "Rule F-6 comes from the user relaying BA in chat, not a Story AC; ETM-2431 AC 2 says box is strictly + or -.",
+  "Allowed BA file already calls this a 'defect candidate'; I ignored that and judged only the picture.",
+  "Failure screenshot during load may mean a timeout/environment issue (PLAN-20K is large), not the Platform box behaviour.",
+  "PLAN-20K data origin not stated; unknown whether it was made through the UI or an import."
+ ],
+ "summary": "ภาพเดียวที่มีเป็นหน้า Shutdown Logic ที่ยังโหลดไม่เสร็จ (มีแค่ spinner) ไม่เห็น Custom View, กล่อง Platform หรือจำนวนแถว จึงพิสูจน์ defect ไม่ได้ ต้องถ่ายภาพก่อน/หลังคลิกใหม่ และเลข 22,442 แถวยังไม่มีแหล่งอ้างอิง",
+ "sourceHash": "33657a75add1"
+}

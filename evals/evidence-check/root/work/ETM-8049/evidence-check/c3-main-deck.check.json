@@ -1,0 +1,34 @@
+{
+  "id": "c3-main-deck",
+  "sourceHash": "91bb35efcf60",
+  "overall": "not-proven",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Edit Work Breakdown page, one row WK-18-O-BD1 (P2, X=1, Y=A, Mechanic[2]). Deck cell in edit mode: tag HELIPAD plus typed text 'main deck' (no 'main deck' tag). Suggestion list shows one item 'Main Deck'. Save button greyed (disabled). Total Results: 1.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Same page and row. Deck cell now has tags HELIPAD and 'main deck' (lower case), cursor after them. Dropdown lists Weather Deck, Upper Deck, Lower Deck, Cooler Deck, Main Deck, Cellar Deck (Main Deck still offered). Save button still greyed (disabled). No message shown.",
+      "verdict": "fail",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "ETM-8049 AC 6.1 (Edit Work Breakdown is an entry point; BA answer Q26 2026-11-24)",
+    "ETM-8049 AC 6.3 (converted spelling shown as soon as the value is entered)",
+    "ETM-8049 AC 6.4 / BA answer Q18 2026-11-18 (stored, unchanged values keep spelling; no migration)"
+  ],
+  "uiReachable": "no",
+  "problems": [
+    "Stored Deck 'main deck' was set in the DB, not made on screen; team rule: re-prove with UI-made data before a defect.",
+    "Removing and re-adding the same stored value may count as 'not changed' (AC 6.4); Save stays disabled, so the form sees no change.",
+    "Expected for re-entering an existing stored spelling is open: BA Q33 not answered yet.",
+    "Picture 2 shows lower-case tag after Enter, which differs from AC 6.3 for a plain new entry; repeat on a breakdown without 'main deck'.",
+    "Saved value is not shown: Save was never clicked (disabled), so 'Main Deck is saved' cannot be checked.",
+    "Brief has no picture for steps 1-2 (opening the Worklist and menu); only steps 4-5 are pictured."
+  ],
+  "summary": "ภาพ 2 เห็นแท็กยังเป็น 'main deck' ตัวเล็กหลังกด Enter (ไม่ตรง AC 6.3) แต่ยังพิสูจน์ defect ไม่ได้: ข้อมูล 'main deck' ใส่จาก DB, การลบแล้วใส่ค่าเดิมอาจนับเป็น 'ไม่เปลี่ยน' ตาม AC 6.4 (Save ยัง disabled) และ Q33 ยังไม่ได้คำตอบ ควรทำซ้ำกับ breakdown ที่ไม่มี 'main deck' ด้วยข้อมูลที่สร้างจากหน้าจอ"
+}
