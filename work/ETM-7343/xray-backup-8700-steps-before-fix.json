@@ -1,0 +1,3 @@
+{"test":"ETM-8700","issueId":"2299742","backupAt":"2026-11-25","steps":[
+{"id":"a174380e-ed3f-4323-8524-030b8fc25060","n":2,"action":"Click the `>` button in the page header and, without waiting for the table, click the `<` button.","result":"The table shows the first date."},
+{"id":"4a011380-ebd1-4f95-b158-18a0177f415a","n":3,"action":"Click the `>` button again, without waiting.","result":"The table finally shows the second date."}]}

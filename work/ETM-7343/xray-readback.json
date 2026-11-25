@@ -1,20 +1,92 @@
 [
-{"key":"ETM-8676","summary":"[FE][MT] Verify the user with View All Daily Report Item sees the Actual (%) colors (POS)","steps":4},
-{"key":"ETM-8678","summary":"[FE][MT] Verify the user with View Active Daily Report Item sees the same Actual (%) colors (POS)","steps":4},
-{"key":"ETM-8681","summary":"[FE][MT] Verify a user without any Daily Report view permission cannot see the table (NEG)","steps":3},
-{"key":"ETM-8683","summary":"[FE][MT] Verify Actual (%) lower than Plan (%) is red (POS)","steps":4},
-{"key":"ETM-8685","summary":"[FE][MT] Verify Actual (%) higher than Plan (%), not 100%, is green (POS)","steps":4},
-{"key":"ETM-8687","summary":"[FE][MT] Verify Actual (%) equal to Plan (%) below 100% is black, including 0% and 0% (BND)","steps":5},
-{"key":"ETM-8689","summary":"[FE][MT] Verify Actual (%) 100% is black whatever the Plan (%) is (POS)","steps":5},
-{"key":"ETM-8691","summary":"[FE][MT] Verify the color for each Plan/Actual pair at the edge values (BND)","steps":3},
-{"key":"ETM-8696","summary":"[FE][MT] Verify the color rule applies at every level of the table (POS)","steps":5},
-{"key":"ETM-8697","summary":"[FE][MT] Verify a parent row takes its color from its own Actual (%) and Plan (%), not from its children (POS)","steps":4},
-{"key":"ETM-8698","summary":"[FE][MT] Verify the color changes at once when Actual (%) is changed (POS)","steps":6},
-{"key":"ETM-8699","summary":"[FE][MT] Verify the colors follow the new date when the execution date is changed (POS)","steps":5},
-{"key":"ETM-8700","summary":"[FE][MT] Verify no old color stays after quick date switching and a reload (NEG)","steps":6},
-{"key":"ETM-8701","summary":"[FE][MT] Verify no legend and no 'behind schedule only' filter were added (NEG)","steps":3},
-{"key":"ETM-8702","summary":"[FE][MT] Verify the exported PDF shows the same Actual (%) colors as the screen (POS)","steps":6},
-{"key":"ETM-8724","summary":"[FE][MT] Verify an empty Plan (%) or Actual (%) keeps the default font color (NEG)","steps":5},
-{"key":"ETM-8725","summary":"[FE][MT] Verify the colors follow the values as shown on the screen, not the stored decimals (BND)","steps":6},
-{"key":"ETM-8726","summary":"[FE][MT] Verify the Total row of the PDF Progress Summary table has no color (POS)","steps":5}
+ {
+  "key": "ETM-8676",
+  "summary": "[FE][MT] Verify the user with View All Daily Report Item sees the Actual (%) colors (POS)",
+  "steps": 4
+ },
+ {
+  "key": "ETM-8678",
+  "summary": "[FE][MT] Verify the user with View Active Daily Report Item sees the same Actual (%) colors (POS)",
+  "steps": 4
+ },
+ {
+  "key": "ETM-8681",
+  "summary": "[FE][MT] Verify a Job Owner cannot see the Daily Report table of a Plan that is not Active (NEG)",
+  "steps": 3
+ },
+ {
+  "key": "ETM-8683",
+  "summary": "[FE][MT] Verify Actual (%) lower than Plan (%) is red (POS)",
+  "steps": 4
+ },
+ {
+  "key": "ETM-8685",
+  "summary": "[FE][MT] Verify Actual (%) higher than Plan (%), not 100%, is green (POS)",
+  "steps": 4
+ },
+ {
+  "key": "ETM-8687",
+  "summary": "[FE][MT] Verify Actual (%) equal to Plan (%) below 100% is black, including 0% and 0% (BND)",
+  "steps": 5
+ },
+ {
+  "key": "ETM-8689",
+  "summary": "[FE][MT] Verify Actual (%) 100% is black whatever the Plan (%) is (POS)",
+  "steps": 5
+ },
+ {
+  "key": "ETM-8691",
+  "summary": "[FE][MT] Verify the color for each Plan/Actual pair at the edge values (BND)",
+  "steps": 3
+ },
+ {
+  "key": "ETM-8696",
+  "summary": "[FE][MT] Verify the color rule applies at every level of the table (POS)",
+  "steps": 5
+ },
+ {
+  "key": "ETM-8697",
+  "summary": "[FE][MT] Verify a parent row takes its color from its own Actual (%) and Plan (%), not from its children (POS)",
+  "steps": 4
+ },
+ {
+  "key": "ETM-8698",
+  "summary": "[FE][MT] Verify the color changes at once when Actual (%) is changed (POS)",
+  "steps": 6
+ },
+ {
+  "key": "ETM-8699",
+  "summary": "[FE][MT] Verify the colors follow the new date when the execution date is changed (POS)",
+  "steps": 5
+ },
+ {
+  "key": "ETM-8700",
+  "summary": "[FE][MT] Verify no old color stays after quick date switching and a reload (NEG)",
+  "steps": 6
+ },
+ {
+  "key": "ETM-8701",
+  "summary": "[FE][MT] Verify no legend and no 'behind schedule only' filter were added (NEG)",
+  "steps": 3
+ },
+ {
+  "key": "ETM-8702",
+  "summary": "[FE][MT] Verify the exported PDF shows the same Actual (%) colors as the screen (POS)",
+  "steps": 6
+ },
+ {
+  "key": "ETM-8724",
+  "summary": "[FE][MT] Verify an empty Plan (%) or Actual (%) keeps the default font color (NEG)",
+  "steps": 5
+ },
+ {
+  "key": "ETM-8725",
+  "summary": "[FE][MT] Verify the colors follow the values as shown on the screen, not the stored decimals (BND)",
+  "steps": 6
+ },
+ {
+  "key": "ETM-8726",
+  "summary": "[FE][MT] Verify the Total row of the PDF Progress Summary table has no color (POS)",
+  "steps": 5
+ }
 ]
