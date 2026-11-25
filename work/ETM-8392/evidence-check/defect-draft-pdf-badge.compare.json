@@ -1,0 +1,17 @@
+{
+ "id": "defect-draft-pdf-badge",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Pictures are cropped renders of the PDF page, not a PDF viewer screen; the brief does not say how the PDF was rendered.",
+  "The recorded BA reply is only '4a'; ba-answers.md interprets it. Confirm the wording matches the BA's intent before logging.",
+  "Fragments are faint white text, easy to miss; the defect should cite the zoom pictures and the PDF text layer.",
+  "Overview pictures 1 and 3 alone barely show the fragment; pictures 2 and 4 carry the proof.",
+  "Lead's earlier rounds also note D+2 column cut by page edge; keep that as a separate defect, not mixed here."
+ ],
+ "summary": "รูป zoom แสดงชัดว่า PDF วันที่ 14 มิ.ย. มีข้อความ 'Down' และ PDF วันที่ 17 มิ.ย. มีข้อความ 'p Up' ค้างอยู่ที่หัว Gantt ทั้งที่เส้น Ramp อยู่นอกช่วง Focus ซึ่งขัดกับคำตอบ BA (ต้องไม่แสดงอะไรเลย) จึงถือว่าพิสูจน์ defect ได้ แต่คำตอบ BA ที่บันทึกไว้มีแค่ '4a' ควรยืนยันอีกครั้ง",
+ "sourceHash": "b306e78c6346"
+}

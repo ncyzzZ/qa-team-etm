@@ -1,0 +1,17 @@
+{
+ "id": "defect-draft-pdf-d2-cut",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Pictures show no page number or file name; cannot confirm it is page 2 of the 11 Jun PDF, only the 10-13 Jun scale matches.",
+  "Picture 2 is a crop; the defect should keep the full-page picture 1 as main evidence.",
+  "Stray '26' text right of the Ramp Down badge may be another overlap/cut issue; not covered by this draft.",
+  "BA answer was relayed through the lead session, confirmed by the user on 2026-11-25; not a written BA document.",
+  "DEC-061 source not checked here; Expected rests on BA answer R3-Q2."
+ ],
+ "summary": "ภาพแสดงป้าย Ramp Up ที่ขอบขวาของ Gantt (หลังวันที่ 13) ถูกตัดเหลือแค่ตัวอักษรแรก ขัดกับคำตอบ BA R3-Q2 (25 Nov 2026) ที่ว่าห้ามตัด จึงพิสูจน์ defect ได้ แต่ภาพไม่มีเลขหน้า/ชื่อไฟล์ PDF ยืนยันว่าเป็นหน้า 2 ของวันที่ 11 Jun",
+ "sourceHash": "4f74023011e3"
+}

@@ -1,4 +1,4 @@
-# Dev brief: D1 (Story ETM-8392) - PDF Focus Timeframe shows badge text of a Ramp line that is outside the window
+# Dev brief: ETM-10054 (Story ETM-8392) - PDF Focus Timeframe shows badge text of a Ramp line that is outside the window
 
 ## 1. What is wrong
 In the Daily Report PDF export (Daily Plan + Focus Timeframe), when a Ramp Down / Ramp Up line is outside the Focus window (D-1 00:00 to D+2 23:59), the line is correctly not drawn, but part of its badge text is still drawn in the Gantt header ("Down", "p Up").

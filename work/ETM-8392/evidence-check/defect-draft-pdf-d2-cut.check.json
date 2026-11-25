@@ -1,0 +1,15 @@
+{ "id": "defect-draft-pdf-d2-cut", "sourceHash": "4f74023011e3", "overall": "defect-proven",
+  "steps": [
+    { "n": 1, "sees": "Rendered page with table No./Details/Job Owner/Scheduled/Manpower/Man-hrs/Plan/Actual and a Gantt with day columns 10, 11 (highlighted), 12, 13. Rows 1-4, 19-21, 23, 24. Blue 'Ramp Down' badge above 11 with a stray '26' text after it. At the far right edge, after column 13, a second vertical blue line and a badge cut by the page edge: only a sliver with a part of one letter is visible. Bottom half of the page is empty white. No PDF page number or viewer frame visible.", "verdict": "fail", "pictureOk": true },
+    { "n": 2, "sees": "Close crop of the Gantt header: 'Ramp Down' badge on 11 with '26' after it; columns 10, 11, 12, 13; a vertical blue line at the right end of column 13 and a blue badge on it cut at the image/page edge, showing only the first letter (looks like 'R'/'F'). The 'Ramp Up' text is not readable.", "verdict": "fail", "pictureOk": true }
+  ],
+  "expectedSources": ["BA answer R3-Q2 (F-13) 2026-11-25, work/ETM-8392/ba-answers.md: D+2 column and a badge on that day must not be cut by the page edge", "DEC-061 (cited by the draft, D+2 counts as inside Focus window; not opened)"],
+  "uiReachable": "yes",
+  "problems": [
+    "Pictures show no page number or file name; cannot confirm it is page 2 of the 11 Jun PDF, only the 10-13 Jun scale matches.",
+    "Picture 2 is a crop; the defect should keep the full-page picture 1 as main evidence.",
+    "Stray '26' text right of the Ramp Down badge may be another overlap/cut issue; not covered by this draft.",
+    "BA answer was relayed through the lead session, confirmed by the user on 2026-11-25; not a written BA document.",
+    "DEC-061 source not checked here; Expected rests on BA answer R3-Q2."
+  ],
+  "summary": "ภาพแสดงป้าย Ramp Up ที่ขอบขวาของ Gantt (หลังวันที่ 13) ถูกตัดเหลือแค่ตัวอักษรแรก ขัดกับคำตอบ BA R3-Q2 (25 Nov 2026) ที่ว่าห้ามตัด จึงพิสูจน์ defect ได้ แต่ภาพไม่มีเลขหน้า/ชื่อไฟล์ PDF ยืนยันว่าเป็นหน้า 2 ของวันที่ 11 Jun" }

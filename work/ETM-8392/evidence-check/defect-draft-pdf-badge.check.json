@@ -1,0 +1,18 @@
+{ "id": "defect-draft-pdf-badge", "sourceHash": "b306e78c6346", "overall": "defect-proven",
+  "steps": [
+    { "n": 1, "sees": "Rendered page of Daily Report table and Gantt, scale Jun 2026 days 13-16, 14 highlighted. One blue vertical line in the 13 Jun column (late on 13 Jun) with a blue 'Ramp Up' badge in the header. At the far left of the header, next to '13', a faint white text fragment is visible. No second vertical line is drawn. Lower half of the page is empty white (end of rows).", "verdict": "fail", "pictureOk": true },
+    { "n": 2, "sees": "Zoom of the Gantt header of picture 1: faint white text 'Down' at the left edge of the 13 Jun cell, no Ramp Down line in the chart area; Ramp Up line and badge on 13 Jun are drawn in full. Ramp Down (11 Jun 08:00) is outside the 13-16 Jun window, yet part of its badge text shows.", "verdict": "fail", "pictureOk": true },
+    { "n": 3, "sees": "Rendered page of Daily Report table and Gantt, scale Jun 2026 days 16-19, 17 highlighted, rows 1-24 with bars. No Ramp vertical line and no visible Ramp badge in the header; a thin light-blue mark at the left edge of the Gantt header, too small to read here.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 4, "sees": "Zoom of the left edge of the header of picture 3: faint white text 'p Up' overlapping the 16 Jun cell, a thin light-blue sliver at the left edge, no line in the chart area. Ramp Up (13 Jun 20:00) is outside the 16-19 Jun window, yet part of its badge text shows.", "verdict": "fail", "pictureOk": true }
+  ],
+  "expectedSources": ["BA answer R3-Q1 (F-12) 25 Nov 2026 in work/ETM-8392/ba-answers.md: no line, no badge text outside the Focus window", "AC 4 (Export PDF)", "DEC-061 Focus window D-1 00:00 to D+2 23:59"],
+  "uiReachable": "yes",
+  "problems": [
+    "Pictures are cropped renders of the PDF page, not a PDF viewer screen; the brief does not say how the PDF was rendered.",
+    "The recorded BA reply is only '4a'; ba-answers.md interprets it. Confirm the wording matches the BA's intent before logging.",
+    "Fragments are faint white text, easy to miss; the defect should cite the zoom pictures and the PDF text layer.",
+    "Overview pictures 1 and 3 alone barely show the fragment; pictures 2 and 4 carry the proof.",
+    "Lead's earlier rounds also note D+2 column cut by page edge; keep that as a separate defect, not mixed here."
+  ],
+  "summary": "รูป zoom แสดงชัดว่า PDF วันที่ 14 มิ.ย. มีข้อความ 'Down' และ PDF วันที่ 17 มิ.ย. มีข้อความ 'p Up' ค้างอยู่ที่หัว Gantt ทั้งที่เส้น Ramp อยู่นอกช่วง Focus ซึ่งขัดกับคำตอบ BA (ต้องไม่แสดงอะไรเลย) จึงถือว่าพิสูจน์ defect ได้ แต่คำตอบ BA ที่บันทึกไว้มีแค่ '4a' ควรยืนยันอีกครั้ง"
+}

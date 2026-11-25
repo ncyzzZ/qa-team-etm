@@ -38,3 +38,13 @@ All 7 Tests await the user's --confirm. 8690 s7 / 8692 s4 wait for BA round 3.
 - NOT pushed: 8797. Its Test Run in ETM-8825 still has the OLD 9-step version (before DEC-062 rewrite: "line moves to the new Ramp Up Date"); the Test itself has the new 7 steps. Fix = reset the Test Run to the latest Test version (Xray write, ask first), then push again.
 - 8690, 8692 not pushed (BA round 3).
 - 8797: Test Run reset to 7 steps (resetTestRun), pushed PASSED + 7 pictures, read back OK. Xray now: 16 PASSED, 8690/8692 TO DO (BA round 3).
+
+## 25 Nov 2026 - BA R3 answers applied, then a correction
+- Xray ETM-8825: 8692 FAILED (s4), 8693 FAILED (s2) pushed; 8690 not pushed (its Test Run has the old 5 steps; reset needs the user's yes).
+- Evidence check: D1 (badge text outside window) defect-proven. D2 not proven as written: the PDF text geometry shows the 4 day columns FIT the page (page 1191 wide, last column ~1121-1189). What is cut is a Ramp badge drawn right of a line late on D+2 (11 Jun PDF: Ramp Up 13 Jun 20:00, badge shows "R") at the Gantt end. The first manual agent's "column cut" was wrong.
+- So 8690 s3 and 8693 s2 should be pass; 8693 FAILED in Xray is wrong and must go back to PASSED (ask first). D2 draft must be rewritten to "badge on D+2 cut".
+- 25 Nov 2026 defects logged (user yes "ยืนยันทั้งหมด" + "แก้ตามนี้ทั้งหมด"), assignee thanawich klongsard (jif, from the lead chat), Sprint 26, Epic ETM-8, labels FE/UI, Relates ETM-8392, images embedded, dev brief attached:
+  - ETM-10054 (D1, F-12): badge text of an out-of-window line in the Focus PDF. Xray: ETM-8690 s7, ETM-8692 s4 FAILED + linked. [QA] ETM-10056 Done, 20m.
+  - ETM-10055 (D2, F-13): Ramp Up badge late on D+2 cut. Xray: ETM-8690 s8 FAILED + linked. [QA] ETM-10057 Done, 15m.
+- Xray ETM-8825 now: 16 PASSED, 8690 FAILED, 8692 FAILED. 8693 back to PASSED (the "column cut" was a wrong reading).
+- Possible extra point seen by the checker (not logged): in the 11 Jun PDF the Ramp Down badge covers part of the "Jun 2026" header, leaving "26".
