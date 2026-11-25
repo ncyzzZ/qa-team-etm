@@ -15,14 +15,26 @@ test('suggest: finding with a defect wins; causes map to a suggestion', () => {
   assert.equal(suggest({ key: 'ETM-5', cause: 'unknown' }).suggest, 'app?');
 });
 
-test('table writes one row per failure', () => {
+test('table writes one row per failure', async () => {
   const r = root();
   const run = fs.mkdtempSync(path.join(os.tmpdir(), 'run-'));
   fs.writeFileSync(path.join(run, 'triage.json'), JSON.stringify([{ key: 'ETM-5', cause: 'env', firstLine: 'net::ERR' }, { key: 'ETM-6', cause: 'unknown', firstLine: 'Error: a | b' }]));
-  const { rows, md } = table('ETM-1', run, r);
+  const { rows, md } = await table('ETM-1', run, r);
   assert.equal(rows.length, 2);
+  assert.doesNotMatch(md, /Since last pass/);
   assert.match(md, /\| 2 \| ETM-6 \| Error: a \/ b/);
   assert.ok(fs.existsSync(path.join(r, 'work', 'ETM-1', 'verdict-table.md')));
+});
+
+test('table with build info adds the column and the build-change note', async () => {
+  const r = root();
+  const run = fs.mkdtempSync(path.join(os.tmpdir(), 'run-'));
+  fs.writeFileSync(path.join(run, 'triage.json'), JSON.stringify([{ key: 'ETM-5', cause: 'locator', locator: '.m', firstLine: 'Timeout' }]));
+  const ann = async (k, d, rows) => rows.map((x) => ({ ...x, suggest: 'app?', why: 'build change? passed in X', buildChange: true, since: { note: 'passed in X; 1 stms-fe merge(s) since', merges: [{ commit: 'abcdef1234', branch: 'feature/ETM-1', keys: ['ETM-1'] }] } }));
+  const { md } = await table('ETM-1', run, r, ann);
+  assert.match(md, /\*\*Build change\?\*\* Rows 1 /);
+  assert.match(md, /\| Since last pass \|/);
+  assert.match(md, /abcdef12 feature\/ETM-1/);
 });
 
 test('record needs evidence, a board ANSWER: line, valid verdicts', () => {
