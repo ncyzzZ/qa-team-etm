@@ -3,15 +3,17 @@
  "tests": {
   "ETM-8629": {
    "status": "skipped",
-   "why": "not-proven",
-   "t": "2026-11-24T09:50:43.341Z",
-   "run": "2026-11-24_162751_ETM-8449"
+   "why": "precondition",
+   "t": "2026-11-25T03:22:10.561Z",
+   "run": "2026-11-25_100441_ETM-8449_manual",
+   "source": "manual-agent"
   },
   "ETM-8630": {
    "status": "skipped",
-   "why": "not-proven",
-   "t": "2026-11-24T09:50:43.341Z",
-   "run": "2026-11-24_162751_ETM-8449"
+   "why": "precondition",
+   "t": "2026-11-25T03:22:10.561Z",
+   "run": "2026-11-25_100441_ETM-8449_manual",
+   "source": "manual-agent"
   },
   "ETM-8631": {
    "status": "skipped",
@@ -41,5 +43,5 @@
    "run": "2026-11-25_084918_ETM-8449"
   }
  },
- "updated": "2026-11-25T02:05:01.721Z"
+ "updated": "2026-11-25T03:22:10.561Z"
 }

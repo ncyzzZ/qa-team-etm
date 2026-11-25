@@ -44,3 +44,9 @@ P / H / W = rows of Platform / Work Header / Work level, N0 = all rows (count th
 | 9 | Note whether the page froze or lagged after the spinner ended | Note "no visible lag" or describes the lag (needs-human) | Gantt |
 
 Known app defects that may show here (do not log again): ETM-9177 (`+` of Work Header brings back only Work Header rows) touches step 5-7 of 8630 only when the lower boxes show `-`; in 8630 the Work box is `+` at step 5, so P+H is the expected count.
+
+## Manual run 2026-11-25 (manual-runner, run folder output/runs/2026-11-25_100441_ETM-8449_manual) - awaiting confirmation
+- 8629: steps 1-6 pass. T1 4.64 s (Platform NTWA, 2108 rows), T2 4.43, T3 4.01 (Work Header with 8 Works), T4 4.22; no spinner; page blocked ~4 s per click (one long task, no repaint). Step 7 needs-human.
+- 8630: steps 1-8 pass. Counts 22442 -> 5167 -> 167 -> 18 -> 167 -> 5167 -> 22442 as expected (ETM-9177 not hit). A1-A6 1.36 / 1.21 / 1.25 / 1.35 / 1.63 / 1.50 s, spinner shown. Step 9 needs-human.
+- Both stay skipped (not PASSED) until a person judges the lag.
+- User 2026-11-25 (chat): "ไม่นับ (ผ่าน)" = the ~4 s freeze of 8629 is not lag. 8629 manual result: PASS (7/7, user-confirmed). 8630 (1.2-1.6 s with spinner, milder) taken as the same verdict: PASS (9/9). Xray not pushed yet (needs the push-plan question).
