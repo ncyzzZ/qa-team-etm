@@ -1,0 +1,4 @@
+{
+ "summary": "[FE][MT] Verify the Reset link in Column Customization restores the default layout with the three columns hidden (ASSUMPTION Q3 for the moment the table changes)",
+ "description_wiki": "*Scenario:* Checks that the Reset link in Column Customization brings back the default layout.\n\n*Precondition:* A user with View Worklist permission (see [Role & Permission|https://pttep.sharepoint.com/:x:/r/sites/TurnaroundManagement/Shared%20Documents/03%20Development/Role%20%26%20Permission%20V.2.xlsx?d=wa5e5a9a2071b4ed7b3ef83c4cf0dffd9&csf=1&web=1&e=3stFwC]) is logged in. The user saved a custom layout with Deck, X and Y checked and {{Department}} moved after {{Equipment Number}}. Worklist {{WL-A}} exists.\n\n*Navigation Path:* Planning tab > Plan Card > Worklist item > Worklist page of {{WL-A}} > Column Customization."
+}

@@ -1,0 +1,72 @@
+[
+ {
+  "no": 1,
+  "id": "6b367e87-c53e-4354-8f08-52e3f01ff41a",
+  "action": "Open Create Work > Manual Create.",
+  "data": null,
+  "result": "The `Create Work` page opens."
+ },
+ {
+  "no": 2,
+  "id": "e1db146b-0e16-4a43-b824-31c665623726",
+  "action": "Type `main` in the Deck field of the first Work Breakdown row, without pressing Enter.",
+  "data": null,
+  "result": "The field shows `main`; partial text is not converted and no per-keystroke change happens."
+ },
+ {
+  "no": 3,
+  "id": "c840f55f-31fc-4dcc-8ea1-ba6285cc305d",
+  "action": "Type ` deck` and press Enter.",
+  "data": null,
+  "result": "The value becomes a tag that shows `Main Deck` (the Master Data spelling)."
+ },
+ {
+  "no": 4,
+  "id": "238cbdc5-afbf-4a37-a8c5-6fd24553c5ed",
+  "action": "Remove the tag and paste the copied text `main deck`.",
+  "data": null,
+  "result": "The pasted value shows `Main Deck`."
+ },
+ {
+  "no": 5,
+  "id": "f8c2200c-2b34-46c4-a044-05bcd5b87f6a",
+  "action": "Remove the tag, type `MAIN DECK` and press Enter.",
+  "data": null,
+  "result": "The tag shows `Main Deck`."
+ },
+ {
+  "no": 6,
+  "id": "b4a0d2a1-d068-4008-ab31-1291ed9acb65",
+  "action": "NEG check: type `DOCK AREA` in the same field and press Enter.",
+  "data": null,
+  "result": "The tag shows `DOCK AREA` exactly as typed, not `Dock Area` or `dock area` of the other works in WL-A."
+ },
+ {
+  "no": 7,
+  "id": "48209310-b4e5-4726-bbdf-17a8852d3f19",
+  "action": "Type `Dock Area` in the Deck field of the second Work Breakdown row and press Enter.",
+  "data": null,
+  "result": "The tag shows `Dock Area` as typed."
+ },
+ {
+  "no": 8,
+  "id": "d30271a6-d5de-4cf8-aeff-b9235fcfb6d8",
+  "action": "Type `cellar deck` in the Deck field of the third Work Breakdown row and click outside the field (ASSUMPTION Q16: blur commits the value the same way as Enter, proposed by the BA).",
+  "data": null,
+  "result": "The value shows `Cellar Deck`; the observed behaviour is recorded in the test result."
+ },
+ {
+  "no": 9,
+  "id": "00417314-4864-49b2-9daa-f8012703ca50",
+  "action": "Fill in the other required fields and click `Save`.",
+  "data": null,
+  "result": "One work is saved with three Work Breakdowns."
+ },
+ {
+  "no": 10,
+  "id": "8161079e-2dac-45d9-8c13-0f92a7378bf1",
+  "action": "Read the Deck cell of the new work.",
+  "data": null,
+  "result": "The cell shows `Main Deck, Cellar Deck, Dock Area, DOCK AREA`: Master Data values first, then the two free-text spellings with the lower case one first, none merged."
+ }
+]

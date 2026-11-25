@@ -1,0 +1,4 @@
+{
+ "summary": "[FE][MT] Verify the Deck boundary of 29, 30 and 31 characters in the forms and Create Work table, and an Excel import with a 31-character value blocks the whole file",
+ "description_wiki": "Original description: see Jira history of ETM-8791 (before 2026-11-24 21:11). Only the Navigation Path line changed: it ended \"Create Work > Manual Create, Edit Work Details, and Import Excel.\" Summary was not changed."
+}

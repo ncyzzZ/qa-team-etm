@@ -1,0 +1,37 @@
+[
+ {
+  "no": 1,
+  "id": "5125cb1f-6ae6-4c8f-a626-8d38092398f5",
+  "action": "Open the page of the data row below.",
+  "data": null,
+  "result": "The page opens."
+ },
+ {
+  "no": 2,
+  "id": "806dd1cc-e322-419b-8530-258bc291d8fa",
+  "action": "Type the typed value of the data row in the Working Location (Deck) field, without pressing Enter.",
+  "data": null,
+  "result": "The field shows the typed value unchanged; text that is not entered yet is not converted."
+ },
+ {
+  "no": 3,
+  "id": "173488df-08db-4d8d-a3af-d56d6a3e7613",
+  "action": "Press Enter.",
+  "data": null,
+  "result": "The value becomes a tag and shows `Main Deck`, before saving."
+ },
+ {
+  "no": 4,
+  "id": "ddf8da00-f07f-4856-8a89-ad32418c1016",
+  "action": "Click `Save`.",
+  "data": null,
+  "result": "The change is saved."
+ },
+ {
+  "no": 5,
+  "id": "7940b891-6ed4-4b11-9e78-bafabd66175a",
+  "action": "Read the Deck cell of the work in the table.",
+  "data": null,
+  "result": "The cell shows `Main Deck, Helideck` (Master Data value first)."
+ }
+]

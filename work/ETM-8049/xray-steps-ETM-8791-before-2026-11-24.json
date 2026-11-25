@@ -1,0 +1,100 @@
+[
+ {
+  "no": 1,
+  "id": "c6e7f624-970e-4767-9bc6-c8de8799f85b",
+  "action": "Open Create Work > Manual Create and fill in the other required fields, X with `1` and Y with `A`.",
+  "data": null,
+  "result": "The page shows the filled values."
+ },
+ {
+  "no": 2,
+  "id": "78008787-8169-4e78-8dc5-b55577f41c88",
+  "action": "Type the 29-character value in the Deck field and press Enter.",
+  "data": null,
+  "result": "The tag shows the full 29-character value."
+ },
+ {
+  "no": 3,
+  "id": "f65fd523-599a-4b9e-97ba-2c27f4bafaa9",
+  "action": "Remove the tag, type the 30-character value and press Enter.",
+  "data": null,
+  "result": "The tag shows the full 30-character value."
+ },
+ {
+  "no": 4,
+  "id": "c75f9394-ac1e-4340-b857-37d79e949776",
+  "action": "Click `Save`.",
+  "data": null,
+  "result": "The work is saved and its Deck cell shows `Deck-0123456789-0123456789-ABC` (with an ellipsis only if the column is narrow)."
+ },
+ {
+  "no": 5,
+  "id": "a3e6b734-3c26-4e59-8f40-75c63f2f4fba",
+  "action": "Open Create Work > Manual Create again and fill in the other required fields, X with `1` and Y with `A`.",
+  "data": null,
+  "result": "The page shows the filled values."
+ },
+ {
+  "no": 6,
+  "id": "dfbae728-023d-4d16-b891-4850d4fb2a32",
+  "action": "Type the 31-character value in the Deck field.",
+  "data": null,
+  "result": "The field keeps 30 characters, the 31st character `D` is not accepted and no message shows."
+ },
+ {
+  "no": 7,
+  "id": "0bf08101-88e1-43cd-b4e0-d1d610d5a374",
+  "action": "Remove the text and paste the copied 31-character value.",
+  "data": null,
+  "result": "The field keeps the 30 characters `Deck-0123456789-0123456789-ABC`, the same as for typing, with no message."
+ },
+ {
+  "no": 8,
+  "id": "2a485023-c9f6-4c8f-a626-8d38092398f5",
+  "action": "BND check: press Enter and click `Save`.",
+  "data": null,
+  "result": "The work is saved with the Deck value `Deck-0123456789-0123456789-ABC` (exactly 30 characters) and no work exists with a 31-character Deck value."
+ },
+ {
+  "no": 9,
+  "id": "c7a270b5-b8fc-4f1d-8d30-e71b6eae6dbb",
+  "action": "Open Create Work again and paste the 31-character value into the Deck cell of the Work Breakdown table.",
+  "data": null,
+  "result": "The value is truncated to the first 30 characters and no error shows."
+ },
+ {
+  "no": 10,
+  "id": "71114d78-b2a2-4e24-b309-8dafd585c890",
+  "action": "Open `Edit Work Details` of the work saved in step 4 and type the 31-character value in the Deck field.",
+  "data": null,
+  "result": "The field keeps 30 characters, the 31st character is not accepted and no message shows (same limit as Create Work)."
+ },
+ {
+  "no": 11,
+  "id": "c9d55bfb-0b39-4224-ab74-2e07b90c63d7",
+  "action": "Click `Create Work`, choose `Import Excel` and open the import window.",
+  "data": null,
+  "result": "The import window opens."
+ },
+ {
+  "no": 12,
+  "id": "935e93ea-4d1d-4fec-867d-887268f67003",
+  "action": "NEG check: choose the prepared file of the data row and import it.",
+  "data": null,
+  "result": "The error report lists the row, the cell and the message of the data row."
+ },
+ {
+  "no": 13,
+  "id": "9d41148a-92b7-446f-8daa-a61f60e17c68",
+  "action": "NEG check: look at the `Next` or `Confirm` button of the data row.",
+  "data": null,
+  "result": "The button is disabled."
+ },
+ {
+  "no": 14,
+  "id": "3341d6db-23e1-4302-8421-c79838fe187a",
+  "action": "NEG check: check the table for the valid row of the file.",
+  "data": null,
+  "result": "The valid row is not imported as a work and no work with a 31-character Deck value exists."
+ }
+]

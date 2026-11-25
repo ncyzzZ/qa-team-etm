@@ -1,0 +1,86 @@
+[
+ {
+  "no": 1,
+  "id": "c5fb43ea-71d7-4c23-88f8-6c511b163af7",
+  "action": "Choose the edit way of the data row for the work of the data row (Edit by Modal opens from a selected row).",
+  "data": null,
+  "result": "The Deck value becomes editable."
+ },
+ {
+  "no": 2,
+  "id": "c4af57a1-3373-4228-983a-dc03bdd1aa29",
+  "action": "Type the typed value of the data row in the Deck field and press Enter.",
+  "data": null,
+  "result": "The value shows `Main Deck` as soon as it is entered."
+ },
+ {
+  "no": 3,
+  "id": "8effd17e-a33b-41a2-9615-97cfd23d3bac",
+  "action": "Save the change.",
+  "data": null,
+  "result": "The change is saved."
+ },
+ {
+  "no": 4,
+  "id": "02b7c228-80e8-400a-8f94-eb556f64d0f5",
+  "action": "Open the Worklist page and read the Deck cell of the work of the data row.",
+  "data": null,
+  "result": "The cell shows `Main Deck, Helideck`: `Main Deck` first."
+ },
+ {
+  "no": 5,
+  "id": "9cc67dea-d2af-4c06-a171-32c01bdf538c",
+  "action": "Return to the same edit way of the same work and type the 31-character value in the Deck field.",
+  "data": null,
+  "result": "The field keeps 30 characters and the 31st character is not accepted, the same as in the Create Work form."
+ },
+ {
+  "no": 6,
+  "id": "20238cba-a2d5-42cf-8a6d-5e309ba4adcb",
+  "action": "NEG check: leave without saving.",
+  "data": null,
+  "result": "The Deck value of the work is unchanged and no 31-character value is saved."
+ },
+ {
+  "no": 7,
+  "id": "abd834a1-c926-4218-8132-1b16b60aa07b",
+  "action": "Select the Deck cell of work `WK-18g` in the Gantt table.",
+  "data": null,
+  "result": "The cell is selected."
+ },
+ {
+  "no": 8,
+  "id": "f3e0d4bf-2720-478d-82db-1d9405be0821",
+  "action": "Paste the 31-character text.",
+  "data": null,
+  "result": "The cell holds the first 30 characters `Deck-0123456789-0123456789-ABC` and no error shows (truncated)."
+ },
+ {
+  "no": 9,
+  "id": "733d22e6-5c2c-4427-b32d-ea50ed7759b2",
+  "action": "Paste the copied text `main deck` in the same cell.",
+  "data": null,
+  "result": "The cell shows `Main Deck`."
+ },
+ {
+  "no": 10,
+  "id": "995e9560-34f0-4722-a2a7-1acfea96291e",
+  "action": "Select the Y cell of work `WK-18g` and paste the text `a`.",
+  "data": null,
+  "result": "The cell shows `A`."
+ },
+ {
+  "no": 11,
+  "id": "d0b4744f-9b16-4547-ac3d-43e9243d77bb",
+  "action": "Save the change.",
+  "data": null,
+  "result": "The change is saved."
+ },
+ {
+  "no": 12,
+  "id": "db5e88b4-df6e-43c1-9041-241e21c7745d",
+  "action": "Open the Worklist page and read the Deck and Y cells of `WK-18g`.",
+  "data": null,
+  "result": "Deck shows `Main Deck` and Y shows `A`."
+ }
+]

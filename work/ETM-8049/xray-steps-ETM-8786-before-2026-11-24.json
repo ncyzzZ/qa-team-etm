@@ -1,0 +1,44 @@
+[
+ {
+  "no": 1,
+  "id": "cdaabed7-cb1d-4c5b-baf7-750dd108031a",
+  "action": "Click `Create Work` on the Worklist page and choose `Import Excel`.",
+  "data": null,
+  "result": "The import window opens."
+ },
+ {
+  "no": 2,
+  "id": "bad48e8e-dfba-4390-b89b-8658d06cc692",
+  "action": "Choose the prepared file and import it.",
+  "data": null,
+  "result": "The import finishes and the work row is created; the import shows no live converted text, the converted value is what is saved."
+ },
+ {
+  "no": 3,
+  "id": "17fdf0f3-ce8a-4636-86c0-5ee4aa9b482b",
+  "action": "Read the Deck and Y cells of work `WK-X1` in the table.",
+  "data": null,
+  "result": "Deck shows `Main Deck` and Y shows `A`."
+ },
+ {
+  "no": 4,
+  "id": "dcbcf558-97fb-4405-818b-2cea3ffa1704",
+  "action": "Click `Create Work` on the Worklist page and choose `Import Excel` (the ETM-6843 workflow of the View Worklist Table).",
+  "data": null,
+  "result": "The import window opens."
+ },
+ {
+  "no": 5,
+  "id": "d9c82bc7-6fbe-4bd3-8b68-19235a43d6ca",
+  "action": "Choose the prepared file and import it.",
+  "data": null,
+  "result": "The import finishes."
+ },
+ {
+  "no": 6,
+  "id": "bb52df8d-5a27-4e1d-90ba-12384d6dca52",
+  "action": "Read the Deck cell of work `WK-X3` in the table.",
+  "data": null,
+  "result": "The cell shows `Cellar Deck`."
+ }
+]

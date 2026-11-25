@@ -1,0 +1,3 @@
+{"testKey":"ETM-8793","issueId":"2300247","readAt":"2026-11-24","changed":[
+{"no":5,"id":"9c6aa949-640e-401d-86eb-d63827ce6a0c","action":"Open `Edit Work Details` of `WK-18` and remove the tag `main deck`.","result":"The tag is removed and `HELIPAD` stays."},
+{"no":6,"id":"1412f3a0-7a19-4b41-8739-9d5d0836ce25","action":"Type `main deck` in the Deck field and press Enter.","result":"The new tag shows `Main Deck`."}]}

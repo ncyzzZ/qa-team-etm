@@ -1,0 +1,44 @@
+[
+ {
+  "no": 1,
+  "id": "336fd911-8d03-4d58-b2d4-5c0e7650ba0e",
+  "action": "Open the Column Customization menu.",
+  "data": null,
+  "result": "The popover shows Deck, X and Y checked."
+ },
+ {
+  "no": 2,
+  "id": "0f6f8242-c2fd-42b7-8ff3-8e04848a97c6",
+  "action": "Look at the footer of the popover.",
+  "data": null,
+  "result": "The footer shows the `Apply` button and a `Reset` link next to it."
+ },
+ {
+  "no": 3,
+  "id": "af5e990c-dd6d-4543-82b5-716b50c6ae7c",
+  "action": "Click the `Reset` link.",
+  "data": null,
+  "result": "No confirmation window opens; the list in the popover returns to the default order and the options Deck, X and Y are unchecked, listed directly after `Department` and before `Manpower Resource`."
+ },
+ {
+  "no": 4,
+  "id": "48203134-e23a-492b-8ec9-08ea1d0119bb",
+  "action": "Look at the table behind the popover.",
+  "data": null,
+  "result": "The table still shows the three Working Location columns until `Apply` is clicked (ASSUMPTION Q3: BA proposal; if the table changes at once, the observed behaviour is recorded in the test result)."
+ },
+ {
+  "no": 5,
+  "id": "939f3d22-d3c4-43c0-ab5b-f17b896771ad",
+  "action": "Click `Apply`.",
+  "data": null,
+  "result": "The popover closes and the table shows the default layout: the three Working Location columns are hidden and `Department` is back at its default place."
+ },
+ {
+  "no": 6,
+  "id": "139ed9f1-eb9b-434e-9715-b13b9e290af0",
+  "action": "Open the Column Customization menu and check Deck, X and Y again.",
+  "data": null,
+  "result": "The three columns appear between `Department` and `Manpower Resource` in the order Deck, X, Y."
+ }
+]

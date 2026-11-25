@@ -16,7 +16,7 @@ req('dotenv').config({ path: path.join(PW_REPO, '.env'), quiet: true });
 const { Client } = req('pg');
 
 const SCRATCH_WORKLIST = 'bea32b01-d98f-4952-8c5c-bbffb84d46dd'; // plans.scratch.worklistId in output/seed/ETM-8049.json
-const WORKS = ['WK-18a-525798','WK-18b-525798','WK-19b-388848','WK-19n-388848','WK-19o-388848','WK-19p-388848','WK-19x0-639042','WK-19x1-639042','WK-19x2-639042','WK-19x3-639042','WK-19x4-639042','WK-19x5-639042','WK-19x6-639042','WK-19x7-639042','WK-19x8-639042','WK-19x9-639042','WK-19z-639042','WK-1b-341761'];
+const WORKS = ['WK-16a-107944'];
 
 const e = process.env;
 const apply = process.argv.includes('--apply');

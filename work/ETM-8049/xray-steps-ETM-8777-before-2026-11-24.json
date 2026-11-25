@@ -1,0 +1,72 @@
+[
+ {
+  "no": 1,
+  "id": "f1568568-4f5b-4101-9c11-11c43457e639",
+  "action": "Log in as User A and open worklist `WL-A`.",
+  "data": null,
+  "result": "The table shows without the three Working Location columns."
+ },
+ {
+  "no": 2,
+  "id": "96c4e182-7b88-4b0e-bad6-f79ce9b7bc5a",
+  "action": "Check Deck and Y in Column Customization.",
+  "data": null,
+  "result": "The `Working Location (Deck)` and `Working Location (Y)` columns appear."
+ },
+ {
+  "no": 3,
+  "id": "985419aa-e16a-4ffe-aab6-13108796e397",
+  "action": "Open the same worklist in a second browser tab and reload it.",
+  "data": null,
+  "result": "The second tab shows the Deck and Y columns."
+ },
+ {
+  "no": 4,
+  "id": "788f7960-bdb3-4085-b431-883f2c009ae4",
+  "action": "Log out and log in again as User A.",
+  "data": null,
+  "result": "User A still sees the Deck and Y columns."
+ },
+ {
+  "no": 5,
+  "id": "2317a797-2f23-4181-9c38-20f43c38c9ab",
+  "action": "Log in as User B and open worklist `WL-A`.",
+  "data": null,
+  "result": "User B sees no Working Location column and the options are unchecked."
+ },
+ {
+  "no": 6,
+  "id": "7a3c6254-e248-45e6-a43e-4f5db74d423f",
+  "action": "Prepare work `WK-5c` with two Work Breakdowns (Deck `Main Deck` on both) and open its two Work Breakdowns in two browser contexts, one for User A and one for User B.",
+  "data": null,
+  "result": "Both users see the Edit Work Breakdown page of their own Work Breakdown."
+ },
+ {
+  "no": 7,
+  "id": "f734d7e9-d6f3-499d-8f29-c3df6dd9e3eb",
+  "action": "As User A add the free-text Deck value `helipad` and press Enter.",
+  "data": null,
+  "result": "User A sees the tag `helipad`."
+ },
+ {
+  "no": 8,
+  "id": "f151d413-5f7a-4ee7-9025-6c50cbab802d",
+  "action": "As User B add the free-text Deck value `Helipad` and press Enter.",
+  "data": null,
+  "result": "User B sees the tag `Helipad`."
+ },
+ {
+  "no": 9,
+  "id": "0125c055-0134-440d-89da-62b9eea6199d",
+  "action": "Both users click `Save` at the same time.",
+  "data": null,
+  "result": "Both saves finish without an error (ASSUMPTION: concurrency was not answered by the BA; derived from the rule that free text is stored as typed)."
+ },
+ {
+  "no": 10,
+  "id": "592489ae-c49a-4457-80c5-823e1a568b3f",
+  "action": "Reload the Worklist page of `WL-A` and read the Deck cell of `WK-5c`.",
+  "data": null,
+  "result": "The cell shows `Main Deck, helipad, Helipad`: both spellings are stored as typed, the lower case one first (ASSUMPTION as in step 9)."
+ }
+]
