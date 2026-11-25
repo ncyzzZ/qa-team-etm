@@ -1,0 +1,45 @@
+{
+  "defect": "ETM-7366",
+  "story": "ETM-6506",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Export Error Excel: empty cells (e.g. Details) are blank instead of \"-\".",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6506",
+  "run": "STORY-ETM-6506",
+  "frozen": "evals/exams/_story-ETM-6506/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "details",
+          "how to fix",
+          "empty",
+          "no value",
+          "no details",
+          "blank",
+          "missing"
+        ],
+        [
+          "`-`",
+          "\"-\"",
+          "'-'",
+          "shows -",
+          "show -",
+          "dash",
+          "hyphen"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Field table: Details / How to fix default `-`."
+}

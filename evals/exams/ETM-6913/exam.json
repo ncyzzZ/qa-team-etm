@@ -1,0 +1,38 @@
+{
+  "defect": "ETM-6913",
+  "story": "ETM-6379",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Duplicated plan: the POB Chart lists its graphs in a different order from the original (tooltip and data table).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6379",
+  "run": "STORY-ETM-6379",
+  "frozen": "evals/exams/_story-ETM-6379/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "duplicat",
+        "copy",
+        "copied"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "order",
+          "sequence"
+        ],
+        [
+          "same",
+          "original",
+          "source",
+          "match"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: POB chart display; the duplicate keeping the order is implied (rule: a second screen holds the same rows in the same order as its source)."
+}

@@ -384,3 +384,25 @@ test('Manpower Mob Plan set: the Filter Panel is often called "the Panel" (ETM-5
   assert.deepEqual(ids('### TC-022 [FE][MT] Verify unchecking everything gives zero rows and the empty message (NEG) [Auto]\n1. Open `Name` and uncheck `Select All`. -> No checkbox is checked.\n2. Look at the grid. -> No personnel rows are shown in the left table and right schedule; the grid shows `No data available`.', 'ETM-6664'), ['TC-022']);
   assert.deepEqual(ids('### TC-015 [FE][MT] Verify free-text sections list distinct values sorted A-Z (POS) [Auto]\nPrecondition: common; the plan has values such as `Crew 2`, `Crew 10`, `crew 3`, `Crew 3` in the text fields\n1. Open the Panel and expand `Name`. -> The names are listed once each, A-Z dictionary style.\n7. Expand `Booking No.`. -> Distinct, A-Z; the order is compared with the dictionary rule in the Story (case variants next to each other, not split).', 'ETM-6634'), ['TC-015']);
 });
+
+const set8 = {
+  'ETM-6770': ['### TC-1 Name not unique\n1. Open Edit Data of `Graph A` and change Name to `Graph B` (the name of another graph). -> Save stays enabled, no validation message; the rename is saved.',
+               '### TC-1 Name limit\n1. Open Edit Data of `Graph A` and type 51 characters in Name. -> Only 50 characters are kept.'],
+  'ETM-6886': ['### TC-1 Save before a change\n1. Open the Edit Data drawer of a graph without changing anything. -> `Save` is disabled.',
+               '### TC-1 Save with blank Name\n1. Open the Edit Data drawer and clear Name so it is blank. -> `Save` is disabled.'],
+  'ETM-6806': ['### TC-1 Plan deleted meanwhile\n1. User A opens Edit Data on a graph. -> Drawer open.\n2. User B in another session deletes the plan. -> Deleted.\n3. User A clicks Save. -> The modal `Unable to Edit Data` shows with OK.',
+               '### TC-1 Graph deleted\n1. Delete a graph. -> The graph is removed.\n2. Click Save. -> Saved.'],
+  'ETM-6913': ['### TC-1 Duplicate keeps order\n1. Duplicate the plan and open its POB Chart. -> Opens.\n2. Compare the graph order with the original. -> The order is the same as the original.',
+               '### TC-1 Duplicate keeps graphs\n1. Duplicate the plan and open its POB Chart. -> All graphs are there.'],
+  'ETM-7366': ['### TC-1 Empty cells\n1. Export Error for an error with no details and open the file. -> Opens.\n2. Read Details of that row. -> The cell shows `-`.',
+               '### TC-1 Details\n1. Export Error and open the file. -> Details shows the detail text of each error.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set8)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('eighth set: Save state only written down is not ETM-6886', () => {
+  assert.deepEqual(ids('### TC-027 Undo\n1. Open Edit for "Graph A" and change nothing. -> Save state is written down (question 3: a user expects Save disabled because there is nothing to save).', 'ETM-6886'), []);
+});

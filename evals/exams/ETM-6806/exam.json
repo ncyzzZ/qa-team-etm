@@ -1,0 +1,59 @@
+{
+  "defect": "ETM-6806",
+  "story": "ETM-6394",
+  "in_story": false,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Save in Edit Data after another user deleted the plan / Manpower Mob Plan: only a toast, not the \"Unable to Edit Data\" modal with OK that goes to the Plan page.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6394",
+  "run": "STORY-ETM-6394",
+  "frozen": "evals/exams/_story-ETM-6394/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "delete",
+        "deleted",
+        "removed"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "another user",
+          "other user",
+          "second tab",
+          "user b",
+          "other session",
+          "second session",
+          "another session",
+          "in another"
+        ],
+        [
+          "delete",
+          "deleted",
+          "removes"
+        ]
+      ],
+      [
+        [
+          "save"
+        ],
+        [
+          "modal",
+          "unable to edit",
+          "popup",
+          "pop-up",
+          "dialog"
+        ],
+        [
+          "!",
+          "toast only"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Not in the Story; grid habit \"someone else changes or deletes the object while it is open: the next Save shows the proper message\"."
+}

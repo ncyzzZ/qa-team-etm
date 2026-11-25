@@ -1,0 +1,47 @@
+{
+  "defect": "ETM-6770",
+  "story": "ETM-6394",
+  "in_story": true,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Edit Data rejects a Name that another graph already uses (\"This name is already used ...\").",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6394",
+  "run": "STORY-ETM-6394",
+  "frozen": "evals/exams/_story-ETM-6394/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "name"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "same name",
+          "already used",
+          "another graph",
+          "other graph",
+          "duplicate",
+          "existing name",
+          "name of graph",
+          "used by"
+        ],
+        [
+          "saved",
+          "accepted",
+          "no error",
+          "no message",
+          "no validation",
+          "enabled",
+          "allowed",
+          "two rows",
+          "both"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 2.1 + field table: names do not have to be unique, no duplicate check."
+}

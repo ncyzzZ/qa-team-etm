@@ -1,0 +1,52 @@
+{
+  "defect": "ETM-6886",
+  "story": "ETM-6394",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Save in the Edit Data drawer is enabled right after the drawer opens, before any change.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6394",
+  "run": "STORY-ETM-6394",
+  "frozen": "evals/exams/_story-ETM-6394/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "edit data",
+        "edit"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "open",
+          "opens",
+          "without chang",
+          "no change",
+          "nothing changed",
+          "before any"
+        ],
+        [
+          "save"
+        ],
+        [
+          "disabled",
+          "not enabled",
+          "greyed",
+          "grayed"
+        ],
+        [
+          "!",
+          "blank",
+          "empty",
+          "written down",
+          "record",
+          "a user expects"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: Save disabled when Name is blank or Value empty. Disabled until a change is the dirty-state rule (Unsaved changes). A step that only writes the Save state down (\"a user expects Save disabled\" as a question) passes on the bug (ETM-6394 fix-round TC-027 step 1, read by hand)."
+}

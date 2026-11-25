@@ -205,6 +205,20 @@ Rules added after the sixth set (commit 7aea1f4, check 5): "a fixed-list column 
 
 3/7 -> 3/7 (rule in Story: 3/3 + partly 1/3). Bug-check opened 27 / 26 / 31 / 23 rows; the fix rounds added 3 / 16 / 7 cases (34->37, 43->59, 24->31). The designers used every new rule without being asked: fixed-list values (ETM-6844 TC-015 and TC-018, ETM-6928 TC-058), "no other message" (ETM-7984 TC-041, ETM-6844 TC-006), strange input in every field, values on every screen. None of the four misses is one of those kinds. Every miss is the "same on every screen" idea applied to something that is not a single value: the order of a list (ETM-7272), the full content of an export (ETM-7352), the look of a control on each page (ETM-7294), and a size limit (ETM-7281). Candidate rule, not added: "an export or second screen shows the same rows, in the same order, as the source screen; a control shared by several pages looks and acts the same on each". Four signatures were too wide at first and one too narrow; every score here was read by hand.
 
+### Eighth set (2026-11-25): with the rule made from the seventh set
+
+Rule added after the seventh set (commit cc040d7, check 5): "an export or second screen holds the same rows in the same order as its source, with data past any page or batch size; a control shared by several pages is compared across those pages". Stories no exam had used: ETM-6394 (POB Chart Edit Data, user), ETM-6379 (POB Chart display, Dechathon), ETM-6506 (Export Error Excel, Dechathon). ETM-7287 (Daily Report filter) was built and dropped after its draft: its defect ETM-7787 expects a Job Owner to Save, but the team rule (CLAUDE.md) says Job Owner is view only, and the designer rightly expected Save hidden for JO. ETM-6506 had no fix round (draft already caught its exam). Dropped before: ETM-6794 (scroll jitter, look only).
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-6770 | yes | CAUGHT (TC-013) | CAUGHT | two graphs named `Graph A` saved, no duplicate message. |
+| ETM-6886 | partly (dirty state) | MISSED | MISSED | draft TC-028 expects Save enabled on open with a Name (the bug). Fix-round TC-027 step 1 only "writes the Save state down"; first scored CAUGHT on its "(a user expects Save disabled)" note; signature narrowed, test added. |
+| ETM-6806 | no (grid habit) | MISSED | MISSED | fix-round TC-045: another user deletes the graph; the defect is the plan / Manpower Mob Plan deleted. |
+| ETM-6913 | no (second screen order) | MISSED | MISSED | no case duplicates the plan; duplication is another Story's action, so the new rule had no "second screen" to point at. |
+| ETM-7366 | yes | CAUGHT (TC-008) | (no fix round) | Details and How to fix show `-` when empty. |
+
+2/5 -> 2/5. Bug-check opened 24 / 35 rows; fix rounds added 13 / 17 cases (40->53, 45->62). The new rule was used (ETM-6506 TC-003 "same rows as the panel in the same order", 1 / 1,000 / 5,000 rows in TC-017; ETM-6394 TC-052 legend and table in the same order), but no defect of this set is that kind. The misses: a Save state the Story half-states (disabled only for blank Name) where the designer wrote the bug as expected and the fix round hedged ("written down"); "someone else deletes" applied to the nearest object (the graph), not to the parent (the plan); and an action from another Story (duplicate plan) that copies this Story's data. Candidate rules, not added: "Save disabled until a change is the default; a case never expects Save enabled on open"; "someone else deletes the object and each parent of it (graph, plan, event)".
+
 ### Totals (fresh designer + bug-check + one fix round)
 
 | Set | Draft | After bug-check |
@@ -216,4 +230,5 @@ Rules added after the sixth set (commit 7aea1f4, check 5): "a fixed-list column 
 | ETM-7900/7349/7351/7310 (never used for a rule, 5 checks in one call) | 5/8 | 5/8 |
 | ETM-6538/6373/6843 (never used for a rule; with the two rules from the 5th set) | 3/11 | 4/11 |
 | ETM-7984/6844/6928/7321 (never used for a rule; with the two rules from the 6th set) | 3/7 | 3/7 |
-| All unseen sets (3rd, 4th first run, 5th, 6th, 7th) | 21/42 | 23/42 |
+| ETM-6394/6379/6506 (never used for a rule; with the rule from the 7th set) | 2/5 | 2/5 |
+| All unseen sets (3rd, 4th first run, 5th to 8th) | 23/47 | 25/47 |
