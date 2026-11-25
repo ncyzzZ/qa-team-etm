@@ -35,9 +35,9 @@
   "impact": "high",
   "raised": "2026-11-19",
   "story_status": "Ready For Development",
-  "outcome": "confirmed",
-  "outcome_date": "2026-11-19",
-  "note": "answered (user said all BA questions were answered, 2026-11-19); whether the AC changed is not recorded",
+  "outcome": "ac-changed",
+  "outcome_date": "2026-11-23",
+  "note": "R2-3 (status on the wrong Data Level row): BA added AC 4 row rule on 2026-11-23: both status columns belong to the Work row, values on a Work Breakdown row are ignored without a message.",
   "later_defect": null,
   "backfilled": true
  },
@@ -278,5 +278,70 @@
   "note": "answered (user said all BA questions were answered, 2026-11-19); whether the AC changed is not recorded",
   "later_defect": null,
   "backfilled": true
+ },
+ {
+  "id": "F-21",
+  "q": "R3-1",
+  "ac": "AC-4",
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "one status per Work; breakdown-row values ignored, no message. BA reply 2026-11-24 (work/SPRINT26/ba-answers-all-2026-11-24.md, DEC-076).",
+  "later_defect": null
+ },
+ {
+  "id": "F-22",
+  "q": "R3-2",
+  "ac": "AC-4",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "invalid value on a breakdown row ignored, no Error, Confirm enabled; AC 4 wins, master data check (AC 6) only on the Work row. BA reply 2026-11-24 (work/SPRINT26/ba-answers-all-2026-11-24.md, DEC-076).",
+  "later_defect": null
+ },
+ {
+  "id": "F-23",
+  "q": "R3-3",
+  "ac": "AC-3.4",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "N = 3, every row (Work + each breakdown) gets the UUID Error. BA reply 2026-11-24 (work/SPRINT26/ba-answers-all-2026-11-24.md, DEC-076).",
+  "later_defect": null
+ },
+ {
+  "id": "F-24",
+  "q": "R3-4",
+  "ac": "AC-1.3",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "JO on a frozen Worklist: Create Work / Import Excel hidden, no message; a direct link to the Import page shows Access Denied; if it opens and can be confirmed it is a defect. BA reply 2026-11-24 (work/SPRINT26/ba-answers-all-2026-11-24.md, DEC-076).",
+  "later_defect": null
+ },
+ {
+  "id": "F-25",
+  "q": "R3-5",
+  "ac": "AC-3.3",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "case ignored only for master data and duplicate/unique checks; Work Header / Deck lower case = not an edit; Job Description / Remark = an edit. BA reply 2026-11-24 (work/SPRINT26/ba-answers-all-2026-11-24.md, DEC-076).",
+  "later_defect": null
  }
 ]

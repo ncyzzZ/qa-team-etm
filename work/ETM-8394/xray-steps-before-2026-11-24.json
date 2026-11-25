@@ -1,0 +1,1026 @@
+[
+ {
+  "key": "ETM-8735",
+  "issueId": "2300037",
+  "summary": "[FE][BE] Verify TM adds Works and Work Breakdowns with every importable status and each is saved as filled",
+  "steps": [
+   {
+    "id": "6d7cede8-d736-4667-abb0-a5d82d2d3bff",
+    "action": "Build an import file with Action `Add`, UUID blank, Work Header `Header Alpha`: six Works `W-8394-A1` to `W-8394-A6` with the Work Status of table 1, each with one breakdown (Action `Add`) with the Breakdown Status of table 1.",
+    "data": "Table 1\n| Work Number | Work Status in file | Breakdown Status in file | Work Status expected | Breakdown Status expected |\n| W-8394-A1 | New | Breakdown Updated | New | Breakdown Updated |\n| W-8394-A2 | Reviewed | Breakdown Reviewed | Reviewed | Breakdown Reviewed |\n| W-8394-A3 | Updated | Breakdown Required | Updated | Breakdown Required |\n| W-8394-A4 | Change Requested | Breakdown Updated | Change Requested | Breakdown Updated |\n| W-8394-A5 | Information Required | Breakdown Reviewed | Information Required | Breakdown Reviewed |\n| W-8394-A6 | Ready | Breakdown Required | Ready | Breakdown Required |",
+    "result": "The file has twelve rows."
+   },
+   {
+    "id": "b9f0278e-2d75-401c-9831-ddfd1ca817c2",
+    "action": "Add Work `W-8394-B1` with Work Status blank and three breakdown rows (Action `Add`) with Breakdown Status `Breakdown Updated`, `Breakdown Reviewed`, `Breakdown Required`.",
+    "data": "-",
+    "result": "The file now has sixteen rows."
+   },
+   {
+    "id": "1879312e-d46c-4255-8823-166ecc2669f7",
+    "action": "Log in as `Somchai Tester` and open the View Worklist Table page.",
+    "data": "-",
+    "result": "The Worklist table opens."
+   },
+   {
+    "id": "277b0fd6-1c44-4995-bcd8-218a586b2883",
+    "action": "Upload the file.",
+    "data": "-",
+    "result": "The preview grid shows sixteen rows with no error and no banner, and `Confirm` is enabled."
+   },
+   {
+    "id": "e13153c9-6c91-4bf7-aba3-21aeab14bb55",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import is committed and the seven Works are created."
+   },
+   {
+    "id": "9d6201f7-0ad4-4e15-b01f-a93e6d90a1a1",
+    "action": "Read the Work Status of `W-8394-A1` to `W-8394-A6`.",
+    "data": "-",
+    "result": "Each Work shows the Work Status of table 1."
+   },
+   {
+    "id": "194c4641-935d-4a79-9dc2-fe88afe56ae7",
+    "action": "Read the Breakdown Status of the breakdown of each of those Works.",
+    "data": "-",
+    "result": "Each shows the Breakdown Status of table 1."
+   },
+   {
+    "id": "aaf27a2e-9be2-4ba8-a2a5-a12c7e3802b1",
+    "action": "Open `W-8394-B1` and read its three breakdowns.",
+    "data": "-",
+    "result": "The Breakdown Status values are `Breakdown Updated`, `Breakdown Reviewed` and `Breakdown Required`, in the order of the file."
+   },
+   {
+    "id": "232982d3-d447-469f-88a8-dd0d7af30499",
+    "action": "Read the Work Status of `W-8394-B1`.",
+    "data": "-",
+    "result": "The Work Status is `New`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8742",
+  "issueId": "2300046",
+  "summary": "[FE][BE] Verify TM adds with blank status cells or only one status column filled and gets the defaults",
+  "steps": [
+   {
+    "id": "8b77495c-d4be-49a2-8138-b8111c9efc1f",
+    "action": "Build an import file with three Works (Action `Add`, each with one breakdown, Action `Add`) with the status cells of table 2.",
+    "data": "Table 2\n| Work Number | Work Status in file | Breakdown Status in file | Work Status expected | Breakdown Status expected |\n| W-8394-C1 | blank | blank | New | Breakdown Updated |\n| W-8394-D1 | Ready | blank | Ready | Breakdown Updated |\n| W-8394-D2 | blank | Breakdown Required | New | Breakdown Required |",
+    "result": "The file is saved with six rows."
+   },
+   {
+    "id": "4ace26c8-5bd5-4000-a12c-21bae22f4520",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows six rows with no error and `Confirm` is enabled."
+   },
+   {
+    "id": "bd418415-bae6-4990-9199-c6bb9341f165",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The three Works are created."
+   },
+   {
+    "id": "26efd46a-347d-4ea0-a941-fce681aaf58d",
+    "action": "Read the Work Status of the three Works.",
+    "data": "-",
+    "result": "Each shows the Work Status expected of table 2."
+   },
+   {
+    "id": "cb84dcf6-ee56-4fbd-ac82-85779a16ed8e",
+    "action": "Read the Breakdown Status of the three breakdowns.",
+    "data": "-",
+    "result": "Each shows the Breakdown Status expected of table 2."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8744",
+  "issueId": "2300048",
+  "summary": "[FE][BE] Verify JO adds Works with status values filled, valid or invalid, and gets no message, and a real Error is listed alone",
+  "steps": [
+   {
+    "id": "d4998a1f-2333-4634-a4d7-8edbbef544de",
+    "action": "Build an import file with Work `W-8394-E1` (Action `Add`, Work Status `Ready`) with one breakdown (Action `Add`, Breakdown Status `Breakdown Reviewed`) and Work `W-8394-E2` (Work Status `Reviewed`) with one breakdown (Breakdown Status `Breakdown Required`).",
+    "data": "-",
+    "result": "The file is saved with four rows, all status cells filled."
+   },
+   {
+    "id": "e544e26c-445d-4122-9186-48352775bf62",
+    "action": "Upload the file as `Malee Tester`.",
+    "data": "-",
+    "result": "The preview grid shows four rows with no error, no warning and no banner about the status columns, and `Confirm` is enabled."
+   },
+   {
+    "id": "e9a34fc5-31f5-49dc-9a93-3fbdace29b25",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Works are created."
+   },
+   {
+    "id": "018b448e-7a17-40eb-82a3-f0adfa289253",
+    "action": "Read the Work Status of `W-8394-E1` and `W-8394-E2`.",
+    "data": "-",
+    "result": "Both show `New`."
+   },
+   {
+    "id": "748be873-972a-49fe-aa9c-1df36442e721",
+    "action": "Read the Breakdown Status of both breakdowns.",
+    "data": "-",
+    "result": "Both show `Breakdown Updated`."
+   },
+   {
+    "id": "56efdf69-f03c-491f-b7bc-307e2f8452d7",
+    "action": "Build a second file that adds `W-8394-AE1` (Work Status `Deleted`) with one breakdown (Breakdown Status `Approved`) and `W-8394-AE2` (Work Status `Breakdown Required`) with one breakdown (Breakdown Status `Ready`).",
+    "data": "-",
+    "result": "The file holds four rows with invalid and wrong-column values."
+   },
+   {
+    "id": "f80923f0-085a-4543-a1d8-0569c81ced43",
+    "action": "Upload the second file as `Malee Tester`.",
+    "data": "-",
+    "result": "The preview shows four rows with no Error, no warning and no banner, and `Confirm` is enabled."
+   },
+   {
+    "id": "0434393a-dc9b-4555-a2f7-9ddeee9473ba",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Works are created."
+   },
+   {
+    "id": "17a77e3e-9fe2-47a0-93ea-89f9969d98c6",
+    "action": "Read the statuses of `W-8394-AE1`, `W-8394-AE2` and their breakdowns.",
+    "data": "-",
+    "result": "Both Works are `New` and both breakdowns are `Breakdown Updated`."
+   },
+   {
+    "id": "19027e30-efa1-4ff0-b210-d0ce13148dda",
+    "action": "Build a third file with one Work row `W-8394-AE3` with the Action cell blank and Work Status `Approved`, and one breakdown row (Action `Add`) with Breakdown Status `Deleted`.",
+    "data": "-",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "77e5350f-8bc6-4f00-b887-30deca5de9b8",
+    "action": "Upload the third file as `Malee Tester`.",
+    "data": "-",
+    "result": "The error banner shows `Data Validation Failed. 1 data validation errors were found in the file.`"
+   },
+   {
+    "id": "f4ee3811-3fb0-46ee-8e64-7ae662c25d45",
+    "action": "Read the error table.",
+    "data": "-",
+    "result": "One row lists the Action cell with the Invalid Detail `This field is mandatory.`; no row mentions Work Status or Breakdown Status."
+   },
+   {
+    "id": "23a54043-3418-4874-a553-4e99261cb23d",
+    "action": "Check the `Confirm` button.",
+    "data": "-",
+    "result": "`Confirm` is disabled because of the Action Error."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8745",
+  "issueId": "2300049",
+  "summary": "[FE][BE] Verify JO revises Works with status values filled, valid or invalid, and the statuses follow the automatic triggers",
+  "steps": [
+   {
+    "id": "c0c05294-d4df-4a13-bae6-bbc9a00cbb6b",
+    "action": "Export the Worklist and build an import file with the UUIDs of `W-8394-F1` and `W-8394-F2` and their breakdowns, Action `Revise`.",
+    "data": "-",
+    "result": "The file is saved with four rows."
+   },
+   {
+    "id": "12834f0c-b5b9-4cc9-9c41-e4f55d507a52",
+    "action": "Change the `Work Header` text of both Work rows.",
+    "data": "-",
+    "result": "Two Work-level values differ from the system."
+   },
+   {
+    "id": "f92529af-4013-4177-8156-bc2a5d8e6ead",
+    "action": "Change one cell of the breakdown of `W-8394-F1`.",
+    "data": "-",
+    "result": "One breakdown value differs from the system."
+   },
+   {
+    "id": "87027765-87b4-412d-81a1-9f3f1c0764de",
+    "action": "Enter Work Status `Ready` on the row of `W-8394-F1`.",
+    "data": "-",
+    "result": "The Work Status is filled in the file."
+   },
+   {
+    "id": "fb599d73-5dec-4499-bfa6-0fb24ee3e32d",
+    "action": "Enter Breakdown Status `Breakdown Required` on its breakdown row.",
+    "data": "-",
+    "result": "The Breakdown Status is filled in the file."
+   },
+   {
+    "id": "e7dc7e17-edcd-4ddc-967d-84739f5f5d56",
+    "action": "Enter Work Status `New` on the row of `W-8394-F2`.",
+    "data": "-",
+    "result": "The status is filled in the file."
+   },
+   {
+    "id": "5706ed8d-61cc-44fa-90e7-ff196dbf9837",
+    "action": "Upload the file as `Malee Tester`.",
+    "data": "-",
+    "result": "The preview grid shows four rows with no error and `Confirm` is enabled."
+   },
+   {
+    "id": "7d292164-b9ff-40cc-b0c2-82b19d4d48e3",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Works are updated."
+   },
+   {
+    "id": "90729c3f-b64f-4400-962c-626256823567",
+    "action": "Read the statuses of `W-8394-F1` and its breakdown.",
+    "data": "-",
+    "result": "Work Status is `Updated` and Breakdown Status is `Breakdown Updated`."
+   },
+   {
+    "id": "c8a57b3a-5c71-4b0d-96b4-1cd05b69db5b",
+    "action": "Read the statuses of `W-8394-F2` and its breakdown.",
+    "data": "-",
+    "result": "Work Status stays `Ready` and Breakdown Status stays `Breakdown Updated`."
+   },
+   {
+    "id": "13a55959-ccab-4e0e-97cf-7f1f31c9617c",
+    "action": "Build a second file with Action `Revise` rows for `W-8394-G1` and its breakdown, one changed `Work Header`, Work Status `Deleted` and Breakdown Status `Approved`.",
+    "data": "-",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "984851aa-8222-4be6-936a-6341f244c165",
+    "action": "Upload the second file as `Malee Tester`.",
+    "data": "-",
+    "result": "The preview grid shows both rows with no Error and no banner, and `Confirm` is enabled."
+   },
+   {
+    "id": "23789b9a-3ead-490f-8deb-a06139899730",
+    "action": "Change Work Status to `Breakdown Required` and Breakdown Status to `Ready` in the file.",
+    "data": "-",
+    "result": "The wrong-column values are in the file."
+   },
+   {
+    "id": "1dc79ba4-12eb-422e-8f65-97c3803839c8",
+    "action": "Upload the file again.",
+    "data": "-",
+    "result": "The preview grid shows both rows with no Error, and `Confirm` is enabled."
+   },
+   {
+    "id": "86ce0539-811b-4cab-b820-1bc219648727",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Work is updated."
+   },
+   {
+    "id": "b8a31cac-5c7b-46f6-996f-c2567e3194ea",
+    "action": "Read the statuses of `W-8394-G1` and its breakdown.",
+    "data": "-",
+    "result": "Work Status is `Updated` (the Work Header changed) and Breakdown Status stays `Breakdown Reviewed` (no breakdown value changed)."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8746",
+  "issueId": "2300050",
+  "summary": "[FE][BE] Verify TM revises Works and Work Breakdowns with filled statuses and each filled status is set",
+  "steps": [
+   {
+    "id": "94397105-6eed-4b53-b4da-dd720f29c440",
+    "action": "Export the Worklist and build an import file with Action `Revise`, the UUIDs of the six Works, their breakdowns, `W-8394-J1` and its three breakdowns, all data values copied unchanged.",
+    "data": "-",
+    "result": "The file is saved with twenty rows."
+   },
+   {
+    "id": "15f34a3d-20b3-4e90-b5d5-c1df9c75a27e",
+    "action": "Enter the imported Work Status of table 5 on each of the six Work rows, leave the breakdown rows of `W-8394-H1` to `W-8394-H6` blank.",
+    "data": "Table 5\n| Work | Current | Imported | Expected |\n| W-8394-H1 | New | Ready | Ready |\n| W-8394-H2 | Reviewed | Information Required | Information Required |\n| W-8394-H3 | Updated | Change Requested | Change Requested |\n| W-8394-H4 | Information Required | Reviewed | Reviewed |\n| W-8394-H5 | Ready | New | New |\n| W-8394-H6 | Change Requested | Updated | Updated |",
+    "result": "The Work Status cells are filled."
+   },
+   {
+    "id": "fb81d8ee-7d1c-41b8-b529-ce4db53c5c02",
+    "action": "Enter Breakdown Status `Breakdown Required`, `Breakdown Updated`, `Breakdown Reviewed` on the three breakdown rows of `W-8394-J1` in order, leave its Work Status blank.",
+    "data": "-",
+    "result": "The Breakdown Status cells are filled."
+   },
+   {
+    "id": "70804d54-9998-49fc-b215-6c6f41de9c38",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows twenty rows with no error and `Confirm` is enabled."
+   },
+   {
+    "id": "f5470754-ac7b-4551-98cd-e3ea09b65929",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Works are updated."
+   },
+   {
+    "id": "8e52fd6f-68c3-44c8-b58b-31ce11b8cd7e",
+    "action": "Read the Work Status of the six Works.",
+    "data": "-",
+    "result": "Each shows the expected Work Status of table 5."
+   },
+   {
+    "id": "f776f7df-d81b-4780-ae0c-5ad4027471d8",
+    "action": "Read the breakdowns of `W-8394-H1` to `W-8394-H6`.",
+    "data": "-",
+    "result": "Each stays `Breakdown Updated` (no value changed)."
+   },
+   {
+    "id": "3b792d8b-c798-490e-93a3-332ba68e184a",
+    "action": "Read the three Breakdown Status values of `W-8394-J1`.",
+    "data": "-",
+    "result": "They show `Breakdown Required`, `Breakdown Updated`, `Breakdown Reviewed` in order."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8747",
+  "issueId": "2300051",
+  "summary": "[FE][BE] Verify TM revises with blank statuses and each current status follows the trigger only for the level that changed, and a Delete row works in the same file",
+  "steps": [
+   {
+    "id": "58666744-950d-41fa-b5d2-ddd7cdebe9f1",
+    "action": "Export the Worklist and build an import file with Action `Revise` for `W-8394-L1` to `W-8394-L6`, `W-8394-P1`, `W-8394-P2`, `W-8394-M1` and their breakdowns (for `W-8394-M1` only `M1-1` to `M1-4`), all status cells blank.",
+    "data": "-",
+    "result": "The file is saved with twenty-one rows."
+   },
+   {
+    "id": "3f45b39d-d1e1-4a7f-bff2-0140ebd9be29",
+    "action": "Change the `Work Header` text on the six `L` Work rows.",
+    "data": "-",
+    "result": "Six Work-level values differ from the system."
+   },
+   {
+    "id": "9d61d426-c078-4111-86c7-4d5f84b119ba",
+    "action": "Change the `Work Header` text on the `W-8394-P1` Work row and keep its breakdown row unchanged.",
+    "data": "-",
+    "result": "One Work-level value differs on `W-8394-P1`."
+   },
+   {
+    "id": "deab4e1a-898e-405e-b8ac-b415353877e8",
+    "action": "Keep the `W-8394-P2` Work row unchanged and change one value on its breakdown row.",
+    "data": "-",
+    "result": "One breakdown value differs on `W-8394-P2`."
+   },
+   {
+    "id": "3ed3d21a-70da-4c99-8ab0-1e4f75921274",
+    "action": "Change one data cell on each of the breakdown rows `M1-1`, `M1-2` and `M1-3`.",
+    "data": "-",
+    "result": "Three breakdown values differ from the system."
+   },
+   {
+    "id": "d2f0571c-b081-4f4f-a32d-fa10373b8f84",
+    "action": "Keep the `W-8394-M1` Work row and the row of `M1-4` unchanged.",
+    "data": "-",
+    "result": "The Work row and `M1-4` equal the system values."
+   },
+   {
+    "id": "a3db835f-3c6f-400e-b0f9-44434cb53040",
+    "action": "Add a breakdown row for `M1-5` with Action `Delete` and its UUID, Breakdown Status blank.",
+    "data": "-",
+    "result": "The file holds twenty-two rows."
+   },
+   {
+    "id": "1ee0f0b6-6d02-4da0-9103-67a1705eb982",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows twenty-two rows with no error and `Confirm` is enabled."
+   },
+   {
+    "id": "943935cb-99fb-4a7b-a8a2-75f7015e4794",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "a8102564-fc2d-4cb8-a1ce-ac1200915029",
+    "action": "Read the Work Status of `W-8394-L1` to `W-8394-L6`, `W-8394-P1` and `W-8394-P2`.",
+    "data": "Table 6a (Work Status)\n| Work | Current | Expected |\n| W-8394-L1 | New | New |\n| W-8394-L2 | Reviewed | Updated |\n| W-8394-L3 | Updated | Updated |\n| W-8394-L4 | Change Requested | Change Requested |\n| W-8394-L5 | Information Required | Updated |\n| W-8394-L6 | Ready | Ready |\n| W-8394-P1 | Reviewed | Updated |\n| W-8394-P2 | Reviewed | Reviewed |",
+    "result": "Each shows the expected value of table 6a."
+   },
+   {
+    "id": "e8c9f88f-2d41-4b38-8c30-54088ff382fa",
+    "action": "Read the Breakdown Status of every breakdown of table 6b.",
+    "data": "Table 6b (Breakdown Status)\n| Breakdown | Current | Changed value | Expected |\n| breakdown of W-8394-L1 to L6 | Breakdown Reviewed | no | Breakdown Reviewed |\n| breakdown of W-8394-P1 | Breakdown Reviewed | no | Breakdown Reviewed |\n| breakdown of W-8394-P2 | Breakdown Reviewed | yes | Breakdown Updated |\n| M1-1 | Breakdown Updated | yes | Breakdown Updated |\n| M1-2 | Breakdown Reviewed | yes | Breakdown Updated |\n| M1-3 | Breakdown Required | yes | Breakdown Updated |\n| M1-4 | Breakdown Reviewed | no | Breakdown Reviewed |",
+    "result": "Each shows the expected value of table 6b."
+   },
+   {
+    "id": "97e3935e-3b60-4101-b2d2-a035fc24bfd9",
+    "action": "Look for `M1-5` in `W-8394-M1`.",
+    "data": "-",
+    "result": "`M1-5` no longer exists in the system (removed permanently)."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8754",
+  "issueId": "2300058",
+  "summary": "[FE][BE] Verify the filled status wins when data changes in the same row, and with only one status column filled the other column follows its own rule",
+  "steps": [
+   {
+    "id": "80ac70ff-2dc9-4565-9e0d-dfad2eeaeed9",
+    "action": "Build an import file with Action `Revise` rows for the four Works and their breakdowns, UUIDs from an export.",
+    "data": "-",
+    "result": "The file is saved with eight rows."
+   },
+   {
+    "id": "75c06aa6-87d4-4e00-9f0d-caa6886aec13",
+    "action": "Change the `Work Header` text of the `K1` and `K2` Work rows.",
+    "data": "-",
+    "result": "Two Work-level values differ from the system."
+   },
+   {
+    "id": "afebfabe-dfba-4ebe-a9c1-a895f294114c",
+    "action": "Change one cell of each `K` breakdown row.",
+    "data": "-",
+    "result": "Two breakdown values differ from the system."
+   },
+   {
+    "id": "c632b650-d946-4e52-b29c-244173a31b96",
+    "action": "Enter Work Status `Reviewed` and Breakdown Status `Breakdown Reviewed` on the `W-8394-K1` rows, and Work Status `Information Required` and Breakdown Status `Breakdown Required` on the `W-8394-K2` rows.",
+    "data": "-",
+    "result": "The statuses are filled and equal to the current ones."
+   },
+   {
+    "id": "f3cad174-45eb-44dd-8a68-69e258067e4b",
+    "action": "Change one Work-level value and one breakdown value on both `Q` Works.",
+    "data": "-",
+    "result": "Four values differ from the system."
+   },
+   {
+    "id": "e6309da1-a67a-4bba-9333-401900491c36",
+    "action": "Enter Work Status `Ready` on `W-8394-Q1` and leave its Breakdown Status blank.",
+    "data": "-",
+    "result": "Only the Work column is filled."
+   },
+   {
+    "id": "3236f7ce-e38c-45ad-a297-e18b23a7edf7",
+    "action": "Enter Breakdown Status `Breakdown Required` on the breakdown of `W-8394-Q2` and leave its Work Status blank.",
+    "data": "-",
+    "result": "Only the Breakdown column is filled."
+   },
+   {
+    "id": "08c78af0-aaaa-4edd-a6f3-66eb0da71006",
+    "action": "Upload the file.",
+    "data": "-",
+    "result": "The preview shows no error and `Confirm` is enabled."
+   },
+   {
+    "id": "8e9876fe-c2bd-42d6-bef0-f6df57509ca6",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "df1c6dc2-fd6e-4b70-b841-429b59f19faf",
+    "action": "Read the statuses of `W-8394-K1` and `W-8394-K2` with their breakdowns.",
+    "data": "-",
+    "result": "The statuses stay `Reviewed`, `Breakdown Reviewed`, `Information Required`, `Breakdown Required`; none changes to `Updated` or `Breakdown Updated`."
+   },
+   {
+    "id": "59d5a153-7a11-49ba-b9e2-5634f4fa1cb9",
+    "action": "Open `W-8394-K1` and read the changed Work Header.",
+    "data": "-",
+    "result": "The new Work Header text is saved."
+   },
+   {
+    "id": "6af50fb5-a1c8-4a0a-94a4-595275ed2b87",
+    "action": "Read the statuses of `W-8394-Q1`.",
+    "data": "-",
+    "result": "Work Status is `Ready` and Breakdown Status is `Breakdown Updated`."
+   },
+   {
+    "id": "ef4bcc82-8d90-49d6-88b8-7549497fb554",
+    "action": "Read the statuses of `W-8394-Q2`.",
+    "data": "-",
+    "result": "Work Status is `Updated` and Breakdown Status is `Breakdown Required`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8755",
+  "issueId": "2300059",
+  "summary": "[FE][BE] Verify an exported Worklist imported again unchanged keeps every status, and the same status filled changes nothing and shows no message",
+  "steps": [
+   {
+    "id": "7aedc69c-a53b-46a4-b1db-6ae49db8d266",
+    "action": "Export the Worklist with the seven Works.",
+    "data": "-",
+    "result": "An Excel file downloads with the Works, their breakdowns and the status columns filled."
+   },
+   {
+    "id": "c839fb61-73ae-4403-8db2-f29b7038c5c4",
+    "action": "Record the Work Status and Breakdown Status of every row.",
+    "data": "-",
+    "result": "The statuses are written down for comparison."
+   },
+   {
+    "id": "941486c3-ceea-42db-ae83-4a5008c6e985",
+    "action": "Upload the exported file unchanged as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows all rows with no error and `Confirm` is enabled."
+   },
+   {
+    "id": "0fb91978-02b6-46aa-995c-e8ee8b31ad73",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "17e9ab2b-a2cc-4760-b9a6-a9620f46f539",
+    "action": "Read the statuses again.",
+    "data": "-",
+    "result": "Every Work Status and Breakdown Status equals the written values; `Change Requested` stays `Change Requested`; `Reviewed` stays `Reviewed`."
+   },
+   {
+    "id": "47b747f8-8215-45d8-a5be-4d3fa671950f",
+    "action": "Upload the same exported file as `Malee Tester`.",
+    "data": "-",
+    "result": "The preview shows no error and `Confirm` is enabled."
+   },
+   {
+    "id": "5c4365fc-32a2-4644-af9d-89313df9a278",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "0f2883e9-a72a-40be-a533-4c1ffbf0d9e9",
+    "action": "Read the statuses again.",
+    "data": "-",
+    "result": "They equal the written values."
+   },
+   {
+    "id": "b866771f-4350-4e59-8257-e34333464671",
+    "action": "Build a file with Action `Revise` for `W-8394-R1` and its breakdown, data unchanged, Work Status `Ready` and Breakdown Status `Breakdown Reviewed`.",
+    "data": "-",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "128d7019-17ff-4186-a81e-04dd4d77721b",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows two rows with no Error and no warning, and `Confirm` is enabled."
+   },
+   {
+    "id": "40cb0d72-f126-40a1-a4a2-36ff62ebc06b",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "a13fc7b7-148c-4b74-8afb-78ab646271fe",
+    "action": "Read the statuses of `W-8394-R1`.",
+    "data": "-",
+    "result": "Work Status stays `Ready` and Breakdown Status stays `Breakdown Reviewed`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8756",
+  "issueId": "2300060",
+  "summary": "[FE][BE] Verify TM can import any combination of Work Status and Breakdown Status and the Ready Work with Breakdown Updated opens (matrix)",
+  "steps": [
+   {
+    "id": "a6ada8ed-d46c-4270-b5a7-398cad97e5f6",
+    "action": "Build an import file that adds six Works, each with one breakdown, with the pairs of table 9.",
+    "data": "Table 9\n| Work | Work Status | Breakdown Status |\n| W-8394-S1 | Ready | Breakdown Updated |\n| W-8394-S2 | Ready | Breakdown Required |\n| W-8394-S3 | New | Breakdown Reviewed |\n| W-8394-S4 | Information Required | Breakdown Reviewed |\n| W-8394-S5 | Change Requested | Breakdown Updated |\n| W-8394-S6 | Reviewed | Breakdown Required |",
+    "result": "The file is saved with twelve rows."
+   },
+   {
+    "id": "b5594ecc-d7f9-4b89-805b-45dd7b23532a",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows twelve rows with no Error and no warning about the combination, and `Confirm` is enabled."
+   },
+   {
+    "id": "fd3f6c2e-0fd8-488e-a461-9e38eef4fdf1",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Works are created."
+   },
+   {
+    "id": "a3216d28-456b-4dd5-b3ef-d5e19a176911",
+    "action": "Read the statuses of the six Works and their breakdowns.",
+    "data": "-",
+    "result": "Each pair equals table 9."
+   },
+   {
+    "id": "1851ca72-8496-4526-ad4c-237e8db45960",
+    "action": "Click Work `W-8394-S1` in the Worklist.",
+    "data": "-",
+    "result": "The Work opens normally with no error."
+   },
+   {
+    "id": "f28ab910-0285-4344-8c11-1c407079ce44",
+    "action": "Open the Work Status dropdown.",
+    "data": "-",
+    "result": "The dropdown shows no options (a Turnaround Manager cannot change a `Ready` Work)."
+   },
+   {
+    "id": "4712fbe9-83c3-4907-9ebb-c2d8eacba9c5",
+    "action": "Open the Breakdown Status dropdown of the breakdown.",
+    "data": "-",
+    "result": "The dropdown shows options, so the Breakdown Status can still be changed."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8757",
+  "issueId": "2300061",
+  "summary": "[FE][BE] Verify invalid status values (Deleted, not in the list, wrong column, misspelled) give the master data Error, block Confirm, and Cancel leaves the Work unchanged",
+  "steps": [
+   {
+    "id": "663efc58-0ebb-4ac5-8a1b-7c6155bd05ef",
+    "action": "Build an import file with Action `Revise` for `W-8394-V1` and its breakdown, with the value of table 10 in the column of table 10, the other status cell blank.",
+    "data": "Table 10\n| Column | Value | Reason |\n| Work Status | Deleted | not in the list |\n| Work Status | Approved | not in the list |\n| Work Status | Reviewd | misspelled |\n| Work Status | Breakdown Required | Breakdown value in Work column |\n| Breakdown Status | Deleted | not a Breakdown Status |\n| Breakdown Status | Ready | Work value in Breakdown column |\n| Breakdown Status | Breakdown Review | misspelled |",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "04f1bbbd-3324-4c25-a67f-418b3f27e3e4",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The error banner shows `Data Validation Failed. 1 data validation errors were found in the file.`"
+   },
+   {
+    "id": "fd5aefc8-74bd-4a7d-9cb2-e6c321c620b9",
+    "action": "Read the error table.",
+    "data": "-",
+    "result": "One row shows the Row of the cell, the Cell, the Field of table 10 and the Invalid Detail `The value you entered does not match with Master Data. Please check the sheet name “Dropdown Options”.`"
+   },
+   {
+    "id": "d8aa9c22-f2c9-44c3-8ad7-00ae7756c032",
+    "action": "Check the `Confirm` button.",
+    "data": "-",
+    "result": "`Confirm` is disabled."
+   },
+   {
+    "id": "b56c7460-b48e-4d4a-bb2c-07c276a98fad",
+    "action": "Click `Cancel`.",
+    "data": "-",
+    "result": "The preview closes."
+   },
+   {
+    "id": "c4c79bf6-1f23-4b41-bfc4-126a57ef8eb9",
+    "action": "Read the Work Status and Breakdown Status of `W-8394-V1`.",
+    "data": "-",
+    "result": "They stay `Reviewed` and `Breakdown Reviewed`; the Work is not deleted."
+   },
+   {
+    "id": "3eba862a-0f3c-4fb0-a905-1beb1574dc5f",
+    "action": "Repeat steps 1 to 6 for every row of table 10.",
+    "data": "Table 10\n| Column | Value | Reason |\n| Work Status | Deleted | not in the list |\n| Work Status | Approved | not in the list |\n| Work Status | Reviewd | misspelled |\n| Work Status | Breakdown Required | Breakdown value in Work column |\n| Breakdown Status | Deleted | not a Breakdown Status |\n| Breakdown Status | Ready | Work value in Breakdown column |\n| Breakdown Status | Breakdown Review | misspelled |",
+    "result": "Every row gives the same Error and `Confirm` stays disabled."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8758",
+  "issueId": "2300062",
+  "summary": "[FE][BE] Verify a file with one Error row imports nothing until the Error is fixed, and Cancel on a valid preview imports nothing",
+  "steps": [
+   {
+    "id": "43f9e679-79c0-4b88-b5e3-db8a9b82e529",
+    "action": "Build an import file with Action `Revise` for `W-8394-W1` and `W-8394-W2` and their breakdowns, `W-8394-W1` with Work Status `Ready` and `W-8394-W2` with Work Status `Approved`.",
+    "data": "-",
+    "result": "The file is saved with four rows."
+   },
+   {
+    "id": "a6950452-ed33-45c7-a786-a8f552608599",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The error banner shows `Data Validation Failed. 1 data validation errors were found in the file.` and `Confirm` is disabled."
+   },
+   {
+    "id": "018a0caa-6adc-4d66-a5fa-326f56270308",
+    "action": "Close the preview.",
+    "data": "-",
+    "result": "The preview closes."
+   },
+   {
+    "id": "8b1952ae-2f4c-4704-9340-463c2ef46142",
+    "action": "Read the Work Status of `W-8394-W1`.",
+    "data": "-",
+    "result": "It stays `New`; nothing was imported."
+   },
+   {
+    "id": "627b730d-88de-47c2-a57a-93805f4ef24c",
+    "action": "Change `Approved` to `Updated` in the file and upload it again.",
+    "data": "-",
+    "result": "The preview shows no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "2c96cfe9-42a2-44f8-96ca-d553c1622153",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "Both Works are updated."
+   },
+   {
+    "id": "8a1297fc-7c70-404d-b355-af9aef21c6ec",
+    "action": "Read the Work Status of both Works.",
+    "data": "-",
+    "result": "`W-8394-W1` shows `Ready` and `W-8394-W2` shows `Updated`."
+   },
+   {
+    "id": "58a74734-eb2e-44e7-914e-4b34b333f708",
+    "action": "Build a file with Action `Revise` for `W-8394-AC1` and its breakdown, Work Status `Ready` and Breakdown Status `Breakdown Required`.",
+    "data": "-",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "e9c0ef2a-2400-4044-9856-c07f86d0f91b",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview shows no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "0b74e1d8-f518-4430-a51b-ac818017963d",
+    "action": "Click `Cancel`.",
+    "data": "-",
+    "result": "The preview closes and the View Worklist Table page shows again."
+   },
+   {
+    "id": "24ff9313-e18c-4498-817f-178b4941f019",
+    "action": "Read the statuses of `W-8394-AC1` and its breakdown.",
+    "data": "-",
+    "result": "Work Status stays `New` and Breakdown Status stays `Breakdown Updated`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8765",
+  "issueId": "2300069",
+  "summary": "[FE][BE] Verify the template sheet Dropdown Options lists Change Requested and not Deleted, and status text with another case or extra spaces is accepted in the list format",
+  "steps": [
+   {
+    "id": "b53fa97a-9158-41af-91f5-b10f2dcb20f7",
+    "action": "Open the downloaded template and open the sheet `Dropdown Options`.",
+    "data": "-",
+    "result": "The sheet opens."
+   },
+   {
+    "id": "90ed3809-ed27-4d13-be7b-28ac430852cb",
+    "action": "Read the Work Status list.",
+    "data": "-",
+    "result": "The list shows `New`, `Reviewed`, `Updated`, `Change Requested`, `Information Required` and `Ready`, and does not show `Deleted`."
+   },
+   {
+    "id": "2920266b-c977-4bd5-9bdd-36e114b8552a",
+    "action": "Read the Breakdown Status list.",
+    "data": "-",
+    "result": "The list shows `Breakdown Updated`, `Breakdown Reviewed` and `Breakdown Required`."
+   },
+   {
+    "id": "61ef5500-30b0-493b-910b-281842772b2d",
+    "action": "Build an import file that adds four Works, each with one breakdown, using the cell texts of table 12.",
+    "data": "Table 12\n| Work | Work Status in cell | Breakdown Status in cell | Expected Work Status | Expected Breakdown Status |\n| W-8394-X1 | reviewed | breakdown required | Reviewed | Breakdown Required |\n| W-8394-X2 | READY | BREAKDOWN UPDATED | Ready | Breakdown Updated |\n| W-8394-X3 | ` Reviewed ` | ` Breakdown Reviewed ` | Reviewed | Breakdown Reviewed |\n| W-8394-X4 | `  information required` | `breakdown reviewed  ` | Information Required | Breakdown Reviewed |",
+    "result": "The file is saved with eight rows."
+   },
+   {
+    "id": "866dd72f-ad24-4c05-bd13-7383be6ce316",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows eight rows with no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "6fa6c6e5-f412-4cfb-815f-731c7be0eb43",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The Works are created."
+   },
+   {
+    "id": "21833c8a-f46d-4e86-ac47-18aa96c8981e",
+    "action": "Read the statuses of the four Works and breakdowns.",
+    "data": "-",
+    "result": "Each equals the expected value of table 12, written in the list format."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8766",
+  "issueId": "2300070",
+  "summary": "[FE][BE] Verify Revise on a Deleted Work or on a Work Breakdown under a Deleted Work gives the UUID Error",
+  "steps": [
+   {
+    "id": "24bb5bcb-ba99-4683-8dcb-58359bdf213d",
+    "action": "Build an import file with Action `Revise` and the UUID of the Deleted Work `W-8394-Y1`, Work Status `Ready`.",
+    "data": "-",
+    "result": "The file is saved with one row."
+   },
+   {
+    "id": "a76be651-dc40-4992-943a-ee65a2a905ad",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The error banner shows `Data Validation Failed. 1 data validation errors were found in the file.`"
+   },
+   {
+    "id": "8cde22b6-b2f7-4098-ab36-dfab67ebf79a",
+    "action": "Read the error table.",
+    "data": "-",
+    "result": "The row shows the Invalid Detail `The UUID you entered is not exist in the system.` and no master data message."
+   },
+   {
+    "id": "73f50a12-611c-43b4-9877-aed55edf3204",
+    "action": "Check `Confirm`.",
+    "data": "-",
+    "result": "`Confirm` is disabled."
+   },
+   {
+    "id": "78b31c83-2f4b-4f68-b6bb-973ffcc8be5e",
+    "action": "Build a file with Work `W-8394-Y2` (Action `Revise`) and a breakdown row with Action `Revise` and the UUID of the breakdown under `W-8394-Y1`.",
+    "data": "-",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "116b7aab-1b68-453f-8a94-88ce1762b490",
+    "action": "Upload the file.",
+    "data": "-",
+    "result": "The breakdown row shows the Invalid Detail `The UUID you entered is not exist in the system.` and `Confirm` is disabled."
+   },
+   {
+    "id": "f201dd48-2336-4eba-a19a-96fac45d526d",
+    "action": "Click `Cancel`.",
+    "data": "-",
+    "result": "The preview closes."
+   },
+   {
+    "id": "19b4a0ba-4ec4-4bde-964f-c9eda9848547",
+    "action": "Read `W-8394-Y1`.",
+    "data": "-",
+    "result": "It stays `Deleted` and was not restored."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8767",
+  "issueId": "2300071",
+  "summary": "[FE][BE] Verify Action Delete ignores the status columns, even with invalid values, for Turnaround Manager and Job Owner, and deletes as in the import rules",
+  "steps": [
+   {
+    "id": "c0560ea8-ed64-4b88-b722-33faaa677b70",
+    "action": "Build an import file with Action `Delete` rows for `W-8394-Z1` (Work Status `Ready`) and its two breakdowns (Breakdown Status `Breakdown Required`).",
+    "data": "-",
+    "result": "The file is saved with three rows."
+   },
+   {
+    "id": "42f208f6-f4f0-407b-b42f-1b97e54832cb",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview grid shows three rows with no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "b239b24c-3dcf-4cd1-a167-7125a511939b",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "a5fd00ea-c6cc-482e-a1da-50a0aad5f3c8",
+    "action": "Read `W-8394-Z1`.",
+    "data": "-",
+    "result": "Its Work Status is `Deleted`."
+   },
+   {
+    "id": "dc63ed3f-f01f-490c-bfeb-322833c91196",
+    "action": "Build a file with an Action `Delete` row for `W-8394-Z2` with Work Status `Approved`.",
+    "data": "-",
+    "result": "The file has one row with an invalid Work Status."
+   },
+   {
+    "id": "34eb691f-78ac-4f2c-96c9-d75888bb3778",
+    "action": "Add an Action `Delete` row for its breakdown with Breakdown Status `Deleted`.",
+    "data": "-",
+    "result": "The file is saved with two rows holding invalid values."
+   },
+   {
+    "id": "2e278473-b15a-4591-8a1a-3283f19f43a8",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview shows no Error and no master data message, and `Confirm` is enabled."
+   },
+   {
+    "id": "2d562d72-9da8-4ea2-a1b5-a97815247674",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "8edff5cc-7909-4607-8559-8cabad8e8113",
+    "action": "Read `W-8394-Z2` and its breakdown.",
+    "data": "-",
+    "result": "The Work Status is `Deleted` and the breakdown no longer exists in the system (removed permanently)."
+   },
+   {
+    "id": "ffc4829f-d5c8-4878-86bf-1063a9c40748",
+    "action": "Build a file with Action `Delete` rows for `W-8394-Z3` (Work Status `Approved`) and its breakdown (Breakdown Status `Ready`).",
+    "data": "-",
+    "result": "The file is saved with two rows holding invalid values."
+   },
+   {
+    "id": "7e6bbc77-5e4a-4f36-9a3c-65b751628fce",
+    "action": "Upload the file as `Malee Tester` (Job Owner).",
+    "data": "-",
+    "result": "The preview shows two rows with no Error and no master data message, and `Confirm` is enabled."
+   },
+   {
+    "id": "47eb9c90-3959-4f5b-b01d-a1a514c64a5a",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "9cd5f357-4d81-429c-8e2d-e047e89a35f6",
+    "action": "Read `W-8394-Z3` and its breakdown.",
+    "data": "-",
+    "result": "The Work Status is `Deleted` and the breakdown no longer exists in the system."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8768",
+  "issueId": "2300072",
+  "summary": "[FE][BE] Verify an imported status is kept on a frozen Worklist",
+  "steps": [
+   {
+    "id": "bbd4eab8-10ec-4fd8-85dd-44c5b30b7971",
+    "action": "Build an import file with Action `Revise` for the Work and breakdown, Work Status `Reviewed` and Breakdown Status `Breakdown Reviewed`.",
+    "data": "-",
+    "result": "The file is saved with two rows."
+   },
+   {
+    "id": "b25655d7-b0a9-4c6e-a616-7cbac5ddf022",
+    "action": "Upload the file as `Somchai Tester`.",
+    "data": "-",
+    "result": "The preview shows no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "f55e60e8-ad47-4d01-ab37-b5125404e53b",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "32fe7a9f-10e7-4f54-ba07-c6636c659c32",
+    "action": "Read the statuses.",
+    "data": "-",
+    "result": "Work Status is `Reviewed` and Breakdown Status is `Breakdown Reviewed`; the Freeze rule did not change them."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8769",
+  "issueId": "2300073",
+  "summary": "[FE][BE] Verify the role decides the result for the same file: Job Owner leaves the statuses and Turnaround Manager applies them",
+  "steps": [
+   {
+    "id": "a583a203-ab11-4a83-a505-991914303bd3",
+    "action": "Build one import file with Action `Revise` for both Works and breakdowns, data unchanged, Work Status `Ready` and Breakdown Status `Breakdown Required`.",
+    "data": "-",
+    "result": "The file is saved with four rows."
+   },
+   {
+    "id": "81b71342-c91e-41ec-aedb-d69d21486c28",
+    "action": "Upload the file as `Malee Tester` (Job Owner).",
+    "data": "-",
+    "result": "The preview shows no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "1fe42c26-3e30-4538-a0fd-eb82691d26dc",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "a2b033aa-a09c-4a25-9eb1-2adfd47e3a2b",
+    "action": "Read the statuses of `W-8394-AB1` and `W-8394-AB2`.",
+    "data": "-",
+    "result": "Both Works stay `New` and both breakdowns stay `Breakdown Updated`."
+   },
+   {
+    "id": "0aa6928c-58d5-416c-b45e-c6bab49c34b0",
+    "action": "Upload the same file as `Somchai Tester` (Turnaround Manager).",
+    "data": "-",
+    "result": "The preview shows no Error and `Confirm` is enabled."
+   },
+   {
+    "id": "92915945-57dd-4437-ba3d-8930ee53397a",
+    "action": "Click `Confirm`.",
+    "data": "-",
+    "result": "The import completes."
+   },
+   {
+    "id": "cc9fcb3b-1a08-4a7c-b1c2-1d5e12d3a5c0",
+    "action": "Read the statuses of `W-8394-AB1` and `W-8394-AB2`.",
+    "data": "-",
+    "result": "Both Works are `Ready` and both breakdowns are `Breakdown Required`."
+   }
+  ]
+ }
+]

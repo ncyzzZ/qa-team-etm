@@ -1,0 +1,109 @@
+{
+ "updated": [
+  "ETM-8735#1",
+  "ETM-8735#2",
+  "ETM-8735#4",
+  "ETM-8735#7",
+  "ETM-8735#8",
+  "ETM-8742#1",
+  "ETM-8742#5",
+  "ETM-8744#1",
+  "ETM-8744#5",
+  "ETM-8744#6",
+  "ETM-8744#9",
+  "ETM-8744#10",
+  "ETM-8745#5",
+  "ETM-8745#9",
+  "ETM-8745#10",
+  "ETM-8745#11",
+  "ETM-8745#13",
+  "ETM-8745#16",
+  "ETM-8746#1",
+  "ETM-8746#3",
+  "ETM-8746#4",
+  "ETM-8746#7",
+  "ETM-8746#8",
+  "ETM-8747#1",
+  "ETM-8747#4",
+  "ETM-8747#7",
+  "ETM-8747#8",
+  "ETM-8747#10",
+  "ETM-8747#11",
+  "ETM-8754#4",
+  "ETM-8754#7",
+  "ETM-8754#10",
+  "ETM-8755#2",
+  "ETM-8755#9",
+  "ETM-8756#1",
+  "ETM-8756#4",
+  "ETM-8756#7",
+  "ETM-8757#1",
+  "ETM-8758#8",
+  "ETM-8758#11",
+  "ETM-8765#4",
+  "ETM-8765#7",
+  "ETM-8766#1",
+  "ETM-8766#2",
+  "ETM-8766#3",
+  "ETM-8766#6",
+  "ETM-8767#1",
+  "ETM-8767#5",
+  "ETM-8767#6",
+  "ETM-8767#10",
+  "ETM-8768#1",
+  "ETM-8768#2",
+  "ETM-8768#3",
+  "ETM-8768#4",
+  "ETM-8769#1",
+  "ETM-8769#4",
+  "ETM-8769#7"
+ ],
+ "added": [
+  "ETM-8768#5:d0d8bf0a-5f34-4a2b-8c58-f8b515be2964",
+  "ETM-8768#6:f8b4b0eb-2f2a-4a86-a807-1513e8b7443c",
+  "ETM-8768#7:c6f2379d-75f1-4620-8cf2-6fe2abdc27d6",
+  "ETM-8768#8:ecbcc49c-026e-4331-9616-25b4cc8993d8",
+  "ETM-8768#9:3ce3fdd7-51ce-45be-9a2e-d9f9d5210fce"
+ ],
+ "created": {
+  "TC-017": {
+   "issueId": "2301135",
+   "key": "ETM-8919",
+   "warnings": []
+  },
+  "TC-018": {
+   "issueId": "2301136",
+   "key": "ETM-8920",
+   "warnings": []
+  },
+  "TC-019": {
+   "issueId": "2301137",
+   "key": "ETM-8921",
+   "warnings": []
+  }
+ },
+ "plan": {
+  "addTestsToTestPlan": {
+   "addedTests": [
+    "2301135",
+    "2301136",
+    "2301137"
+   ],
+   "warning": null
+  }
+ },
+ "planFolder": {
+  "error": "Error: graphql: [{\"message\":\"User doesn't have permissions to view/edit test repository for project with id 2299251\",\"locations\":[{\"line\":1,\"column\":29}],\"path\":[\"addTestsToFolder\"]}]"
+ },
+ "exec": {
+  "addTestsToTestExecution": {
+   "addedTests": [
+    "2301135",
+    "2301136",
+    "2301137"
+   ],
+   "warning": null
+  }
+ },
+ "log": []
+}

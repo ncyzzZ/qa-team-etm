@@ -1,67 +1,83 @@
 {
  "card": "ETM-8394",
- "date": "2026-11-19",
+ "date": "2026-11-24",
  "verdict": "partly",
- "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "note": "Re-rated by the lead after the rewrite for the 23 Nov AC (read from the code, nothing run yet, so no AC is proven). The status codes are now verified (stms-fe enum + QA DB). Breakdown Status is read from shutdown_work.sdw_breakdown_status (one value per Work). New Tests ETM-8919/8920/8921 created 2026-11-24 and scripted. The 19 Nov rating is replaced.",
  "ac": [
   {
    "id": "AC-1",
-   "rule": "Job Owner ignored",
+   "rule": "only a Turnaround Manager sets statuses (role)",
+   "tests": [
+    "ETM-8769",
+    "ETM-8744"
+   ],
+   "rating": "strong",
+   "why": "same file: Job Owner leaves the statuses, Turnaround Manager applies them, DB asserted"
+  },
+  {
+   "id": "AC-1.2",
+   "rule": "Job Owner: status columns ignored, no message",
    "tests": [
     "ETM-8744",
     "ETM-8745",
+    "ETM-8755",
     "ETM-8769"
    ],
    "rating": "strong",
-   "why": "DB status and no message"
+   "why": "DB status after a Job Owner import with valid, invalid and wrong-column values; expectAccepted checks no banner/message"
   },
   {
    "id": "AC-2",
-   "rule": "Add with status",
+   "rule": "Add with status (TM)",
    "tests": [
-    "ETM-8735"
+    "ETM-8735",
+    "ETM-8756"
    ],
    "rating": "strong",
-   "why": "asserted"
+   "why": "every importable Work Status and Breakdown Status on the Work row, DB values compared with verified codes"
   },
   {
    "id": "AC-3",
-   "rule": "Add blank -> defaults",
+   "rule": "Add blank -> New / Breakdown Updated",
    "tests": [
     "ETM-8742",
     "ETM-8744"
    ],
    "rating": "strong",
-   "why": "asserted"
+   "why": "blank cells and one column filled, DB asserted"
   },
   {
    "id": "AC-4",
-   "rule": "Revise with status",
+   "rule": "Revise with status (TM)",
    "tests": [
-    "ETM-8746"
+    "ETM-8746",
+    "ETM-8754",
+    "ETM-8769"
    ],
    "rating": "strong",
-   "why": "asserted"
+   "why": "each imported status set; filled status wins over the trigger"
   },
   {
    "id": "AC-5",
-   "rule": "automatic triggers",
+   "rule": "Revise blank -> triggers, only when a value differs, per level",
    "tests": [
     "ETM-8745",
     "ETM-8747",
     "ETM-8754"
    ],
    "rating": "strong",
-   "why": "asserted"
+   "why": "table 6a/6b: Work-level change vs breakdown change, Breakdown Updated stays, unchanged rows keep both statuses"
   },
   {
    "id": "AC-6",
-   "rule": "any combination",
+   "rule": "any combination, Change Requested importable",
    "tests": [
-    "ETM-8756"
+    "ETM-8756",
+    "ETM-8735",
+    "ETM-8755"
    ],
    "rating": "strong",
-   "why": "DB asserted"
+   "why": "six combinations incl. Ready + Breakdown Updated asserted in DB; dropdown steps 6-7 use UNVERIFIED selectors (no swallowed click any more)"
   },
   {
    "id": "AC-7",
@@ -71,26 +87,65 @@
     "ETM-8765"
    ],
    "rating": "strong",
-   "why": "asserted"
+   "why": "Deleted gives the master data Error and Confirm stays disabled; template list check uses an UNVERIFIED download selector"
   },
   {
    "id": "AC-8",
-   "rule": "master data message",
+   "rule": "master data Error, trim and case ignored",
    "tests": [
     "ETM-8757",
-    "ETM-8758"
+    "ETM-8758",
+    "ETM-8765"
    ],
    "rating": "strong",
-   "why": "exact text"
+   "why": "exact message per cell of table 10 (all on the Work row now); trimmed / other-case values accepted and stored in list format"
   },
   {
    "id": "AC-9",
-   "rule": "frozen worklist",
+   "rule": "frozen Worklist: JO blocked, TM applied",
    "tests": [
-    "ETM-8768"
+    "ETM-8768",
+    "ETM-8919"
    ],
-   "rating": "blocked",
-   "why": "FROZEN_* not set"
+   "rating": "strong",
+   "why": "ETM-8768 (TM imports on a frozen Worklist found in the DB, own Work, deleted after) + ETM-8919 (JO: Create Work hidden, direct link to the Import page shows Access Denied per BA 24 Nov, Import page on a not frozen Worklist). Both skip as Not proven if no frozen Worklist exists. ETM-8919 step 3 is in the script; its Xray step waits on xray-fix-proposal-2.md"
+  },
+  {
+   "id": "AC-10",
+   "rule": "Edited: trim, case only for master data",
+   "tests": [
+    "ETM-8920"
+   ],
+   "rating": "strong",
+   "why": "ETM-8920 table 13: trim and master data case keep the status, free text case runs the trigger, per level, DB asserted (BA 24 Nov DEC-076 (1))"
+  },
+  {
+   "id": "AC-11",
+   "rule": "UUID Error on every flagged row",
+   "tests": [
+    "ETM-8766"
+   ],
+   "rating": "strong",
+   "why": "deleted Work + its two breakdown rows: toHaveCount(3) rows with the UUID message and banner count 3 (AC 3.4 + ETM-6843 AC 7.1, R3-3 answered from the Story)"
+  },
+  {
+   "id": "AC-12",
+   "rule": "statuses belong to the Work row; breakdown-row values ignored",
+   "tests": [
+    "ETM-8735",
+    "ETM-8921"
+   ],
+   "rating": "strong",
+   "why": "ETM-8735 (Add, valid values on breakdown rows ignored) + ETM-8921 (Revise, valid and invalid values ignored, no message; BA 24 Nov DEC-076 (3))"
+  },
+  {
+   "id": "AC-13",
+   "rule": "Action Delete ignores status columns",
+   "tests": [
+    "ETM-8767"
+   ],
+   "rating": "strong",
+   "why": "invalid values with Delete for TM and JO: no Error, Work deleted (is_delete Y), breakdown gone"
   }
  ]
 }
