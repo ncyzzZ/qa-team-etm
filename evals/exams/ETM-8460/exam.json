@@ -1,0 +1,46 @@
+{
+  "defect": "ETM-8460",
+  "story": "ETM-7902",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "After a typed or pasted date is converted, clicking back into the field shows the raw input until another field is clicked.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7902",
+  "run": "STORY-ETM-7902",
+  "frozen": "evals/exams/_story-ETM-7902/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "convert",
+          "05 jun",
+          "canonical",
+          "dd mon yyyy"
+        ]
+      ],
+      [
+        [
+          "click back",
+          "again",
+          "re-focus",
+          "refocus",
+          "return to",
+          "double-click the same",
+          "re-enter"
+        ],
+        [
+          "converted",
+          "05 jun",
+          "canonical",
+          "not the raw",
+          "dd mon",
+          "shows `"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "The Story converts on blur/Enter; what the box shows on re-entry after a conversion is implied."
+}

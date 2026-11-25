@@ -1,0 +1,562 @@
+# Draft test cases - ETM-7314 Equipment Mob Plan - Multi-Criteria Filter Panel
+
+Story: ETM-7314 (frozen exam copy). Source: story.md only (no analyst.md, no inspector.md). Module docs read: equipment-mob-plan-validation.md, equipment-mob-plan-figma.md (page layout only). AC ids below are numbered by this draft from the Story:
+- AC-1 Open/layout (1.1 filter icon opens drawer from right; 1.2 header title + single Reset; 1.3 no Apply, real-time; 1.4 stays open, closed by toolbar icon)
+- AC-2 Collapsed default (2.1 all collapsed; 2.2 click header/chevron expands one; 2.3 expand state + typed search kept in session, reload resets)
+- AC-3 The 23 criteria fields (3.1 to 3.23 in Story order; 3.24 date and numeric range rules)
+- AC-4 Select only search results (4.1 blank search shows only Select All; 4.2 checkbox appears on match; 4.3 checks matches, keeps hidden; 4.4 zero match "No option")
+- AC-5 Real-time filtering (5.1 AND across fields; 5.2 OR inside field; 5.3 Work Header hidden when 0 items; 5.4 no "no results" message; 5.5 all filtered = empty body)
+- AC-6 Reset and persistence (6.1 Reset; 6.2 session persistence; 6.3 reload resets, Save persists with Edit permission)
+
+Existing [QA] subtasks: not available in this exam.
+Common precondition: logged in as Turnaround Manager (TM) with View All Equipment Mob Plan Item; an active Equipment Mob Plan is open with at least 3 Work Headers and about 30 equipment rows that cover mixed values (several Departments, Platforms, Decks, Statuses, Priorities 1/2/3, blank dates and blank numbers, a Remark like `Note 2` and `Note 10`, a Thai Material Description, one with leading/trailing spaces if the screen can make it).
+Notation: `->` separates action and expected result. Priority has no value in the Story, so it is set by damage (wrong data shown or filter result wrong = High).
+Roles: only TM and JO exist on QA (JO = view only, View Active Equipment Mob Plan Item).
+
+## Coverage map
+
+| Requirement / screen state | Technique | Risk | Planned case(s) |
+| --- | --- | --- | --- |
+| AC-1.1 open drawer | Screen states | drawer not from right, icon not toggling | TC-001 |
+| AC-1.2 header Filter Panel + single Reset | Screen states | two Reset buttons, wrong title | TC-001 |
+| AC-1.3 no Apply, real time | Error guessing | grid waits for a click, Apply shown | TC-002 |
+| AC-1.4 stays open, closed by icon | State changes | drawer closes by itself | TC-003 |
+| AC-2.1 all collapsed | Screen states | a section opens by default | TC-004 |
+| AC-2.2 expand one section | Screen states | all sections expand together | TC-005 |
+| AC-2.3 session state kept, reload resets | Leaving and coming back | state lost on close/reopen, kept after reload | TC-006, TC-007 |
+| AC-3.1 Material Description contains, case, Thai, trim | Strange input, equivalence | case-sensitive, Thai not found, spaces break match | TC-008, TC-009 |
+| AC-3.2 WIN# No. contains | Equivalence | exact match instead of contains | TC-010 |
+| AC-3.3, 3.4, 3.11, 3.12 distinct list fields (Contact Person, Department, Platform, Deck) | Equivalence, OR logic | options show values not in plan, duplicates | TC-011 |
+| AC-3.5 Premob Inspection Yes/No | Equivalence | wrong option list | TC-012 |
+| AC-3.6 to 3.10 numeric ranges (Width, Length, Height, Area, Gross Wt.) | Boundary, decision table | Height missing, inclusive bound wrong, From only / To only | TC-013 (table), TC-014 |
+| AC-3.13 Item No. in Plot Plan | Equivalence | search not working | TC-010 |
+| AC-3.14 Transportation 4 options | Equivalence | missing or extra option | TC-015 |
+| AC-3.15, 3.16, 3.17, 3.22 date ranges (Material Ready at SKL, Require at Offshore, Backload to SKL, Loading at PSB) | Boundary, decision table | inclusive bound wrong, wrong column filtered | TC-016 (table), TC-017 |
+| AC-3.18 Status 10 options in order | Equipment/List order | wrong order, missing status | TC-018 |
+| AC-3.19 Priority 1,2,3 | Equivalence | wrong option list | TC-012 |
+| AC-3.20 MMR No. 30 characters (typing blocked, paste truncated) | Boundary | 31st char accepted, paste not cut | TC-019, TC-020 |
+| AC-3.21 Vessel Name contains, trim, case | Strange input | same as Material Description | TC-008 |
+| AC-3.23 Remark free text, sort order (lesson L-1) | Strange input | "Note 10" before "Note 2" | TC-021 |
+| All 23 fields present, count | Screen states | a field missing | TC-022 |
+| AC-3.24 blank values hidden when filter active | Boundary | blank rows still shown | TC-023 |
+| AC-3.24 From greater than To: red border | Negative, boundary | invalid range accepted | TC-024 (NEG) |
+| AC-4.1, 4.2 Select only search results appears | Screen states | checkbox always shown or never | TC-025 |
+| AC-4.3 checks matches, keeps hidden items | State changes | hidden items change | TC-026 |
+| AC-4.4 No option | Screen states, empty | checkboxes still shown | TC-027 (NEG) |
+| AC-5.1 AND across fields | Combinations | OR used instead | TC-028 |
+| AC-5.2 OR inside field | Combinations | AND used instead | TC-029 |
+| AC-5.3 Work Header hidden if 0 items | State changes | empty Work Header row left | TC-030 |
+| AC-5.4, 5.5 all filtered: empty body, no message | Screen states, empty | a "no results" text shown | TC-031 (NEG) |
+| AC-6.1 Reset | State changes | search field or one section not reset, rows not restored | TC-032, TC-033 |
+| AC-6.2 session persistence of selections | Leaving and coming back | selection lost on close/reopen | TC-034 |
+| AC-6.3 reload resets; Save persists | Leaving and coming back, roles | filters kept after reload, view saved wrongly | TC-035, TC-036 |
+| Permission: TM and JO both see filter | Roles | filter hidden for JO | TC-037 |
+| Page states: no data in plan, very many rows | Screen states | crash, slow | TC-038 |
+| Filter + other page actions (Add Equipment, edit cell under filter) | Combinations (lesson 2) | edited row disappears or stale | TC-039 |
+| Two tabs / two users | Lesson 1 | state leaks between tabs | TC-040 |
+| Unsaved changes: filter then undo by hand, Save state; view-only actions; Save then Save disabled | Leaving and coming back, state changes | filter marks the page as changed, Save stays on | TC-043 |
+| Leaving with a filter set as TM and as JO: Back/Forward, breadcrumb, menu, equipment detail page | Leaving and coming back, roles | warning shown with nothing to save, or never for JO; filter leaks to other pages | TC-044, TC-045, TC-046 |
+| Number inputs with large values; lists in the last sections; date picker month; paste in the middle | Input habits | format, list not opening, wrong month, paste breaks the limit | TC-047, TC-048, TC-049, TC-050 |
+| Frozen columns / two grid sides under filter | Combinations | left and right side show different rows | TC-051 |
+| Another user changes or deletes the plan while the filter is open | Lesson 1 | stale rows, crash | TC-052 |
+
+Lessons categories: 1 two people (TC-040); 2 filter+sort+search (TC-028, TC-039, search under filter TC-026); 3 old data migrations (not relevant: new panel, no data migration); 4 strange input (TC-009, TC-021); 5 reorder (not relevant: filter does not reorder rows; row numbers check in TC-030); 6 linked data (TC-039); 7 charts (not relevant: no chart in the Story); 8 same data on many pages (TC-036 saved view); 9 matrix (TC-013, TC-016). L-1 TC-021; L-2 special option survives reload/reopen TC-034, TC-035; L-3 wait for response then read rows AND Total (all Auto cases); L-4 paste TC-020; L-5, L-6 (case variants TC-008), L-7 not relevant (no picker of colour), L-8 Story text changed (open question 12).
+
+Skipped: lesson 3, 5, 7 (reasons above). Keyboard Tab/Enter order: TC-041.
+
+Counts: High 24, Medium 18, Low 6 (total 48). Auto 39, Partial 3, Manual 6 (Manual: TC-039, TC-040, TC-041, TC-042, TC-046, TC-048; Partial: TC-016, TC-036, TC-038).
+
+## Open questions (not in Story, nothing guessed)
+
+1. Where does the "Filter" icon sit when both Custom View and Filter icons are shown, and does the icon change (active) when a filter is on? Story says only "top-right toolbar".
+2. AC-6.1 says Reset restores "all checkboxes checked", but AC-4.1 and the multi-select imply nothing is selected by default as filter. What is the default of a multi-select section: all checked (= no filter) or none checked? Cases are written as "all checked = no filtering".
+3. When some options are unchecked in a multi-select, are Blank values shown as an option? Needed for rows with blank Department, Platform, etc.
+4. Does a date or number text input accept typing, or only the picker? Does a negative or non-numeric entry get blocked?
+5. Do Width/Length/Height/Area/Gross Wt. ranges compare raw stored value or the displayed rounded value?
+6. Does the Material Description trim also apply to paste and to Vessel Name when typing only spaces (spaces only = blank search?)
+7. Is the "Select only search results" selection OR-combined with already selected items, or does it replace them?
+8. Does "Select All" with a search query active select hidden items too?
+9. Is the filter count/badge or "Total results" shown anywhere? Story does not say; no case written.
+10. When From > To, is the grid left unfiltered or empty? Story only says red border.
+11. Contact Person list: "distinct assignees present in the active plan": is the list refreshed after an edit under filter in the same session?
+12. The Story is a frozen copy of a changed description: confirm the current version for field list (Height "re-added per specification") before run.
+13. Suggestion (not in Story): a count of rows next to a filter, and a "no results" hint for the user, because with all rows hidden the user may think the page is broken. Not written as a case.
+14. The 23 fields "matching design": does the panel order follow the column order of the grid? The Story list order is used here.
+15. Does a Work Header that is collapsed in the grid show when all its items are filtered out except one?
+
+16. Is the filter itself ever counted as an unsaved change (Save enabled, leave warning)? The cases are written as: the filter is a view only, so Save stays disabled and no warning shows. Confirm before run.
+17. Does the Equipment detail or edit page open from a row under a filter, and does the filter stay when the user returns? Cases record the result.
+18. Number format in the Width ... Gross Wt. inputs: separator and decimal places are not in the Story; TC-047 records what the screen shows and checks the value is not changed.
+
+## Test cases (48 flows)
+
+### TC-001 [FE][MT] Verify the Filter Panel opens from the right with its title and a single Reset (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-1.1, AC-1.2
+1. Open the Equipment Mob Plan page. -> The page shows the Work Header rows and the toolbar with the Filter icon at the top right.
+2. Click the Filter icon in the toolbar. -> A drawer slides in from the right side of the screen.
+3. Read the panel header. -> The title `Filter Panel` shows on the left; one `Reset` action shows on the right; no second Reset exists.
+Starting data: common plan. What to check: drawer visible on the right edge, title text, exactly one Reset. Clean up: none.
+
+### TC-002 [FE][MT] Verify there is no Apply button and the grid filters in real time (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-1.3
+1. Open the Filter Panel. -> The panel shows no `Apply` button.
+2. Record the number of Work Header rows and equipment rows in the grid. -> The numbers are written down for comparison.
+3. Expand `Department` and uncheck one department that exists in the plan. -> The grid changes at once without any other click; rows of that department disappear.
+Starting data: plan with at least 2 departments. Clean up: click Reset.
+
+### TC-003 [FE][MT] Verify the drawer stays open and closes only by the toolbar Filter icon (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.4
+1. Open the Filter Panel. -> The drawer is open.
+2. Expand `Priority` and uncheck `3`. -> The grid updates; the drawer stays open.
+3. Click on the grid area outside the drawer. -> The drawer stays open.
+4. Click the toolbar Filter icon again. -> The drawer closes.
+Clean up: Reset.
+
+### TC-004 [FE][MT] Verify every section is collapsed when the panel opens (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-2.1
+1. Open the Filter Panel for the first time after the page loads. -> All 23 sections show as collapsed, with only their headers visible.
+2. Check that no search field or option list is visible. -> No search field and no checkbox list is shown.
+
+### TC-005 [FE][MT] Verify a section expands by its header and by its chevron, one at a time (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-2.2
+1. Open the Filter Panel and click the header text of `Department`. -> Only `Department` expands and shows its search field and options.
+2. Click the chevron icon of `Platform`. -> `Platform` expands; `Department` keeps its state; other sections stay collapsed.
+3. Click the header of `Department` again. -> `Department` collapses.
+
+### TC-006 [FE][MT] Verify expanded sections and typed search are kept after closing and reopening the panel (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-2.3, AC-6.2
+1. Open the Filter Panel, expand `Department` and `Status`. -> The two sections are expanded.
+2. Type `Op` in the search field of `Department`. -> The list shows only matching departments.
+3. Uncheck one of the matching departments. -> The grid hides rows of that department.
+4. Click the toolbar Filter icon to close the panel. -> The panel closes.
+5. Click the Filter icon to open it again, without reloading the page. -> `Department` and `Status` are still expanded; the search field of `Department` still shows `Op`; the list is still filtered by `Op` (only matching departments show); the unchecked department is still unchecked.
+Clean up: Reset.
+
+### TC-007 [FE][MT] Verify a browser reload resets sections to collapsed (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-2.3
+1. Open the Filter Panel, expand `Department`, type `Op` in its search and uncheck one department. -> The section is expanded with the search text; the grid hides rows of that department.
+2. Reload the browser page. -> The page reloads.
+3. Open the Filter Panel. -> All sections are collapsed.
+4. Expand `Department`. -> The search field is empty; the full department list shows with all checkboxes checked.
+
+### TC-008 [FE][MT] Verify text fields match by contains, ignore case and trim spaces (POS) [Auto]
+Precondition: common; rows with Material Description `Hydraulic Pump` and Vessel Name `Sea Eagle`
+Priority: High
+Trace: AC-3.1, AC-3.21
+1. Expand `Material Description` and type `hydra` in lower case. -> Rows whose description contains `Hydra` in any case show.
+2. Replace the text with `  PUMP  ` (spaces before and after). -> The same rows show as if `PUMP` was typed.
+3. Expand `Vessel Name` and type `EAGLE`. -> Rows with `Sea Eagle` show.
+4. Type `Eagle` and `eagle` in turn. -> The same rows show each time.
+5. Replace the text with `  eagle  ` (spaces before and after). -> The same rows as in step 3 show; the padded spaces do not stop the match.
+Test data set: strange-values table in TC-009 plus this one. Clean up: Reset.
+
+### TC-009 [FE][MT] Verify Thai text and special characters in Material Description search (Exotic: strange input) [Auto]
+Precondition: common; rows with a Thai description and one containing `A&B/50%` (made-up data entered through the screen)
+Priority: Medium
+Trace: AC-3.1
+1. Expand `Material Description` and type the Thai word that exists in one row. -> The row with that Thai text shows.
+2. Type `&B/5`. -> The row containing `A&B/50%` shows.
+3. Type `<b>`. -> The page does not break; rows without that text are hidden and the search shows `No option` or an empty list.
+Data set: Thai, `&`, `/`, `%`, `<b>`, emoji, one long 200-character text. The test loops over the set and expects no error and the correct rows. Clean up: Reset.
+
+### TC-010 [FE][MT] Verify WIN# No. and Item No. in Plot Plan match by contains (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-3.2, AC-3.13
+1. Expand `WIN# No. (CCU No.)` and type part of an existing number in lower case. -> Rows containing that part show, regardless of case.
+2. Expand `Item No. in Plot Plan` and type part of an existing value. -> The grid shows only rows containing it, still combined with the first filter.
+
+### TC-011 [FE][MT] Verify distinct-value lists show only values present in the active plan (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-3.3, AC-3.4, AC-3.11, AC-3.12, AC-5.2
+1. Read the Contact Person, Department, Platform and Deck values in the grid. -> The distinct values are written down.
+2. Expand each of the four sections. -> Each list shows exactly the written distinct values once each, no value from another plan or event, no duplicate.
+3. Uncheck all but two values in `Department`. -> Rows of those two departments show.
+Data set: four fields x expected distinct lists read from the grid. Clean up: Reset.
+
+### TC-012 [FE][MT] Verify Premob Inspection and Priority options (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-3.5, AC-3.19
+1. Expand `Premob Inspection`. -> The options are `Yes` and `No`.
+2. Expand `Priority`. -> The options are `1`, `2`, `3`.
+3. Uncheck `No` in Premob Inspection. -> Only rows with Yes show.
+
+### TC-013 [FE][MT] Verify numeric range filters for Width, Length, Height, Area and Gross Wt. (BND) [Auto]
+Precondition: common; rows with values 1.0, 2.5, 5.0 in each numeric column
+Priority: High
+Trace: AC-3.6, AC-3.7, AC-3.8, AC-3.9, AC-3.10, AC-3.24
+1. Expand `Height (m)`. -> The section shows `From` and `To` inputs.
+2. Enter From `2.5` only. -> Rows with Height >= 2.5 show (2.5 included).
+3. Clear From and enter To `2.5` only. -> Rows with Height <= 2.5 show (2.5 included).
+4. Enter From `1.0` and To `2.5`. -> Rows from 1.0 to 2.5 inclusive show.
+5. Repeat for Width, Length, Area, Gross Wt. (Tons). -> Each column follows the same table.
+Expected table (the test loops over each of the 5 columns): From only 2.5 -> >= 2.5; To only 2.5 -> <= 2.5; both 1.0 and 2.5 -> [1.0, 2.5]; From = To = 2.5 -> only rows equal 2.5; From 5.1 To 6 -> none above max. Clean up: Reset.
+
+### TC-014 [FE][MT] Verify the numeric range with a decimal value and a negative or zero value (BND) [Auto]
+Precondition: common; a row with value 0 and a row with 0.01
+Priority: Medium
+Trace: AC-3.6, AC-3.24
+1. Expand `Width (m)` and enter From `0`. -> Rows with value 0 show (0 is a value, not blank).
+2. Enter From `0.01`. -> The row with 0 is hidden; the row with 0.01 shows.
+3. Type `-1` in From. -> The page does not break and the grid shows no error; either the minus sign is not accepted or rows with Width >= -1 (all rows with a value) show; the result is recorded against Open question 4.
+4. Type `abc` in From. -> The page does not break; letters are not accepted or the grid is not filtered; the result is recorded against Open question 4.
+
+### TC-015 [FE][MT] Verify Transportation options (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-3.14
+1. Expand `Transportation`. -> The options are `Supply Vessel`, `Crew Boat`, `MSB`, `Helicopter`.
+2. Uncheck `MSB`. -> Rows with Transportation MSB are hidden; other rows stay.
+
+### TC-016 [FE][MT] Verify date range filters for the four date fields (BND) [Partial: date picker control was unstable on earlier cards]
+Precondition: common; rows with dates 10 Jun 2026, 15 Jun 2026, 20 Jun 2026 in each date column
+Priority: High
+Trace: AC-3.15, AC-3.16, AC-3.17, AC-3.22, AC-3.24
+1. Expand `Material Ready at SKL`. -> The section shows `From` and `To` date pickers.
+2. Pick From `15 Jun 2026` only. -> Rows on or after 15 Jun 2026 show (15 Jun included).
+3. Clear From and pick To `15 Jun 2026` only. -> Rows on or before 15 Jun 2026 show.
+4. Pick From `10 Jun 2026` and To `15 Jun 2026`. -> Rows from 10 Jun to 15 Jun inclusive show; 20 Jun is hidden.
+5. Repeat for `Require at Offshore`, `Backload to SKL`, `Loading at PSB`. -> Each filters only its own column.
+Expected table (loop over 4 columns): From only; To only; both; From = To; both outside data range. Auto by API/UI where the picker allows; otherwise the date is typed and a person checks the picker. Clean up: Reset.
+
+### TC-017 [FE][MT] Verify each date filter affects only its own column (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-3.15, AC-3.16, AC-3.17, AC-3.22
+1. Set a date range in `Loading at PSB` that keeps 3 rows. -> The grid shows 3 rows.
+2. Record the dates in the other three date columns of those rows. -> The values are written down.
+3. Check that the filter did not use those other columns. -> The rows hidden are only rows outside the Loading at PSB range, whatever their other dates are.
+
+### TC-018 [FE][MT] Verify Status lists the 10 statuses in the defined order (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-3.18
+1. Expand `Status`. -> The options show in this order: `Inspected`, `Delivered at PSB`, `MMR Issued`, `Vessel Assigned`, `In Transit`, `Received`, `Ready for Backload`, `Backloaded`, `Delay`, `Cancel`.
+2. Count the options. -> There are exactly 10; none is missing or added.
+3. Uncheck `Cancel` and `Delay`. -> Rows with those two statuses are hidden.
+
+### TC-019 [FE][MT] Verify MMR No. blocks typing past 30 characters (BND) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-3.20
+1. Expand `MMR No.`. -> The section shows a search field.
+2. Type 29 characters. -> All 29 show.
+3. Type the 30th character. -> The field shows 30 characters.
+4. Type the 31st character. -> The field still shows 30 characters; the extra character is not added.
+
+### TC-020 [FE][MT] Verify pasting more than 30 characters in MMR No. is cut to 30 (BND) [Auto]
+Precondition: common; clipboard text of 45 characters
+Priority: High
+Trace: AC-3.20
+1. Expand `MMR No.` and paste the 45-character text. -> The field shows only the first 30 characters.
+2. Replace with a paste of exactly 30 characters. -> All 30 show.
+3. Paste 31 characters. -> The first 30 show.
+4. Paste text with spaces before and after (25 characters of text). -> The text shows trimmed or as the field rule says, no error.
+5. Paste the 45-character text again, then read the grid. -> The grid is filtered by the same 30 characters that the box shows, not by the full 45 characters (a row that contains only the first 30 characters is shown).
+
+### TC-021 [FE][MT] Verify Remark list order and free-text search with numbers (BND) [Auto]
+Precondition: common; Remark values `Note 2`, `Note 10`, `note 3`, and one blank Remark
+Priority: Medium
+Trace: AC-3.23
+1. Expand `Remark`. -> The options list shows the Remark values.
+2. Read the order of `Note 2`, `Note 10`, `note 3`. -> The order is the one the rest of the product uses for text lists (see Open question 14); `Note 2` shows before `Note 10`.
+3. Type `note 1`. -> Only `Note 10` shows (case ignored).
+Clean up: Reset.
+
+### TC-022 [FE][MT] Verify the panel has all 23 criteria fields (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-3.1, AC-3.2, AC-3.3, AC-3.4, AC-3.5, AC-3.6, AC-3.7, AC-3.8, AC-3.9, AC-3.10, AC-3.11, AC-3.12, AC-3.13, AC-3.14, AC-3.15, AC-3.16, AC-3.17, AC-3.18, AC-3.19, AC-3.20, AC-3.21, AC-3.22, AC-3.23
+1. Open the Filter Panel and read the section headers. -> 23 sections show: Material Description, WIN# No. (CCU No.), Contact Person, Department, Premob Inspection, Width (m), Length (m), Height (m), Area (m2), Gross Wt. (Tons), Platform, Deck, Item No. in Plot Plan, Transportation, Material Ready at SKL, Require at Offshore, Backload to SKL, Status, Priority, MMR No., Vessel Name, Loading at PSB, Remark.
+2. Compare with the grid columns. -> Every grid column that is a criterion has a section; `Height (m)` is present.
+
+### TC-023 [FE][MT] Verify rows with blank values are hidden when a numeric or date filter is active (BND) [Auto]
+Precondition: common; rows with blank Width and blank Material Ready at SKL
+Priority: High
+Trace: AC-3.24
+1. Record the row count with no filter. -> The count is written down.
+2. In `Width (m)` enter From `0`. -> Rows with a blank Width are hidden; rows with a value show.
+3. Click Reset. -> The rows with a blank Width show again.
+4. In `Material Ready at SKL` pick a wide From..To range. -> Rows with a blank date are hidden.
+
+### TC-024 [FE][MT] Verify From greater than To shows a red border (NEG) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-3.24
+1. Expand `Width (m)` and enter To `5`. -> The grid shows rows with Width <= 5.
+2. Enter From `9`. -> The input prevents the invalid selection and shows a red border.
+3. Check the grid. -> The grid keeps the last valid result (rows with Width <= 5) and shows no empty body and no error; the result is recorded against Open question 10.
+4. Repeat with `Loading at PSB`: pick From `20 Jun 2026` and To `10 Jun 2026`. -> The picker blocks the invalid pick and shows a red border.
+5. Fix From to `3`. -> The red border disappears and the rows update.
+
+### TC-025 [FE][MT] Verify the Select only search results checkbox appears only when typing a match (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-4.1, AC-4.2
+1. Expand `Department` with an empty search field. -> Only `Select All` shows; no `Select only search results`.
+2. Type a text that matches 1 or more departments. -> `Select only search results` appears directly below `Select All`.
+3. Clear the search field. -> `Select only search results` disappears; only `Select All` stays.
+
+### TC-026 [FE][MT] Verify Select only search results checks matches and keeps hidden items unchanged (POS) [Auto]
+Precondition: common; `Department` with 4 or more values; some checked, some unchecked
+Priority: High
+Trace: AC-4.3
+1. In `Department` uncheck every value with `Select All` unchecked. -> No department is checked.
+2. Check one department that will not match the later search. -> That one is checked.
+3. Type a query that matches 2 departments. -> The list shows only the 2 matching items.
+4. Check `Select only search results`. -> The 2 matching items are checked.
+5. Clear the search field. -> The full list shows: the 2 matches and the item from step 2 are checked; all others stay unchecked.
+6. Check the grid. -> The grid shows rows of the 3 checked departments only.
+Clean up: Reset.
+
+### TC-027 [FE][MT] Verify a search with no match shows No option and no checkboxes (NEG) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-4.4
+1. Expand `Department` and type `zzzzz`. -> The list shows `No option`.
+2. Look for checkboxes. -> `Select All` and `Select only search results` are not shown.
+3. Clear the search field. -> The normal list returns with its checkbox states unchanged.
+
+### TC-028 [FE][MT] Verify different criteria work together as AND, with search on and off (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-5.1
+1. Select a Department that has 6 rows. -> 6 rows show.
+2. Also select a Status that only 2 of those rows have. -> Only the 2 rows with both show.
+3. Add a Material Description search that only 1 of them contains. -> Only 1 row shows.
+4. Remove the Department selection by Select All. -> All rows that match Status and Material Description show.
+5. Wait for the grid to settle and read the rows. -> The shown rows equal the expected list.
+Data set: pairs and triples of fields against an expected row list. Clean up: Reset.
+
+### TC-029 [FE][MT] Verify values in the same field work together as OR (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-5.2
+1. In `Priority` leave only `1` checked. -> Only priority 1 rows show.
+2. Check `3` too. -> Rows with priority 1 or 3 show; priority 2 stays hidden.
+3. Check `2` too. -> All rows show.
+
+### TC-030 [FE][MT] Verify a Work Header is hidden when all its items are filtered out (POS) [Auto]
+Precondition: common; Work Header A has equipment only with Department X; Work Header B has other departments
+Priority: High
+Trace: AC-5.3
+1. Record the Work Headers in the grid. -> The list is written down.
+2. Select only the departments of B. -> The Work Header row of A is hidden completely; B shows with its matching items.
+3. Check that A does not show as an empty group or with "No equipment added". -> A is not in the grid.
+4. Click Reset. -> A shows again with all its items and the row numbers match the first record.
+
+### TC-031 [FE][MT] Verify no result message when every item is filtered out (NEG) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-5.4, AC-5.5
+1. Expand `Material Description` and type `zzzzzzz`. -> The list shows `No option`; no rows match.
+2. Select a filter that no row can satisfy (Width From a very large value). -> All Work Header rows are hidden.
+3. Read the grid area. -> Only the table headers and the toolbar remain; no text `No results found for the selected filter criteria.` and no `No equipment matches the selected filters.`.
+4. Click Reset. -> All Work Headers and rows return.
+
+### TC-032 [FE][MT] Verify Reset clears criteria, search text and checkboxes in all sections (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-6.1
+1. Set a Department selection, type a search in `Material Description`, set a Width range and a date range. -> The grid shows fewer rows.
+2. Set one more value in each of the other sections: `Remark`, `MMR No.`, `Vessel Name`, `WIN# No. (CCU No.)`, `Item No. in Plot Plan`, `Contact Person`, `Platform`, `Deck`, `Premob Inspection`, `Transportation`, `Status`, `Priority`, `Length (m)`, `Height (m)`, `Area (m2)`, `Gross Wt. (Tons)` and the three other date ranges. -> Every one of the 23 sections holds a value.
+3. Click `Reset` in the panel header. -> All checkboxes are checked; search fields are empty; the Width and date inputs are empty.
+4. Expand every one of the 23 sections in turn. -> None of them shows a search text, a range value or an unchecked option.
+5. Check the grid. -> Every Work Header and every row returns at once, equal to the first record.
+6. Check the panel stays open. -> The drawer is still open.
+
+### TC-033 [FE][MT] Verify Reset after From greater than To and after No option (BND) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-6.1, AC-3.24
+1. Create an invalid range (From > To) with the red border and a search with `No option`. -> Both states show.
+2. Click `Reset`. -> The red border is gone; the search text is cleared; the list is normal.
+
+### TC-034 [FE][MT] Verify selections survive closing and reopening the panel and a Blank option (POS) [Auto]
+Precondition: common; rows with blank Department and with blank Remark
+Priority: High
+Trace: AC-6.2
+1. Uncheck two departments and set a Status. -> The grid is filtered.
+2. Close the panel with the Filter icon. -> The panel closes; the grid keeps the filtered rows.
+3. Open the panel. -> The unchecked departments and the Status are still shown as set.
+4. Open another page of the product and return to the Equipment Mob Plan page without reload by the menu. -> The behaviour is the same as the Story says for a session (see Open question 2); the result is recorded.
+5. Check the Blank option of a section where it exists, close and reopen. -> The Blank selection is kept and no text such as `null` shows.
+
+### TC-035 [FE][MT] Verify a reload resets the filters and shows all rows (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-6.3
+1. Set a Department filter. -> The grid is filtered.
+2. Reload the page. -> All Work Headers and rows show; the Filter Panel shows all checkboxes checked and empty inputs.
+3. Log out and log in again without saving. -> The filters are reset to the default view.
+
+### TC-036 [FE][MT] Verify Save with Edit permission persists the view and the filter does not change saved data (POS) [Partial: Save changes shared data, needs a plan owned by the card]
+Precondition: common; TM with Edit Equipment Mob Plan; plan owned by the tester
+Priority: High
+Trace: AC-6.3
+1. Set a Department filter that hides some rows. -> The grid is filtered.
+2. Click the page-level `Save` button. -> The save succeeds with the toast `Save Equipment Mob Plan Successfully.`.
+3. Reload the page. -> All rows, including the hidden ones, still exist in the plan (the filter did not delete rows).
+4. Open the Filter Panel and read the Department section. -> Record whether the filter is kept or all checkboxes are checked; the grid and the panel agree with each other (both filtered or both showing all rows), and the result is recorded against Open question 16.
+5. Count the equipment rows after the reload and compare with the count recorded before step 1. -> The count is the same as before the filter; the filter did not remove or change any saved row.
+
+### TC-037 [FE][MT] Verify both roles see the Filter icon with no extra filter permission (POS) [Auto]
+Precondition: JO with View Active Equipment Mob Plan Item and an Active plan; TM with View All Equipment Mob Plan Item
+Priority: High
+Trace: AC-1.1
+1. Log in as TM and open the Equipment Mob Plan page. -> The Filter icon shows and opens the panel.
+2. Log in as JO and open the Equipment Mob Plan page of an Active plan. -> The Filter icon shows and the panel opens with the same 23 sections.
+3. As JO set a Department filter. -> The grid filters; no save control is changed for JO.
+4. As JO try to open a plan that is not Active by its link. -> The page is not shown; no filter panel is reachable.
+
+### TC-038 [FE][MT] Verify the panel with an empty plan and a very large plan (Exotic: screen states) [Partial: large data not made safely on QA]
+Precondition: one Equipment Mob Plan with no equipment and one with a very large list
+Priority: Medium
+Trace: none (empty and many-rows screen states)
+1. Open the empty plan and open the Filter Panel. -> The panel opens; lists show no values (or `No option`); the page does not break.
+2. Open the large plan and set one filter. -> The grid updates in a reasonable time and shows the right rows.
+3. Reset. -> All rows return.
+
+### TC-039 [FE][MT] Verify editing or adding equipment while a filter is active (Exotic: combination) [Manual: needs a person to judge what the user sees]
+Precondition: common; plan owned by the tester
+Priority: Medium
+Trace: AC-5.1, AC-5.3
+1. Set a Department filter that keeps one Work Header. -> One Work Header shows.
+2. Change a row so that it no longer matches the filter. -> The behaviour is recorded: the row stays or hides (see Open question 11); no data is lost.
+3. Add Equipment under the visible Work Header. -> The new row shows; the Department list in the panel includes any new value.
+4. Click Reset. -> All rows return, including the new one.
+
+### TC-040 [FE][MT] Verify filters in two tabs do not affect each other (Exotic: two tabs) [Manual: two tabs, short check]
+Precondition: common
+Priority: Low
+Trace: none (two tabs risk of AC-6.2)
+1. Open the page in tab A and tab B. -> Both show all rows.
+2. In tab A set a Department filter. -> Tab A shows fewer rows.
+3. Switch to tab B and open the panel. -> Tab B shows all rows with the default panel state.
+
+### TC-041 [FE][MT] Verify keyboard use of the panel inputs (Exotic: keyboard) [Manual: judged by a person]
+Precondition: common
+Priority: Low
+Trace: none (keyboard use of AC-3 inputs)
+1. Open the Filter Panel and press Tab. -> The focus moves through section headers in order.
+2. Press Enter on a header. -> The section expands.
+3. Tab to a search field and type text. -> The list filters as typed.
+4. Press Tab to the next option and press Space. -> The checkbox toggles and the grid updates.
+5. Fill Width From and press Tab to To. -> The focus moves to To in order.
+
+### TC-042 [FE][MT] Verify the Reset action and slow load do not show half results (Exotic: slow network) [Manual: needs network throttling]
+Precondition: common
+Priority: Low
+Trace: none (slow connection risk of AC-1.3)
+1. Set the network to slow. -> The slow network is set.
+2. Change a filter two times quickly. -> The grid ends on the result of the last filter, not the first.
+3. Click Reset. -> All rows return and the panel is clear.
+
+### TC-043 [FE][MT] Verify the filter never counts as an unsaved change (POS) [Auto]
+Precondition: common; TM with Edit Equipment Mob Plan; plan owned by the tester
+Priority: High
+Trace: AC-6.2, AC-6.3
+1. Open the page and read the state of the page-level `Save` button. -> The state is written down (disabled when nothing is changed).
+2. Open the Filter Panel, expand `Department` and `Status`, type `Op` in a search field, and close and open the panel. -> Nothing is edited; `Save` has the same state as in step 1.
+3. Uncheck one department and tick `3` in `Priority`. -> The grid filters; `Save` still has the same state as in step 1 (a filter is not a data change, Open question 16).
+4. Re-check the department and `3` by hand and clear the search text. -> The panel is back to its first state; the grid shows all rows; `Save` has the same state as in step 1.
+5. Leave the page with the breadcrumb after step 3 is repeated (filter set). -> The page opens without any unsaved-changes warning.
+6. Return to the page, change one editable cell, then set a Department filter. -> `Save` is enabled because of the cell edit.
+7. Click `Save`. -> The toast `Save Equipment Mob Plan Successfully.` shows; `Save` goes back to disabled; the filter stays as set or is reset as recorded for Open question 16, with no row lost.
+Clean up: Reset; restore the edited cell.
+
+### TC-044 [FE][MT] Verify leaving the page as TM with a real edit and a filter warns once (NEG) [Auto]
+Precondition: common; TM with Edit permission; plan owned by the tester
+Priority: High
+Trace: AC-6.3
+1. Edit one editable cell so that `Save` is enabled, then set a Department filter. -> `Save` is enabled; the grid is filtered.
+2. Click the breadcrumb to leave the page. -> The unsaved-changes warning shows once, because the cell edit is not saved.
+3. Choose to stay on the page. -> The page, the filter and the edited cell are unchanged.
+4. Undo the cell edit by hand, then click the breadcrumb. -> `Save` is disabled again; the page is left with no warning.
+Clean up: Reset.
+
+### TC-045 [FE][MT] Verify a JO who sets a filter leaves the page without any warning (NEG) [Auto]
+Precondition: JO with View Active Equipment Mob Plan Item; an Active plan
+Priority: Medium
+Trace: AC-1.1, AC-6.3
+1. Log in as JO, open the Equipment Mob Plan page and open the Filter Panel. -> The panel opens; no save control is enabled for JO.
+2. Set a Department filter and a Status filter. -> The grid filters.
+3. Click the breadcrumb. -> The page is left at once with no unsaved-changes warning.
+4. Return to the page. -> The grid shows according to the state recorded for Open question 16; no warning is shown.
+
+### TC-046 [FE][MT] Verify browser Back, Forward and an equipment detail page with a filter set (Exotic: leaving and returning) [Manual: browser history and other pages judged by a person]
+Precondition: common
+Priority: Medium
+Trace: AC-6.2
+1. Set a Department filter and open the panel. -> The grid is filtered.
+2. Click the browser Back button. -> The previous page shows with no error.
+3. Click the browser Forward button. -> The Equipment Mob Plan page shows; the filter state is recorded (kept in the session or reset, Open question 16); the grid and the panel agree.
+4. Open an equipment detail or edit page from a visible row (Open question 17), then return. -> The page shows again with the grid and the panel in the same state, and no row is lost.
+5. Open another plan of the same event and another module page. -> Those pages show all their rows; the filter of this plan is not applied there.
+
+### TC-047 [FE][MT] Verify large numbers in the Width to Gross Wt. inputs (BND) [Auto]
+Precondition: common; one row with Gross Wt. `1234567.89` and one with Area `1000000`
+Priority: Medium
+Trace: AC-3.6, AC-3.10, AC-3.24
+1. Expand `Gross Wt. (Tons)` and type From `1234567.89`. -> The input shows the value (with a separator and decimals as the screen formats it, Open question 18); the row with `1234567.89` shows.
+2. Type To `1234567.89`. -> Only rows equal to that value show.
+3. Expand `Area (m2)` and type From `1000000`. -> The row with `1000000` shows; the value is not cut, rounded or changed to another number.
+
+### TC-048 [FE][MT] Verify the last sections open after scrolling the drawer, and the date picker month (Exotic: scroll and picker) [Manual: scroll and picker month judged by a person]
+Precondition: common; plan with a Start date
+Priority: Low
+Trace: none (scroll and date picker habits of AC-3 inputs)
+1. Open the Filter Panel and scroll the drawer down to `Remark`. -> The last sections `Loading at PSB` and `Remark` are reachable and the header stays visible.
+2. Expand `Remark` and `Loading at PSB`. -> Both lists open with their search field and options; the options are not hidden behind the screen edge.
+3. Open the date picker of `Loading at PSB` with empty fields. -> The picker opens on the month of the plan start date.
+4. Pick a date, close, and open the picker again. -> The picker opens on the month of the picked date.
+
+### TC-049 [FE][MT] Verify pasting into the middle of a text field and over selected text in MMR No. and Material Description (BND) [Auto]
+Precondition: common; clipboard text `AB-123`
+Priority: Medium
+Trace: AC-3.20, AC-3.1
+1. Expand `MMR No.`, type 28 characters, put the cursor in the middle and paste `AB-123`. -> The field shows 30 characters in total; the extra characters of the paste are cut, not added.
+2. Select 5 characters of the text and paste `AB-123`. -> The selected 5 characters are replaced; the field shows at most 30 characters.
+3. Expand `Material Description`, type `pump`, put the cursor at the end and paste `AB-123`. -> The field shows `pumpAB-123`; the grid filters by that whole text.
+
+### TC-050 [FE][MT] Verify a very short and a very long Material Description search keep the grid usable (Exotic: strange input) [Auto]
+Precondition: common
+Priority: Low
+Trace: AC-3.1
+1. Type a single character `a` in `Material Description`. -> Rows containing `a` in any case show.
+2. Type a 200-character text. -> The page does not break; the grid shows no rows or the matching rows.
+3. Clear the field. -> All rows return.
+
+### TC-051 [FE][MT] Verify frozen columns and the other side of the grid show the same rows under a filter (POS) [Manual: two grid sides compared by eye]
+Precondition: common; the grid has frozen (left) columns and scrollable columns
+Priority: Medium
+Trace: AC-5.1, AC-5.3
+1. Set a Department filter that keeps 3 rows. -> The frozen side shows 3 rows.
+2. Scroll the grid to the right. -> The scrollable side shows the same 3 rows, in the same order, with the same row heights.
+3. Click Reset. -> Both sides show all rows again with matching rows.
+
+### TC-052 [FE][MT] Verify another user changing or deleting the plan while the filter is open (Exotic: two users) [Manual: needs two accounts at once]
+Precondition: common; two TM sessions on the same plan owned by the tester
+Priority: Medium
+Trace: AC-5.1
+1. In session A set a Department filter and keep the panel open. -> Session A shows the filtered rows.
+2. In session B add an equipment row with a new Department value and save. -> Session B saves successfully.
+3. In session A reload the page. -> The new row shows (all rows return after reload) and the Department list contains the new value.
+4. In session B delete the plan; in session A change a filter. -> Session A shows a clear message or an empty page, no crash and no wrong rows from another plan.
+

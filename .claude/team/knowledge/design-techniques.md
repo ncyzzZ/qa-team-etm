@@ -88,3 +88,25 @@ in the Coverage Map saying why the group does not apply to this field.
 - Keyboard: Tab to the next field, Enter, Esc (cancels the edit), Ctrl+Z.
 - After entry: click somewhere else, Save, then Refresh: the saved value is
   still right.
+
+## Grid and input habits (not written in the Story)
+Users expect these from every editable table or input screen even when the
+Story is silent. For each one, write a case or one short reason it does not
+apply. The expected result is what the rest of the product does (check a
+similar screen in the module docs); if unknown, write the user's view and add a
+question.
+- Numbers: how a large value is shown (thousands separator, decimals) after
+  leaving the cell; the same as other number columns of the product.
+- Lists and dropdowns: typing in a long list filters it, like other dropdowns
+  of the product; a list opens in every row, also the last rows near the bottom
+  of the screen and after scrolling.
+- Date pickers: the month it opens on when the cell is empty (the date that
+  matters here, such as the event or plan start, not today) and when it has a
+  date (that date).
+- Editing inside a cell: paste with the cursor in the middle or at the end
+  inserts there and keeps the rest; paste on a selected cell replaces it.
+- Two panels or frozen columns: scrolling, adding a row (auto-scroll) and
+  resizing keep both sides on the same rows; a widened column keeps its
+  alignment rule.
+- Someone else changes or deletes the object while it is open (second tab or
+  user): the next Save, Export or edit shows the proper message.

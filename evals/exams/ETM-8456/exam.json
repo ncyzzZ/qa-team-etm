@@ -1,0 +1,51 @@
+{
+  "defect": "ETM-8456",
+  "story": "ETM-7902",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "A date typed in Manpower Mob Plan Mob/Demob Date is lost when the cell is left with Tab (Enter and click work).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7902",
+  "run": "STORY-ETM-7902",
+  "frozen": "evals/exams/_story-ETM-7902/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "re:\\btab\\b"
+        ],
+        [
+          "type",
+          "5/6",
+          "date"
+        ]
+      ],
+      [
+        [
+          "converted",
+          "shows",
+          "kept",
+          "05 jun",
+          "dd mon"
+        ],
+        [
+          "!",
+          "previous value",
+          "old value"
+        ]
+      ]
+    ],
+    "block": [
+      [
+        "manpower",
+        "mob date",
+        "mobilization",
+        "demob"
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: the blur trigger includes tabbing to the next cell."
+}

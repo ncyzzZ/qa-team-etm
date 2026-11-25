@@ -1,0 +1,33 @@
+{
+  "defect": "ETM-7957",
+  "story": "ETM-7314",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "The Filter Panel has 7 fields missing, 1 extra (Work Header), 7 names and the order differing from AC 3.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7314",
+  "run": "STORY-ETM-7314",
+  "frozen": "evals/exams/_story-ETM-7314/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "filter panel",
+          "sections",
+          "fields",
+          "section headers"
+        ],
+        [
+          "23"
+        ],
+        [
+          "material description",
+          "win#"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

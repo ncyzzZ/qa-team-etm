@@ -1,0 +1,53 @@
+{
+  "defect": "ETM-8501",
+  "story": "ETM-7902",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "After an invalid date turns a cell blank and red, double-clicking it again shows an empty box instead of the prior valid date.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7902",
+  "run": "STORY-ETM-7902",
+  "frozen": "evals/exams/_story-ETM-7902/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "invalid",
+          "32/",
+          "not a date",
+          "abc",
+          "wrong",
+          "31/02",
+          "not valid",
+          "invalid date"
+        ]
+      ],
+      [
+        [
+          "double-click",
+          "double click",
+          "re-enter",
+          "open the same",
+          "edit mode again",
+          "again"
+        ],
+        [
+          "prior",
+          "previous",
+          "last valid",
+          "old date",
+          "pre-fill",
+          "prefill",
+          "recorded",
+          "original",
+          "value a",
+          "recorded value",
+          "the recorded"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

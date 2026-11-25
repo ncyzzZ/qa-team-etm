@@ -1,0 +1,45 @@
+{
+  "defect": "ETM-8462",
+  "story": "ETM-7902",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Clearing a date and pressing Tab/Enter puts the old date back instead of leaving it empty.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7902",
+  "run": "STORY-ETM-7902",
+  "frozen": "evals/exams/_story-ETM-7902/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "clear",
+          "delete all",
+          "press `delete`",
+          "select all",
+          "empty the",
+          "remove the date",
+          "edit field is empty"
+        ]
+      ],
+      [
+        [
+          "tab",
+          "enter",
+          "click outside",
+          "leave"
+        ],
+        [
+          "blank",
+          "empty",
+          "no date",
+          "not restored",
+          "stays empty",
+          "red"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

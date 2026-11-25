@@ -86,3 +86,27 @@ Stories ETM-7311 and ETM-7306, defects of another tester. Story text is the Jira
 | ETM-7886 | no | MISSED | MISSED | auto-scroll of both panels |
 
 Rule in Story: 3/5 -> 4/5. Not in Story: 0/7 -> 0/7. Bug-check fixes wrong or hedged Expected Results; it does not invent expectations the Story does not state. Drafts grew 40 -> 51 and 35 -> 42 cases. The "not in Story" misses are general UI habits (number format, search in lists, paste at the cursor, picker start month, rows far down, panels in sync, object deleted elsewhere): a checklist of those for grids is the next candidate, measured on yet another set.
+
+### Grid habits checklist, measured on a third set (2026-11-25)
+
+"Grid and input habits" was written into `design-techniques.md` from the seven Equipment Mob Plan misses only, and added as check 4 of bug-check. It was then measured on Stories never used to make a rule: ETM-7902 (date input in grids, 4 defects) and ETM-7314 (Equipment Mob Plan Filter Panel, 3 defects). `equipment-mob-plan.md` was withheld for ETM-7314 again.
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-8501 | yes | CAUGHT (TC-020) | CAUGHT | |
+| ETM-8462 | yes | CAUGHT (TC-022) | CAUGHT | |
+| ETM-8460 | implied | CAUGHT (TC-004) | CAUGHT | |
+| ETM-8456 | yes | MISSED | MISSED | Tab tested only on Shutdown Logic; on Manpower Mob Plan only Enter. Gap: each commit trigger on each page. |
+| ETM-7957 | yes | CAUGHT (TC-022) | CAUGHT | |
+| ETM-7945 | yes | CAUGHT (TC-031) | CAUGHT | |
+| ETM-7949 | no (checklist item) | MISSED | **CAUGHT, weak (TC-048)** | from check 4. Expects the plan start month; the BA wanted the earliest month in the data. Still fails on the bug (current month) unless the plan starts this month. Manual, Low. |
+
+5/7 -> 6/7. The checklist was skipped by the designer (as before with knowledge rules) and worked only through the focused bug-check. Not changed after this set: a "each trigger on each page" rule would fit ETM-8456 only; keep it as a candidate until another set shows the same gap.
+
+### Totals so far (fresh designer + bug-check + one fix round; ETM-8497 not counted, user decision)
+
+| Set | Draft | After bug-check |
+|---|---|---|
+| Sprint 26 cards + ETM-7345/7348 (rules were made from these) | 4/8 | 8/8 (ETM-9229/8902 with a leading prompt) |
+| Equipment Mob Plan ETM-7311/7306 | 3/12 | 4/12 |
+| ETM-7902/7314 (never used for a rule) | 5/7 | 6/7 |

@@ -1,0 +1,36 @@
+{
+  "defect": "ETM-7949",
+  "story": "ETM-7314",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "A date filter's picker opens on the current month instead of the earliest month in the table data.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7314",
+  "run": "STORY-ETM-7314",
+  "frozen": "evals/exams/_story-ETM-7314/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "date picker",
+          "calendar",
+          "from",
+          "to"
+        ],
+        [
+          "open"
+        ],
+        [
+          "month",
+          "earliest",
+          "first date",
+          "data"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Grid habits checklist item: the month a picker opens on."
+}

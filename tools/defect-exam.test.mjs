@@ -139,3 +139,36 @@ test('ETM-7940: typing into a text cell next to a note about dropdowns is not co
   const txt = '### TC-024 Contact Person\nNote: Platform is a dropdown.\n5. Type a space only in Contact Person. -> The cell is treated as blank (red) or accepted; record the result.';
   assert.deepEqual(ids(txt, 'ETM-7940'), []);
 });
+
+// Date input (ETM-7902) and filter panel (ETM-7314) exams
+const set3 = {
+  'ETM-8501': ['### TC-1 Invalid date\n1. Double-click Start Date (record it), clear it, type `32/01/2026` and press Tab. -> The cell is blank and red.\n2. Double-click the same cell again. -> The box is pre-filled with the recorded prior valid date.',
+               '### TC-1 Invalid date\n1. Double-click Start Date, clear it, type `32/01/2026` and press Tab. -> The cell is blank and red.'],
+  'ETM-8462': ['### TC-1 Clear a date\n1. Double-click Mob Date and delete all text so the date is empty. -> The box is empty.\n2. Press Tab. -> The cell stays empty (red); the old date is not restored.',
+               '### TC-1 Change a date\n1. Double-click Mob Date and type `5/6/26`. -> Typed.\n2. Press Tab. -> The cell shows `05 Jun 2026`.'],
+  'ETM-8460': ['### TC-1 Convert then re-enter\n1. Paste `5/6/26 1430` and click outside. -> It is converted to `05 Jun 2026, 14:30`.\n2. Click back into the same field. -> It shows the converted value `05 Jun 2026, 14:30`.',
+               '### TC-1 Convert\n1. Paste `5/6/26 1430` and click outside. -> It is converted to `05 Jun 2026, 14:30`.'],
+  'ETM-8456': ['### TC-1 Tab commits\n1. Double-click Mob Date, type `5/6/26` and press Tab. -> The cell shows `05 Jun 2026` and the next cell is focused.',
+               '### TC-1 Tab\n1. Double-click Mob Date, type `5/6/26` and press Enter. -> The cell shows `05 Jun 2026`.'],
+  'ETM-7957': ['### TC-1 Filter Panel sections\n1. Open the filter panel and read the sections. -> Exactly these 23 fields in this order: Material Description, WIN# No. (CCU No.), ...',
+               '### TC-1 Filter Panel\n1. Open the filter panel. -> It slides in from the right.'],
+  'ETM-7949': ['### TC-1 Date filter\n1. Click the From box of Require at Offshore. -> The date picker opens on the earliest month found in the table data.',
+               '### TC-1 Date filter\n1. Pick 01 Jun 2026 in the From box. -> Rows from 01 Jun 2026 show.'],
+  'ETM-7945': ['### TC-1 No match\n1. Tick a Status that matches no record and apply. -> The table body is empty, only the table header stays; no message.',
+               '### TC-1 Match\n1. Tick Status `Received` and apply. -> Only received rows show.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set3)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('ETM-7957: "23 sections show as collapsed" without the field list is not counted (exam 2026-11-25, TC-004)', () => {
+  assert.deepEqual(ids('### TC-004 Filter Panel\n1. Open the Filter Panel for the first time. -> All 23 sections show as collapsed, with only their headers visible.', 'ETM-7957'), []);
+});
+test('ETM-7902 set: other wording is understood, "table" is not "Tab", Tab on another page does not count (exam 2026-11-25)', () => {
+  assert.deepEqual(ids('### TC-020 red cell\n1. Record value A of the cell. -> Written down.\n2. Type `31/02/2026` and press `Enter`. -> The cell is blank and red.\n3. Double-click the red cell. -> The edit field shows value A, not blank.', 'ETM-8501'), ['TC-020']);
+  assert.deepEqual(ids('### TC-022 clear\n1. Double-click the cell, select all text and press `Delete`. -> The edit field is empty.\n2. Press `Enter`. -> The cell is blank with a red background.', 'ETM-8462'), ['TC-022']);
+  assert.deepEqual(ids('### TC-029 Manpower Mob Plan dates\n1. For each row of the table type the input into Mobilization Date and press `Enter`. -> The cell shows the expected value.', 'ETM-8456'), []);
+  assert.deepEqual(ids('### TC-002 Shutdown Logic\n5. Type `6/6/26 08:00`. -> Typed.\n6. Press `Tab`. -> The End cell shows `06 Jun 2026 08:00`.', 'ETM-8456'), []);
+});

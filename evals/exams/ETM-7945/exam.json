@@ -1,0 +1,38 @@
+{
+  "defect": "ETM-7945",
+  "story": "ETM-7314",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "A filter that matches nothing shows 'No data available.' instead of an empty table body.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7314",
+  "run": "STORY-ETM-7314",
+  "frozen": "evals/exams/_story-ETM-7314/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "no record",
+          "matches no",
+          "nothing matches",
+          "no match",
+          "no row",
+          "zero"
+        ]
+      ],
+      [
+        [
+          "empty",
+          "no message",
+          "only the header",
+          "only table header",
+          "headers only",
+          "no text"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}
