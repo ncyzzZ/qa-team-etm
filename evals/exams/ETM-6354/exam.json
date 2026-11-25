@@ -34,10 +34,14 @@
         [
           "mob date",
           "transportation"
+        ],
+        [
+          "!",
+          "not empty"
         ]
       ]
     ]
   },
   "baseline": null,
-  "note": "Story: Onboard Date derived from Mob Transportation and Mob Date."
+  "note": "Story: Onboard Date derived from Mob Transportation and Mob Date. \"Onboard Date shows a date (not empty)\" is the positive case; the catch is Onboard empty without Transportation (fix-round TC-029 step 4)."
 }

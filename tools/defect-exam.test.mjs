@@ -434,3 +434,15 @@ for (const [d, [hitTxt, nearTxt]] of Object.entries(set9)) {
 test('ninth set: Set Route opened with saved routes counts for ETM-6211', () => {
   assert.deepEqual(ids('### TC-027 Save until change\nPrecondition: common, saved routes exist\n1. Open `Set Route`. -> The panel `Save` is disabled.', 'ETM-6211'), ['TC-027']);
 });
+test('ninth set: a picker month left to an open question is not ETM-6357', () => {
+  assert.deepEqual(ids('### TC-022 Picker\n1. Open the `Mob Date` picker on the empty cell. -> A calendar opens (Q12: the month it opens on).', 'ETM-6357'), []);
+});
+test('ninth set: a filled cell opening on its own date is not ETM-6357', () => {
+  assert.deepEqual(ids('### TC-022 Picker\n3. Open the picker again. -> The calendar opens on the month of the date in the cell.', 'ETM-6357'), []);
+});
+test('ninth set: signature fixes from the ETM-5836 fix round (read by hand)', () => {
+  assert.deepEqual(ids('### TC-051 Bar\n4. Compare the order of the timeline rows with the table rows. -> The same rows in the same order, each bar level with its row.', 'ETM-6369'), []);
+  assert.deepEqual(ids('### TC-029 Onboard\n2. Select `Helicopter` in `Mob Transportation` and set a Mob Date. -> Onboard Date shows a date (not empty).', 'ETM-6354'), []);
+  assert.deepEqual(ids('### TC-029 Onboard\n4. Clear `Mob Transportation`. -> Onboard Date is empty and does not keep the old value.', 'ETM-6354'), ['TC-029']);
+  assert.deepEqual(ids('### TC-022 Picker\nPrecondition: Mob Date cell empty.\n1. Open the `Mob Date` picker on the empty cell. -> A calendar opens on the month of the first Required Manpower date of the category (Q12 confirms).', 'ETM-6357'), ['TC-022']);
+});

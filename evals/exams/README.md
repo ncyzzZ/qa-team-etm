@@ -219,6 +219,23 @@ Rule added after the seventh set (commit cc040d7, check 5): "an export or second
 
 2/5 -> 2/5. Bug-check opened 24 / 35 rows; fix rounds added 13 / 17 cases (40->53, 45->62). The new rule was used (ETM-6506 TC-003 "same rows as the panel in the same order", 1 / 1,000 / 5,000 rows in TC-017; ETM-6394 TC-052 legend and table in the same order), but no defect of this set is that kind. The misses: a Save state the Story half-states (disabled only for blank Name) where the designer wrote the bug as expected and the fix round hedged ("written down"); "someone else deletes" applied to the nearest object (the graph), not to the parent (the plan); and an action from another Story (duplicate plan) that copies this Story's data. Candidate rules, not added: "Save disabled until a change is the default; a case never expects Save enabled on open"; "someone else deletes the object and each parent of it (graph, plan, event)".
 
+### Ninth set (2026-11-25): with the Save and parent-delete rules from the eighth set
+
+Rules added after the eighth set (commit 6d2c5fe): "Save is disabled when a page, drawer or panel opens and stays disabled until a real change; never expected enabled on open, never only written down" (Unsaved changes, check 2) and "someone else deletes the object and each parent of it" (Grid habits, check 4). Stories no exam had used, all Manpower Mob Plan, September 2026: ETM-5838 (Set Route), ETM-6396 (Export Plan to Excel), ETM-5836 (Add Personnel). `manpower-mob-plan.md` withheld for all three (it holds later answers, e.g. the Route No. limit). Dropped because the frozen Story says the opposite: ETM-6199 (Day list starts Monday in the Story), ETM-6205 (Route No. max 50 in the Story), ETM-6837 (Story: zero / no value left blank), ETM-6358 (Story: autofill of both dates), ETM-6397 (Figma look). ETM-5615 (Filter Panel) was built and dropped: another session in this folder already has exams on it (ETM-6634 and others); its files were restored.
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-6211 | no (new Save rule) | CAUGHT, weak (TC-027) | CAUGHT, weak | "Open Set Route (saved routes exist) -> panel Save is disabled": the new rule. Weak: the frozen Story has one panel; the defect is the later Edit Route entry. Signature widened for the Story's words, test added. |
+| ETM-6469 | partly | MISSED | MISSED | TC-008 lists Accommodation, the field, SKL in order, never "only these". |
+| ETM-6839 | partly | MISSED | MISSED | TC-051 / fix-round TC-061 check the file holds saved data; no step says Export is disabled while Save is enabled. |
+| ETM-6315 | yes | CAUGHT (TC-004) | CAUGHT | new row Hot Bed `No`. |
+| ETM-6369 | no (order after edit) | MISSED | MISSED | fix-round TC-007 / TC-051 compare timeline order with table order (both move together on the bug); first scored CAUGHT, signature narrowed, test added. |
+| ETM-6359 | partly | CAUGHT (TC-028 step 3) | CAUGHT | autofilled dates cleared -> both cells empty. |
+| ETM-6357 | no (grid habit) | MISSED | **CAUGHT (TC-022 step 1)** | draft left the month to Q12; check 3 (assumed answers) made it a fixed result: the month of the first Required Manpower date. First draft scored CAUGHT twice by wrong lines (Q12 note, a filled cell's own date); signature narrowed, tests added. |
+| ETM-6354 | yes | MISSED | **CAUGHT (TC-029 step 4)** | Transportation cleared -> Onboard Date empty, from check 3. Step 2 "(not empty)" first counted; signature narrowed, test added. |
+
+3/8 -> 5/8. Bug-check opened 32 / 37 / 27 rows; fix rounds added 13 / 5 / 6 cases (38->51, 60->65, 46->52). Both new catches came from check 3 (an Open question turned into a fixed expected result), not from the two new rules. The new Save rule fired once (ETM-6211, weak) and the parent-delete rule was written by the designers (ETM-5836 TC-040 plan deleted; ETM-5838 fix-round TC-049) with no defect of that kind here. Misses left: "only these options" for a list built from a parent's value (ETM-6469), a button that must be disabled while another one is enabled (ETM-6839), and list order after an edit (ETM-6369).
+
 ### Totals (fresh designer + bug-check + one fix round)
 
 | Set | Draft | After bug-check |
@@ -231,7 +248,8 @@ Rule added after the seventh set (commit cc040d7, check 5): "an export or second
 | ETM-6538/6373/6843 (never used for a rule; with the two rules from the 5th set) | 3/11 | 4/11 |
 | ETM-7984/6844/6928/7321 (never used for a rule; with the two rules from the 6th set) | 3/7 | 3/7 |
 | ETM-6394/6379/6506 (never used for a rule; with the rule from the 7th set) | 2/5 | 2/5 |
-| All unseen sets (3rd, 4th first run, 5th to 8th) | 23/47 | 25/47 |
+| ETM-5838/6396/5836 (never used for a rule; with the Save and parent-delete rules) | 3/8 | 5/8 |
+| All unseen sets (3rd, 4th first run, 5th to 9th) | 26/55 | 30/55 |
 
 ### Manpower Mob Plan set with Playwright's planner (2026-11-25): ETM-5614, ETM-5615, ETM-6378
 

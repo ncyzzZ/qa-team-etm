@@ -25,24 +25,33 @@
           "place"
         ],
         [
-          "same",
           "kept",
           "unchanged",
           "stays",
           "still",
           "original",
           "not moved",
-          "keeps"
+          "keeps",
+          "before the edit",
+          "as before",
+          "order they were added",
+          "added order",
+          "same position"
         ],
         [
           "row",
           "personnel",
           "person",
           "worker"
+        ],
+        [
+          "!",
+          "timeline",
+          "bar"
         ]
       ]
     ]
   },
   "baseline": null,
-  "note": "Not in the Story; a list keeps its order after an edit (rule: the same rows in the same order)."
+  "note": "Not in the Story; a list keeps its order after an edit (rule: the same rows in the same order). Timeline order equal to table order is not this bug: both move together (fix-round TC-007 / TC-051, read by hand)."
 }

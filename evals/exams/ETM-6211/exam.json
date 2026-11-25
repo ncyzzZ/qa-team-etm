@@ -14,7 +14,10 @@
     "block": [
       [
         "edit route",
-        "existing route"
+        "existing route",
+        "saved routes exist",
+        "existing routes",
+        "saved route"
       ]
     ],
     "steps": [
@@ -49,5 +52,5 @@
     ]
   },
   "baseline": null,
-  "note": "Story silent on Save state; the rule \"Save disabled until a change\" (added after the eighth set) covers it."
+  "note": "Story silent on Save state; the rule \"Save disabled until a change\" (added after the eighth set) covers it. The frozen Story has one Set Route panel that also holds the saved routes (no separate Edit Route yet); a case that opens it with saved routes and expects Save disabled counts (ETM-5838 draft TC-027, weak: not the later Edit Route entry point)."
 }

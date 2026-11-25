@@ -39,11 +39,18 @@
         [
           "!",
           "current month",
-          "this month"
+          "this month",
+          "today",
+          "q12: the month",
+          "the month it opens on",
+          "date in the cell",
+          "its date",
+          "the cell value",
+          "cell date"
         ]
       ]
     ]
   },
   "baseline": null,
-  "note": "Not in the Story; grid habit \"date pickers open on the month that matters\"."
+  "note": "Not in the Story; grid habit \"date pickers open on the month that matters\". A step that leaves the month to an open question (\"Q12: the month it opens on\") does not count (ETM-5836 draft TC-022, read by hand). A filled cell opening on its own date is the other habit item, not this bug (TC-022 step 3). Fix-round TC-022 step 1 \"opens on the month of the first Required Manpower date\" counts (the plan month, not today)."
 }
