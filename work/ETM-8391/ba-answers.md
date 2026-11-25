@@ -27,3 +27,11 @@ Optional hardening for script: also assert Total Results = 0 and "No results fou
 ## Not applicable / decision needed
 - ETM-8648: ETM has only the TM and JO roles (memory: project-etm-roles-tm-jo), so a user without View Worklist may not exist. Decide: not applicable, or ask for a test user.
 - ETM-8663: pre-release state cannot be created on QA; old key names are guessed. Ask dev for the real old address keys, or mark manual.
+
+## ETM-8658 step 8 "options after a search" - ANSWERED (25 Nov 2026, answer B)
+Question: `questions-for-BA-8658-step8.md`.
+Answer (by design, not a bug):
+- A search text (e.g. `W05`) narrows the options of **every** column filter (Remark, Job Description, Job Owner, ...) to the values of the works found. After searching `W05` the Remark filter lists only `Note 1`: correct.
+- Ticking another column filter (e.g. Job Owner) does **not** change the Remark options: they stay all values of the worklist.
+- DEC-040 "options come from all works" holds except while a search text is active.
+Changes: Xray ETM-8658 step 8 reworded; spec step 8 expects only the Remark of W05.
