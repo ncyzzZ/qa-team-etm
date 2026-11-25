@@ -29,6 +29,7 @@ test-results*/
 # local nickname list of the developers
 .claude/team/people.local.md
 evals/agents/results/
+evals/exams/results/
 evals/metrics/out.html
 
 # personal Claude Code overrides

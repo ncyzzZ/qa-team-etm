@@ -1,0 +1,16 @@
+{
+  "defect": "ETM-9229",
+  "story": "ETM-8391",
+  "found_by": "team (TC-011 step 6 -> Xray ETM-8658 step 4); first run hid it by reading stale rows (ai-miss M-9)",
+  "bug": "Clearing the search box also removes the active column filters (Remark, Job Owner); only the search text should be cleared.",
+  "inputs": ["story.md", "analyst.md"],
+  "frozen": "story.md and analyst.md copied 2026-11-24 from .claude/team/work/ETM-8391/ (written before the defect, no defect text in them)",
+  "catch": {
+    "_how": "A TC catches the bug when, inside one TC block, every 'block' group matches somewhere and every 'steps' entry matches within ONE line. A group matches when any of its words is in the text (case-insensitive).",
+    "block": [["filter"], ["search"]],
+    "steps": [
+      [["search"], ["clear", "delete all", "empty the", "remove the search", "erase"], ["filter"], ["stay", "kept", "keep", "still", "remain", "not cleared", "not removed"]]
+    ]
+  },
+  "baseline": "baseline-draft-tc.md"
+}

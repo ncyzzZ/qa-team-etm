@@ -1,0 +1,68 @@
+{
+  "defect": "ETM-8877",
+  "story": "ETM-8388",
+  "found_by": "team (TC-018 steps 8-9 -> Xray ETM-8723 failed, defect logged 2026-11-20)",
+  "bug": "On Edit Plan, pasting more than one row into the weekly Plan (%) cells changed other rows; BA: only the first row is pasted, the other rows are ignored.",
+  "inputs": [
+    "story.md",
+    "analyst.md"
+  ],
+  "frozen": "story.md and analyst.md copied 2026-11-24 from .claude/team/work/ETM-8388/ (story.md includes the BA comment of 17 Nov that set 'first row only', before the defect of 20 Nov)",
+  "catch": {
+    "_how": "See ETM-9229/exam.json.",
+    "block": [
+      [
+        "Edit Plan"
+      ],
+      [
+        "weekly"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "two lines",
+          "two rows",
+          "2 rows",
+          "2 lines",
+          "several rows",
+          "several lines",
+          "multiple rows",
+          "multiple lines",
+          "more than one row",
+          "three rows",
+          "3 rows",
+          "multi-row"
+        ],
+        [
+          "clipboard",
+          "paste",
+          "ctrl+v"
+        ],
+        [
+          "weekly plan",
+          "plan (%) cell",
+          "plan % cell"
+        ]
+      ],
+      [
+        [
+          "ignored",
+          "unchanged",
+          "not changed",
+          "not pasted",
+          "not applied",
+          "equal the values recorded",
+          "stay the same"
+        ],
+        [
+          "row",
+          "valve",
+          "other activit",
+          "second"
+        ]
+      ]
+    ]
+  },
+  "baseline": "baseline-draft-tc.md"
+}
