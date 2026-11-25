@@ -1,0 +1,3 @@
+{"note":"Before Work Setting -> Work Details (approved in chat 2026-11-24)",
+"ETM-8862":{"s7":{"id":"af53d5f1-7ea9-43a0-959f-0adeaef6064a","action":"Open the Work Setting modal (Edit Work) of that row and change one editable value."},"s8":{"id":"2ad4dbd5-6ee3-4f8d-bab9-719c7f985003","action":"Click `Save` in the Work Setting modal."}},
+"ETM-8865":{"s22":{"id":"50d65e71-82f5-4f2c-9870-e029690b0f81","action":"Edit one value of Work B in the Work Setting modal (Edit Work)."},"s23":{"id":"a8d77b8b-10aa-44c0-b723-a9683509ca3d","action":"Click `Save` in the Work Setting modal."}}}

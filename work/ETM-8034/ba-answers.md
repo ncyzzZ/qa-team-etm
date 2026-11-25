@@ -26,3 +26,32 @@
 
 ## รอบ 2 (BA ตอบ 2026-11-18, ไฟล์ 2026-11-18_ETM-8034_qa-questions.md)
 สรุปอยู่ใน .claude/team/work/ETM-8034/story.md ท้ายไฟล์. ยังเปิด: ข้อ 4 ข้อความ modal unsaved (Dev), สูตรผสมสีจาก Figma 163-807247, Dev ยืนยันว่า cell ไหนมี condition color และ backend เช็คสิทธิ์.
+
+## รอบ 3 (BA ตอบ 2026-11-24, work/SPRINT26/ba-answers-all-2026-11-24.md หัวข้อ ETM-8034; คำถาม questions-for-BA-round3.en.md)
+| R3 | คำตอบ BA | ผลต่อ TC / script |
+|---|---|---|
+| R3-1 | AC 1.2 = No Color + 12 สี (13 ช่อง); BA แก้ข้อความ AC 1.2 เอง, DEC-028 คงไว้ | ETM-8856 คงเดิม (spec เช็ค 13 ช่องอยู่แล้ว) |
+| R3-2 | Undo history รวมการแก้ใน Work Details modal เรียงตามลำดับกับการเปลี่ยนสี (ETM-2703); ถ้า build ไม่ทำ = defect | ETM-8865 s22-25 มีที่มาแล้ว คงไว้ |
+| R3-3 | DEC-055: Copy & Paste (ETM-2615) = double-click ช่อง No. + Ctrl+C / Ctrl+V คัดลอกแค่ text ไม่เอาสี; Duplicate (ETM-2696) คัดลอก Highlight และ Text Color; ไม่มีเมนู copy อื่น | ETM-8861 s1-4 ใน spec ตรงแล้ว; Xray 8861 s1-2 ควรเขียนชื่อวิธีให้ชัด (รอ yes) |
+
+ปิดครบทั้ง 3 ข้อ ไม่มีคำถามรอบ 3 ค้าง
+
+## Behaviour table (ผู้ใช้ส่งในแชต 2026-11-24, ตรงกับ build stms-fe 73dfde33)
+| ที่ไหน | การกระทำ | ผล |
+|---|---|---|
+| คอลัมน์ No. | Click | Select Cell |
+| คอลัมน์ No. | Shift + Click | Select Multiple Cell |
+| คอลัมน์ No. | Right Click | Dropdown: Highlight Cell, Change Text Color, Delete |
+| คอลัมน์ No. | Double Click | Select Row |
+| คอลัมน์ No. | Shift + Double Click / Select Row + Shift + Click | Select Multiple Row |
+| คอลัมน์ No. | Select Row + Right Click | Dropdown: Highlight Row, Change Text Color, Delete |
+| คอลัมน์อื่น | Click / Shift + Click | Select Cell / Select Multiple Cell |
+| คอลัมน์อื่น | Right Click | Dropdown: Highlight Cell, Change Text Color, Delete |
+
+ผล: "คลิกขวาที่แถว" ใน TC = double-click No. แล้วคลิกขวา; Highlight Cell (ลงสีเฉพาะช่อง) ยังไม่มีใน AC (อ่าน AC ใหม่ 14:23 แล้ว: แก้แค่ 1.2) และไม่มี TC -> ถาม BA รอบ 4 (F-35, R4-1)
+
+## Highlight Cell (ผู้ใช้ตอบในแชตของ lead 2026-11-24)
+"Highlight Cell ต้องคลิกขวาที่ description ตั้งใจเพิ่มมา แต่รอก่อนได้ไหม"
+- Highlight Cell เป็น feature ที่ตั้งใจเพิ่ม (คลิกขวาที่ช่อง Description) ไม่ใช่ defect
+- พักไว้ก่อน: ยังไม่ส่ง R4-1 ให้ BA และยังไม่เพิ่ม TC ของ Highlight Cell (F-35 confirmed, deferred)
+- script คงเดิม: double-click No. -> คลิกขวา -> Highlight Row

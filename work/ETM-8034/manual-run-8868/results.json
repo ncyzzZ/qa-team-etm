@@ -1,0 +1,17 @@
+{"key":"ETM-8034","test":"ETM-8868","role":"turnaroundManager","note":"Task 11 (04-Test1, only Crane Opt[1]). Nothing saved; Save never pressed; reloaded twice, final state: 0 highlighted, 0 error cells, Save disabled. Delete Resource also asks a confirm dialog (Delete) and a 'No Working Time Available' OK dialog. Red layer = rgb(255,204,199) is drawn translucent over the highlight: on FFFB8F the cell looks orange. Histogram showed empty/partial after delete and after reload (display glitch seen twice).",
+"steps":[
+{"n":1,"verdict":"pass","why":"Delete Resource on Crane Opt: task 11 resource cell got b-invalid-cell with red layer rgb(255,204,199)","picture":"evidence/ETM-8868/step-1.png"},
+{"n":2,"verdict":"pass","why":"Look noted: cell background layer rgb(255,204,199) (FFCCC7) over white, no highlight, no selected tint","picture":"evidence/ETM-8868/step-2.png"},
+{"n":3,"verdict":"pass","why":"All 7 cells of row 11 measured rgb(255,251,143) = FFFB8F","picture":"evidence/ETM-8868/step-3.png"},
+{"n":4,"verdict":"needs-human","why":"Mixed colour, no exact value: red cell is drawn as red layer rgb(255,204,199) over FFFB8F plus 8% blue selected tint; on screen it looks orange, other cells yellow. Person decides if still recognised as red","picture":"evidence/ETM-8868/step-4.png"},
+{"n":5,"verdict":"pass","why":"All 7 cells of row 11 measured rgb(255,204,198) = FFCCC6","picture":"evidence/ETM-8868/step-5.png"},
+{"n":6,"verdict":"needs-human","why":"Mixed colour: red layer FFCCC7 vs highlight FFCCC6 differ by 1 unit; on the picture the red cell is a visibly darker pink than the rest of the row. Person decides","picture":"evidence/ETM-8868/step-6.png"},
+{"n":7,"verdict":"pass","why":"Highlight removed (white cells); red layer still rgb(255,204,199) as step 2. Only difference: 8% selected tint of the row (row still selected)","picture":"evidence/ETM-8868/step-7.png"},
+{"n":8,"verdict":"pass","why":"After reload without Save: Crane Opt[1] back on task 11, 0 error cells, Save disabled","picture":"evidence/ETM-8868/step-8.png"},
+{"n":9,"verdict":"pass","why":"All 7 cells of row 11 measured rgb(255,251,143) = FFFB8F","picture":"evidence/ETM-8868/step-9.png"},
+{"n":10,"verdict":"pass","why":"After Delete Resource on highlighted row: resource cell has b-invalid-cell with red layer rgb(255,204,199); other cells stay FFFB8F. Histogram displayed empty after delete (glitch)","picture":"evidence/ETM-8868/step-10.png"},
+{"n":11,"verdict":"needs-human","why":"Other 6 cells measured FFFB8F; red cell shows red layer over FFFB8F = orange look (mixed colour, no exact value). Person decides if red is still visible","picture":"evidence/ETM-8868/step-11.png"},
+{"n":12,"verdict":"pass","why":"Red cell keeps b-invalid-cell red layer rgb(255,204,199); other 6 cells back to rgb(255,255,255)","picture":"evidence/ETM-8868/step-12.png"},
+{"n":13,"verdict":"pass","why":"All 7 cells of row 11 measured rgb(255,251,143) = FFFB8F","picture":"evidence/ETM-8868/step-13.png"},
+{"n":14,"verdict":"needs-human","why":"No clear on-screen way to make a dependency conflict is given in the Test (no Dev steps); not attempted, as the Test says","picture":"evidence/ETM-8868/step-14.png"},
+{"n":15,"verdict":"needs-human","why":"Depends on step 14: no red border was made, so border + FFFB8F cannot be checked. Reload without Save done: 0 highlighted, 0 error cells, Save disabled","picture":"evidence/ETM-8868/step-15.png"}]}

@@ -1,0 +1,73 @@
+{
+ "key": "ETM-8034",
+ "test": "ETM-8869",
+ "title": "Hover, selected, focus and disabled layers on a highlighted row",
+ "role": "turnaroundManager",
+ "steps": [
+  {
+   "n": 1,
+   "do": "Move the mouse over the highlighted Work row",
+   "expected": "The hover layer shows over the row and the highlight FFFB8F is still visible under it",
+   "verdict": "needs-human",
+   "why": "Row 8 (task row, menu says Work Breakdown) highlighted FFFB8F. While hovered, Description cell has an extra layer rgba(24,144,255,0.14) over background-color rgb(255,251,143) (FFFB8F kept, not replaced). Mixed colour has no exact value: a person judges the picture.",
+   "picture": "evidence/ETM-8869/step-1.png"
+  },
+  {
+   "n": 2,
+   "do": "Click the row to select it",
+   "expected": "The selected look shows and the highlight is still visible",
+   "verdict": "needs-human",
+   "why": "Row selected (double-click No. cell, class b-selected): every cell keeps background-color rgb(255,251,143) with layer rgba(24,144,255,0.08) on top. A single click selects one cell only (layer 0.14/0.08), it does not select the row. Mixed colour: a person judges the picture.",
+   "picture": "evidence/ETM-8869/step-2.png"
+  },
+  {
+   "n": 3,
+   "do": "Click a cell of the row so it has focus",
+   "expected": "The focus look shows and the highlight is still visible",
+   "verdict": "needs-human",
+   "why": "Clicked Description cell: it gets b-focused, background-color stays rgb(255,251,143); no colour layer and no outline/box-shadow was measured for focus (outline none), so the focus look is not measurable. A person must look at the picture.",
+   "picture": "evidence/ETM-8869/step-3.png"
+  },
+  {
+   "n": 4,
+   "do": "Click an empty area of the page",
+   "expected": "The row looks like FFFB8F again",
+   "verdict": "needs-human",
+   "why": "Clicked an empty area above the grid: background-color of all cells = rgb(255,251,143), but the row stays selected (layer rgba(24,144,255,0.08) still on cells 3-8) and the focus stays; clicking outside does not clear the selection. Not exactly FFFB8F: a person decides.",
+   "picture": "evidence/ETM-8869/step-4.png"
+  },
+  {
+   "n": 5,
+   "do": "Record how the disabled cell of the Platform row looks with no highlight",
+   "expected": "The look is written down for comparison",
+   "verdict": "pass",
+   "why": "Platform row FP (row 1), read-only Duration cell (class b-readonly-cell): background-color rgb(242,248,250) with layer rgb(245,245,245), text colour rgb(89,89,89); recorded for comparison.",
+   "picture": "evidence/ETM-8869/step-5.png"
+  },
+  {
+   "n": 6,
+   "do": "Right-click the Platform row, open Highlight Row and choose B9E0FF",
+   "expected": "The row background is B9E0FF",
+   "verdict": "pass",
+   "why": "Row FP selected, Highlight Row, B9E0FF: background-color of cells = rgb(185,224,255) (= B9E0FF), class shutdown-cell--highlight on cells.",
+   "picture": "evidence/ETM-8869/step-6.png"
+  },
+  {
+   "n": 7,
+   "do": "Look at the disabled cell",
+   "expected": "The disabled look is still visible, mixed with the highlight, and the cell is still recognised as disabled",
+   "verdict": "needs-human",
+   "why": "Duration cell keeps class b-readonly-cell, layer rgb(245,245,245) and text rgb(89,89,89) over background-color rgb(185,224,255) (row also selected, layer 0.08). Mixed colour, no exact value: a person judges the picture.",
+   "picture": "evidence/ETM-8869/step-7.png"
+  },
+  {
+   "n": 8,
+   "do": "Right-click the Platform row, Highlight Row, No Color, then reload without Save",
+   "expected": "The disabled cell looks as in step 5",
+   "verdict": "pass",
+   "why": "After No Color and a reload without Save: 0 highlighted cells on the page; Duration cell bg rgb(242,248,250), layer rgb(245,245,245), text rgb(89,89,89) = same as step 5. Picture taken after the reload. Row 8 also back to white rgb(255,255,255).",
+   "picture": "evidence/ETM-8869/step-8.png"
+  }
+ ],
+ "actions": []
+}

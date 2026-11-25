@@ -432,5 +432,83 @@
   "note": "backfilled from ba-answers.md; answered (user said all BA questions were answered, 2026-11-19); whether the AC changed is not recorded",
   "later_defect": null,
   "backfilled": true
+ },
+ {
+  "id": "F-32",
+  "q": "R3-1",
+  "ac": "AC-1.2",
+  "kind": "conflict",
+  "impact": "high",
+  "note": "AC 1.2 says No Color + 13 colours; BA answer, Figma and palette give No Color + 12. ETM-8856 s2/4/6/8 and spec assert 13 cells (No Color + 12); AC text must be corrected | Answered from repo: No Color + 12 (ba-answers.md row 1, story.md 12-hex palette). Only the Jira AC 1.2 text still says 13: BA to edit AC. Source: work/SPRINT26/ba-self-answers-2026-11-24.md row 8034-Q1. | BA confirmed 2026-11-24 (work/SPRINT26/ba-answers-all-2026-11-24.md, ETM-8034 Q1).",
+  "raised": "2026-11-24",
+  "story_status": "In Development",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "later_defect": null
+ },
+ {
+  "id": "F-33",
+  "q": "R3-2",
+  "ac": "AC-6",
+  "kind": "question",
+  "impact": "medium",
+  "note": "Is a Work Setting modal save in the page Undo history?. ETM-8865 s24 asserts yes without AC/BA basis; drop the step if no | Answered: a modal Save (Work Details / Breakdown Settings) is one Undo step in the same history (Jira ETM-2703 Data Source + AC 2.4; ETM-8034 AC 6 aligned with ETM-2703). 8865 s24 is backed; wording \"Work Setting\" vs ETM-2703 \"Work Details\" to align. Source: work/SPRINT26/ba-self-answers-2026-11-24.md row 8034-Q2. | BA confirmed 2026-11-24 (ba-answers-all-2026-11-24.md, ETM-8034 Q2): a build that leaves it out is a defect.",
+  "raised": "2026-11-24",
+  "story_status": "In Development",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "later_defect": null
+ },
+ {
+  "id": "F-34",
+  "q": "R3-3",
+  "ac": "AC-8.2",
+  "kind": "question",
+  "impact": "medium",
+  "note": "Is Copy & Paste of AC 8.2 the Bryntum double-click No. + Ctrl+C / Ctrl+V?. ETM-8861 s1-4 now scripted this way (from stms-fe source, not run yet) | Partly answered: ETM-2615 AC 1.1-1.4 = cell clipboard (click / Shift+click / Ctrl+click, paste at focused cell); no row-copy menu. The build path (double-click No. + Ctrl+C) is not in any spec; ETM-2615 AC 1.3 says double-click = edit mode. Still open for BA. Source: work/SPRINT26/ba-self-answers-2026-11-24.md row 8034-Q3. | BA 2026-11-24 (ba-answers-all-2026-11-24.md, ETM-8034 Q3, DEC-055): yes, double-click No. + Ctrl+C/V copies text only; Duplicate copies both colours. Spec already matches; Xray 8861 s1-2 wording to name it.",
+  "raised": "2026-11-24",
+  "story_status": "In Development",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "later_defect": null
+ },
+ {
+  "id": "F-35",
+  "q": "R4-1",
+  "ac": "AC-1",
+  "kind": "conflict",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "In Development",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "Build 24 Nov (stms-fe 73dfde33) + behaviour table from the user: right-click a cell = Highlight Cell (that cell only); Highlight Row only after a double-click on the No. cell (Select Row + Right Click). AC 1 / Xray steps say 'right-click the row, Highlight Row'. Run 2026-11-24_132604: 0/16, all at the menu. Script fixed (rightClickRow selects the row first). AC 1 re-read 2026-11-24 14:23: AC 1.2 fixed, AC 1.1/2/3 still row-only, no Highlight Cell -> asked BA (questions-for-BA-round4.en.md). Open: Xray wording of ~80 right-click steps, and no TC covers Highlight Cell (cell-only colour, shift+click several cells): BA to add the AC, then a new TC. | User 2026-11-24 (lead chat, relayed): \"Highlight Cell ต้องคลิกขวาที่ description ตั้งใจเพิ่มมา แต่รอก่อนได้ไหม\" -> intended feature (right-click on the Description cell), not a defect; DEFERRED: R4-1 not sent to BA, no Highlight Cell TC yet. Script keeps double-click No. -> right-click -> Highlight Row.",
+  "later_defect": null
+ },
+ {
+  "id": "F-36",
+  "q": "palette-hex-2026-11-24",
+  "ac": "AC-1.2",
+  "kind": "conflict",
+  "impact": "medium",
+  "raised": "2026-11-24",
+  "story_status": "In Development",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "Run 2026-11-24_150208: the build palette (stms-fe row-color.constant.ts, 'pixel-for-pixel from Figma') differs by 1-4 per channel from the TC/spec values (Ant Design tokens): highlight D7E3FF/D6E4FF, B9E0FF/BAE0FF, B4F5EC/B5F5EC, FFD9BF/FFD8BF, FFCCC6/FFCCC7, FFD7E7/FFD6E7 (6 same); text 1E39C5/1D39C4, 1777FF/1677FF, 04979C/08979C, 53C31B/52C41A, 81A828/81A827, D4B108/D4B106, FA8B16/FA8C16, F5212D/F5222D, EB2E97/EB2F96 (D48806, FA541C, 722ED1 same). Saved hex goes to the BE as is. User to decide: accept the build values (update TC + script) or log a defect. | User 2026-11-24 in chat: \"เอาสีตาม dev\" -> QA follows the build palette; spec, helpers and manual files updated. Xray step text still has the old hex (needs a yes to update). | 2026-11-25: user checked Figma Color Code again (labels = Ant tokens); decision reversed: build palette is a defect, ETM-10034 logged (user: \"เปิด defect ได้เลย\").",
+  "later_defect": "ETM-10034"
+ },
+ {
+  "id": "F-37",
+  "q": "run-2026-11-24_163422",
+  "ac": "AC-1.2",
+  "kind": "gap",
+  "impact": "medium",
+  "raised": "2026-11-24",
+  "story_status": "In Development",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "BA round 1 Q3: the blue frame marks the colour in use. Build (stms-fe develop, _shutdown-gantt-row-color.scss) frames a swatch only on hover / focus / active; no current-colour marking. ETM-8856 s12-13 and ETM-8859 s14 fail. User checked by hand 2026-11-24 19:43 (3 screenshots: frame only under the mouse): \"ใช่ละ มันไม่กรอบให้ ตอนที่มีสีแล้ว\" -> real app bug. Defect ETM-9219 logged 2026-11-24 (user: \"log defect ได้เลย\").",
+  "later_defect": "ETM-9219"
  }
 ]

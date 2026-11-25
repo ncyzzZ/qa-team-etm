@@ -1,0 +1,16 @@
+{
+ "ETM-8863": {
+  "2": "reload the plan.",
+  "4": "reload the plan.",
+  "5": "open the plan in a new tab.",
+  "9": "Open the plan in browser 2 as the second user."
+ },
+ "ETM-8861": {
+  "1": "Copy the cell values of the coloured Work row (ETM-2615).",
+  "2": "Paste it with the paste action the Gantt table offers."
+ },
+ "ETM-8871": {
+  "8": "Apply a filter (Filter Panel or a column filter) that shows only Work A. | expected: Work A is shown with `B5F5EC`.",
+  "10": "Apply a filter that shows only Work B. | expected: Work B is shown with `FFE58F`."
+ }
+}

@@ -1,0 +1,151 @@
+{
+ "config": {
+  "source": "manual-agent"
+ },
+ "suites": [
+  {
+   "title": "Manual run (ETM-8034)",
+   "file": "manual-runner",
+   "line": 0,
+   "column": 0,
+   "specs": [
+    {
+     "title": "ETM-8869 - Hover, selected, focus and disabled layers on a highlighted row",
+     "ok": true,
+     "tags": [],
+     "file": "manual-runner",
+     "line": 0,
+     "column": 0,
+     "tests": [
+      {
+       "projectName": "manual-runner",
+       "expectedStatus": "skipped",
+       "annotations": [
+        {
+         "type": "needs-manual",
+         "description": "step 1 needs a person: Row 8 (task row, menu says Work Breakdown) highlighted FFFB8F. While hovered, Description cell has an extra layer rgba(24,144,255,0.14) over background-color rgb(255,251,143) (FFFB8F kept, not replaced). Mixed colour has no exact value: a person judges the picture. | step 2 needs a person: Row selected (double-click No. cell, class b-selected): every cell keeps background-color rgb(255,251,143) with layer rgba(24,144,255,0.08) on top. A single click selects one cell only (layer 0.14/0.08), it does not select the row. Mixed colour: a person judges the picture. | step 3 needs a person: Clicked Description cell: it gets b-focused, background-color stays rgb(255,251,143); no colour layer and no outline/box-shadow was measured for focus (outline none), so the focus look is not measurable. A person must look at the picture. | step 4 needs a person: Clicked an empty area above the grid: background-color of all cells = rgb(255,251,143), but the row stays selected (layer rgba(24,144,255,0.08) still on cells 3-8) and the focus stays; clicking outside does not clear the selection. Not exactly FFFB8F: a person decides. | step 7 needs a person: Duration cell keeps class b-readonly-cell, layer rgb(245,245,245) and text rgb(89,89,89) over background-color rgb(185,224,255) (row also selected, layer 0.08). Mixed colour, no exact value: a person judges the picture."
+        }
+       ],
+       "status": "skipped",
+       "results": [
+        {
+         "workerIndex": 0,
+         "status": "skipped",
+         "duration": 0,
+         "retry": 0,
+         "startTime": "1970-01-01T00:00:00.000Z",
+         "steps": [
+          {
+           "title": "1. Move the mouse over the highlighted Work row",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Row 8 (task row, menu says Work Breakdown) highlighted FFFB8F. While hovered, Description cell has an extra layer rgba(24,144,255,0.14) over background-color rgb(255,251,143) (FFFB8F kept, not replaced). Mixed colour has no exact value: a person judges the picture."
+          },
+          {
+           "title": "2. Click the row to select it",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Row selected (double-click No. cell, class b-selected): every cell keeps background-color rgb(255,251,143) with layer rgba(24,144,255,0.08) on top. A single click selects one cell only (layer 0.14/0.08), it does not select the row. Mixed colour: a person judges the picture."
+          },
+          {
+           "title": "3. Click a cell of the row so it has focus",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Clicked Description cell: it gets b-focused, background-color stays rgb(255,251,143); no colour layer and no outline/box-shadow was measured for focus (outline none), so the focus look is not measurable. A person must look at the picture."
+          },
+          {
+           "title": "4. Click an empty area of the page",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Clicked an empty area above the grid: background-color of all cells = rgb(255,251,143), but the row stays selected (layer rgba(24,144,255,0.08) still on cells 3-8) and the focus stays; clicking outside does not clear the selection. Not exactly FFFB8F: a person decides."
+          },
+          {
+           "title": "5. Record how the disabled cell of the Platform row looks with no highlight",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "6. Right-click the Platform row, open Highlight Row and choose B9E0FF",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "7. Look at the disabled cell",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Duration cell keeps class b-readonly-cell, layer rgb(245,245,245) and text rgb(89,89,89) over background-color rgb(185,224,255) (row also selected, layer 0.08). Mixed colour, no exact value: a person judges the picture."
+          },
+          {
+           "title": "8. Right-click the Platform row, Highlight Row, No Color, then reload without Save",
+           "duration": 0,
+           "manualVerdict": "pass"
+          }
+         ],
+         "attachments": [
+          {
+           "name": "Step 1: evidence/ETM-8869/step-1.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-1.png"
+          },
+          {
+           "name": "Step 2: evidence/ETM-8869/step-2.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-2.png"
+          },
+          {
+           "name": "Step 3: evidence/ETM-8869/step-3.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-3.png"
+          },
+          {
+           "name": "Step 4: evidence/ETM-8869/step-4.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-4.png"
+          },
+          {
+           "name": "Step 5: evidence/ETM-8869/step-5.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-5.png"
+          },
+          {
+           "name": "Step 6: evidence/ETM-8869/step-6.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-6.png"
+          },
+          {
+           "name": "Step 7: evidence/ETM-8869/step-7.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-7.png"
+          },
+          {
+           "name": "Step 8: evidence/ETM-8869/step-8.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8034/manual-run-8869/evidence/ETM-8869/step-8.png"
+          }
+         ],
+         "annotations": [
+          {
+           "type": "needs-manual",
+           "description": "step 1 needs a person: Row 8 (task row, menu says Work Breakdown) highlighted FFFB8F. While hovered, Description cell has an extra layer rgba(24,144,255,0.14) over background-color rgb(255,251,143) (FFFB8F kept, not replaced). Mixed colour has no exact value: a person judges the picture. | step 2 needs a person: Row selected (double-click No. cell, class b-selected): every cell keeps background-color rgb(255,251,143) with layer rgba(24,144,255,0.08) on top. A single click selects one cell only (layer 0.14/0.08), it does not select the row. Mixed colour: a person judges the picture. | step 3 needs a person: Clicked Description cell: it gets b-focused, background-color stays rgb(255,251,143); no colour layer and no outline/box-shadow was measured for focus (outline none), so the focus look is not measurable. A person must look at the picture. | step 4 needs a person: Clicked an empty area above the grid: background-color of all cells = rgb(255,251,143), but the row stays selected (layer rgba(24,144,255,0.08) still on cells 3-8) and the focus stays; clicking outside does not clear the selection. Not exactly FFFB8F: a person decides. | step 7 needs a person: Duration cell keeps class b-readonly-cell, layer rgb(245,245,245) and text rgb(89,89,89) over background-color rgb(185,224,255) (row also selected, layer 0.08). Mixed colour, no exact value: a person judges the picture."
+          }
+         ],
+         "errors": []
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "suites": []
+  }
+ ],
+ "errors": [],
+ "stats": {
+  "expected": 0,
+  "unexpected": 0,
+  "skipped": 1,
+  "flaky": 0,
+  "duration": 0,
+  "startTime": "1970-01-01T00:00:00.000Z"
+ }
+}

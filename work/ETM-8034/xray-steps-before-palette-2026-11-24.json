@@ -1,0 +1,485 @@
+{
+ "ETM-8868": [
+  {
+   "n": 5,
+   "id": "5d69e5f2-6871-4863-8bb5-386bcbe4bef2",
+   "action": "Right-click the same row, open `Highlight Row` and choose `FFCCC7`.",
+   "data": "",
+   "result": "The row background is `FFCCC7`."
+  }
+ ],
+ "ETM-8869": [
+  {
+   "n": 6,
+   "id": "ec2d03f7-5dee-4f81-b55c-f3649055e1fa",
+   "action": "Right-click the Platform row, open `Highlight Row` and choose `BAE0FF`.",
+   "data": "",
+   "result": "The row background is `BAE0FF`."
+  }
+ ],
+ "ETM-8856": [
+  {
+   "n": 4,
+   "id": "b5283d7c-c0e2-4db2-8dfd-cc0c6383b90a",
+   "action": "Read the other 12 cells in order.",
+   "data": "",
+   "result": "The colours are D6E4FF, BAE0FF, B5F5EC, D9F7BE, EBF5BA, FFFB8F, FFE58F, FFE7BA, FFD8BF, FFCCC7, FFD6E7, EFDBFF."
+  },
+  {
+   "n": 8,
+   "id": "bc038f53-78ba-41c7-b792-973aeee28597",
+   "action": "Read the other 12 cells in order.",
+   "data": "",
+   "result": "The colours are 1D39C4, 1677FF, 08979C, 52C41A, 81A827, D4B106, D48806, FA8C16, FA541C, F5222D, EB2F96, 722ED1."
+  },
+  {
+   "n": 10,
+   "id": "73a51b60-d28c-48a8-98fe-9f7202e5cc68",
+   "action": "Right-click Work A, open `Highlight Row` and choose `BAE0FF`.",
+   "data": "",
+   "result": "The row background becomes `BAE0FF`."
+  },
+  {
+   "n": 12,
+   "id": "5b84c38d-1ae9-4f05-8ef7-c428c0e0e274",
+   "action": "Look at the cell `BAE0FF`.",
+   "data": "",
+   "result": "The cell `BAE0FF` has a blue frame."
+  }
+ ],
+ "ETM-8866": [
+  {
+   "n": 1,
+   "id": "fdd98d55-244c-40df-8a42-6249b5bb085b",
+   "action": "Right-click the Work row, open `Highlight Row` and choose `B5F5EC`.",
+   "data": "",
+   "result": "The row is `B5F5EC`."
+  },
+  {
+   "n": 4,
+   "id": "0f6d258a-126a-4d90-a002-31feb2010b22",
+   "action": "Click `Redo`.",
+   "data": "",
+   "result": "The `B5F5EC` background comes back on screen."
+  },
+  {
+   "n": 8,
+   "id": "d27e21f3-a3d1-4046-9634-f2f36a46c33b",
+   "action": "Right-click the Work Breakdown row, open `Highlight Row` and choose `FFD8BF`.",
+   "data": "",
+   "result": "The row has the background `FFD8BF`."
+  },
+  {
+   "n": 9,
+   "id": "3c7880a8-1181-476e-84eb-988d4b30c5fc",
+   "action": "Right-click the Work Breakdown row, open `Change Text Color` and choose `1677FF`.",
+   "data": "",
+   "result": "The row text is `1677FF`."
+  },
+  {
+   "n": 11,
+   "id": "b12150f3-9715-45c1-8536-33e565401911",
+   "action": "Click `Undo`.",
+   "data": "",
+   "result": "The row is back at its place with the background `FFD8BF` and the text `1677FF`."
+  }
+ ],
+ "ETM-8864": [
+  {
+   "n": 1,
+   "id": "ae5a3a6e-fe64-4d0b-9539-8de23237a819",
+   "action": "In browser 1 right-click the row, open `Highlight Row` and choose `FFCCC7`.",
+   "data": "",
+   "result": "The row is `FFCCC7` in browser 1."
+  },
+  {
+   "n": 5,
+   "id": "3dc8d407-f59c-4f6e-a04b-00d39016cb8d",
+   "action": "Reload the plan in both browsers.",
+   "data": "",
+   "result": "Both browsers show the row with `D9F7BE` (the later Save wins); `FFCCC7` is not shown."
+  }
+ ],
+ "ETM-8865": [
+  {
+   "n": 4,
+   "id": "80c62c1b-c684-4e09-93fe-8957906d1289",
+   "action": "Right-click Work B, open `Highlight Row` and choose `BAE0FF`.",
+   "data": "",
+   "result": "Work B background is `BAE0FF`."
+  },
+  {
+   "n": 5,
+   "id": "8eb7012f-07d3-4e45-8526-73528b9d48a7",
+   "action": "Right-click Work B, open `Change Text Color` and choose `1D39C4`.",
+   "data": "",
+   "result": "Work B text is `1D39C4`."
+  },
+  {
+   "n": 6,
+   "id": "732a6d6c-d7c4-435b-b11d-2c5445e0c76d",
+   "action": "Click `Undo`.",
+   "data": "",
+   "result": "The text colour of Work B goes back to the default; the background stays `BAE0FF`."
+  },
+  {
+   "n": 8,
+   "id": "cd16ee07-a0cb-4038-8033-86143ef54f81",
+   "action": "Click `Redo`.",
+   "data": "",
+   "result": "The background `BAE0FF` comes back."
+  },
+  {
+   "n": 9,
+   "id": "800c8351-b447-4924-a666-35356459374f",
+   "action": "Click `Redo` again.",
+   "data": "",
+   "result": "The text colour `1D39C4` comes back."
+  },
+  {
+   "n": 11,
+   "id": "22f993d0-a34d-466e-8577-3a0d80d27ee6",
+   "action": "Press `Ctrl+Y`.",
+   "data": "",
+   "result": "The background `BAE0FF` comes back."
+  },
+  {
+   "n": 12,
+   "id": "7836b342-c702-4db5-8ea1-284be209580e",
+   "action": "Press `Ctrl+Shift+Z`.",
+   "data": "",
+   "result": "The text colour `1D39C4` comes back."
+  },
+  {
+   "n": 21,
+   "id": "6acf2443-7590-4c30-b57b-fa386a970ba6",
+   "action": "Right-click Work B, open `Highlight Row` and choose `FFD6E7`.",
+   "data": "",
+   "result": "The Work B background is `FFD6E7`."
+  },
+  {
+   "n": 24,
+   "id": "2f9b0d57-4888-4a9f-b3f0-dd4328737fe1",
+   "action": "Click `Undo`.",
+   "data": "",
+   "result": "The last action is undone: the edited value goes back to the old value and the Work B background stays `FFD6E7`."
+  }
+ ],
+ "ETM-8861": [
+  {
+   "n": 3,
+   "id": "e182bf6e-1874-4c5c-b909-32b23f2d1e68",
+   "action": "Check the target row.",
+   "data": "",
+   "result": "The target row still has its own `B5F5EC` background and the default text colour; it does not get `FFE58F` or `D48806`."
+  }
+ ],
+ "ETM-8859": [
+  {
+   "n": 10,
+   "id": "68fb500a-8fc9-4d6e-b891-b1807a35dd37",
+   "action": "Right-click the same row, open `Highlight Row` and choose `FFD6E7`.",
+   "data": "",
+   "result": "The background changes to `FFD6E7` and the text stays `722ED1`."
+  },
+  {
+   "n": 11,
+   "id": "83614750-d765-46e2-bff0-af866af1d62f",
+   "action": "Right-click the same row, open `Change Text Color` and choose `1677FF`.",
+   "data": "",
+   "result": "The text changes to `1677FF` and the background stays `FFD6E7`."
+  },
+  {
+   "n": 13,
+   "id": "6d278d25-b2e5-42a3-858c-cb694a855160",
+   "action": "Check the old colour.",
+   "data": "",
+   "result": "`FFD6E7` is not shown anywhere on the row."
+  },
+  {
+   "n": 20,
+   "id": "4b2f9eb8-2333-4329-87a4-c9cc2fbfd964",
+   "action": "Reload the page.",
+   "data": "",
+   "result": "The row is still `FFFB8F` with text `1677FF`."
+  },
+  {
+   "n": 24,
+   "id": "b773534b-48fb-4f9b-b457-6de947f90d0e",
+   "action": "Right-click the row again, open `Change Text Color` and choose `F5222D`.",
+   "data": "",
+   "result": "The row text is `F5222D` and the background is still `FFFB8F`."
+  },
+  {
+   "n": 27,
+   "id": "ba62f6f5-0616-4d16-ace0-88ff414ab5c5",
+   "action": "Check the text of the row.",
+   "data": "",
+   "result": "The text colour of the row is still `F5222D`."
+  }
+ ],
+ "ETM-8862": [
+  {
+   "n": 1,
+   "id": "1ea47b69-666a-4ae9-89f9-79167942d06c",
+   "action": "Right-click the row, open `Highlight Row` and choose `D6E4FF`.",
+   "data": "",
+   "result": "The row background is `D6E4FF` and `Save` is enabled."
+  },
+  {
+   "n": 4,
+   "id": "ca03cd6b-86fb-4d7d-ab8e-43f2be608389",
+   "action": "Choose the option that stays on the page.",
+   "data": "",
+   "result": "The modal closes and the row still shows `D6E4FF` and `722ED1`."
+  },
+  {
+   "n": 5,
+   "id": "45cdd758-6da2-44ef-a50b-6100b07ba732",
+   "action": "Click `Save`, then confirm `Save Shutdown Logic and Update Worklist`.",
+   "data": "",
+   "result": "The toast `Save Success` appears; the row keeps `D6E4FF` and `722ED1`; no separate message for colours."
+  },
+  {
+   "n": 6,
+   "id": "4439ffde-6f1c-46b6-8475-ed0ef32a77ab",
+   "action": "Reload the page.",
+   "data": "",
+   "result": "The row still has the background `D6E4FF` and the text `722ED1`."
+  },
+  {
+   "n": 10,
+   "id": "ec9b78a2-18d3-44b6-9959-0423e9c1ebd8",
+   "action": "Reload the page.",
+   "data": "",
+   "result": "The row shows the new value and still has `D6E4FF` and `722ED1`."
+  }
+ ],
+ "ETM-8860": [
+  {
+   "n": 1,
+   "id": "c60afe69-714f-4fd9-82a1-219662741a92",
+   "action": "Right-click the Platform 1 row, open `Highlight Row` and choose `FFCCC7`.",
+   "data": "",
+   "result": "The Platform 1 row has the background `FFCCC7` in all columns."
+  },
+  {
+   "n": 2,
+   "id": "480c185e-3b1c-4d96-990a-9857e694412e",
+   "action": "Right-click the Platform 1 row, open `Change Text Color` and choose `F5222D`.",
+   "data": "",
+   "result": "The Platform 1 row text is `F5222D` in all columns."
+  },
+  {
+   "n": 3,
+   "id": "11b25ac4-337b-4a82-9fef-942fc15b1049",
+   "action": "Check the Work Header, Work and Work Breakdown rows under it.",
+   "data": "",
+   "result": "They show no `FFCCC7` and no `F5222D`."
+  },
+  {
+   "n": 4,
+   "id": "3b2387ba-f37b-4f92-a770-b8e14679f4be",
+   "action": "Check Work A with its own colour.",
+   "data": "",
+   "result": "Work A still has `B5F5EC` as background."
+  },
+  {
+   "n": 8,
+   "id": "91e7d7ee-db8d-4a37-93e4-d13ea56b8afa",
+   "action": "Check Work A.",
+   "data": "",
+   "result": "Work A still has `B5F5EC` as background."
+  },
+  {
+   "n": 12,
+   "id": "c7b6a135-9dc1-4c7e-9d3d-66add3845f38",
+   "action": "Right-click the Work A row, open `Highlight Row` and choose `BAE0FF`.",
+   "data": "",
+   "result": "The Work A background is `BAE0FF` (it replaces `B5F5EC`)."
+  },
+  {
+   "n": 13,
+   "id": "5b02c80b-66a6-4a0e-b1b0-d0747bed2671",
+   "action": "Right-click the Work A row, open `Change Text Color` and choose `08979C`.",
+   "data": "",
+   "result": "The Work A text is `08979C`."
+  },
+  {
+   "n": 14,
+   "id": "83634bb6-7565-4c0a-9422-537a621a19bb",
+   "action": "Right-click the Work Header 1 row, open `Highlight Row` and choose `BAE0FF`.",
+   "data": "",
+   "result": "The Work Header 1 background is `BAE0FF` (it replaces `FFFB8F`)."
+  },
+  {
+   "n": 15,
+   "id": "7027ea80-8e9a-4eb4-abd5-6737eeb18f93",
+   "action": "Right-click the Work Header 1 row, open `Change Text Color` and choose `08979C`.",
+   "data": "",
+   "result": "The Work Header 1 text is `08979C`."
+  },
+  {
+   "n": 16,
+   "id": "feeb6710-bbe6-4090-9079-e2d4dc3bdb52",
+   "action": "Right-click the Platform 1 row, open `Highlight Row` and choose `BAE0FF`.",
+   "data": "",
+   "result": "The Platform 1 background is `BAE0FF` (it replaces `FFCCC7`)."
+  },
+  {
+   "n": 17,
+   "id": "b8c81bdd-561b-4c25-90cf-ece4eae9cca9",
+   "action": "Right-click the Platform 1 row, open `Change Text Color` and choose `08979C`.",
+   "data": "",
+   "result": "The Platform 1 text is `08979C`."
+  },
+  {
+   "n": 19,
+   "id": "f4d6cd52-0ef8-470f-9eb1-fc1e1913906c",
+   "action": "Expand Work Header 1 again.",
+   "data": "",
+   "result": "Work A is shown with the background `BAE0FF` and the text `08979C`."
+  },
+  {
+   "n": 20,
+   "id": "edef428c-82e7-4e88-8caa-04e65a926802",
+   "action": "Drag Work A below Work B inside Work Header 1.",
+   "data": "",
+   "result": "Work A is below Work B and keeps `BAE0FF` and `08979C`."
+  },
+  {
+   "n": 23,
+   "id": "0b91f717-c83d-4120-b458-36c2dedfd16c",
+   "action": "Reload the page.",
+   "data": "",
+   "result": "Work A is still below Work B and keeps `BAE0FF` and `08979C`."
+  },
+  {
+   "n": 24,
+   "id": "b55c1916-53e8-4394-a5c7-3ab541be1c0b",
+   "action": "Drag Work Header 1 below Work Header 2.",
+   "data": "",
+   "result": "Work Header 1 keeps `BAE0FF` and `08979C` after the move."
+  },
+  {
+   "n": 26,
+   "id": "f99fdbad-72a1-44ee-8d33-a98970d7d978",
+   "action": "Drag Platform 1 below Platform 2.",
+   "data": "",
+   "result": "Platform 1 keeps `BAE0FF` and `08979C` after the move."
+  }
+ ],
+ "ETM-8867": [
+  {
+   "n": 5,
+   "id": "d9a1db38-9524-48bc-88a6-b399b182422c",
+   "action": "Check the Platform, Work and Work Breakdown rows.",
+   "data": "",
+   "result": "The Platform row has `FFCCC7`, the Work row has the text `1677FF`, the Work Breakdown row has `D9F7BE` and `722ED1`, as in the original plan."
+  },
+  {
+   "n": 8,
+   "id": "5a5d32dd-7bc2-4834-9c9c-092554f3e850",
+   "action": "Open the original plan.",
+   "data": "",
+   "result": "The original Platform row still has `FFCCC7`."
+  }
+ ],
+ "ETM-8863": [
+  {
+   "n": 1,
+   "id": "cd5a7e74-d54e-477f-80e7-eceaede98e1b",
+   "action": "In browser 1 right-click the Work row without clicking Save, open `Highlight Row` and choose `FFD8BF`.",
+   "data": "",
+   "result": "The row is coloured in browser 1."
+  },
+  {
+   "n": 4,
+   "id": "04b621a9-9c4c-47c7-a176-9875d7e573d8",
+   "action": "In browser 2 reload the plan.",
+   "data": "",
+   "result": "The row has the background `FFD8BF`."
+  },
+  {
+   "n": 5,
+   "id": "20677dce-22a5-44c9-b7f4-a88927678904",
+   "action": "In browser 2 open the plan in a new tab.",
+   "data": "",
+   "result": "The row also shows `FFD8BF` there."
+  },
+  {
+   "n": 6,
+   "id": "57e2b43d-7caf-424d-8398-5c76b5f8105f",
+   "action": "In browser 1 right-click the row of that level, open `Highlight Row` and choose the colour of the first line of the highlight table, then open `Change Text Color` and choose the colour of the first line of the text table.",
+   "data": "Table: Platform = highlight D6E4FF, text 1D39C4; Work Header = highlight B5F5EC, text 08979C; Work = highlight FFE58F, text D48806 (replaces FFD8BF); Work Breakdown = highlight FFD6E7, text 722ED1.",
+   "result": "The row shows both colours in all columns."
+  },
+  {
+   "n": 10,
+   "id": "360261eb-128c-45f7-af53-76b805844966",
+   "action": "Repeat steps 6 to 9 for each level of the table.",
+   "data": "Table: Platform = highlight D6E4FF, text 1D39C4; Work Header = highlight B5F5EC, text 08979C; Work = highlight FFE58F, text D48806 (replaces FFD8BF); Work Breakdown = highlight FFD6E7, text 722ED1.",
+   "result": "Each level keeps its colours after reload and for the second user."
+  }
+ ],
+ "ETM-8871": [
+  {
+   "n": 6,
+   "id": "9f1245c1-010c-4b99-84ea-9d5b70d25ca8",
+   "action": "Right-click Work A, open `Highlight Row` and choose `B5F5EC`; then right-click Work B, open `Highlight Row` and choose `FFE58F`.",
+   "data": "",
+   "result": "Work A has `B5F5EC` and Work B has `FFE58F`."
+  },
+  {
+   "n": 8,
+   "id": "593ba6aa-8ee6-4094-85a1-523e1e60c2dc",
+   "action": "Apply a filter (Filter Panel or a column filter) that shows only Work A.",
+   "data": "",
+   "result": "Work A is shown with `B5F5EC`."
+  },
+  {
+   "n": 9,
+   "id": "05a1693d-1256-4c22-9386-8994dd2d5bf6",
+   "action": "Clear the filter.",
+   "data": "",
+   "result": "Work A still has `B5F5EC` and Work B still has `FFE58F`."
+  }
+ ],
+ "ETM-8858": [
+  {
+   "n": 1,
+   "id": "3d4cf5b4-f2ea-474d-ad25-a27060524d89",
+   "action": "Right-click a Work row, open `Highlight Row` and choose the colour from the first line of the highlight table in Test Data.",
+   "data": "Highlight table: D6E4FF, BAE0FF, B5F5EC, D9F7BE, EBF5BA, FFFB8F, FFE58F, FFE7BA, FFD8BF, FFCCC7, FFD6E7, EFDBFF.\nText table: 1D39C4, 1677FF, 08979C, 52C41A, 81A827, D4B106, D48806, FA8C16, FA541C, F5222D, EB2F96, 722ED1.",
+   "result": "The menu closes."
+  },
+  {
+   "n": 2,
+   "id": "69f3e80c-f58b-4fc2-8c19-682c6cdc0032",
+   "action": "Check the background of every column of that row (task name, dates, duration and all other columns in the table).",
+   "data": "Highlight table: D6E4FF, BAE0FF, B5F5EC, D9F7BE, EBF5BA, FFFB8F, FFE58F, FFE7BA, FFD8BF, FFCCC7, FFD6E7, EFDBFF.\nText table: 1D39C4, 1677FF, 08979C, 52C41A, 81A827, D4B106, D48806, FA8C16, FA541C, F5222D, EB2F96, 722ED1.",
+   "result": "Every column cell of the row has the chosen colour as background."
+  },
+  {
+   "n": 4,
+   "id": "660d9a4f-7337-4606-9366-3909cb8b6b24",
+   "action": "Repeat steps 1 to 3 for each colour of the highlight table.",
+   "data": "Highlight table: D6E4FF, BAE0FF, B5F5EC, D9F7BE, EBF5BA, FFFB8F, FFE58F, FFE7BA, FFD8BF, FFCCC7, FFD6E7, EFDBFF.\nText table: 1D39C4, 1677FF, 08979C, 52C41A, 81A827, D4B106, D48806, FA8C16, FA541C, F5222D, EB2F96, 722ED1.",
+   "result": "Each colour shows correctly on the whole row."
+  },
+  {
+   "n": 6,
+   "id": "b4694511-4aca-4d77-9d16-53f4916c366b",
+   "action": "Right-click a Work row, open `Change Text Color` and choose the colour from the first line of the text table in Test Data.",
+   "data": "Highlight table: D6E4FF, BAE0FF, B5F5EC, D9F7BE, EBF5BA, FFFB8F, FFE58F, FFE7BA, FFD8BF, FFCCC7, FFD6E7, EFDBFF.\nText table: 1D39C4, 1677FF, 08979C, 52C41A, 81A827, D4B106, D48806, FA8C16, FA541C, F5222D, EB2F96, 722ED1.",
+   "result": "The menu closes."
+  },
+  {
+   "n": 9,
+   "id": "236841e3-2f54-4df6-84fa-9a1c80dfb82e",
+   "action": "Repeat steps 6 to 8 for each colour of the text table.",
+   "data": "Highlight table: D6E4FF, BAE0FF, B5F5EC, D9F7BE, EBF5BA, FFFB8F, FFE58F, FFE7BA, FFD8BF, FFCCC7, FFD6E7, EFDBFF.\nText table: 1D39C4, 1677FF, 08979C, 52C41A, 81A827, D4B106, D48806, FA8C16, FA541C, F5222D, EB2F96, 722ED1.",
+   "result": "Each colour shows correctly on the whole row."
+  }
+ ]
+}
