@@ -1,0 +1,43 @@
+{
+  "defect": "ETM-7938",
+  "story": "ETM-7311",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Pasting in edit mode replaces the whole cell text instead of inserting at the cursor.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7311",
+  "run": "STORY-ETM-7311",
+  "frozen": "evals/exams/_story-ETM-7311/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "edit mode",
+          "double-click",
+          "double click",
+          "cursor",
+          "typing inside",
+          "inside the cell"
+        ],
+        [
+          "paste",
+          "ctrl+v"
+        ]
+      ],
+      [
+        [
+          "insert",
+          "at the cursor",
+          "appended",
+          "abc123",
+          "after the existing",
+          "existing text",
+          "kept"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

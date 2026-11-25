@@ -65,3 +65,24 @@ The same checks as a separate short call (`bug-check.md`, three tables), then on
 | ETM-8902 | MISSED | CAUGHT (TC-028 step 3) | same leading prompt. |
 
 Bug-check is now its own mode in `test-reviewer.md` and a step of Phase 3 in `TEAM.md`. To confirm it without a leading prompt, run it on new exams.
+
+### New set: Equipment Mob Plan (2026-11-25), bug-check with the generic prompt of its agent mode
+
+Stories ETM-7311 and ETM-7306, defects of another tester. Story text is the Jira changelog version before the first defect (both Stories were edited after the defects). `docs/modules/equipment-mob-plan.md` was kept from the designer: it names ETM-7936 and holds rules learned later. ETM-7920 was dropped: a later user rule (letters may be typed, then rejected) overrules its expected result. ETM-7884 was not used: the Story has no Column No. field.
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-7913 | yes | CAUGHT (TC-007) | CAUGHT | |
+| ETM-7915 | partly | CAUGHT (TC-010) | CAUGHT | 0.05 x 0.1 = 0.005 -> 0.01 |
+| ETM-7936 | yes | MISSED | **CAUGHT (TC-017)** | bug-check: "almost any result passes" on the hedged "either ... or red" step |
+| ETM-7857 | yes | CAUGHT (TC-019) | CAUGHT | |
+| ETM-7801 | yes | MISSED | MISSED | TC-002 checks alignment only at the default width |
+| ETM-7922 | no | MISSED | MISSED | thousands separator |
+| ETM-7938 | no | MISSED | MISSED | paste inside edit mode |
+| ETM-7940 | no | MISSED | MISSED | search in dropdowns |
+| ETM-7947 | no | MISSED | MISSED | date picker start month |
+| ETM-8073 | no | MISSED | MISSED | dropdowns in lower rows |
+| ETM-7799 | no | MISSED | MISSED | plan deleted in another session |
+| ETM-7886 | no | MISSED | MISSED | auto-scroll of both panels |
+
+Rule in Story: 3/5 -> 4/5. Not in Story: 0/7 -> 0/7. Bug-check fixes wrong or hedged Expected Results; it does not invent expectations the Story does not state. Drafts grew 40 -> 51 and 35 -> 42 cases. The "not in Story" misses are general UI habits (number format, search in lists, paste at the cursor, picker start month, rows far down, panels in sync, object deleted elsewhere): a checklist of those for grids is the next candidate, measured on yet another set.

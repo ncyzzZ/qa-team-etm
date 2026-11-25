@@ -1,0 +1,47 @@
+{
+  "defect": "ETM-7913",
+  "story": "ETM-7311",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Deck: typed free text is not offered as a new option and Enter does not apply it (also no multi-select).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7311",
+  "run": "STORY-ETM-7311",
+  "frozen": "evals/exams/_story-ETM-7311/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "deck"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "free text",
+          "free-text",
+          "custom",
+          "new value",
+          "not in the list",
+          "not in the option",
+          "own text",
+          "new text"
+        ]
+      ],
+      [
+        [
+          "enter",
+          "saved",
+          "kept",
+          "applied",
+          "cell shows",
+          "shows the typed",
+          "listed as",
+          "option"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

@@ -1,0 +1,35 @@
+{
+  "defect": "ETM-7947",
+  "story": "ETM-7311",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "The date picker opens on the current month instead of the Event Start month.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7311",
+  "run": "STORY-ETM-7311",
+  "frozen": "evals/exams/_story-ETM-7311/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "date picker",
+          "calendar",
+          "datepicker"
+        ],
+        [
+          "open"
+        ],
+        [
+          "month",
+          "event start",
+          "shutdown start",
+          "plan start",
+          "ramp"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

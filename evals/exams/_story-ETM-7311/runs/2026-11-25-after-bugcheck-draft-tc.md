@@ -1,0 +1,655 @@
+# Draft test cases: ETM-7311 Equipment Mob Plan - Edit Equipment & Data Validation
+
+Story: ETM-7311 (frozen exam copy, no analyst.md; AC ids below are numbered by the designer from the Story text).
+Source: story.md, docs/modules/equipment-mob-plan-validation.md, docs/modules/equipment-mob-plan-figma.md, knowledge/. Not checked on the real app.
+Existing [QA] subtasks: none known (not read).
+Common precondition: User is logged in with the Edit Equipment Mob Plan permission (Turnaround Manager). The Equipment Mob Plan page of a Shutdown Event is open (Planning tab > Equipment Mob Plan > View Equipment Mob Plan). At least one Work Header exists with at least one equipment row. Save is grey (nothing changed).
+Notation: `->` separates the action from the expected result. TM = Turnaround Manager, JO = Job Owner.
+
+## AC ids used in Trace
+
+- AC-1.1 text cells (Material Description, WIN# No. (CCU No.), Contact Person, Department, Item No. in Plot Plan, MMR No., Vessel Name, Remark) are text inputs
+- AC-1.2 Premob Inspection dropdown Yes / No
+- AC-1.3 date cells (Material Ready at SKL, Require at Offshore, Backload to SKL, Loading at PSB) open a date picker, format DD Mon YYYY
+- AC-1.4 Platform dropdown = platforms of the current shutdown asset
+- AC-1.5 Deck combo-box: standard Working Location options and free text
+- AC-1.6 Transportation dropdown: Supply Vessel, Crew Boat, MSB, Helicopter
+- AC-1.7 Priority dropdown: 1, 2, 3
+- AC-1.8 Status dropdown: 10 statuses
+- AC-1.9 Width, Length, Height, Gross Wt. numeric decimal inputs
+- AC-1.10 Area (m2) disabled / read-only
+- AC-2.1 Area = Width * Length, 2 decimals half-up; `-` when Width or Length empty / 0 / negative
+- AC-2.2 Width, Length, Height, Gross Wt.: <= 0 or cleared = red background only, no border, no popover; no red in initial state; minus sign blocked
+- AC-2.3 Decimal precision: typing beyond 2 decimals blocked; paste rounds to 2 decimals
+- AC-2.4 Date order Material Ready <= Require at Offshore <= Backload; equal allowed; Loading at PSB independent
+- AC-2.5 Date picker disables violating dates (3 rules), no red background
+- AC-2.6 Pasted dates: evaluated left to right, conflicting dates rejected, cleared, `Paste Validation Failed` modal, no red background (ETM-7351)
+- AC-2.7 Mandatory cells: no red in the first state of a new row
+- AC-2.8 Mandatory cell that had data and is cleared: red background and `This field is required.`
+- AC-2.9 Entering a valid value clears the red state
+- AC-2.10 Save blocked while any mandatory cell is red
+- AC-2.11 MMR No. max 30 characters
+- AC-3.1 Save success: toast `Save Success` / `Save Equipment Mob Plan Successfully`, `Last update on [DD Mon YYYY]`, Save disabled
+- AC-3.2 Save with errors: blocked, scroll to first invalid row, toast `Please correct the highlighted errors before saving.`
+- AC-3.3 Plan deleted in another session: Save or Export shows `Unable to Save Equipment Mob Plan`; OK goes to Planning tab
+- AC-4 Unsaved Change modal on leaving (Back, sidebar, breadcrumb): Continue Editing / Discard Change
+- AC-0 Pre-condition: permission Edit Equipment Mob Plan
+
+## Think like the user
+
+- Who: a TM or JO updating 20-100 equipment rows during shutdown preparation, many times a day, mostly typing and pasting from Excel, often tabbing between cells.
+- Wants: change a size, date or status fast and save once.
+- Careless person: types a minus, pastes 3.14159, clears a required cell and forgets, enters dates in the wrong order, opens two tabs, leaves without saving, edits a plan a colleague deleted.
+
+## Coverage map
+
+| Requirement / screen state | Technique | Risk | Planned case(s) |
+|---|---|---|---|
+| AC-0 permission | Roles | edit without permission; JO role unclear | TC-001, TC-002 |
+| AC-1.1 text cells | Field interaction, strange input | cell does not enter edit mode; emoji / spaces break it | TC-003, TC-031 |
+| AC-1.2 / 1.6 / 1.7 / 1.8 dropdowns | Input groups | wrong option list, wrong count | TC-004 |
+| AC-1.3 date picker | Field interaction | wrong format, close without pick changes value | TC-005 |
+| AC-1.4 Platform | Linked data | shows platforms of another asset | TC-006 |
+| AC-1.5 Deck | Equivalence | custom text lost | TC-007 |
+| AC-1.9 numeric | Input groups | letters accepted | TC-008 |
+| AC-1.10 Area read-only | Screen state disabled | user types into Area | TC-009 |
+| AC-2.1 Area calculation | Boundary, condition table | wrong rounding, stale Area | TC-010, TC-011, TC-012 |
+| AC-2.2 dimension red state | Boundary, state | red border, popover, red in initial state, minus accepted | TC-013, TC-014, TC-015 |
+| AC-2.3 decimals | Boundary | 3rd decimal accepted; paste not rounded | TC-016, TC-017 |
+| AC-2.4 / 2.5 date order | Condition table, boundary | wrong order saved; equal dates blocked | TC-018, TC-019, TC-020 |
+| AC-2.6 paste dates | Paste (L-4), boundary | conflicting pasted dates kept; wrong rows changed | TC-021, TC-022 |
+| AC-2.7 / 2.8 / 2.9 mandatory | State changes | red at start; no message after delete; red not cleared | TC-023, TC-024, TC-025 |
+| AC-2.10 Save guard | State | saves with red cell | TC-026 |
+| AC-2.11 MMR 30 | Boundary | 31st character accepted | TC-027 |
+| AC-3.1 Save success | Persistence, dirty state | not saved; toast text; Save stays blue | TC-028, TC-029 |
+| AC-3.2 Save with errors | Error guessing | saves bad rows; no scroll | TC-030 |
+| Save fail (validation sheet row 2) | Error guessing | changes lost on network failure | TC-032 |
+| AC-3.3 concurrency | Two users (lesson 1) | Save over deleted plan; Export | TC-033, TC-034 |
+| AC-4 unsaved guard | Leaving and coming back, dirty state | no warning; warning with nothing to save; changes lost; Back not guarded twice; Discard on Back route; reload; blocked or failed Save then leave; empty added row | TC-035, TC-036, TC-037, TC-038, TC-041, TC-042, TC-043, TC-044, TC-045, TC-046, TC-047, TC-048, TC-049 |
+| AC-2.10 / Q-6 untouched blank new row | State | Save accepts blank mandatory cells | TC-050 |
+| AC-2.5 / Q-8 change Material Ready | Linked cells | other dates cleared or picker stale | TC-051 |
+| Keyboard | Real-user view | Tab / Enter / Esc break edit | TC-039 |
+| Same data on many pages | Lesson 8 | Plan Card Last update not changed | TC-040 |
+| Screen state: very long content / many rows | Screen states | long text overflow | TC-031 |
+
+Lessons / categories: 1 two users: relevant (TC-033, TC-034). 2 filter + sort + search: not relevant, the Story changes cell editing, not filter or sort (edited values in Filter Panel is a Suggestion). 3 old data after migration: not relevant, no migration in Story. 4 strange input: relevant (TC-031, TC-016, TC-027). 5 reorder: not relevant, no reordering. 6 linked data: relevant (Platform list TC-006, Deck master TC-007). 7 charts: not relevant, none on page. 8 same data many pages: relevant (TC-040). 9 matrix: relevant (Area table TC-010, date table TC-019). L-1 text sort: not relevant, no sorted list edited. L-2 filter choice: not relevant. L-3 search read too early: not relevant. L-4 multi-row paste: relevant (TC-017, TC-021, TC-022). L-5 collapse: not relevant. L-6 case variants: not relevant, no duplicate rule in Story. L-7 selected state: relevant for dropdowns (TC-004 checks the current value is marked). L-8 Story changed: relevant, Story edited during sprint (note in Open questions).
+
+Counts: High 23, Medium 22, Low 6 (51 cases). Automation: Auto 35, Partial 5, Manual 11. Priority taken from damage (the Story has no priority).
+
+## Open questions
+
+1. Q-1 Who can edit: the Story says "Turnaround Manager or Job Owner" but the module notes say JO is view only. Does JO have the Edit Equipment Mob Plan permission? What does JO see (cells read-only)? TC-002 is written as expected "cells do not enter edit mode", please confirm.
+2. Q-2 Mandatory columns: the Story says 7 columns with asterisks (Material Description, WIN# No., Contact Person, Width, Length, Height, Gross Wt.), the Figma notes show stars on only 5 (no Height, no Gross Wt.). Which is right?
+3. Q-3 AC-2.2 says no popover for dimensions, AC-2.8 says the inline warning `This field is required.` shows for mandatory cells (Width, Length, Height, Gross Wt. are in both lists). Is the text shown for those four cells? TC-014 and TC-024 assume the text is shown on hover or under the cell for the text cells and not as a popover for numbers; please confirm.
+4. Q-4 Where and how does `This field is required.` show (under the cell, tooltip, on hover)?
+5. Q-5 A value of 0 or a negative number in Width / Length: red background only, and is Save blocked? AC-2.10 only mentions mandatory cells with red; dimension minimums are listed in AC-3.2 as validated. TC-026 assumes Save is blocked for any red dimension cell.
+6. Q-6 Is a mandatory cell that is blank in a newly added row, never touched, blocked on Save (initial state has no red)? Expected result in TC-030 assumes Save shows the error toast and highlights the cell red at that moment. Please confirm.
+7. Q-7 When Require at Offshore is blank, which dates does the picker of Backload to SKL disable (none, or those before Material Ready)? TC-020 assumes the nearest filled earlier date is used.
+8. Q-8 When Material Ready at SKL is changed and the new date is later than an already saved Require at Offshore (possible through the picker only if blocked, so the Story implies never). Confirm the picker disables those dates and no clearing of other dates happens.
+9. Q-9 Area rounding: the Story says half-up; is Width * Length calculated on the values as typed or on the rounded 2-decimal values?
+10. Q-10 After clicking OK on `Unable to Save Equipment Mob Plan` the Story says redirect to the Planning Tab; does the same apply to the Export modal `Unable to Export Equipment Mob Plan` (validation sheet title)? Does the unsaved draft show the Unsaved Change modal on that redirect?
+11. Q-11 Does the Unsaved Change modal also show when the user closes the browser tab or reloads (native prompt)? The Story names Back, sidebar and breadcrumb only.
+12. Q-12 Body text of the Unsaved Change modal: the validation sheet gives `Are you sure you want to leave this page? Change you made will not be saved.` (not checked on the app). Confirm.
+13. Q-13 Save failure toast (`Save Failed` / `Save Equipment Mob Plan Failed`) comes from the validation sheet, not from the Story. Included in TC-032 with that text; confirm it is in scope.
+14. Q-14 Date order is also checked on Save for all rows (AC-3.2). Can a row ever hold a wrong order (for example old data)? What is shown?
+15. Q-15 Platform list: the Data Source says "active Asset platforms master"; AC-1.4 says "all platforms under the current shutdown asset". Are inactive platforms excluded?
+16. Q-16 Deck: is there a maximum length for free text, and is free text kept as a new option in the list?
+17. Q-17 Text cell limits for Material Description, WIN#, Contact Person, Department, Item No., Vessel Name, Remark: no limit is given except MMR No. 30. Please give them.
+18. Q-18 Maximum value for Width, Length, Height, Gross Wt., and what happens for very large values (Area overflow, e.g. 99999999 * 99999999).
+19. Q-19 Story history: the description was changed in Jira during the sprint (frozen copy). Check the current Story against this draft before a run.
+20. Suggestion (not in Story): edited values appear correctly in the Filter Panel lists and the Export file after Save.
+21. Suggestion (not in Story): Ctrl+Z inside a cell.
+22. Suggestion (not in Story): two users editing different rows of the same plan, last save wins or merge.
+23. Q-23 Is an added empty row (nothing typed) an unsaved change that triggers the Unsaved Change modal? TC-044 assumes yes.
+
+## Test cases (51 flows)
+
+### TC-001 [FE][MT] Verify TM with the Edit permission can enter edit mode on a cell (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-0, AC-1.1
+1. Click the Material Description cell of the first equipment row. -> The cell turns into a text input with the cursor inside and the old text is kept.
+2. Type `Pump skid A` and press Enter. -> The cell shows `Pump skid A` and the Save button turns blue.
+Starting data: a plan with one Work Header and one equipment row (made by the test through Add Equipment).
+What to check: cell text, Save button state.
+Clean up: delete the row or the plan made by the test.
+
+### TC-002 [FE][MT] Verify a user without the Edit Equipment Mob Plan permission cannot edit cells (NEG) [Auto]
+Precondition: Logged in as JO (or any role without the Edit Equipment Mob Plan permission) on a plan that is visible to this role. See Q-1.
+Priority: High
+Trace: AC-0
+1. Open the Equipment Mob Plan page. -> The table shows the equipment rows.
+2. Click the Material Description cell of the first row. -> The cell does not become an input.
+3. Double-click the Width (m) cell. -> The cell does not become an input.
+4. Look at the header buttons. -> The Save button stays grey and no editing control shows.
+Starting data: an Active plan with one equipment row.
+What to check: cells not editable; Save disabled.
+Clean up: none.
+
+### TC-003 [FE][MT] Verify every text cell accepts text (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.1
+1. Click the WIN# No. (CCU No.) cell. -> The cell becomes a text input.
+2. Type `CCU-001` and press Enter. -> The cell shows `CCU-001`.
+3. Click the Contact Person cell, type `Somchai Dee` and press Enter. -> The cell shows `Somchai Dee`.
+4. Click the Department cell, type `Operation` and press Enter. -> The cell shows `Operation`.
+5. Click the Item No. in Plot Plan cell, type `P-12` and press Enter. -> The cell shows `P-12`.
+6. Click the Vessel Name cell, type `MV Sea Star` and press Enter. -> The cell shows `MV Sea Star`.
+7. Click the Remark cell, type `Handle with care` and press Enter. -> The cell shows `Handle with care`.
+Test data set: loop over the 7 columns (Material Description is in TC-001, MMR No. in TC-027).
+Clean up: delete the row.
+
+### TC-004 [FE][MT] Verify the dropdown cells show the exact option lists (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.2, AC-1.6, AC-1.7, AC-1.8
+1. Click the Premob Inspection cell. -> A single-select list opens with `Yes` and `No`.
+2. Choose `Yes`. -> The cell shows `Yes`; reopening the list marks `Yes` as the selected one while the mouse is away.
+3. Click the Transportation cell. -> A list opens with `Supply Vessel`, `Crew Boat`, `MSB`, `Helicopter` (4 options).
+4. Click the Priority cell. -> A list opens with `1`, `2`, `3`.
+5. Click the Status cell. -> A list opens with 10 options: `Inspected`, `Delivered at PSB`, `MMR Issued`, `Vessel Assigned`, `In Transit`, `Received`, `Ready for Backload`, `Backloaded`, `Delay`, `Cancel`.
+6. Choose `Delay`. -> The cell shows `Delay` (red tag colour as in the design).
+Test data set: table Column | Options (above); the test loops over every row and picks every option once.
+Clean up: delete the row.
+
+### TC-005 [FE][MT] Verify the four date cells open a date picker and show DD Mon YYYY (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-1.3
+1. Click the Material Ready at SKL cell. -> A date picker popover opens.
+2. Pick 05 Jun 2026. -> The cell shows `05 Jun 2026`.
+3. Click the Loading at PSB cell and close the popover without picking (press Esc). -> The old value of the cell stays.
+4. Click the Loading at PSB cell and pick 01 Jun 2026. -> The cell shows `01 Jun 2026`.
+5. Click the Require at Offshore and the Backload to SKL cells one by one. -> Each opens a date picker.
+Clean up: delete the row.
+
+### TC-006 [FE][MT] Verify the Platform dropdown lists the platforms of the current shutdown asset only (POS) [Auto]
+Precondition: common. Record the platforms of the current shutdown asset from the master data.
+Priority: Medium
+Trace: AC-1.4
+1. Click the Platform cell. -> A single-select list opens.
+2. Compare the list with the recorded platforms. -> Every platform of this asset is listed; no platform of another asset is listed.
+3. Choose one platform. -> The cell shows the chosen platform.
+Starting data: master platforms read through API / database by the test.
+Clean up: delete the row.
+
+### TC-007 [FE][MT] Verify the Deck combo-box accepts a standard option and free text (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.5
+1. Click the Deck cell. -> A dropdown opens with the standard Working Location (Deck) options.
+2. Choose the first option. -> The cell shows that option.
+3. Click the Deck cell again, type `Helideck North` (not in the list) and press Enter. -> The cell shows `Helideck North`.
+4. Click Save, then refresh the page. -> The Deck cell still shows `Helideck North`.
+Clean up: delete the row.
+
+### TC-008 [FE][MT] Verify Width, Length, Height and Gross Wt. accept decimal numbers and reject letters (NEG) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.9
+1. Click the Width (m) cell and type `abc`. -> Nothing is entered (cell stays empty).
+2. Type `2.5` and press Enter. -> The cell shows `2.5`.
+3. Repeat for Length (m) with `4`, Height (m) with `1.2` and Gross Wt. (Tons) with `0.75`. -> Each cell shows the typed number.
+Clean up: delete the row.
+
+### TC-009 [FE][MT] Verify Area (m2) cannot be typed into (NEG) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.10
+1. Click the Area (m2) cell. -> The cell does not become an input.
+2. Double-click the Area (m2) cell and press the digit `5`. -> The cell value does not change and Save stays grey.
+Clean up: none.
+
+### TC-010 [FE][MT] Verify Area is calculated as Width * Length with half-up rounding (BND) [Auto]
+Precondition: common, a new row with empty dimension cells
+Priority: High
+Trace: AC-2.1
+1. Type `2` in Width (m). -> The Area cell shows `-` (Length is empty).
+2. Type `3` in Length (m). -> The Area cell shows `6.00` immediately, without pressing Save.
+3. Change Width to `1.25` and Length to `1.25`. -> The Area cell shows `1.56` (1.5625 rounded half-up).
+4. Change Width to `0.05` and Length to `0.1`. -> The Area cell shows `0.01` (0.005 rounded half-up).
+5. Change Length to `0.3` (Width stays `0.05`). -> The Area cell shows `0.02` (0.015 rounded half-up).
+Test data set (the test loops over every row; see Q-9):
+| Width | Length | Area |
+|---|---|---|
+| 2 | 3 | 6.00 |
+| 1.25 | 1.25 | 1.56 |
+| 0.05 | 0.1 | 0.01 |
+| 0.05 | 0.3 | 0.02 |
+| 0.01 | 0.01 | 0.00 |
+| 100.5 | 10.25 | 1030.13 |
+Clean up: delete the row. (Display format of 6 as `6` or `6.00` is Q-9 / format open point: the test compares the numeric value.)
+
+### TC-011 [FE][MT] Verify Area shows `-` when Width or Length is empty, 0 or negative (NEG) [Auto]
+Precondition: common, a row with Width `2` and Length `3` (Area `6.00`)
+Priority: High
+Trace: AC-2.1, AC-2.2
+1. Clear the Width cell. -> The Area cell shows `-`.
+2. Type `2` in Width again. -> The Area cell shows `6.00`.
+3. Type `0` in Length. -> The Area cell shows `-`.
+4. Type `3` in Length again. -> The Area cell shows `6.00`.
+Test data set: | Width | Length | Area | rows: (empty,3,-), (2,empty,-), (0,3,-), (2,0,-), (empty,empty,-). The test loops over every row.
+Note: a negative number cannot be typed (see TC-015); a negative value can only arrive by paste, see TC-017.
+Clean up: delete the row.
+
+### TC-012 [FE][MT] Verify Area updates as soon as a value changes and is saved correctly (POS) [Auto]
+Precondition: common, a row with Width `2` and Length `3`
+Priority: High
+Trace: AC-2.1, AC-3.1
+1. Change Width to `4`. -> The Area cell shows `12.00` at once.
+2. Click Save. -> The success toast shows and the Area cell shows `12.00`.
+3. Refresh the page. -> The Area cell still shows `12.00`.
+Clean up: delete the row.
+
+### TC-013 [FE][MT] Verify a new equipment row has no red cells (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-2.2, AC-2.7
+1. Click Add Equipment on a Work Header. -> A new empty row appears with grey placeholders.
+2. Look at the cells Material Description, WIN# No. (CCU No.), Contact Person, Width, Length, Height, Gross Wt. -> None has a red background or red border; the background is the normal neutral colour.
+3. Click into the Width cell and click away without typing. -> The cell stays neutral, no red.
+Clean up: delete the row.
+
+### TC-014 [FE][MT] Verify a cleared or zero dimension cell gets a red background only, with no border and no popover (NEG) [Auto]
+Precondition: common, a row with Width `2`, Length `3`, Height `1`, Gross Wt. `0.5`
+Priority: High
+Trace: AC-2.2, AC-2.8, AC-2.9
+1. Clear the Width cell and click away. -> The Width cell has a red background; no red border; no popover appears.
+2. Type `2` in Width. -> The red background disappears.
+3. Type `0` in Length and click away. -> The Length cell has a red background; no red border; no popover.
+4. Type `0.00` in Height and click away. -> The Height cell has a red background.
+5. Clear Gross Wt. and click away. -> The Gross Wt. cell has a red background.
+6. Type `3` in Length, `1` in Height and `0.5` in Gross Wt. -> All red backgrounds are gone.
+Test data set: columns Width, Length, Height, Gross Wt. x values `empty`, `0`, `0.00`, `0.001 (see TC-016)`. The test loops.
+Clean up: delete the row.
+
+### TC-015 [FE][MT] Verify the minus sign cannot be typed in dimension cells (NEG) [Auto]
+Precondition: common, a new row
+Priority: High
+Trace: AC-2.2
+1. Click the Width cell and press `-`. -> Nothing is entered.
+2. Type `-5`. -> The cell shows `5`; no minus sign appears.
+3. Repeat for Length, Height and Gross Wt. -> The same result in every cell.
+Clean up: delete the row.
+
+### TC-016 [FE][MT] Verify the third decimal place cannot be typed (BND) [Auto]
+Precondition: common, a new row
+Priority: High
+Trace: AC-2.3
+1. Type `1.23` in the Width cell. -> The cell shows `1.23`.
+2. Type one more digit `4`. -> The cell still shows `1.23`.
+3. Type `1.234` into Length in one go. -> The cell shows `1.23`.
+4. Type `1.2` in Height. -> The cell shows `1.2`; no digits are added.
+5. Repeat step 3 with Gross Wt. (Tons). -> The cell shows `1.23`.
+Clean up: delete the row.
+
+### TC-017 [FE][MT] Verify a pasted number with more than 2 decimals is rounded to 2 decimals (BND) [Auto]
+Precondition: common, a new row; the clipboard holds one value at a time
+Priority: High
+Trace: AC-2.3, AC-2.1
+1. Paste `3.14159` into the Width cell. -> The cell shows `3.14`.
+2. Paste `2.675` into the Length cell. -> The cell shows `2.68` (half-up).
+3. Paste `1.999` into the Height cell. -> The cell shows `2.00`.
+4. Paste `5.5` into Gross Wt. -> The cell shows `5.5`.
+5. Paste `-4.5` into the Width cell and click away. -> The Width cell has a red background (a negative value is not valid, no popover); the Area cell shows `-` (see Q-5).
+6. Paste `0` into the Length cell and click away. -> The Length cell has a red background; the Area cell still shows `-`.
+7. Click Save. -> Nothing is saved: the toast `Please correct the highlighted errors before saving.` shows and the page scrolls to the red row (see Q-5).
+8. Paste 3 values (`1.111`, `2.222`, `3.333`) copied from 3 rows into the Width column of 3 rows. -> Every pasted row shows the value rounded to 2 decimals (`1.11`, `2.22`, `3.33`); no other column or row changes.
+Clean up: delete the rows.
+
+### TC-018 [FE][MT] Verify the date order rule with a valid sequence and with equal dates (POS) [Auto]
+Precondition: common, a new row
+Priority: High
+Trace: AC-2.4
+1. Pick Material Ready at SKL = 10 Jun 2026. -> The cell shows `10 Jun 2026`.
+2. Pick Require at Offshore = 15 Jun 2026. -> The cell shows `15 Jun 2026`.
+3. Pick Backload to SKL = 20 Jun 2026. -> The cell shows `20 Jun 2026`; no red background in any date cell.
+4. Pick Require at Offshore = 10 Jun 2026 and Backload to SKL = 10 Jun 2026. -> Both cells accept the equal date; no red background.
+5. Pick Loading at PSB = 01 Jan 2026 (before all other dates). -> The cell accepts it; no error.
+6. Pick Loading at PSB = 31 Dec 2026 (after all other dates). -> The cell accepts it; no error.
+Clean up: delete the row.
+
+### TC-019 [FE][MT] Verify the date picker disables dates that break the sequence (NEG) [Auto]
+Precondition: common, a row with Material Ready at SKL = 10 Jun 2026, Require at Offshore = 15 Jun 2026, Backload to SKL = 20 Jun 2026
+Priority: High
+Trace: AC-2.5, AC-2.4
+1. Open the Require at Offshore picker. -> Dates before 10 Jun 2026 are disabled; dates from 10 Jun 2026 on can be clicked.
+2. Click a disabled date (09 Jun 2026). -> The cell value stays `15 Jun 2026`.
+3. Close the picker with Esc. -> The cell still shows `15 Jun 2026`; no red background.
+4. Open the Backload to SKL picker. -> Dates before 15 Jun 2026 are disabled; 15 Jun 2026 can be clicked (equal date allowed).
+5. Open the Material Ready at SKL picker. -> Dates after 15 Jun 2026 are disabled; 15 Jun 2026 can be clicked.
+6. Open the Loading at PSB picker. -> No date is disabled.
+Test data set: | Cell | Last disabled | First enabled | rows: Require at Offshore: 09 Jun / 10 Jun; Backload: 14 Jun / 15 Jun; Material Ready (upper limit): 16 Jun disabled / 15 Jun enabled; Loading at PSB: none disabled. The test loops.
+Clean up: delete the row.
+
+### TC-020 [FE][MT] Verify the date picker when earlier date cells are empty (BND) [Partial: depends on Q-7, behaviour not defined]
+Precondition: common, a new row with only Backload to SKL empty and Material Ready at SKL = 10 Jun 2026, Require at Offshore empty
+Priority: Medium
+Trace: AC-2.5
+1. Open the Backload to SKL picker. -> Dates before 10 Jun 2026 are disabled (assumption, see Q-7); no error shows.
+2. Pick 12 Jun 2026. -> The cell shows `12 Jun 2026`.
+3. Open the Require at Offshore picker. -> Dates before 10 Jun 2026 and after 12 Jun 2026 are disabled.
+4. Clear the Material Ready at SKL cell, then open the Require at Offshore picker. -> Dates after 12 Jun 2026 are disabled; earlier dates can be picked.
+Clean up: delete the row.
+
+### TC-021 [FE][MT] Verify a pasted date row that breaks the sequence is rejected with the Paste Validation Failed modal (NEG) [Partial: modal wording belongs to ETM-7351, check by eye]
+Precondition: common, a new row with all date cells empty; clipboard holds 4 dates `20 Jun 2026`, `15 Jun 2026`, `10 Jun 2026`, `01 Jun 2026` (Material Ready, Require, Backload, Loading)
+Priority: High
+Trace: AC-2.6, AC-2.4
+1. Paste the dates into the Material Ready at SKL cell (4 date cells). -> The modal `Paste Validation Failed` opens.
+2. Close the modal. -> The conflicting date cells are blank; the first valid date is kept (left-to-right evaluation) and no date cell has a red background.
+3. Check Loading at PSB. -> It shows `01 Jun 2026` (independent of the order).
+Test data set: | Pasted (Ready, Require, Backload) | Kept | Cleared | rows: (10,15,20) all kept, no modal; (10,10,10) all kept; (20,15,25) Ready kept, Require cleared; (10,25,15) Ready and Require kept, Backload cleared; (invalid text,...) see Q-14. The test loops.
+Clean up: delete the row.
+
+### TC-022 [FE][MT] Verify pasting dates into several rows changes only the rows that were pasted into (BND) [Auto]
+Precondition: common, 3 rows with different dates; the clipboard holds 2 rows of valid dates
+Priority: Medium
+Trace: AC-2.6
+1. Paste 2 rows of dates into the Material Ready at SKL cell of row 1. -> Row 1 and row 2 show the pasted dates.
+2. Check row 3. -> Row 3 is unchanged.
+3. Paste 2 rows into row 3 (only 1 row below). -> The dates of row 3 change; no new row is added and no error shows (the second pasted row is ignored).
+Clean up: delete the rows.
+
+### TC-023 [FE][MT] Verify the mandatory cells are not red in the first state and show the Save guard after one is blank on save (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-2.7
+1. Click Add Equipment. -> A new row appears.
+2. Look at the 7 mandatory cells (Material Description, WIN# No. (CCU No.), Contact Person, Width, Length, Height, Gross Wt.). -> All have the normal neutral background and no `This field is required.` text.
+3. Fill Material Description only. -> The other 6 mandatory cells stay neutral.
+Clean up: delete the row.
+
+### TC-024 [FE][MT] Verify a mandatory cell that had data and was cleared turns red with the message (NEG) [Auto]
+Precondition: common, a row with all 7 mandatory cells filled
+Priority: High
+Trace: AC-2.8, AC-2.9
+1. Clear the Material Description cell and click away. -> The cell has a red background (no red border) and shows `This field is required.`.
+2. Type `Pump` in the cell. -> The red background and the message disappear at once.
+3. Clear the WIN# No. (CCU No.) cell. -> The cell has a red background and `This field is required.`.
+4. Clear the Contact Person cell. -> The cell has a red background and `This field is required.`.
+5. Type a space only in Contact Person (see Q-17 for trimming). -> The cell is treated as blank (red) or accepted; record the result.
+Test data set: loop over the 7 mandatory columns.
+Clean up: delete the row.
+
+### TC-025 [FE][MT] Verify error clearance happens at once when the value is made valid by a dropdown, paste or typing (POS) [Auto]
+Precondition: common, a row with Width cleared (red background)
+Priority: Medium
+Trace: AC-2.9
+1. Paste `2.5` into the red Width cell. -> The red background goes away.
+2. Clear it again. -> The red background comes back.
+3. Type `3` and press Tab. -> The red background goes away and the focus moves to the next cell.
+Clean up: delete the row.
+
+### TC-026 [FE][MT] Verify Save is blocked while a mandatory cell is red (NEG) [Auto]
+Precondition: common, a row with all mandatory cells filled
+Priority: High
+Trace: AC-2.10, AC-3.2
+1. Change Remark to `Test`. -> The Save button turns blue.
+2. Clear the Contact Person cell. -> The cell is red with `This field is required.`.
+3. Click Save. -> Nothing is saved: the toast `Please correct the highlighted errors before saving.` shows and the page scrolls to the red row.
+4. Type `3` in Contact Person. -> The red background and the message disappear.
+5. Type `0` in Width and click away. -> The Width cell has a red background (no border, no popover).
+6. Click Save. -> Nothing is saved: the toast `Please correct the highlighted errors before saving.` shows and the page scrolls to the red row (a red dimension cell blocks Save, see Q-5).
+7. Click a breadcrumb link, then `Discard Change`, then return to the page. -> The Remark shows the old value (the change was never saved).
+Clean up: delete the row.
+
+### TC-027 [FE][MT] Verify MMR No. accepts at most 30 characters (BND) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-2.11, AC-1.1
+1. Type 29 characters `A` (`AAAAAAAAAAAAAAAAAAAAAAAAAAAAA`) in the MMR No. cell. -> The cell shows 29 characters.
+2. Type 30 characters. -> The cell shows 30 characters.
+3. Type one more character. -> The cell still shows 30 characters.
+4. Paste a 45-character text into the cell. -> The cell shows the first 30 characters only.
+5. Click Save and refresh. -> The saved value has 30 characters.
+Test data set: lengths 29, 30, 31, 45, 200 (emoji and Thai text of 31 characters).
+Clean up: delete the row.
+
+### TC-028 [FE][BE][MT] Verify saving valid changes persists them and shows the success toast (POS) [Auto]
+Precondition: common, rows with valid data
+Priority: High
+Trace: AC-3.1, AC-1.1, AC-1.3, AC-1.9
+1. Change Material Description to `Pump skid B`, Width to `3`, Require at Offshore to a date. -> The Save button turns blue.
+2. Click Save. -> A success toast shows with the title `Save Success` and the message `Save Equipment Mob Plan Successfully`.
+3. Look at `Last update on`. -> It shows today's date in the format `DD Mon YYYY`.
+4. Look at the Save button. -> It is disabled (grey).
+5. Refresh the page. -> Every changed value is shown again as saved.
+Clean up: restore or delete the row.
+
+### TC-029 [FE][MT] Verify Save stays disabled when no change was made or the change is undone by hand (BND) [Auto]
+Precondition: common, a row with Remark `old`, Width `2`, Material Ready at SKL = 10 Jun 2026, Priority `1`, Status `Inspected`
+Priority: High
+Trace: AC-3.1
+1. Look at the Save button. -> It is grey and cannot be clicked.
+2. Change Remark to `abc`. -> Save turns blue.
+3. Change Remark back to `old`. -> Save goes back to grey (nothing left to save).
+4. Change Width to `3`, then type `2` again. -> Save turns blue after `3` and goes back to grey after `2`.
+5. Change Width to `3`, then type `2.00`. -> Save goes back to grey (the value is the same number).
+6. Pick Material Ready at SKL = 11 Jun 2026, then pick 10 Jun 2026 again. -> Save turns blue after the first pick and goes back to grey after the second.
+7. Change Priority to `2`, then back to `1`. -> Save turns blue, then goes back to grey.
+8. Change Status to `Delay`, then back to `Inspected`. -> Save turns blue, then goes back to grey.
+9. Open the Width cell, press Esc without typing. -> Save stays grey.
+Test data set: dropdown cells Premob Inspection, Transportation, Platform and Deck are looped the same way (change, change back, Save grey).
+Clean up: none.
+
+### TC-030 [FE][MT] Verify Save with invalid rows is blocked, scrolls to the first invalid row and shows the error toast (NEG) [Auto]
+Precondition: common, 30 equipment rows (so the first invalid row is out of view), row 25 and row 28 each have a cleared mandatory cell
+Priority: High
+Trace: AC-3.2, AC-2.10
+1. Click Save. -> The toast `Please correct the highlighted errors before saving.` shows.
+2. Look at the table. -> It scrolled to row 25 (the first invalid row); rows 25 and 28 have red cells.
+3. Fix row 25 and click Save. -> The error toast shows again and the table scrolls to row 28.
+4. Fix row 28 and click Save. -> The success toast `Save Success` shows.
+Clean up: delete the rows.
+
+### TC-031 [FE][MT] Verify strange text in text cells is kept as typed (Exotic: strange input) [Auto]
+Precondition: common, a new row
+Priority: Medium
+Trace: AC-1.1
+1. Type `<b>"A&B" 50% \ / ' </b>` in Remark and press Enter. -> The cell shows the text exactly as typed (no bold, no cut).
+2. Type emoji `🚧🚧` and Thai `แท่นขุดเจาะ` and Chinese `设备` in Material Description. -> The cell shows the text as typed.
+3. Type 500 characters in Remark. -> The cell shows the text without breaking the layout (cut with ... or scroll), or is limited to its limit (see Q-17).
+4. Save, then refresh. -> The values are shown as typed.
+Test data set: strange values table (emoji, Thai, Chinese, Arabic, quotes, angle brackets, spaces only, spaces before and after, new line) looped through the 8 text cells.
+Clean up: delete the row.
+
+### TC-032 [FE][MT] Verify a failed save keeps the changes on the page (NEG) [Manual: network failure setup is costly to automate]
+Precondition: common, DevTools open
+Priority: Medium
+Trace: AC-3.1
+1. Change Remark to `Offline test`. -> Save turns blue.
+2. Set the network to Offline in DevTools. -> The page stays open.
+3. Click Save. -> A toast shows the title `Save Failed` and the message `Save Equipment Mob Plan Failed` (see Q-13).
+4. Look at the Remark cell and the Save button. -> The text `Offline test` is still in the cell and Save is still blue.
+5. Set the network back to Online and click Save. -> The success toast `Save Success` shows.
+Clean up: restore Remark.
+
+### TC-033 [FE][BE][MT] Verify Save is refused when the plan was deleted in another tab (NEG) [Auto]
+Precondition: common. Tab A has the page open; tab B (same user, or a second browser context) has the Planning tab.
+Priority: High
+Trace: AC-3.3
+1. In tab B delete the Equipment Mob Plan from the plan card three-dot menu. -> The plan is deleted.
+2. In tab A change Remark to `x` and click Save. -> A modal opens with the title `Unable to Save Equipment Mob Plan`, the message `The equipment mob plan has already been deleted.` and one OK button.
+3. Click OK. -> The user goes back to the Planning tab and the plan row shows the not-created state; no `Unsaved Change` modal appears on this redirect even though `x` was never saved (see Q-10).
+Starting data: a plan created by the test; second browser context.
+Clean up: none, the plan is deleted by the test.
+
+### TC-034 [FE][BE][MT] Verify Export is refused when the plan was deleted in another tab (NEG) [Auto]
+Precondition: same as TC-033, written to stand alone: tab A has the page open, tab B deletes the plan first
+Priority: Medium
+Trace: AC-3.3
+1. In tab B delete the Equipment Mob Plan. -> The plan is deleted.
+2. In tab A click Export. -> A modal opens with the message `The equipment mob plan has already been deleted.` and one OK button; the title is `Unable to Export Equipment Mob Plan` (validation sheet) or `Unable to Save Equipment Mob Plan` (Story), see Q-10.
+3. Click OK. -> The user goes back to the Planning tab; no file is downloaded.
+Clean up: none.
+
+### TC-035 [FE][MT] Verify leaving with unsaved changes shows the Unsaved Change modal on Back, sidebar and breadcrumb (POS) [Partial: browser Back and the modal are native-like, check by eye]
+Precondition: common
+Priority: High
+Trace: AC-4
+1. Change Remark to `unsaved`. -> Save turns blue.
+2. Click the browser Back button. -> The modal `Unsaved Change` opens with the text `Are you sure you want to leave this page? Change you made will not be saved.` (see Q-12) and the buttons `Continue Editing` and `Discard Change`.
+3. Click `Continue Editing`. -> The modal closes, the page stays and `unsaved` is still in the Remark cell.
+4. Click a sidebar menu link. -> The modal `Unsaved Change` opens again.
+5. Click `Continue Editing`, then click a breadcrumb link (Shutdown Event List). -> The modal `Unsaved Change` opens again.
+6. Click `Discard Change`. -> The user goes to the Shutdown Event List and the change is not saved.
+7. Return to the Equipment Mob Plan page. -> The Remark shows the old value.
+Clean up: none.
+
+### TC-036 [FE][MT] Verify no Unsaved Change modal shows when nothing was changed or the change was undone (NEG) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-4, AC-3.1
+1. Click a breadcrumb link without any edit. -> The user leaves at once without a modal.
+2. Return to the page, change Remark to `abc`, then change it back to the old value. -> Save is grey again.
+3. Click the sidebar menu link. -> The user leaves at once without a modal.
+4. Return to the page, change Remark, click Save and wait for the success toast. -> Save is grey.
+5. Click the browser Back button. -> The user leaves at once without a modal.
+Clean up: none.
+
+### TC-037 [FE][MT] Verify no Unsaved Change modal for a user who cannot save (NEG) [Auto]
+Precondition: JO or a role without the Edit permission (Q-1), plan visible to this role
+Priority: Medium
+Trace: AC-0, AC-4
+1. Open the page, scroll and collapse a work header (view only actions). -> Nothing changes the Save button.
+2. Click a breadcrumb link. -> The user leaves with no modal.
+3. Return to the page and click a sidebar menu link. -> The user leaves with no modal.
+4. Return to the page and click the browser Back button. -> The user leaves with no modal.
+Clean up: none.
+
+### TC-038 [FE][MT] Verify Discard Change drops all edits including the rows added and the changes in several rows (POS) [Auto]
+Precondition: common, 3 rows
+Priority: High
+Trace: AC-4, AC-1.1
+1. Change Remark in row 1, Width in row 2 and add a new row in row 3's Work Header. -> Save turns blue.
+2. Click a sidebar link, then `Discard Change`. -> The user leaves the page.
+3. Return to the Equipment Mob Plan page. -> Row 1 and row 2 show the old values and the added row is not in the table.
+Clean up: none.
+
+### TC-039 [FE][MT] Verify keyboard use across the cells of one row (POS) [Partial: focus order is checked by eye]
+Precondition: common, a new row
+Priority: Medium
+Trace: AC-1.1, AC-1.9, AC-1.3
+1. Click the Material Description cell, type `Pump` and press Tab. -> The focus moves to the next editable cell.
+2. Type `CCU-1` and press Tab, then type `Somchai Dee` and press Tab. -> Each value is kept and the focus moves on, skipping the Area cell.
+3. Type `2` in Width and press Enter. -> The value is kept and the cell leaves edit mode.
+4. Click Length, type `3` and press Esc. -> The edit is cancelled and the old (empty) value stays.
+Clean up: delete the row.
+
+### TC-040 [FE][BE][MT] Verify saving changes updates the Plan Card on the Planning tab (POS) [Auto]
+Precondition: common. Record the `Last update on` date of the Equipment Mob Plan row on the Planning tab.
+Priority: Medium
+Trace: AC-3.1
+1. Change Remark and click Save. -> The success toast shows.
+2. Open the Planning tab. -> The Equipment Mob Plan row shows `Last update on` with today's date (Thai time).
+3. Open the page again. -> The saved Remark shows.
+Clean up: restore Remark.
+
+### TC-041 [FE][MT] Verify the browser Back is guarded again after Continue Editing (NEG) [Partial: browser Back is native-like, check by eye]
+Precondition: common
+Priority: High
+Trace: AC-4
+1. Change Remark to `unsaved`. -> Save turns blue.
+2. Click the browser Back button. -> The modal `Unsaved Change` opens.
+3. Click `Continue Editing`. -> The modal closes and the page stays with `unsaved` in the Remark cell.
+4. Click the browser Back button again. -> The modal `Unsaved Change` opens again; the user does not leave.
+5. Click `Continue Editing`, then click the browser Back button a third time. -> The modal opens again.
+Clean up: none.
+
+### TC-042 [FE][MT] Verify Discard Change on the browser Back route leaves to the previous page without saving (POS) [Partial: browser Back is native-like, check by eye]
+Precondition: common. Open the page from the Planning tab so the previous page is the Planning tab.
+Priority: High
+Trace: AC-4
+1. Change Remark to `unsaved`. -> Save turns blue.
+2. Click the browser Back button. -> The modal `Unsaved Change` opens.
+3. Click `Discard Change`. -> The user lands on the Planning tab (the page before this one), not on a blank or the same page.
+4. Open the Equipment Mob Plan page again. -> The Remark shows the old value.
+Clean up: none.
+
+### TC-043 [FE][MT] Verify clearing a mandatory cell and typing the original value back leaves nothing to save (BND) [Auto]
+Precondition: common, a row with all 7 mandatory cells filled; Material Description is `Pump skid A`; Save is grey
+Priority: Medium
+Trace: AC-2.8, AC-2.9, AC-3.1
+1. Clear the Material Description cell and click away. -> The cell has a red background and `This field is required.`; Save is blue or grey as the product decides (record it).
+2. Type `Pump skid A` (the original value) and click away. -> The red background and the message are gone.
+3. Look at the Save button. -> It is grey (the page equals the saved data).
+4. Click a breadcrumb link. -> The user leaves at once without a modal.
+Clean up: none.
+
+### TC-044 [FE][MT] Verify leaving after Add Equipment with an empty row only (BND) [Auto]
+Precondition: common. See Q-23.
+Priority: Medium
+Trace: AC-4, AC-2.7
+1. Click Add Equipment on a Work Header and type nothing. -> A new empty row appears; no red cells.
+2. Click a breadcrumb link. -> The modal `Unsaved Change` opens (the added row is an unsaved change).
+3. Click `Discard Change`. -> The user leaves the page.
+4. Return to the Equipment Mob Plan page. -> The empty row is not in the table.
+Clean up: none.
+
+### TC-045 [FE][MT] Verify view-only actions as TM do not count as a change (POS) [Auto]
+Precondition: common, 2 Work Headers
+Priority: Low
+Trace: AC-4, AC-3.1
+1. Collapse a Work Header and expand it again. -> The rows show again; Save stays grey.
+2. Scroll the table down and up. -> Save stays grey.
+3. Click a breadcrumb link. -> The user leaves at once without a modal.
+Clean up: none.
+
+### TC-046 [FE][MT] Verify reload with unsaved changes does not save the change (NEG) [Manual: native browser prompt, see Q-11]
+Precondition: common
+Priority: Medium
+Trace: AC-4
+1. Change Remark to `unsaved`. -> Save turns blue.
+2. Press F5. -> The browser may show its own leave prompt (see Q-11); choose to reload.
+3. Look at the Remark cell after the page loads. -> The Remark shows the old value and Save is grey.
+Clean up: none.
+
+### TC-047 [FE][MT] Verify the Unsaved Change modal still shows after a Save blocked by errors (NEG) [Auto]
+Precondition: common, a row with all mandatory cells filled
+Priority: Medium
+Trace: AC-4, AC-3.2
+1. Change Remark to `unsaved` and clear Contact Person. -> Contact Person is red.
+2. Click Save. -> The toast `Please correct the highlighted errors before saving.` shows; nothing is saved.
+3. Click a breadcrumb link. -> The modal `Unsaved Change` opens (the draft is still unsaved).
+4. Click `Continue Editing`. -> The page stays with the red cell and the changed Remark.
+Clean up: none.
+
+### TC-048 [FE][MT] Verify the Unsaved Change modal still shows after a failed Save (NEG) [Manual: network failure setup is costly to automate]
+Precondition: common, DevTools open
+Priority: Medium
+Trace: AC-4, AC-3.1
+1. Change Remark to `Offline test`. -> Save turns blue.
+2. Set the network to Offline and click Save. -> The toast `Save Failed` shows; Save stays blue.
+3. Click a breadcrumb link. -> The modal `Unsaved Change` opens.
+4. Click `Continue Editing`. -> The page stays with `Offline test` in the Remark cell.
+Clean up: set the network back to Online and restore Remark.
+
+### TC-049 [FE][BE][MT] Verify the Plan Card Last update does not change after unsaved or discarded edits (NEG) [Auto]
+Precondition: common. Record the `Last update on` date of the Equipment Mob Plan row on the Planning tab.
+Priority: Medium
+Trace: AC-3.1, AC-4
+1. Change Remark to `unsaved`, do not click Save, and click a breadcrumb link. -> The modal `Unsaved Change` opens.
+2. Click `Discard Change`, then open the Planning tab. -> The `Last update on` date of the Equipment Mob Plan row is the same as the recorded one.
+3. Open the page again. -> The Remark shows the old value.
+Clean up: none.
+
+### TC-050 [FE][MT] Verify Save is blocked for a new row whose mandatory cells were never touched (NEG) [Auto]
+Precondition: common. See Q-6.
+Priority: High
+Trace: AC-2.10, AC-3.2, AC-2.7
+1. Click Add Equipment and leave every cell empty. -> A new row appears with no red cells.
+2. Click Save. -> Nothing is saved: the toast `Please correct the highlighted errors before saving.` shows, the page scrolls to the new row and the blank mandatory cells turn red.
+3. Refresh the page. -> The new row is not in the table.
+Clean up: none.
+
+### TC-051 [FE][MT] Verify changing Material Ready at SKL keeps the other dates and updates their pickers (BND) [Auto]
+Precondition: common, a row with Material Ready at SKL = 10 Jun 2026, Require at Offshore = 15 Jun 2026, Backload to SKL = 20 Jun 2026, Loading at PSB = 01 Jun 2026. See Q-8.
+Priority: Medium
+Trace: AC-2.5, AC-2.4
+1. Open the Material Ready at SKL picker. -> Dates after 15 Jun 2026 are disabled.
+2. Pick 12 Jun 2026. -> The cell shows `12 Jun 2026`.
+3. Look at the other date cells. -> Require at Offshore `15 Jun 2026`, Backload to SKL `20 Jun 2026`, Loading at PSB `01 Jun 2026`; none is cleared and none is red.
+4. Open the Require at Offshore picker. -> Dates before 12 Jun 2026 are disabled.
+Clean up: delete the row.

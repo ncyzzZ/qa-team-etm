@@ -1,0 +1,65 @@
+{
+  "defect": "ETM-7936",
+  "story": "ETM-7311",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Pasting an invalid value into a mandatory (non-date) cell shows the modal but the cell is not red.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7311",
+  "run": "STORY-ETM-7311",
+  "frozen": "evals/exams/_story-ETM-7311/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "paste",
+        "ctrl+v"
+      ],
+      [
+        "material description",
+        "win#",
+        "contact person",
+        "width",
+        "length",
+        "height",
+        "gross",
+        "mandatory"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "paste",
+          "ctrl+v",
+          "clipboard"
+        ],
+        [
+          "invalid",
+          "not valid",
+          "negative",
+          "letters",
+          "abc",
+          "text"
+        ]
+      ],
+      [
+        [
+          "red"
+        ],
+        [
+          "background",
+          "cell",
+          "highlight"
+        ],
+        [
+          "!",
+          "either",
+          "or the value",
+          "may"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

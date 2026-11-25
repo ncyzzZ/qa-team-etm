@@ -1,0 +1,37 @@
+{
+  "defect": "ETM-7801",
+  "story": "ETM-7306",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "After widening a column, content alignment is not the defined one (Gross Wt. centered, should be right).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7306",
+  "run": "STORY-ETM-7306",
+  "frozen": "evals/exams/_story-ETM-7306/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "widen",
+          "expand the column",
+          "drag",
+          "resize",
+          "wider"
+        ]
+      ],
+      [
+        [
+          "align"
+        ],
+        [
+          "column",
+          "content",
+          "value"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

@@ -97,3 +97,45 @@ test('ETM-8429: "TM-B" names the second user (re-exam 2026-11-25, TC-052)', () =
   const txt = '### TC-052 conflict modal\n2. TM-B updates the Actual (%) of any activity on the Timeline and clicks `Update Progress`. -> TM-B sees `Update Success`.\n3. TM-A clicks `Save`. -> A modal opens with the title `Progress has been updated`.';
   assert.deepEqual(ids(txt.replace('### TC-052 conflict modal', '### TC-052 conflict modal on Edit Plan'), 'ETM-8429'), ['TC-052']);
 });
+
+// Equipment Mob Plan exams (ETM-7311, ETM-7306): one hit and one near miss each
+const emp = {
+  'ETM-7913': ['### TC-1 Deck\n1. Double-click a Deck cell and type `Pump Room 9` (not in the list). -> The list offers `Pump Room 9` as a new option.\n2. Press Enter. -> The cell shows `Pump Room 9`.',
+               '### TC-1 Deck\n1. Double-click a Deck cell and pick `Main Deck`. -> The cell shows `Main Deck`.'],
+  'ETM-7915': ['### TC-1 Area\n1. Type Width `1.15` and Length `1.10`. -> Area (m2) shows `1.27` (1.265 rounded half up).',
+               '### TC-1 Area\n1. Type Width `2.00` and Length `3.00`. -> Area (m2) shows `6.00`.'],
+  'ETM-7922': ['### TC-1 Gross Wt.\n1. Type `1234567` in Gross Wt. (Tons) and click outside. -> It shows `1,234,567`.',
+               '### TC-1 Gross Wt.\n1. Type `12` in Gross Wt. (Tons). -> It shows `12`.'],
+  'ETM-7936': ['### TC-1 Paste into mandatory cells\n1. Put `abc` on the clipboard and paste (Ctrl+V) into Width (m). -> The modal Paste Validation Failed shows.\n2. Close the modal and look at the Width cell. -> The cell has a red background.',
+               '### TC-1 Paste dates\n1. Put an invalid date on the clipboard and paste (Ctrl+V) into Require at Offshore. -> The modal shows; the cell is blank, not red.'],
+  'ETM-7938': ['### TC-1 Paste in edit mode\n1. Double-click Remark with `ABC`, put the cursor at the end and press Ctrl+V with `123` on the clipboard. -> The cell shows `ABC123`; the existing text is kept.',
+               '### TC-1 Paste in focus mode\n1. Select the Remark cell and press Ctrl+V with `123`. -> The cell shows `123`.'],
+  'ETM-7940': ['### TC-1 Platform dropdown\n1. Open the Platform dropdown and type `WP`. -> Only platforms containing `WP` are listed.',
+               '### TC-1 Deck\n1. Open the Deck combo-box and type `Main`. -> Only options containing `Main` are listed.'],
+  'ETM-7947': ['### TC-1 Date picker\n1. Click Require at Offshore. -> The date picker opens on the month of the Event Start.',
+               '### TC-1 Date picker\n1. Click Require at Offshore. -> The date picker opens.'],
+  'ETM-8073': ['### TC-1 Dropdowns in lower rows\n1. Scroll down to the last row and click its Transportation cell. -> The list opens with Supply Vessel, Crew Boat, MSB, Helicopter.',
+               '### TC-1 Dropdowns\n1. Click the Transportation cell of the first row. -> The list opens.'],
+  'ETM-7857': ['### TC-1 Empty plan with no Work Header\n1. Open the plan. -> `No results found` shows with no sub-text and no table header.',
+               '### TC-1 Empty plan with no Work Header\n1. Open the plan. -> The open box picture shows.'],
+  'ETM-7801': ['### TC-1 Column width\n1. Drag the right border of Gross Wt. (Tons) to widen it. -> The column is wider.\n2. Look at the values. -> They stay right aligned in the column.',
+               '### TC-1 Column width\n1. Drag the right border of Gross Wt. (Tons) to widen it. -> The column is wider.'],
+  'ETM-7799': ['### TC-1 Deleted plan\n1. In another session delete the plan. -> Deleted.\n2. In the first session click Save. -> The already deleted modal shows; OK goes to the Plan page.',
+               '### TC-1 Delete\n1. Delete the plan. -> It is gone from the Plan Card.'],
+  'ETM-7886': ['### TC-1 Add Equipment in a long list\n1. Click Add Equipment on a Work Header with 40 rows. -> The new row is added at the end.\n2. Look at both panels. -> The page scrolls to the new row and both panels stay aligned.',
+               '### TC-1 Add Equipment\n1. Click Add Equipment. -> A new row is added.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(emp)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('ETM-7936: a hedged result ("either ... or red") is not counted (exam 2026-11-25, TC-017)', () => {
+  const txt = '### TC-017 paste numbers\n5. Paste `-4.5` into the Width cell. -> The result is not a negative number: either the cell does not take the minus sign or the value is rejected with a red background.';
+  assert.deepEqual(ids(txt, 'ETM-7936'), []);
+});
+test('ETM-7940: typing into a text cell next to a note about dropdowns is not counted (exam 2026-11-25, TC-024)', () => {
+  const txt = '### TC-024 Contact Person\nNote: Platform is a dropdown.\n5. Type a space only in Contact Person. -> The cell is treated as blank (red) or accepted; record the result.';
+  assert.deepEqual(ids(txt, 'ETM-7940'), []);
+});

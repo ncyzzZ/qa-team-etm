@@ -1,0 +1,36 @@
+{
+  "defect": "ETM-7922",
+  "story": "ETM-7311",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Numeric fields show no thousands separator (1234567 instead of 1,234,567).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7311",
+  "run": "STORY-ETM-7311",
+  "frozen": "evals/exams/_story-ETM-7311/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "width",
+        "length",
+        "height",
+        "gross",
+        "numeric"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "1,000",
+          "1,234",
+          "thousand",
+          "separator",
+          "comma"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

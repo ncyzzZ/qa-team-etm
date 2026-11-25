@@ -1,0 +1,500 @@
+# Draft TC - ETM-7306 Equipment Mob Plan - Table Columns, Work Header Grouping & Empty States
+
+Story: ETM-7306 (frozen copy, `story.md`). Source: Story description and comments, `docs/modules/equipment-mob-plan-figma.md`, `docs/modules/equipment-mob-plan-validation.md`, `docs/modules/planning.md`, `knowledge/`. No analyst.md and no inspector.md: AC ids below are numbered by the designer from the Story text.
+Existing `[QA]` subtasks: none known (not read).
+Common precondition: Turnaround Manager (TM) is logged in with Edit Equipment Mob Plan and View All Equipment Mob Plan Item; the Equipment Mob Plan page of a plan is open (Planning tab, row Equipment Mob Plan, three-dot menu, View Equipment Mob Plan; it opens in a new tab). The plan has at least 3 Work Headers, at least two with equipment rows and one with none. Job Owner (JO) is the only other role (view only, sees the Active plan only).
+Notation: TM = Turnaround Manager, JO = Job Owner, chevron = expand/collapse icon on the Work Header row, Save = page-level Save button (top right, grey when nothing to save, blue when there is).
+
+## AC ids (designer numbering)
+
+- AC-1 Grid columns: AC-1.1 column list, order, alignment and widths; AC-1.2 red asterisk on required headers; AC-1.3 date milestone sequence (Material Ready at SKL <= Require at Offshore <= Backload to SKL); AC-1.4 column behaviours (dropdown values, read-only Area, No. running number, MMR No. max 30)
+- AC-2 Work Header grouping: AC-2.1 banner row, colour, order by Master Data; AC-2.2 manually added header at the bottom; AC-2.3 row components; AC-2.4 only the chevron toggles
+- AC-3 Page empty state (0 Work Headers)
+- AC-4 Sectional empty state (Work Header with 0 equipment)
+- AC-5 Persistence: AC-5.1 Save commits the state; AC-5.2 chevron enables Save; AC-5.3 Unsaved Change guard; AC-5.4 only Edit permission saves; AC-5.5 global shared state and default all expanded; AC-5.6 Filter Panel AND rule
+
+## Coverage map
+
+| Requirement / screen state | Technique | Risk | Planned case(s) |
+|---|---|---|---|
+| AC-1.1 columns, order, alignment, width | Screen state, matrix | wrong or missing column, wrong order | TC-001, TC-002 |
+| AC-1.2 red asterisk | Screen state, matrix | asterisk on wrong header | TC-003 |
+| AC-1.3 date sequence | Edge values, input groups | later date before earlier one accepted | TC-004, TC-005, TC-006 |
+| AC-1.4 dropdown values and read-only fields | Condition table | wrong options, Area editable or wrong | TC-007, TC-008, TC-009 |
+| AC-1.4 No. running number | Error guessing | restarts per header, counts banner rows | TC-010 |
+| AC-1.4 MMR No. max 30 | Edge values | 31st character accepted | TC-011 |
+| AC-1.4 strange input in text cells | Strange input (lesson 4) | broken page, lost text | TC-012 |
+| AC-2.1 banner look and order | Screen state, decision table | wrong order, wrong colour | TC-013, TC-014 |
+| AC-2.2 manual header position | State change | header inserted in the middle | TC-015 |
+| AC-2.3 row components | Screen state | missing button or icon | TC-016 |
+| AC-2.4 chevron only | Error guessing, L-5 | click on name or button collapses the row | TC-017, TC-018 |
+| AC-3 page empty state | Screen state | wrong text, extra prompt, Add Work Header blocked | TC-019 |
+| AC-4 sectional empty state | Screen state | text or span wrong | TC-020 |
+| AC-5.1 Save commit and reload | Leaving and coming back (L-2, L-7) | state lost on reload | TC-021, TC-022 |
+| AC-5.2 chevron enables Save, undo disables | Dirty state | Save stays blue after undo | TC-023, TC-024 |
+| AC-5.3 Unsaved Change guard | Dirty state, leaving | wrong buttons, state lost or kept wrongly | TC-025, TC-026, TC-027 |
+| AC-5.4 View-only role | Roles and permission | JO or view-only saves, or gets the guard | TC-028, TC-029 |
+| AC-5.5 global state, default | Two users (lesson 1, 8) | other user sees different state; default not expanded | TC-030, TC-031 |
+| AC-5.6 Filter AND rule | Combinations (lesson 2) | collapsed header hidden wrongly, filtered rows shown | TC-032, TC-033, TC-034 |
+| AC-5.2 undo one of two changes | Dirty state | Save grey after undoing only one change | TC-036 |
+| AC-5.3 leaving by browser Back | Leaving | change lost silently | TC-037 |
+| AC-5.3 closing the tab with unsaved change | Leaving | change lost silently | TC-038 |
+| AC-5.3 in-app link to another screen of the plan | Leaving | change lost silently | TC-039 |
+| AC-5.2, AC-5.3 collapse via Custom View panel | Linked screen | Save or guard not triggered | TC-040 |
+| AC-5.5 another plan of the same event | Related screen | state leaks to other plan | TC-041 |
+| AC-5.5 two tabs on the same plan, different states | Two users / two tabs | wrong state after the second Save | TC-042 |
+| Screen state: loading, many rows, very long Work Header name | Screen states | layout break | TC-035 |
+
+Categories (lessons-learned): 1 two people at once: relevant (TC-030). 2 filter + sort + search together: relevant, filter with collapse (TC-032..034); sort and search are not in this Story. 3 old data after migrations: not relevant, new page. 4 strange input: relevant (TC-012). 5 reorder list: not relevant, the Story has no reorder; Work Header order is covered by TC-013..015. 6 linked data: partly, Add Equipment and header delete affect state, see open questions. 7 charts: not relevant, no chart. 8 same data on many pages: relevant (TC-030 other user, reload). 9 matrix: relevant (TC-002, TC-003, TC-007 use data tables). L-1 text sort: not relevant, no sorted filter list in this Story. L-2 filter choice kept: relevant (TC-033). L-3 search read too early: not relevant, no search. L-4 paste: not relevant, paste is another Story. L-5 collapse per level: relevant (TC-017, TC-018; only one level here). L-6 case variants: not relevant, no save of a name here. L-7 selected not hover: not relevant, no picker. L-8 Story changed during sprint: the comment says linked issue ETM-7621 was resolved; see open questions.
+Skipped: Custom View panel itself (ETM-7313) and Filter Panel contents (ETM-7314) are other Stories; only their link to this Story is covered.
+
+Counts: see qa-check (42 cases).
+
+## Open questions
+
+1. AC-1.3: what happens when a date breaks the sequence (an error under the cell, the value is rejected, or the other dates are cleared)? The Story gives no message text. TC-005 expects "the later date is not accepted and the user is told"; the exact text is needed.
+2. AC-1.3: is equal date allowed (the Story says `<=`)? Assumed yes (TC-004).
+3. AC-1.2: the Story marks 7 required headers (including Height and Gross Wt.), the Figma notes list only 5 (without Height and Gross Wt.). Which one is right? TC-003 uses the Story.
+4. AC-1.4: which Platform values exist for the test asset, and does the Deck dropdown free text save any text? Max length of free text, Item No. in Plot Plan, Vessel Name and Remark is not stated.
+5. AC-1.4: Area rounding and decimals (Width x Length), and what Area shows when Width or Length is empty.
+6. AC-1.4: does No. keep counting when a filter hides rows, or only counts visible rows?
+7. AC-2.1: is there a Master Data sequence for a custom header name that is not in the master list, and where does it go on initialization?
+8. AC-5.2: the Story says "per Criterion 5.2" but 5.2 is the same sentence. If the user collapses and then expands back to the saved state, is Save grey again? TC-024 expects Save grey (nothing to save) and asks.
+9. AC-5.3: does the Unsaved Change pop-up also appear for a role with View only who toggled a chevron? Expected here: no, because that user cannot save (TC-029). Confirm.
+10. AC-5.3: leaving by browser Back, breadcrumb, side menu and closing the tab: which are guarded? The validation sheet names Back and side menu only. The Planning note says the page opens in a new tab with no browser Back.
+11. AC-5.5: are saved states per plan (Story says "for the specific Equipment Mob Plan instance")? Active and Inactive plans both?
+12. AC-5.6: when a header is expanded but all its rows are filtered out, does the header stay visible with "No equipment added."? Story only states the collapsed case.
+13. AC-5.6: does the expand state of a header that is hidden by the filter come back when the filter is cleared? Expected: yes, same state as before.
+14. AC-3: "all headers were deleted" needs a Delete Work Header action that is in another Story. Is a delete in scope for this Story's empty state?
+15. Comment: the linked issue ETM-7621 was resolved (no text). What did it change for this Story?
+16. Suggestion (not in Story): keyboard use (Tab order between cells of one row), slow network on Save. Not written as cases.
+17. AC-2.2: is a manually added Work Header saved at once by the Add Work Header pop-up, or only after the page Save? Decides whether TC-015 needs Save before the reload.
+18. AC-2.4: what should Add Equipment do on a collapsed header (expand it, or add a row that stays hidden)? TC-018 expects the row to be visible.
+19. AC-5.3: TC-037, TC-038, TC-039 expect the Unsaved Change pop-up (or the browser leave prompt for a closed tab) for browser Back, tab close and an in-app link; open question 10 still needs BA confirmation of which exits are guarded.
+20. AC-5.5: TC-042 (two tabs, different states) expects the last Save to win and the page to show the state the saver saw; confirm that no conflict message is wanted.
+21. AC-5.2: the Custom View panel (ETM-7313) controls for collapse/expand are not described in this Story; TC-040 names them generically.
+
+## Test cases (42 flows)
+
+### TC-001 [FE][MT] Verify the grid shows the 25 default columns in the right order (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-1.1
+1. Look at the table header row. -> The columns show from left to right: No., Material Description, WIN# No. (CCU No.), Contact Person, Department, Premob Inspection, Width (m), Length (m), Height (m), Area (m2), Gross Wt. (Tons), Platform, Deck, Item No. in Plot Plan, Transportation, Material Ready at SKL, Require at Offshore, Backload to SKL, Priority, Status, MMR No., Vessel Name, Loading at PSB, Remark, Action
+2. Count the columns. -> There are 25 columns and no other column
+Automation: Starting data: plan with at least one equipment row. What to check: the header texts in order. Clean up: none.
+
+### TC-002 [FE][MT] Verify alignment and width of every column (POS) [Auto]
+Precondition: common, a Work Header with at least one equipment row
+Priority: Low
+Trace: AC-1.1
+1. Read the alignment and width of each column header and its cells, one column at a time, against the table below. -> Each column matches its row of the table
+2. Make the browser window narrow. -> No column becomes narrower than its minimum width; a horizontal scroll bar appears
+
+| Column | Alignment | Width |
+|---|---|---|
+| No. | Center | 60px |
+| Material Description | Left | min 200px |
+| WIN# No. (CCU No.) | Left | min 180px |
+| Contact Person | Left | min 150px |
+| Department | Left | min 120px |
+| Premob Inspection | Center | min 130px |
+| Width (m), Length (m), Height (m), Area (m2) | Right | min 90px |
+| Gross Wt. (Tons) | Right | min 110px |
+| Platform | Left | min 130px |
+| Deck | Left | min 140px |
+| Item No. in Plot Plan | Left | min 140px |
+| Transportation | Left | min 150px |
+| Material Ready at SKL, Require at Offshore, Backload to SKL, Loading at PSB | Center | min 140px |
+| Priority | Center | min 80px |
+| Status | Center | min 160px |
+| MMR No. | Left | min 120px |
+| Vessel Name | Left | min 140px |
+| Remark | Left | min 180px |
+| Action | Right | 60px |
+Automation: Data set: the table above, the test loops over every row. Clean up: none.
+
+### TC-003 [FE][MT] Verify the red asterisk shows only on required headers (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-1.2
+1. Look at the headers Material Description, WIN# No. (CCU No.), Contact Person, Width (m), Length (m), Height (m) and Gross Wt. (Tons). -> Each header shows a red `*` before its name
+2. Look at all the other headers. -> None of them shows a red `*`
+Automation: Data set: list of 7 required headers; the test loops over all 25 headers.
+
+### TC-004 [FE][MT] Verify the dates are accepted in the right order, and equal dates are accepted (POS) [Auto]
+Precondition: common, an equipment row with the three dates empty
+Priority: High
+Trace: AC-1.3
+1. Pick a date in Material Ready at SKL. -> The cell shows the date as `DD Mon YYYY`, for example `05 Jun 2026`
+2. Pick a later date in Require at Offshore. -> The cell shows the later date, for example `10 Jun 2026`
+3. Pick a date later than that in Backload to SKL. -> The cell shows the date, for example `20 Jun 2026`
+4. Pick the same date as Require at Offshore in Backload to SKL. -> The cell shows `10 Jun 2026` (equal is allowed)
+Automation: Starting data: new row made by the test. Clean up: remove the row.
+
+### TC-005 [FE][MT] Verify a date that breaks the sequence is not accepted (NEG) [Auto]
+Precondition: common, an equipment row with Material Ready at SKL `05 Jun 2026`, Require at Offshore `10 Jun 2026`, Backload to SKL `20 Jun 2026`
+Priority: High
+Trace: AC-1.3
+1. Pick `01 Jun 2026` in Require at Offshore (earlier than Material Ready at SKL). -> The date is not accepted and the user is told why (text per open question 1); the cell keeps `10 Jun 2026`
+2. Pick `04 Jun 2026` in Backload to SKL (earlier than Require at Offshore). -> The date is not accepted and the user is told why; the cell keeps `20 Jun 2026`
+3. Pick `15 Jun 2026` in Material Ready at SKL (later than Require at Offshore). -> The date is not accepted and the user is told why; the cell keeps `05 Jun 2026`
+4. Look at the Save button. -> Save is still grey (no accepted change)
+5. Clear Require at Offshore. -> The cell is empty (the middle date is gone, only the outer pair is left: Material Ready at SKL `05 Jun 2026`, Backload to SKL `20 Jun 2026`)
+6. Pick `04 Jun 2026` in Backload to SKL (earlier than Material Ready at SKL). -> The date is not accepted and the user is told why; the cell keeps `20 Jun 2026`
+7. Pick `25 Jun 2026` in Material Ready at SKL (later than Backload to SKL). -> The date is not accepted and the user is told why; the cell keeps `05 Jun 2026`
+Automation: loop over the three bad picks with the middle date filled, then the two bad picks with Require at Offshore empty. Clean up: reload without saving.
+
+### TC-006 [FE][MT] Verify the date sequence at the edge, one day before and one day after (BND) [Auto]
+Precondition: common, a row with Material Ready at SKL `05 Jun 2026` and Require at Offshore `10 Jun 2026`
+Priority: Medium
+Trace: AC-1.3
+1. Pick `09 Jun 2026` in Material Ready at SKL. -> The date is accepted
+2. Pick `10 Jun 2026` in Material Ready at SKL. -> The date is accepted (equal)
+3. Pick `11 Jun 2026` in Material Ready at SKL. -> The date is not accepted and the user is told why
+Automation: Data set: 3 dates above.
+
+### TC-007 [FE][MT] Verify the dropdown options of each dropdown column (POS) [Auto]
+Precondition: common, an equipment row
+Priority: Medium
+Trace: AC-1.4
+1. Open the dropdown of each column in the table below, one at a time. -> The options are exactly the ones in the table, in that order
+2. Open the Platform dropdown. -> It lists every platform of the current asset
+3. Open the Deck dropdown, type a text that is not in the list. -> The typed text is accepted as the value
+
+| Column | Options |
+|---|---|
+| Premob Inspection | Yes, No |
+| Transportation | Supply Vessel, Crew Boat, MSB, Helicopter |
+| Priority | 1, 2, 3 |
+| Status | Inspected, Delivered at PSB, MMR Issued, Vessel Assigned, In Transit, Received, Ready for Backload, Backloaded, Delay, Cancel |
+Automation: Data set: the table; the test loops. Platform list compared with the asset's platforms read from the app.
+
+### TC-008 [FE][MT] Verify Area is read-only and equals Width x Length (POS) [Auto]
+Precondition: common, an equipment row
+Priority: High
+Trace: AC-1.4
+1. Type `2` in Width (m). -> Width shows `2`
+2. Type `3.5` in Length (m). -> Length shows `3.5`; Area (m2) shows `7`
+3. Try to click and type in the Area (m2) cell. -> The cell is disabled and does not take the typing
+4. Change Width to `4`. -> Area shows `14`
+5. Clear Width (m) while Length (m) still shows `3.5`. -> Area (m2) no longer shows `14`; it shows empty (a user would call a leftover `14` wrong, see open question 5)
+6. Type `4` in Width (m) again. -> Area shows `14`
+7. Clear Length (m) while Width (m) still shows `4`. -> Area (m2) shows empty and not the old `14`
+Automation: Data set: (2, 3.5, 7), (4, 3.5, 14), (empty, 3.5, empty), (4, empty, empty). Clean up: remove the row.
+
+### TC-009 [FE][MT] Verify Area when Width or Length is empty or zero (BND) [Manual: expected text is not in the Story, open question 5]
+Precondition: common, an equipment row
+Priority: Medium
+Trace: AC-1.4
+1. Leave Width and Length empty. -> Area shows empty (not `0` and not `NaN`)
+2. Type `0` in Width (m) and `5` in Length (m). -> Area shows `0`
+3. Type `0.01` in Width (m) and `0.01` in Length (m). -> Area shows a value a user would call correct for 0.0001 (see open question 5) and no error
+
+### TC-010 [FE][MT] Verify No. is one running number across all headers and skips banner rows (POS) [Auto]
+Precondition: common, two Work Headers each with 2 equipment rows
+Priority: Medium
+Trace: AC-1.4
+1. Read the No. of the 4 equipment rows from top to bottom. -> They show 1, 2, 3, 4
+2. Look at the Work Header banner rows. -> No number is shown on the banner rows
+3. Click Add Equipment on the first header. -> The new row gets the next number and the rows below move on by one (1..5 with no gap and no repeat)
+Automation: Clean up: remove the new row.
+
+### TC-011 [FE][MT] Verify MMR No. accepts at most 30 characters (BND) [Auto]
+Precondition: common, an equipment row
+Priority: Medium
+Trace: AC-1.4
+1. Type 29 characters in MMR No. -> All 29 characters show
+2. Type exactly 30 characters. -> All 30 characters show
+3. Type 31 characters. -> Only the first 30 characters show (or the 31st is refused)
+4. Paste 40 characters. -> Only the first 30 characters show
+Automation: Data set: lengths 29, 30, 31, 40.
+
+### TC-012 [FE][MT] Verify strange text in the free-text cells (Exotic: strange input) [Auto]
+Precondition: common, an equipment row
+Priority: Medium
+Trace: AC-1.4
+1. Type each value from the data set into Item No. in Plot Plan, Vessel Name and Remark, then click away. -> The cell shows the text back as typed and the page does not break
+2. Save, then reload the page. -> The saved text still shows as typed
+Automation: Data set: emoji `🚢🚢`, Thai `เรือขนส่ง`, `<b>x</b>`, `"quote" & 50%`, 3 spaces, text with a new line, 300 characters. The test loops over every cell and value. Expected for values the Story does not limit: shows as typed (open question 4). Clean up: remove the row.
+
+### TC-013 [FE][MT] Verify Work Header banner look (POS) [Manual: colour and look are judged by eye]
+Precondition: common
+Priority: Low
+Trace: AC-2.1
+1. Look at a Work Header row. -> The row spans the full width of the table; the background is light grey `#F5F7FA`
+2. Look at the Work Header name. -> The name shows in bold
+
+### TC-014 [FE][MT] Verify baseline Work Headers follow the Master Data order (POS) [Auto]
+Precondition: a new plan made from a Worklist that has the baseline Work Headers
+Priority: High
+Trace: AC-2.1
+1. Read the Work Header names from top to bottom. -> The names follow the Master Data sequence of Data Storage.xlsx, not alphabetical order and not the Worklist order
+2. Reload the page. -> The order is the same
+Automation: Data set: expected order read from the Master Data file. Clean up: none (read only).
+
+### TC-015 [FE][MT] Verify a manually added Work Header goes to the bottom (POS) [Auto]
+Precondition: common
+Priority: High
+Trace: AC-2.2
+1. Record the names of the headers from top to bottom. -> The list is written down for comparison
+2. Click `+ Add Work Header`. -> The Add Work Header pop-up opens
+3. Type `QA Extra Header` and click Save in the pop-up. -> The pop-up closes
+4. Read the header names again. -> The old headers keep their order and `QA Extra Header` is the last one, below all the others, even if its name would sort first
+5. Click `+ Add Work Header` again and add `AA Second Header`. -> `AA Second Header` is below `QA Extra Header`
+6. Reload the page. -> The baseline headers are in their Master Data order, then `QA Extra Header`, then `AA Second Header` at the bottom; neither new header jumps into a Master Data position (if the headers need Save first, click Save before the reload, see open question 17)
+7. If Save is blue, click Save, then reload the page again. -> The order is still the baseline headers, `QA Extra Header`, `AA Second Header`
+Automation: Clean up: delete the two headers (they are the test's own data).
+
+### TC-016 [FE][MT] Verify the parts of a Work Header row (POS) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-2.3
+1. Look at one Work Header row. -> It shows, from left to right: a chevron (pointing as expanded), the Work Header name in bold, a `+ Add Equipment` text button with a plus icon, and a three-dot menu icon on the far right
+2. Open the page for the first time with no saved state. -> The chevron shows as expanded and the equipment rows show
+Automation: check on every header row.
+
+### TC-017 [FE][MT] Verify only the chevron collapses and expands the rows (POS) [Auto]
+Precondition: common, a Work Header with 2 equipment rows
+Priority: High
+Trace: AC-2.4
+1. Click the chevron of the header. -> The 2 equipment rows hide and the chevron changes to collapsed
+2. Click the chevron again. -> The 2 rows show again
+3. Click the chevron twice quickly. -> The rows end in the state matching an even number of clicks (shown) and the page does not flicker or break
+Automation: Clean up: none, no Save.
+
+### TC-018 [FE][MT] Verify clicking anywhere else on the Work Header row does not toggle (NEG) [Auto]
+Precondition: common, a Work Header with 2 equipment rows shown
+Priority: High
+Trace: AC-2.4
+1. Click the empty space in the middle of the header row. -> The rows stay shown; Save stays grey
+2. Click the Work Header name. -> The rows stay shown; Save stays grey
+3. Click `+ Add Equipment`. -> A new empty equipment row is added; the header stays expanded
+4. Click the three-dot icon, then press Esc. -> The menu opens and closes; the header stays expanded
+5. Collapse the header with the chevron, then repeat steps 1 and 2. -> The header stays collapsed after each click
+6. While collapsed, click `+ Add Equipment`. -> A new empty equipment row is added and the user can see it: the header shows expanded with the new row visible (no invisible row under a collapsed header; Story is silent, see open question 18)
+Automation: Data set: click targets (blank area, name, Add Equipment, three-dot) x state (expanded, collapsed). Clean up: remove the new row, no Save.
+
+### TC-019 [FE][MT] Verify the empty state when the plan has 0 Work Headers (POS) [Auto]
+Precondition: a plan with 0 Work Headers (empty Worklist at initialization)
+Priority: High
+Trace: AC-3
+1. Open the Equipment Mob Plan page. -> The table body shows a centred empty box illustration and the text `No results found` in regular 14px grey `#8C8C8C`
+2. Look under `No results found`. -> There is no other text or prompt
+3. Look at the toolbar. -> The `+ Add Work Header` button is active
+4. Click `+ Add Work Header`, type `QA First Header`, click Save in the pop-up. -> The empty state goes away and the header shows with `No equipment added.`
+Automation: Starting data: plan made from an empty Worklist (test owns it). Clean up: delete the plan.
+
+### TC-020 [FE][MT] Verify the empty state of a Work Header with 0 equipment (POS) [Auto]
+Precondition: common, a Work Header with no equipment
+Priority: High
+Trace: AC-4
+1. Look at the row under that header. -> It shows `No equipment added.` in 14px regular italic grey `#8C8C8C`
+2. Look at the width of that row. -> The row spans across all table columns
+3. Click `+ Add Equipment` on that header. -> The placeholder text goes away and the new empty row shows with No. as the next running number
+4. Remove that new row with the bin icon. -> `No equipment added.` shows again
+Automation: Clean up: none, the row is removed in step 4.
+
+### TC-021 [FE][MT] Verify Save commits the collapse state and it comes back after reload (POS) [Auto]
+Precondition: common, at least 3 headers, all expanded and saved
+Priority: High
+Trace: AC-5.1, AC-5.5
+1. Collapse the first and the third header with their chevrons. -> Both collapse
+2. Click Save. -> The success toast `Save Success` / `Save Equipment Mob Plan Successfully.` shows; Save turns grey
+3. Reload the page. -> The first and third headers are collapsed, the second is expanded
+4. Close the tab, open the page again from the Planning tab. -> The same state shows
+Automation: Clean up: expand all and Save to restore.
+
+### TC-022 [FE][MT] Verify a collapse change that is not saved is lost on reload (NEG) [Partial: browser reload prompt may appear, check by hand]
+Precondition: common, all headers expanded and saved
+Priority: Medium
+Trace: AC-5.1, AC-5.3
+1. Collapse the first header. -> It collapses and Save turns blue
+2. Reload the page without saving. -> The reload leaves the page (a browser prompt may show) and all headers show expanded
+3. Look at Save. -> Save is grey
+
+### TC-023 [FE][MT] Verify a chevron click enables Save (POS) [Auto]
+Precondition: common, nothing changed on the page (Save grey)
+Priority: High
+Trace: AC-5.2
+1. Look at Save. -> Save is grey and disabled
+2. Click the chevron of one header. -> The header collapses and Save turns blue and enabled
+3. Click the chevron of another header. -> Save stays blue
+Automation: no Save, clean up by reload.
+
+### TC-024 [FE][MT] Verify Save is grey again after the state is put back by hand (BND) [Auto]
+Precondition: common, nothing changed (Save grey)
+Priority: Medium
+Trace: AC-5.2
+1. Collapse one header. -> Save turns blue
+2. Expand the same header again. -> The state is the same as the saved one and Save is grey again (nothing to save; see open question 8)
+3. Try to leave through the breadcrumb. -> No Unsaved Change pop-up shows
+Automation: ties to open question 8.
+
+### TC-025 [FE][MT] Verify the Unsaved Change pop-up and Continue Editing (POS) [Auto]
+Precondition: common, nothing changed
+Priority: High
+Trace: AC-5.3
+1. Collapse one header. -> It collapses and Save turns blue
+2. Click the event name in the breadcrumb. -> The pop-up `Unsaved Change` shows with `Are you sure you want to leave this page? Change you made will not be saved.` and the buttons `Continue Editing` and `Discard Change`
+3. Click `Continue Editing`. -> The pop-up closes, the page stays, the header is still collapsed and Save is still blue
+Automation: Clean up: reload.
+
+### TC-026 [FE][MT] Verify Discard Change leaves and drops the collapse change (POS) [Auto]
+Precondition: common, all headers expanded and saved
+Priority: High
+Trace: AC-5.3
+1. Collapse one header. -> It collapses
+2. Click another item in the side menu (or the breadcrumb). -> The `Unsaved Change` pop-up shows
+3. Click `Discard Change`. -> The page is left and opens the chosen page
+4. Open the Equipment Mob Plan page again. -> All headers are expanded (the collapse was not saved)
+Automation: Clean up: none.
+
+### TC-027 [FE][MT] Verify no pop-up when nothing was changed, and for a view-only action after Save (NEG) [Auto]
+Precondition: common
+Priority: Medium
+Trace: AC-5.3
+1. Without any change, click the breadcrumb. -> The page is left with no pop-up
+2. Open the page again, collapse a header and click Save. -> The save succeeds and Save turns grey
+3. Click the breadcrumb. -> The page is left with no pop-up
+Automation: Clean up: restore the saved state.
+
+### TC-028 [FE][MT] Verify a view-only user can toggle locally but Save is disabled (NEG) [Auto]
+Precondition: JO is logged in (View Active Equipment Mob Plan Item, no Edit), the Active plan page is open
+Priority: High
+Trace: AC-5.4
+1. Look at Save. -> Save is disabled (grey)
+2. Click the chevron of one header. -> The header collapses
+3. Look at Save. -> Save is still disabled
+4. Try to click Save. -> Nothing happens and no request is sent
+5. Reload the page. -> All headers show as the TM saved them (not the JO's local collapse)
+Automation: role fixture `jobOwnerPages`.
+
+### TC-029 [FE][MT] Verify a view-only user gets no Unsaved Change pop-up when leaving (NEG) [Manual: depends on open question 9]
+Precondition: JO is logged in, the Active plan page is open
+Priority: Medium
+Trace: AC-5.3, AC-5.4
+1. Collapse a header. -> It collapses
+2. Click the breadcrumb. -> The page is left with no `Unsaved Change` pop-up (this user cannot save, so nothing is lost)
+
+### TC-030 [FE][MT] Verify the saved state is shared with all users (POS) [Auto]
+Precondition: common, all headers expanded and saved; two browser contexts, TM and JO, both on the same Active plan
+Priority: High
+Trace: AC-5.5
+1. As TM, collapse the second header and click Save. -> Save success toast shows
+2. As JO, reload the page. -> The second header shows collapsed
+3. As JO, expand the second header and leave it unsaved. -> It expands locally; Save stays disabled
+4. As TM, reload the page. -> The second header is still collapsed (the JO's local change did not reach the database)
+5. As TM, expand all headers and click Save. -> The state is restored
+Automation: two contexts in one test. Clean up: step 5.
+
+### TC-031 [FE][MT] Verify the default view is fully expanded when no state was ever saved (POS) [Auto]
+Precondition: a new plan that has never been saved with a collapse state, with at least 3 headers
+Priority: High
+Trace: AC-5.5
+1. Open the page as TM. -> All Work Header rows are expanded
+2. Open the page as JO. -> All Work Header rows are expanded
+Automation: Starting data: new plan made by the test. Clean up: delete the plan.
+
+### TC-032 [FE][MT] Verify the Filter Panel and header expansion work together (AND) (POS) [Auto]
+Precondition: common, header A (2 rows: Status `Delay`, Status `Received`), header B (1 row: Status `Delay`); all expanded
+Priority: High
+Trace: AC-5.6
+1. Open the Filter Panel and select Status `Delay` only. -> Header A shows only its `Delay` row and header B shows its `Delay` row
+2. Collapse header A with its chevron. -> Header A's rows hide; header B is unchanged
+3. Expand header A again. -> Only the `Delay` row of header A shows, not the `Received` row
+Automation: Data set: filter x header state. Clean up: reset the filter.
+
+### TC-033 [FE][MT] Verify a collapsed header whose rows are all filtered out is hidden, and it comes back (NEG) [Auto]
+Precondition: common, header A (2 rows: Status `Delay`, Status `Received`), header B (1 row: Status `Delay`); all expanded
+Priority: High
+Trace: AC-5.6
+1. Collapse header B with its chevron. -> Header B collapses
+2. In the Filter Panel select Status `Received` only. -> Header B has no matching row and the header row is hidden; header A shows its `Received` row
+3. Click `Reset` in the Filter Panel. -> Header B shows again, still collapsed
+4. Expand header B. -> Its row shows
+Automation: Clean up: none, no Save.
+
+### TC-034 [FE][MT] Verify the visibility rule for every combination of header state and filter result (BND) [Auto]
+Precondition: common, header A (2 rows: Status `Delay`, Status `Received`), header B (1 row: Status `Delay`); all expanded
+Priority: Medium
+Trace: AC-5.6
+1. For each row of the table below set the header state and the filter, then read which rows and which header row show. -> The result matches the table
+
+| Header state | Rows match the filter | Header row | Equipment rows |
+|---|---|---|---|
+| Expanded | some | shown | only the matching rows |
+| Expanded | none | shown (open question 12) | none |
+| Collapsed | some | shown | none |
+| Collapsed | none | hidden | none |
+Automation: the test loops over the table. Filter with a search or a number-like value is not in this Story.
+
+### TC-035 [FE][MT] Verify very long header names and many rows (Exotic: long content) [Partial: layout is judged by eye]
+Precondition: common
+Priority: Low
+Trace: none (screen states: very long content, very many rows)
+1. Add a Work Header with a 200-character name (the limit shown in the pop-up counter). -> The header shows without breaking the row; the chevron, `+ Add Equipment` and three-dot icon stay visible and clickable
+2. Open a plan with 100 equipment rows over 5 headers. -> The page opens, rows number 1 to 100 with no gap, and collapsing a header hides only its rows
+
+### TC-036 [FE][MT] Verify Save stays blue when only one of two collapse changes is undone (BND) [Auto]
+Precondition: common, all headers expanded and saved (Save grey), at least 2 headers
+Priority: Medium
+Trace: AC-5.2
+1. Collapse header A. -> Header A collapses and Save turns blue
+2. Collapse header B. -> Header B collapses and Save stays blue
+3. Expand header A again. -> Header A shows its rows; header B is still collapsed and Save stays blue (one change is still unsaved)
+4. Expand header B again. -> Both headers are expanded as saved and Save is grey
+Automation: Clean up: none, no Save.
+
+### TC-037 [FE][MT] Verify browser Back with an unsaved collapse change (NEG) [Partial: the browser Back route depends on open questions 10 and 19]
+Precondition: common, all headers expanded and saved; the page was reached in the same tab from another page, so a browser Back target exists
+Priority: Medium
+Trace: AC-5.3
+1. Collapse one header. -> It collapses and Save turns blue
+2. Click the browser Back button. -> The `Unsaved Change` pop-up shows with `Continue Editing` and `Discard Change`; the page is not left silently
+3. Click `Discard Change`. -> The previous page opens
+4. Open the Equipment Mob Plan page again. -> All headers are expanded (the change was not saved)
+
+### TC-038 [FE][MT] Verify closing the tab with an unsaved collapse change (NEG) [Manual: the browser leave prompt cannot be driven reliably]
+Precondition: common, all headers expanded and saved
+Priority: Medium
+Trace: AC-5.3
+1. Collapse one header. -> It collapses and Save turns blue
+2. Close the browser tab. -> The browser asks before leaving (or the page warns the change is not saved); the change is not lost without a warning
+3. Confirm leaving, then open the page again from the Planning tab. -> All headers are expanded (nothing was saved)
+
+### TC-039 [FE][MT] Verify an in-app link to another screen of the plan with an unsaved collapse change (NEG) [Auto]
+Precondition: common, all headers expanded and saved
+Priority: Medium
+Trace: AC-5.3
+1. Collapse one header. -> It collapses and Save turns blue
+2. Click an in-app tab or link that leads to another screen of the plan (for example the Planning tab). -> The `Unsaved Change` pop-up shows with `Continue Editing` and `Discard Change`
+3. Click `Continue Editing`. -> The pop-up closes, the page stays, the header is still collapsed and Save is still blue
+Automation: Data set: each in-app link of the plan page. Clean up: reload.
+
+### TC-040 [FE][MT] Verify collapse and expand from the Custom View panel enable Save and trigger the guard (POS) [Partial: the panel controls are described in ETM-7313, see open question 21]
+Precondition: common, all headers expanded and saved (Save grey)
+Priority: Medium
+Trace: AC-5.2, AC-5.3
+1. Open the Custom View panel and collapse one header with its collapse control. -> The header collapses on the page and Save turns blue
+2. Click the event name in the breadcrumb. -> The `Unsaved Change` pop-up shows with `Continue Editing` and `Discard Change`
+3. Click `Continue Editing`, then expand the same header with the panel control. -> The header shows its rows and Save is grey again (back to the saved state)
+
+### TC-041 [FE][MT] Verify a saved collapse state of one plan does not change another plan of the same event (NEG) [Partial: needs two plans of one event, do not switch the Active plan]
+Precondition: common, the event has a second plan (Active or Inactive) with at least 2 headers, all expanded and saved
+Priority: Medium
+Trace: AC-5.5
+1. In plan A, collapse the first header and click Save. -> The success toast shows; Save turns grey
+2. Open the Equipment Mob Plan page of plan B of the same event. -> All headers of plan B are expanded as saved there (see open question 11)
+3. Reload plan A. -> The first header of plan A is still collapsed
+4. In plan A, expand all headers and click Save. -> The state is restored
+
+### TC-042 [FE][MT] Verify two tabs on the same plan with different collapse states (Exotic: two tabs) [Auto]
+Precondition: common, all headers expanded and saved, at least 2 headers; two browser contexts of TM on the same plan, both loaded
+Priority: Medium
+Trace: AC-5.5
+1. In tab 1, collapse header A and click Save. -> The success toast shows and Save turns grey
+2. In tab 2 (not reloaded, still shows A expanded), collapse header B and click Save. -> Save succeeds with no error; Save turns grey (see open question 20)
+3. Reload tab 2. -> Header B is collapsed; the state of header A is what the user saw when saving in tab 2 (expanded)
+4. Reload tab 1. -> Tab 1 shows the same state as tab 2 after its reload
+Automation: two contexts in one test. Clean up: expand all headers and Save.

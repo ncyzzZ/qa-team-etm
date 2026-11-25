@@ -1,0 +1,45 @@
+{
+  "defect": "ETM-7799",
+  "story": "ETM-7306",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Save/Export on a plan deleted in another session shows no 'already deleted' modal.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7306",
+  "run": "STORY-ETM-7306",
+  "frozen": "evals/exams/_story-ETM-7306/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "steps": [
+      [
+        [
+          "delete"
+        ],
+        [
+          "another",
+          "other session",
+          "second",
+          "tab b",
+          "other user",
+          "session b",
+          "tab 2"
+        ]
+      ],
+      [
+        [
+          "save",
+          "export"
+        ],
+        [
+          "modal",
+          "deleted",
+          "redirect",
+          "plan page",
+          "no longer"
+        ]
+      ]
+    ]
+  },
+  "baseline": null
+}

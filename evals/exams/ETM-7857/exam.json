@@ -1,0 +1,88 @@
+{
+  "defect": "ETM-7857",
+  "story": "ETM-7306",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Empty plan (0 Work Headers) shows 'Last update on', enabled Custom View/Filter, the table header and an extra hint.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7306",
+  "run": "STORY-ETM-7306",
+  "frozen": "evals/exams/_story-ETM-7306/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "_how": "any part",
+    "any": [
+      {
+        "block": [
+          [
+            "no work header",
+            "0 work header",
+            "zero work header",
+            "empty"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "no results found"
+            ],
+            [
+              "no sub-text",
+              "no prompt",
+              "only",
+              "no table",
+              "no header",
+              "nothing else",
+              "no other"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "no work header",
+            "0 work header",
+            "zero work header",
+            "empty"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "custom view",
+              "filter panel"
+            ],
+            [
+              "disabled"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "no work header",
+            "0 work header",
+            "zero work header",
+            "empty"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "last update"
+            ],
+            [
+              "not ",
+              "no ",
+              "hidden"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null
+}
