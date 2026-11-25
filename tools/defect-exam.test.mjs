@@ -32,3 +32,13 @@ test('a heading alone never counts as a step', () => {
   const sig = { block: [], steps: [[['first row only']]] };
   assert.equal(score('### TC-001 first row only\n1. paste', sig).caught_by.length, 0);
 });
+test('ETM-8877: other wording of the same check is still caught (exam run 2026-11-25, TC-040)', () => {
+  const { sig } = load('ETM-8877');
+  const txt = '### TC-040 multi-row paste (BND)\nPrecondition: common, Edit Plan open.\n1. Record the weekly Plan (%) values of activities 1 to 3. -> Written down.\n2. Set the clipboard to 3 rows of 3 values. -> The clipboard holds 3 rows.\n3. Paste into the first weekly cell of activity 1. -> Only the first row is written.\n4. Compare activities 2 and 3 with the record. -> They are unchanged.';
+  assert.deepEqual(score(txt, sig).caught_by.map(c => c.tc), ['TC-040']);
+});
+test('ETM-8877: a multi-row paste on the Timeline (no Edit Plan) is not counted', () => {
+  const { sig } = load('ETM-8877');
+  const txt = '### TC-022 Timeline weekly\n1. Set the clipboard to 3 rows of weekly Plan (%) values. -> Holds 3 rows.\n2. Look at activities 2 and 3. -> They are unchanged.';
+  assert.equal(score(txt, sig).caught_by.length, 0);
+});

@@ -16,6 +16,10 @@
       ],
       [
         "weekly"
+      ],
+      [
+        "Plan (%)",
+        "Plan %"
       ]
     ],
     "steps": [
@@ -35,14 +39,7 @@
           "multi-row"
         ],
         [
-          "clipboard",
-          "paste",
-          "ctrl+v"
-        ],
-        [
-          "weekly plan",
-          "plan (%) cell",
-          "plan % cell"
+          "clipboard"
         ]
       ],
       [
@@ -58,7 +55,7 @@
         [
           "row",
           "valve",
-          "other activit",
+          "activit",
           "second"
         ]
       ]
