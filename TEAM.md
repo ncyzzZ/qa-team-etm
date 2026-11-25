@@ -70,6 +70,15 @@ At the end the lead sends ONE closing summary in Thai: card, number of cases, Xr
 | logger | jira-xray-logger | Xray push, Test Plan/Execution, defects, closeout | user said yes to a Jira/Xray write | skip |
 | manual | manual-runner | Does ONE manual Test from its `manual-steps` table in a headless browser on QA, picture per step, proposed verdict per step | Phase 6, a manual Test with a steps file and no `needs: excel` | skip |
 | reporter | evidence-reporter | Evidence report, short summaries | `tools/run-card.mjs` did not build the report, or user asks for a summary | skip |
+| healer | playwright-healer | Proposes a new locator from the live page; never edits files | every `needs-live` row in `heal-proposals.md` (Phase 7) | skip |
+
+**Playwright's own agents live in `PW_REPO/.claude/agents/`, not here, and the team does not call them.** They come from `npx playwright init-agents` and are tied to that repo's `playwright-test` MCP server and seed files, so they stay there (people who work in `PW_REPO` alone still use them). The lead never calls them for a card; it calls the team agent on the right:
+
+| Playwright agent (PW_REPO) | What it does | Why not for a card | Use instead |
+|---|---|---|---|
+| `playwright-test-healer` | Edits the failing test itself | Heals must pass `tools/heal/guard.mjs` and the user's Apply, and never touch assertions, waits or data | `playwright-healer` (proposes only) |
+| `playwright-test-generator` | Records actions on the page and writes a spec | Team specs need Page Objects, `evidence()` per step, no false pass, card data, the Xray key in the title (gate G6) | `automation-engineer` |
+| `playwright-test-planner` | Explores the page and writes a test plan | Test cases come from the AC (`test-designer`, gates G3/G4), not from what the page happens to do | `test-designer` |
 
 All agents use sonnet except reporter (haiku). When the lead does an agent's job: `set <id> done "LEAD ทำเอง"`.
 User already has Playwright scripts: no analyst, inspector, designer, reviewer, automator. Never call one agent twice for what one call can do: give it everything in one prompt.
