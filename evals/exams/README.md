@@ -51,3 +51,17 @@ Saved drafts: `<DEFECT>/runs/<date>-draft-tc.md`. Re-score one with `score <DEFE
 | ETM-8497 | MISSED | MISSED | `docs/modules/shutdown-timeline.md`: keyboard-only "Not wanted" for ETM-7348 (user, 3 Nov). The designer followed a user decision; do not count this one against it. |
 
 4/9 (3/8 without ETM-8497) against 5/9 in run 1. One run per exam is too noisy to show a rule helps; compare several runs per exam before keeping or dropping a rule.
+
+### Reviewer step (2026-11-25)
+
+Checks 10-12 (would the case fail on the bug, unsaved changes and leaving, assumed answers tested) were added to the normal review: none of the three reviewers used them, and no review named a missed defect.
+The same checks as a separate short call (`bug-check.md`, three tables), then one designer fix round:
+
+| Exam | Run 2 draft | After bug-check + fix | Note |
+|---|---|---|---|
+| ETM-8664 | MISSED | CAUGHT (TC-034) | bug-check row: "That is the buggy behaviour the case calls expected." Generic prompt. |
+| ETM-8666 | MISSED | CAUGHT (TC-043) | the "assumed" Open question became a case. Generic prompt. |
+| ETM-9229 | MISSED | CAUGHT (TC-032) | the prompt for this pass listed "clearing one control while another is on" and "edit page and back": leading, so weak evidence. |
+| ETM-8902 | MISSED | CAUGHT (TC-028 step 3) | same leading prompt. |
+
+Bug-check is now its own mode in `test-reviewer.md` and a step of Phase 3 in `TEAM.md`. To confirm it without a leading prompt, run it on new exams.

@@ -102,7 +102,7 @@ Subagents follow `.claude/team/agent-protocol.md` (facts / assumptions / gaps, w
 
 **Phase 2 - Design** (designer): `draft-tc.md` in Markdown in the format of `.claude/agents/test-designer.md` (`### TC-001 ... (POS) [Auto]`, steps `N. action -> expected`). No .xlsx or .csv ever. Gate G3.
 
-**Phase 3 - Review** (reviewer or lead; gate G4). Failed → back to designer, at most 2 rounds, then the lead shows what is still open.
+**Phase 3 - Review** (reviewer or lead; gate G4). Failed → back to designer, at most 2 rounds, then the lead shows what is still open. Then one **bug-check** call (reviewer in bug-check mode, `test-reviewer.md`): it writes `bug-check.md`; the designer fixes every open row or gives a reason, once. Do not fold it into the review call: inside the long review the same checks were skipped (defect exams, `evals/exams/README.md`).
 
 **CHECKPOINT 2 - Test case review.** First the AC to case table from `node tools/qa-check.mjs coverage <KEY>` (pasted as is, no tokens spent writing it), then a short summary per case (what it does, expected result, what it proves). `ask`, WAIT.
 
