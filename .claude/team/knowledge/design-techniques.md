@@ -127,3 +127,10 @@ rule of the Story:
   a combination that leaves nothing under a parent row.
 - Save on an edit page: after Save and reload, every value the user did not
   touch is unchanged, dates and times included (no day shift).
+- A value shown on more than one screen (a status, name, date, count or total
+  that also appears on a list, an edit or detail page, a header, a popup, a
+  report or an export): after each change of that value, open EVERY screen
+  that shows it and check the exact text there, not only the screen where it
+  was changed. A rule tested on one screen does not prove the others (defect
+  exam ETM-8370, 2026-11-25: the Status was right on the list but wrong on
+  Edit Plan, and no case opened Edit Plan to read it).
