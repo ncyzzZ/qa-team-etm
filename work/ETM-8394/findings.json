@@ -220,7 +220,7 @@
   "outcome": "ac-changed",
   "outcome_date": "2026-11-18",
   "note": "Story description changed 2026-11-18: Revise on a deleted Work (or Breakdown under it) is an Error: UUID not exist in the system. (checked against the Jira changelog 2026-11-19)",
-  "later_defect": null,
+  "later_defect": "ETM-10060",
   "backfilled": true
  },
  {

@@ -1,0 +1,19 @@
+{
+ "id": "defect-draft-uuid-msg",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Picture does not prove row 6 holds the deleted Y1 breakdown UUID; attach the uploaded file or a screenshot of it.",
+  "No picture shows Y1 was deleted first (step 2); add before evidence for a developer to follow.",
+  "Round 4 BA answer was given by the user acting as BA in lead chat, not by the BA directly.",
+  "AC 3.4 literally covers a breakdown under a deleted Work; here the row is under live Y2. Mapping relies on the BA answer.",
+  "Draft says 'Confirm'; screen button is labelled 'Import'. Use the on-screen label.",
+  "Likely same root cause as the breakdown-not-deleted defect (ETM-8767); cross-link both.",
+  "Only the message differs; the row is still rejected and Import disabled, so impact is message accuracy only."
+ ],
+ "summary": "ภาพแสดงข้อความ 'already associated with another work' แทน 'The UUID you entered is not exist in the system.' ตาม AC 3.4 และคำตอบ BA รอบ 4 ส่วนปุ่ม Import ถูกปิดตามที่คาด จึงถือว่า defect พิสูจน์ได้ แต่ควรแนบไฟล์ที่อัปโหลดและภาพตอนลบ Y1 เพื่อให้ dev ทำซ้ำได้",
+ "sourceHash": "9abd9709fc5d"
+}

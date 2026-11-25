@@ -1,0 +1,19 @@
+{
+ "id": "defect-draft-bd-not-deleted",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "step 1: picture blank, cut or not full screen",
+  "The only picture is a generic Worklist; it shows neither Z2, its breakdown, the import, nor any delete state. Nothing about the defect is visible.",
+  "The actual behaviour (breakdown row left in shutdown_activity_breakdown, no flag) is database-only; no screen evidence that a user sees a wrong result.",
+  "Sources disagree on the form: AC 1.4 and Xray say the breakdown row is removed permanently; BA Round 4 says flagged deleted. Align the draft wording.",
+  "Picture is test-failed-1.png from an automated run, not step evidence; the Worklist with Z2 gone and the breakdown check are not captured.",
+  "Steps lack the Plan name shown on screen (Wide Plan B - NN vs 'Plan 6843') and how to see the breakdown after delete without a database.",
+  "Role in Environment says TM and JO, but delete via import is a TM action; JO role is irrelevant or unclear."
+ ],
+ "summary": "ยังพิสูจน์ไม่ได้: รูปเดียวที่แนบเป็นหน้า Worklist ทั่วไป ไม่เห็น Z2 หรือ breakdown เลย และผลจริง (breakdown ยังอยู่ในตาราง ไม่มี flag) เห็นได้จาก DB เท่านั้น; Expected มีที่มา (BA รอบ 4, AC 1.4, Xray ETM-8767) แต่ AC/Xray บอกลบถาวร ส่วน BA บอก flag ว่าลบ ควรเขียนให้ตรงกัน",
+ "sourceHash": "9444e040b8bd"
+}

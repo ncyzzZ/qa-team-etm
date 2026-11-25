@@ -46,3 +46,12 @@
 - Lead deletes ETM-9233 in Jira by hand. Files `dev-brief-ETM-9233.md` and `retest-9233.md` are obsolete.
 - To do (needs the user's yes, Xray write): ETM-8755 step 3 -> "fill `Action = Revise` on every row, then upload" (expected: no error, Confirm enabled); set ETM-8755 back from FAILED, remove the defect link on step 3; re-run ETM-8755.
 - `questions-for-BA-round5.md` Q1 and Q3 closed by this decision; Q2 (export follows the filter?) still open.
+- 2026-11-25 15:10: ETM-9233 deleted in Jira by the lead (checked: issue no longer exists). ETM-8755 PASSED in ETM-8774 (run 2026-11-25_140423), steps 3 and 6 updated.
+- 2026-11-25 15:00: 8766/8767 re-run for defect evidence hit "Loading..." (QA busy, 5 cards running); re-run blocked by another session's ETM-8394 run lock. Defects D1/D2 (xray-fix-proposal-3.md) not logged yet.
+
+## 2026-11-25 afternoon: BA R4/R5 applied, two defects logged
+- Xray ETM-8755 step 1 updated (export holds the whole Worklist, Action blank); steps 3/6 already said "fill Action = Revise"; 8755 PASSED in ETM-8774, no defect link.
+- ETM-10051 (from 8767): breakdowns of a Work deleted by import are not deleted/flagged. DB evidence only. Assignee jif (thanawich klongsard). [QA] ETM-10052 Done 20m. Xray 8767 step 9 FAILED + linked.
+- ETM-10060 (from 8766): breakdown UUID of a deleted Work gives "already associated with another work" instead of "UUID not exist". Picture work/ETM-8394/evidence-8766/step6_upload_result.png embedded. Assignee jif. [QA] ETM-10061 Done 20m. Xray 8766 step 6 FAILED + linked. Relates to ETM-10051.
+- Spec: 8766 now saves a full-screen picture of the upload result before the check; expectBreakdownGone accepts a delete flag. Not committed.
+- ETM-9233 still Open in Jira (lead deletes it by hand).

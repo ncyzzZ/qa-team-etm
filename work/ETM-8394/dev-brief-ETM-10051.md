@@ -1,4 +1,4 @@
-# Dev brief: DEFECT_KEY (Story ETM-8394)
+# Dev brief: ETM-10051 (Story ETM-8394)
 
 ## 1. What is wrong
 Import `Action = Delete` on a Work soft-deletes the Work (`sdw_is_delete = 'Y'`) but leaves its Work Breakdowns in `shutdown_activity_breakdown` with no delete flag. The breakdowns of a deleted Work must be flagged deleted together with it.
@@ -18,6 +18,9 @@ Import `Action = Delete` on a Work soft-deletes the Work (`sdw_is_delete = 'Y'`)
 |---|---|---|
 | Work `Z2` | `sdw_is_delete = 'Y'`, gone from the Worklist | same |
 | Breakdown of `Z2` | Row still in `shutdown_activity_breakdown`, not flagged (the table has no delete column) | Flagged deleted (soft delete with the Work) |
+
+QA DB evidence (24 Nov 2026): Works W-8394-Z2-2mvv, W-8394-Z2-3vfy, W-8394-Z1-2mvv have `sdw_is_delete = 'Y'`; their breakdowns (e.g. `8103726e-a640-4eb3-a452-d64e78ee290d`, `7abd5350-90a4-4eaf-9df1-5314c2512dd8`) are still in `shutdown_activity_breakdown` with `sab_updated_date` null.
+Note: AC 1.4 / Xray ETM-8767 say a breakdown deleted by its own Delete row is "removed permanently"; BA (25 Nov) says breakdowns of a deleted Work are flagged deleted. Either way it must not stay a live record.
 
 ## 5. Rule source
 - Import template rules: deleting a Work is a soft delete together with its breakdowns.

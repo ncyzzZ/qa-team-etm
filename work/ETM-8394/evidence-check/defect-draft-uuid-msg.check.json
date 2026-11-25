@@ -1,22 +1,24 @@
-{ "id": "defect-draft-uuid-msg", "sourceHash": "ea3aa729f79c", "overall": "not-proven",
+{ "id": "defect-draft-uuid-msg", "sourceHash": "9abd9709fc5d", "overall": "defect-proven",
   "steps": [
     { "n": 1,
-      "sees": "Full-screen Worklist page 'Worklist: Wide Plan B - NN' (tags Initial, Active), event NN TEST QA. Table grouped Mechanical (PM) with rows 44443, 65432, TC7125-*, TC7127A-*, TC7127B-*, TC7133-W1-*; Total Results 205. No import dialog, no upload validation table, no error banner, no Invalid Detail message, no Import/Confirm button state. No Work Y1 or Y2 visible.",
-      "verdict": "cannot-tell",
-      "pictureOk": false }
+      "sees": "Full screen, Import Work page after an upload. Red banner: 'Data Validation Failed. 1 data validation error were found in the file.' Error table has one row: Row 6, Cell B6, Field UUID, Invalid Detail 'The work breakdown with the entered UUID is already associated with another work in the system.' Import button bottom right is grey (disabled). Back button active. The uploaded file content and the earlier Delete of Y1 are not shown.",
+      "verdict": "fail",
+      "pictureOk": true }
   ],
   "expectedSources": [
-    "AC 3.4 (Story v4, 18 Nov): Revise on a deleted Work gives the UUID Error",
-    "BA answer round 4 Q1 (ba-answers.md, answer 6a): message must be 'The UUID you entered is not exist in the system.'",
-    "Xray ETM-8766 step (xray-steps-before-2026-11-24.json): breakdown row shows the UUID message and Confirm is disabled"
+    "AC 3.4 (Story v4, per ba-answers.md)",
+    "BA answer Round 4 Q1 '6a' 2026-11-25 (ba-answers.md line 43)",
+    "Xray ETM-8766 step (xray-steps-before-2026-11-24.json: breakdown row shows 'The UUID you entered is not exist in the system.' and Confirm disabled)"
   ],
   "uiReachable": "yes",
   "problems": [
-    "The only picture shows the Worklist, not the import validation result; the actual message is not visible anywhere.",
-    "Picture does not show Works Y1/Y2 or that Y1 was deleted; steps 1-2 are not evidenced.",
-    "Brief says 'Import is disabled', Xray step says 'Confirm is disabled'; align the button name with the screen.",
-    "Plan named 'Wide Plan B - NN' in picture; brief says Plan 6843. Confirm it is the same plan.",
-    "Need a full-screen picture of the upload result dialog showing the breakdown row message before logging."
+    "Picture does not prove row 6 holds the deleted Y1 breakdown UUID; attach the uploaded file or a screenshot of it.",
+    "No picture shows Y1 was deleted first (step 2); add before evidence for a developer to follow.",
+    "Round 4 BA answer was given by the user acting as BA in lead chat, not by the BA directly.",
+    "AC 3.4 literally covers a breakdown under a deleted Work; here the row is under live Y2. Mapping relies on the BA answer.",
+    "Draft says 'Confirm'; screen button is labelled 'Import'. Use the on-screen label.",
+    "Likely same root cause as the breakdown-not-deleted defect (ETM-8767); cross-link both.",
+    "Only the message differs; the row is still rejected and Import disabled, so impact is message accuracy only."
   ],
-  "summary": "ภาพที่แนบเป็นหน้า Worklist ไม่ใช่ผลการ upload ไฟล์ จึงไม่เห็นข้อความ error ของแถว breakdown เลย ยังพิสูจน์ defect ไม่ได้ Expected มีที่มาชัด (AC 3.4 และคำตอบ BA) ต้องถ่ายภาพหน้าผล validation ใหม่ก่อน log"
+  "summary": "ภาพแสดงข้อความ 'already associated with another work' แทน 'The UUID you entered is not exist in the system.' ตาม AC 3.4 และคำตอบ BA รอบ 4 ส่วนปุ่ม Import ถูกปิดตามที่คาด จึงถือว่า defect พิสูจน์ได้ แต่ควรแนบไฟล์ที่อัปโหลดและภาพตอนลบ Y1 เพื่อให้ dev ทำซ้ำได้"
 }

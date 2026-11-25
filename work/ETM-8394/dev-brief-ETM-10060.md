@@ -1,4 +1,4 @@
-# Dev brief: DEFECT_KEY (Story ETM-8394)
+# Dev brief: ETM-10060 (Story ETM-8394)
 
 ## 1. What is wrong
 On Import Work, a `Work Breakdown` row with `Action = Revise` that uses the UUID of a breakdown whose Work was deleted is rejected with "The work breakdown with the entered UUID is already associated with another work in the system." It must say "The UUID you entered is not exist in the system." (AC 3.4). The row is correctly rejected; only the message is wrong.
@@ -6,7 +6,7 @@ On Import Work, a `Work Breakdown` row with `Action = Revise` that uses the UUID
 ## 2. Where
 - Environment: QA, `https://stms-qa.apps.pttep.com`. Role: Turnaround Manager.
 - Page: Worklist > Create Work > Import Excel ("Import Work and Work Breakdown"), upload validation.
-- Data: event `NN TEST QA`, Worklist of Plan 6843; any Worklist works.
+- Data: event `NN TEST QA`, Worklist "Wide Plan B - NN"; any Worklist works.
 
 ## 3. Steps to reproduce
 1. Import Work `Y1` with 2 breakdowns and Work `Y2` with 1 breakdown (`Action = Add`), Confirm.
@@ -17,7 +17,9 @@ On Import Work, a `Work Breakdown` row with `Action = Revise` that uses the UUID
 | | Actual | Expected |
 |---|---|---|
 | Message on the breakdown row | "The work breakdown with the entered UUID is already associated with another work in the system." | "The UUID you entered is not exist in the system." |
-| Import | Disabled | Disabled |
+| Import button | Disabled | Disabled |
+
+Evidence: Row 6, Cell B6, Field UUID (QA run 2026-11-25_145954). Related: ETM-10051 (breakdowns of a deleted Work are not deleted).
 
 ## 5. Rule source
 - ETM-8394 AC 3.4: Revise on a deleted Work, or on a Work Breakdown under a deleted Work, gives the UUID Error.
