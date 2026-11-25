@@ -1,0 +1,3 @@
+{"test":"ETM-8634","saved":"2026-11-24","steps":[
+{"no":6,"id":"262bf555-1e74-4a8f-9a66-30d7e521b161","action":"Click the `-` box of the level `Work Header` in the Custom View panel.","result":"Work and Work Breakdown rows are hidden; every dependency line with one or both ends on a hidden row is hidden (not drawn), including the line between the two Works (ETM-2431 AC 4.5)."},
+{"no":8,"id":"56f37821-7a3f-405e-a9e7-47015d8920c2","action":"Click the `+` box of the level `Work Header`.","result":"Every line is drawn as in step 1; no line is missing or doubled."}]}

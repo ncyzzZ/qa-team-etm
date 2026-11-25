@@ -1,0 +1,61 @@
+{
+ "url_path": "/shutdown-event-list/events/afdb376f-12cf-48f4-8e6e-a81288b9f864/planning/d584b6ce-458e-4d87-b74f-77d2e4a42794/logics/97600d7c-39c9-4279-bddc-a5a1a9b482fc",
+ "time": "2026-11-25T01:48:34.927Z",
+ "note": "view only, no Save",
+ "steps": [
+  {
+   "step": "start",
+   "rows": {
+    "count": 22442,
+    "by": [
+     18,
+     149,
+     5000,
+     17275
+    ]
+   },
+   "boxes": [
+    "Platform (always expanded) [disabled]",
+    "Collapse all Work Header",
+    "Collapse all Work",
+    "Collapse all Work Breakdown"
+   ]
+  },
+  {
+   "step": "click Collapse all Work Header",
+   "rows": {
+    "count": 18,
+    "by": [
+     18,
+     0,
+     0,
+     0
+    ]
+   },
+   "boxes": [
+    "Platform (always expanded) [disabled]",
+    "Expand all Work Header",
+    "Expand all Work",
+    "Expand all Work Breakdown"
+   ]
+  },
+  {
+   "step": "click Expand all Work Header",
+   "rows": {
+    "count": 167,
+    "by": [
+     18,
+     149,
+     0,
+     0
+    ]
+   },
+   "boxes": [
+    "Platform (always expanded) [disabled]",
+    "Collapse all Work Header",
+    "Expand all Work",
+    "Expand all Work Breakdown"
+   ]
+  }
+ ]
+}

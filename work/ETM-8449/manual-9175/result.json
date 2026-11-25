@@ -1,0 +1,63 @@
+{
+ "url_path": "/shutdown-event-list/events/afdb376f-12cf-48f4-8e6e-a81288b9f864/planning/d584b6ce-458e-4d87-b74f-77d2e4a42794/logics/97600d7c-39c9-4279-bddc-a5a1a9b482fc",
+ "time": "2026-11-24T16:30:50.262Z",
+ "before": {
+  "rows": {
+   "count": 22442,
+   "by": [
+    18,
+    149,
+    5000,
+    17275
+   ]
+  },
+  "boxes": [
+   {
+    "label": "Platform (always expanded)",
+    "disabled": true
+   },
+   {
+    "label": "Collapse all Work Header",
+    "disabled": false
+   },
+   {
+    "label": "Collapse all Work",
+    "disabled": false
+   },
+   {
+    "label": "Collapse all Work Breakdown",
+    "disabled": false
+   }
+  ]
+ },
+ "click": "normal click refused (disabled); forced click done",
+ "after": {
+  "rows": {
+   "count": 22442,
+   "by": [
+    18,
+    149,
+    5000,
+    17275
+   ]
+  },
+  "boxes": [
+   {
+    "label": "Platform (always expanded)",
+    "disabled": true
+   },
+   {
+    "label": "Collapse all Work Header",
+    "disabled": false
+   },
+   {
+    "label": "Collapse all Work",
+    "disabled": false
+   },
+   {
+    "label": "Collapse all Work Breakdown",
+    "disabled": false
+   }
+  ]
+ }
+}

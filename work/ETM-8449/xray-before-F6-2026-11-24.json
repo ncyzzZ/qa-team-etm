@@ -1,0 +1,156 @@
+[
+ {
+  "key": "ETM-8630",
+  "step": 2,
+  "action": "Start the timing and click the `-` box of the level `Platform`.",
+  "data": "",
+  "expectedResult": "A loading spinner shows; when it ends only Platform rows are visible and the row count falls; the time from click to finished table is written down as A1."
+ },
+ {
+  "key": "ETM-8630",
+  "step": 3,
+  "action": "Click the `+` box of the level `Platform`.",
+  "data": "",
+  "expectedResult": "The spinner shows and ends; Platform rows with their Work Header rows are visible; the time is written down as A2."
+ },
+ {
+  "key": "ETM-8630",
+  "step": 4,
+  "action": "Click the `+` box of the level `Work Header`.",
+  "data": "",
+  "expectedResult": "The spinner shows and ends; Work Header rows with their Work rows are visible; the time is written down as A3."
+ },
+ {
+  "key": "ETM-8630",
+  "step": 5,
+  "action": "Click the `+` box of the level `Work`.",
+  "data": "",
+  "expectedResult": "The spinner shows and ends; Work rows with their Work Breakdown rows are visible; the time is written down as A4."
+ },
+ {
+  "key": "ETM-8630",
+  "step": 6,
+  "action": "Click the `-` box of the level `Work Header`.",
+  "data": "",
+  "expectedResult": "The spinner shows and ends; the Work rows are hidden; the time is written down as A5."
+ },
+ {
+  "key": "ETM-8630",
+  "step": 7,
+  "action": "Click the `+` box of the level `Work Breakdown`.",
+  "data": "",
+  "expectedResult": "The spinner shows and ends; the table shows the rows of all levels; the time is written down as A6."
+ },
+ {
+  "key": "ETM-8630",
+  "step": 8,
+  "action": "Compare A1 to A6 with the limits.",
+  "data": "",
+  "expectedResult": "Every time is 15 s or less (Pass), between 15 s and 20 s (Pass, the time is noted), or over 20 s (Fail)."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 2,
+  "action": "Open the Custom View panel.",
+  "data": "",
+  "expectedResult": "The section `Expand/Collapse by Data Level` shows Platform, Work Header, Work, Work Breakdown; the 4 boxes are written down as S0 (a box that looks lighter is described as \"looks lighter\")."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 3,
+  "action": "Click the `-` box of `Platform`.",
+  "data": "",
+  "expectedResult": "Only Platform rows are visible; the row count equals P; the box of `Platform` shows `+`."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 4,
+  "action": "Click the `+` box of `Platform`.",
+  "data": "",
+  "expectedResult": "Platform and Work Header rows are visible; the row count equals P + H; the box of `Platform` shows `-`."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 5,
+  "action": "Click the `+` box of `Work Header`.",
+  "data": "",
+  "expectedResult": "Platform, Work Header and Work rows are visible; the row count equals P + H + W."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 6,
+  "action": "Click the `+` box of `Work`.",
+  "data": "",
+  "expectedResult": "All four levels are visible; the row count equals N0 and the row order equals step 1."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 7,
+  "action": "Click the `-` box of `Work`.",
+  "data": "",
+  "expectedResult": "Work Breakdown rows are hidden; the row count equals P + H + W; the box of `Work` shows `+`."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 8,
+  "action": "Click the `-` box of `Work Header`.",
+  "data": "",
+  "expectedResult": "Work rows are hidden; the row count equals P + H; the box of `Work Header` shows `+`."
+ },
+ {
+  "key": "ETM-8632",
+  "step": 9,
+  "action": "Click the `+` box of `Work Breakdown`.",
+  "data": "",
+  "expectedResult": "The row count equals N0 and the row order equals step 1."
+ },
+ {
+  "key": "ETM-8633",
+  "step": 4,
+  "action": "Click the `-` box of the level `Work Header` in the Custom View panel.",
+  "data": "",
+  "expectedResult": "Only rows that pass the filter are shown, collapsed to that level; no filtered-out row appears."
+ },
+ {
+  "key": "ETM-8633",
+  "step": 5,
+  "action": "Click the `+` box of the level `Work Header`.",
+  "data": "",
+  "expectedResult": "Platform, Work Header and Work rows of the filtered Platform are shown; Work Breakdown rows stay hidden (BA, 2026-11-24). The row count equals the Platform + Work Header + Work rows of F0; no filtered-out row appears."
+ },
+ {
+  "key": "ETM-8635",
+  "step": 4,
+  "action": "Click the `-` box of the level `Work Header` in the Custom View panel.",
+  "data": "",
+  "expectedResult": "Work rows disappear; Platform and Work Header rows stay."
+ },
+ {
+  "key": "ETM-8635",
+  "step": 5,
+  "action": "Click the `+` box of the level `Work Header` within about 1 second.",
+  "data": "",
+  "expectedResult": "The Work rows appear again."
+ },
+ {
+  "key": "ETM-8635",
+  "step": 6,
+  "action": "Click the `-` box of the level `Work Header` within about 1 second.",
+  "data": "",
+  "expectedResult": "The table ends collapsed to Platform and Work Header rows; no leftover Work rows and no error message."
+ },
+ {
+  "key": "ETM-8635",
+  "step": 7,
+  "action": "Click the `+` box of the level `Work Header` once.",
+  "data": "",
+  "expectedResult": "Platform, Work Header and Work rows are shown; Work Breakdown rows stay hidden (BA, 2026-11-24). The row order is the same as step 1 without the Work Breakdown rows, and the first Platform row is expanded."
+ },
+ {
+  "key": "ETM-8629",
+  "step": 6,
+  "action": "Compare T1 to T4 with the limits.",
+  "data": "",
+  "expectedResult": "Every time is 15 s or less (Pass), between 15 s and 20 s (Pass, the time is noted), or over 20 s (Fail)."
+ }
+]

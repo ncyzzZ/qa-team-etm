@@ -1,0 +1,30 @@
+[
+ {
+  "key": "ETM-8633",
+  "step": 5,
+  "action": "Click the `+` box of the level `Work Header`.",
+  "data": "",
+  "expectedResult": "The row count equals F0."
+ },
+ {
+  "key": "ETM-8635",
+  "step": 7,
+  "action": "Click the `+` box of the level `Work Header` once.",
+  "data": "",
+  "expectedResult": "The row count equals N0 and the first Platform row is expanded."
+ },
+ {
+  "key": "ETM-8634",
+  "step": 3,
+  "action": "Collapse the Work Header that holds one of the two Works.",
+  "data": "",
+  "expectedResult": "The line is redrawn to the collapsed row or hidden; it does not point to empty space."
+ },
+ {
+  "key": "ETM-8634",
+  "step": 6,
+  "action": "Click the `-` box of the level `Work Header` in the Custom View panel.",
+  "data": "",
+  "expectedResult": "Lines to hidden rows are hidden or drawn to the collapsed row; none points to empty space."
+ }
+]

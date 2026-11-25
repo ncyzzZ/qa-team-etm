@@ -1,0 +1,14 @@
+{
+ "note": "Xray step text before the cascade fix of 25 Nov 2026 (user ruling, ETM-9177 not a bug). Only the steps that change.",
+ "ETM-8633": {
+  "5": {"id": "dc7b66d9-9582-4e4c-910c-aa6f167fbca3", "action": "Click the `+` box of the level `Work Header`.", "result": "The rows come back: the row count equals F0 and the same rows as step 1 are shown (the `Work` and `Work Breakdown` boxes still show `-`); no filtered-out row appears."}
+ },
+ "ETM-8634": {
+  "6": {"id": "262bf555-1e74-4a8f-9a66-30d7e521b161", "action": "Click the `-` box of the level `Work Header` in the Custom View panel.", "result": "Work Header, Work and Work Breakdown rows are hidden; only Platform rows are shown (count P). The Work Header box shows `+`; the Platform box stays `-`; the Work and Work Breakdown boxes keep `-`. No dependency line is drawn, because every Work and Work Breakdown row is hidden (ETM-2431 AC 4.5: a line is hidden when one or both ends are hidden). No line is left floating without its bars."},
+  "8": {"id": "56f37821-7a3f-405e-a9e7-47015d8920c2", "action": "Click the `+` box of the level `Work Header`.", "result": "Work Header, Work and Work Breakdown rows are shown again (count N0, same order as step 1); the Work Header box shows `-`. Every line is drawn as in step 1; no line is missing or doubled."}
+ },
+ "ETM-8635": {
+  "5": {"id": "8d2be043-fb6d-424b-bc55-094ade4f33c1", "action": "Click the `+` box of the level `Work Header` within about 1 second.", "result": "The Work Header rows and the rows under them appear again (row count N0)."},
+  "7": {"id": "4de0de42-90bf-479a-9fed-fdfc1fee245e", "action": "Click the `+` box of the level `Work Header` once.", "result": "All rows are shown again: the row count equals N0, the row order equals step 1 and the first Platform row is expanded."}
+ }
+}

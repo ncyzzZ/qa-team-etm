@@ -1,0 +1,80 @@
+[
+ {
+  "id": "F-1",
+  "q": "1",
+  "ac": "AC-1",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "15 s / 20 s limit in ETM-8629 s6 and ETM-8630 s8 has no BA source; ETM-8521 got DEC-049 no time target; no number in any Story (ETM-7609 AC 6.4 \"[X]\"), still open for BA; BA 2026-11-24: no speed target (DEC-049); intended, TCs drop the limit; user 2026-11-24: fastest ~0.5 s, ceiling 20 s (pass rule <= 20 s)",
+  "later_defect": null
+ },
+ {
+  "id": "F-2",
+  "q": "2",
+  "ac": "AC-2",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-25",
+  "note": "+ Work Header: ETM-8632 s5 P+H+W vs ETM-8633 s5 F0 and ETM-8635 s7 N0; Xray and script wait on this answer; BA 2026-11-24: P+H+W (as ETM-8632); 8633 s5 / 8635 s7 were wrong TCs; CORRECTED 25 Nov 2026: BA answer F-2 (P+H+W) is wrong. User ruling 25 Nov 2026 (chat): ETM-9177 not a bug, system correct. Cascade = ETM-2431: '-' at a level hides that level and every level below (lower boxes turn +); '+' at a level shows that level and the levels above only. ETM-8449 changes nothing here. Replaces F-2 and the F-6 reading. QA check 25 Nov (manual-9177-icons/): after - Work Header the Work and Work Breakdown boxes show + (icons match the rows). 8633 s5 / 8635 s5 now expect P+H.; ETM-9177 deleted 25 Nov 2026: not a bug, system correct per user",
+  "later_defect": null
+ },
+ {
+  "id": "F-3",
+  "q": "3",
+  "ac": "AC-2",
+  "kind": "question",
+  "impact": "low",
+  "raised": "2026-11-17",
+  "story_status": "In Development",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "Q8 in draft-tc.md, never sent before; TCs do not rely on the box colour; partly: ETM-2431 AC 2 box is strictly +/- (no partly expanded); disabled / lighter look not defined, still open; BA 2026-11-24: no new design, works as before",
+  "later_defect": null
+ },
+ {
+  "id": "F-4",
+  "q": "4",
+  "ac": "AC-2",
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "ETM-8634 steps 3 and 6 accept either; the script keeps them check-by-eye until answered; answered from ETM-2431 AC 4.5: line hidden when one or both ends are hidden by a collapsed parent (work/SPRINT26/ba-self-answers-2026-11-24.md)",
+  "later_defect": null
+ },
+ {
+  "id": "F-5",
+  "q": "5",
+  "ac": "AC-2",
+  "kind": "question",
+  "impact": "medium",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-24",
+  "note": "ETM-8631 JO half fails if PLAN-20K is not Active; partly: ETM-2431 AC 5.4 JO may expand/collapse, not save; making PLAN-20K Active is a user test-data decision (activating deactivates the event other plan); BA 2026-11-24: set PLAN-20K Active for 8631, back to Inactive after",
+  "later_defect": null
+ },
+ {
+  "id": "F-6",
+  "q": "6",
+  "ac": "AC-2",
+  "kind": "question",
+  "impact": "high",
+  "raised": "2026-11-24",
+  "story_status": "Deployed to QA",
+  "outcome": "confirmed",
+  "outcome_date": "2026-11-25",
+  "note": "- Work Header hides Work Header rows (P only) and the box stays - after - / + Platform; ETM-2431 AC 3.1/3.3 says P+H. Defect or TC change waits on BA.; user 2026-11-24: - on a level hides that level; Platform box cannot switch. TCs change; app Platform box toggles = defect candidate; ETM-9175 deleted 24 Nov 2026: script error, not reproduced by hand (manual-9175/). levelBox fallback clicked Work Header; Platform box is locked/disabled in the app (rule already met); 25 Nov 2026: the F-6 reading \"lower levels keep their own box\" is replaced: User ruling 25 Nov 2026 (chat): ETM-9177 not a bug, system correct. Cascade = ETM-2431: '-' at a level hides that level and every level below (lower boxes turn +); '+' at a level shows that level and the levels above only. ETM-8449 changes nothing here. Replaces F-2 and the F-6 reading. QA check 25 Nov (manual-9177-icons/): after - Work Header the Work and Work Breakdown boxes show + (icons match the rows).; ETM-9177 deleted 25 Nov 2026: not a bug, system correct per user",
+  "later_defect": null
+ }
+]
