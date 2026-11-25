@@ -1,0 +1,20 @@
+[
+  {
+    "key": "ETM-8649",
+    "issueId": "2299444",
+    "stepNo": 12,
+    "stepId": "c035e7e1-e04a-48df-b54c-4c95617bbe76",
+    "action": "Untick `Note 1`.",
+    "data": "",
+    "result": "The table shows the same rows as the Job Description filter with nothing ticked."
+  },
+  {
+    "key": "ETM-8655",
+    "issueId": "2299450",
+    "stepNo": 3,
+    "stepId": "553802c5-22de-4163-bd66-8c792fac779d",
+    "action": "Untick `Note 2`.",
+    "data": "",
+    "result": "The table shows the same rows as the Job Description filter with nothing ticked (not all works)."
+  }
+]

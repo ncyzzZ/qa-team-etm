@@ -50,6 +50,12 @@ Related: the same rule was reported once for the Job Description filter as open 
 
 **Verdict needed from the user:** real app bug / script bug / wrong test. Evidence is consistent across 3 tests (ETM-8662, ETM-8655, ETM-8656) but I did not compare with another column that has a blank value, and the expected behaviour (filters kept in the page address and restored) is an assumption taken from the module doc and other columns, not written in the Story. Confirm with BA/dev before logging.
 
+**Recheck 2026-11-24 (UI-reachable data only):** the first run used W12 `"   "` (spaces only), which the screen cannot save, so the dev could not reproduce it. Re-run with `tests/fe/explore/etm8391BlankRecheck.spec.ts` (read only) on worklists with one kind of Blank each, from a fresh page, ticking only `-`:
+- `S26 Remark A` (W11 empty Remark): Apply shows W11, address `#wsRemarks=null`; after reload no `#` at all, Total 0, `-` not ticked.
+- `S26 Remark C` (W13 Remark typed as `-`, can be made on the screen): same result.
+- `S26 Remark C`, first `Test` (address `#wsRemarks=Test`, kept after reload), then switch to `-`: address `#wsRemarks=null`, after reload Total 0, nothing ticked.
+So the bug does not need spaces-only data or an earlier filter. Simplest repro for the dev: a worklist with one work whose Remark is `-`, tick only `-`, Apply, look at the address, reload. Evidence: `ep-etm-fe-qa/output/explore/etm8391-blank-2/` and `output/explore/etm8391-blank/` (not read: screenshots).
+
 **Summary:** `[ETM-8391] Remark filter: the Blank (-) selection is not kept in the page address and is lost after reload`
 
 ### English (Jira Description, Markdown)

@@ -1,0 +1,19 @@
+{
+  "test": "ETM-8658",
+  "issueId": "2299453",
+  "saved": "2026-11-24",
+  "why": "Before removing steps 3-4 (sort): the Worklist table has no sortable column (QA, all headers sortable=false). User: 'ลบ step 3-4'.",
+  "summary": "[FE][BE][MT] Verify the Remark filter works together with the search box, another column filter and sorting, and its options come from all works",
+  "steps": [
+    { "no": 1, "id": "1ca0297a-fe70-4eda-814f-acc3ee181fdf", "action": "Type `W0` in the search box `Search work number and job description`.", "data": "", "result": "Only W01 to W09 are shown (Job Descriptions `W01` to `W09`)." },
+    { "no": 2, "id": "ca3ff25e-186b-4189-8bbc-39334434f067", "action": "Open the filter on the `Remark` column, untick `Select All` first, then tick `Note 1` and `Note 2`.", "data": "", "result": "Only W05 and W06 are shown." },
+    { "no": 3, "id": "096b6511-eb18-4b87-955e-74dbc0440d1f", "action": "Sort the `Job Description` column ascending.", "data": "", "result": "W05 is shown above W06." },
+    { "no": 4, "id": "6e7c426f-bd9e-40d0-b83a-a1fc3d93edef", "action": "Sort it descending.", "data": "", "result": "W06 is shown above W05." },
+    { "no": 5, "id": "6f943341-bf45-45a0-a413-6ea2501de5a4", "action": "Open the filter on the `Job Owner` column and tick `Somchai Test`.", "data": "", "result": "Only W05 is shown." },
+    { "no": 6, "id": "a35c4bb0-1d2e-47e4-94b1-3d8d1f3dfd49", "action": "Clear the search box.", "data": "", "result": "Only W05 is shown (the Remark and Job Owner filters stay)." },
+    { "no": 7, "id": "3bea13c0-b313-477c-975c-9674612ae005", "action": "Open the filter on the `Remark` column.", "data": "", "result": "The list opens." },
+    { "no": 8, "id": "3070a1be-9699-465c-a7d8-be18769dc658", "action": "Look at the options.", "data": "", "result": "`-`, `Note 1`, `Note 2`, `Note 10`, `Test` and all other Remark values of the worklist are listed, not only `Note 1` and `Note 2`." },
+    { "no": 9, "id": "5d98aa66-6a4f-4e90-8237-c33f411c726d", "action": "Type `W05` in the search box `Search work number and job description`.", "data": "", "result": "Only W05 is shown." },
+    { "no": 10, "id": "fdf5abd5-4c22-4b81-a4e8-eca75123b913", "action": "Look at the options of the `Remark` filter again.", "data": "", "result": "The same options as in step 8 are listed." }
+  ]
+}

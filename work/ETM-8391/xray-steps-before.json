@@ -1,0 +1,1148 @@
+[
+ {
+  "key": "ETM-8648",
+  "issueId": "2299443",
+  "steps": [
+   {
+    "no": 1,
+    "id": "cfcd1e3b-8851-47e0-afad-45755a089e5b",
+    "action": "Log in with the user that has no View Worklist permission.",
+    "data": "",
+    "result": "The user is logged in and sees only the pages the role allows."
+   },
+   {
+    "no": 2,
+    "id": "320bb039-1af1-43ad-8e08-cef5e73e76a4",
+    "action": "Open the copied Worklist page address in the browser.",
+    "data": "",
+    "result": "The Shutdown Event List page is shown and the Worklist table is not shown (existing behaviour: a path the user cannot use redirects to the Shutdown Event List without an error page)."
+   },
+   {
+    "no": 3,
+    "id": "7432ce80-d4df-4531-b715-08173ef4c85c",
+    "action": "Look at the page.",
+    "data": "",
+    "result": "No Remark values appear anywhere on the page."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8649",
+  "issueId": "2299444",
+  "steps": [
+   {
+    "no": 1,
+    "id": "a842acaf-a28e-48bf-bbf0-0e22858af97f",
+    "action": "Open the Planning tab of the Shutdown Event.",
+    "data": "",
+    "result": "The Plan Cards are shown."
+   },
+   {
+    "no": 2,
+    "id": "29390c35-e0f2-4b8b-a7e5-92adae4723b6",
+    "action": "Click the Worklist row of a Plan Card.",
+    "data": "",
+    "result": "The Worklist page opens (in a new tab, as Plan Card rows do today) with the header `Worklist: [Plan Name]` and the work table."
+   },
+   {
+    "no": 3,
+    "id": "738db19d-1662-4d69-958d-c287485becc3",
+    "action": "Click the filter icon on the `Remark` column header.",
+    "data": "",
+    "result": "A filter panel opens under the header."
+   },
+   {
+    "no": 4,
+    "id": "53916741-1620-4bec-a85b-22c786e6c79f",
+    "action": "Look at the panel.",
+    "data": "",
+    "result": "The panel shows a search box, a `Select All` checkbox and a list of checkboxes with Remark values."
+   },
+   {
+    "no": 5,
+    "id": "4d21983b-38e5-4a59-b1f8-977fd69a9198",
+    "action": "Look for a condition dropdown.",
+    "data": "",
+    "result": "No dropdown with `Contains`, `Blank` or `Not blank` is shown."
+   },
+   {
+    "no": 6,
+    "id": "bf98f272-bd42-425c-88ec-dc2d4949fe9a",
+    "action": "Look for a free text input used as the filter value.",
+    "data": "",
+    "result": "The only text input is the search box of the checkbox list."
+   },
+   {
+    "no": 7,
+    "id": "da778be3-0b7d-4ac9-93c5-e668f0fda3d8",
+    "action": "Click the filter icon on the `Job Owner` column header.",
+    "data": "",
+    "result": "The Remark panel closes and a checkbox list opens with a search box and `Select All`; no condition dropdown is shown."
+   },
+   {
+    "no": 8,
+    "id": "87c4ced9-d0fb-41c8-b2b5-188fa46a8b65",
+    "action": "Compare the Job Owner panel with the Remark panel seen in step 4.",
+    "data": "",
+    "result": "Both panels have a search box, a `Select All` checkbox and a scrollable list of checkboxes."
+   },
+   {
+    "no": 9,
+    "id": "3456beaf-0d07-4e99-babc-6870f05eccfe",
+    "action": "Click the filter icon on the `Remark` column header.",
+    "data": "",
+    "result": "The Remark list opens."
+   },
+   {
+    "no": 10,
+    "id": "3dca2818-b9eb-4aaa-9d8f-99d40a954b3c",
+    "action": "Count the options named `Note 1`.",
+    "data": "",
+    "result": "Exactly one option `Note 1` is shown, even though two works use it."
+   },
+   {
+    "no": 11,
+    "id": "726d23c9-4c27-4290-843b-cac62a9a2f9f",
+    "action": "Tick only `Note 1`.",
+    "data": "",
+    "result": "The table shows exactly the two works W05 and W20."
+   },
+   {
+    "no": 12,
+    "id": "c035e7e1-e04a-48df-b54c-4c95617bbe76",
+    "action": "Untick `Note 1`.",
+    "data": "",
+    "result": "All works are shown again."
+   },
+   {
+    "no": 13,
+    "id": "9a10e0ae-6cab-42cf-bea2-d72229ba500c",
+    "action": "Look for the options that read `Test` or `test`.",
+    "data": "",
+    "result": "Four separate options are listed: `Test`, `test`, one with one space before `Test` and one with one space after `Test`."
+   },
+   {
+    "no": 14,
+    "id": "717435ae-2053-417e-b654-c84824ece354",
+    "action": "Tick only the option `test`.",
+    "data": "",
+    "result": "The table shows only W02."
+   },
+   {
+    "no": 15,
+    "id": "b09ba10d-7f95-466a-a6e1-526ae22929f4",
+    "action": "Untick `test` and tick only the option with one space before `Test`.",
+    "data": "",
+    "result": "The table shows only W03."
+   },
+   {
+    "no": 16,
+    "id": "fddd18c5-3e5d-489f-86e6-d87b481c32e9",
+    "action": "Untick it and tick only the option with one space after `Test`.",
+    "data": "",
+    "result": "The table shows only W04."
+   },
+   {
+    "no": 17,
+    "id": "48bf399d-df1c-4ef8-84ce-d1c72c8fa623",
+    "action": "Untick it and tick only `Test`.",
+    "data": "",
+    "result": "The table shows only W01."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8650",
+  "issueId": "2299445",
+  "steps": [
+   {
+    "no": 1,
+    "id": "6c715c56-ce0d-4b35-88fb-a6002ac7c5a4",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens."
+   },
+   {
+    "no": 2,
+    "id": "605b5b1d-5f40-4c96-ae55-c3f9efc04b31",
+    "action": "Look at the row directly under `Select All`.",
+    "data": "",
+    "result": "The first option is `-`."
+   },
+   {
+    "no": 3,
+    "id": "e1d15b59-310f-4de5-a7c4-44f5b1a0d2a5",
+    "action": "Look at the option after `-`.",
+    "data": "",
+    "result": "The next option is a normal value (not `-`)."
+   },
+   {
+    "no": 4,
+    "id": "8188d5dc-00ee-48ea-9b69-ed22d3fe71e3",
+    "action": "Search the whole list for a second `-` option.",
+    "data": "",
+    "result": "Only one option reads `-`."
+   },
+   {
+    "no": 5,
+    "id": "1628becf-574c-4f3f-81b8-fcada27716ad",
+    "action": "Scroll to the end of the list.",
+    "data": "",
+    "result": "No `-` option is found in the middle or at the end; `-` is not part of the A to Z block (`#Urgent`, `(Hold)` and digits exist)."
+   },
+   {
+    "no": 6,
+    "id": "d6c8c586-8e05-4ed4-93b2-71eb35ecfcbd",
+    "action": "Scroll back to the top of the list.",
+    "data": "",
+    "result": "The first option under `Select All` is `-` again."
+   },
+   {
+    "no": 7,
+    "id": "e034910c-1e68-4045-8c32-6e5bec19c7de",
+    "action": "Read the positions of `Note 1`, `Note 2` and `Note 10`.",
+    "data": "",
+    "result": "The order is `Note 1`, `Note 2`, `Note 10`; `Note 10` is not before `Note 2`."
+   },
+   {
+    "no": 8,
+    "id": "719dbd92-3faa-42f2-b1c4-873d7e90fa00",
+    "action": "Read all options after `-` in order.",
+    "data": "",
+    "result": "The options appear in four groups in this order: values that start with a symbol or space (one space before Test, ` - `, `- `, `- a`, `--`, `(Hold)`, `#Urgent`), then the value that starts with a digit (`100% <b>ok</b> \"x\" & y`), then English-letter values, then Thai (`ซ่อมด่วน`)."
+   },
+   {
+    "no": 9,
+    "id": "307cedec-17e3-41ea-a9c8-dbd96ba3dd10",
+    "action": "Look at the English-letter group.",
+    "data": "",
+    "result": "The order is `Check valve 🔧`, `Long remark ...` (the 200-character one), `Note 1`, `Note 2`, `Note 10`, `test`, `Test`, `Test ` (one space after Test), `Valve A, B`; `test` is before `Test` (lowercase first)."
+   },
+   {
+    "no": 10,
+    "id": "f9cdffd1-ad74-496d-a128-c7a0b7480c0d",
+    "action": "Look at the position of `ซ่อมด่วน`.",
+    "data": "",
+    "result": "It is listed last, after `Valve A, B`."
+   },
+   {
+    "no": 11,
+    "id": "83bc631f-9a06-4a18-9503-35fd464431bf",
+    "action": "Look at the options that start with a symbol or a space.",
+    "data": "",
+    "result": "They come before `100% <b>ok</b> \"x\" & y` and before all letters, in the order localeCompare('en', { numeric: true }) gives (values starting with a space or `-` before values starting with `(` or `#`); none is listed before `-`."
+   },
+   {
+    "no": 12,
+    "id": "c8937099-f056-4013-ac8f-07a3917bbb6f",
+    "action": "Find the option that starts with `Long remark `.",
+    "data": "",
+    "result": "The option text ends with an ellipsis (…) and stays on one line inside the panel width."
+   },
+   {
+    "no": 13,
+    "id": "9c18fef0-c54f-44bf-9a19-65f6c89314d0",
+    "action": "Move the mouse over this option.",
+    "data": "",
+    "result": "A hover text shows the full 200-character Remark."
+   },
+   {
+    "no": 14,
+    "id": "90cd7ed2-0a09-400f-93f4-f02339fbce10",
+    "action": "Move the mouse away.",
+    "data": "",
+    "result": "The hover text disappears."
+   },
+   {
+    "no": 15,
+    "id": "39dfab8d-051a-4d71-b04a-d9c2c5db31fc",
+    "action": "Look at the option `Note 1`.",
+    "data": "",
+    "result": "The full text `Note 1` is shown with no ellipsis."
+   },
+   {
+    "no": 16,
+    "id": "8e1a6718-2a25-4b1a-a874-e07835a47474",
+    "action": "Move the mouse over the option `Note 1`.",
+    "data": "",
+    "result": "No tooltip appears for this short option."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8651",
+  "issueId": "2299446",
+  "steps": [
+   {
+    "no": 1,
+    "id": "7ee11f0a-e0ee-4204-8e83-5fb3b8efa3c4",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens with one `-` option."
+   },
+   {
+    "no": 2,
+    "id": "65c29a30-a096-40e2-9ad6-326e0466a0f7",
+    "action": "Tick only `-`.",
+    "data": "",
+    "result": "The table shows exactly W11, W12 and W13."
+   },
+   {
+    "no": 3,
+    "id": "1a303091-8a7a-416b-8963-b84c66e5c34c",
+    "action": "Look at the `Job Description` and `Remark` cells of the three rows.",
+    "data": "",
+    "result": "The Job Descriptions are `W11`, `W12`, `W13`; the Remark cells are empty, empty-looking (three spaces) and `-`."
+   },
+   {
+    "no": 4,
+    "id": "0c95994c-d458-4d8c-8f95-210b4aef7c07",
+    "action": "On the Work Registration form `Create Work` > `Manual Create`, keep `Remark` empty with the required fields filled.",
+    "data": "",
+    "result": "The `Save` button is enabled."
+   },
+   {
+    "no": 5,
+    "id": "06f9ad30-158b-4015-9ede-315fe08e6d37",
+    "action": "Click `Save`.",
+    "data": "",
+    "result": "The work is saved and appears in the worklist."
+   },
+   {
+    "no": 6,
+    "id": "268b5032-63ad-4a4c-9668-17c7909cafbf",
+    "action": "Open the filter on the `Remark` column and tick only `-`.",
+    "data": "",
+    "result": "The table shows W11, W12, W13 and the new work; still one `-` option."
+   },
+   {
+    "no": 7,
+    "id": "9080d5b5-4e60-4fa5-add8-14719a82b006",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "The filter is cleared and all works are shown."
+   },
+   {
+    "no": 8,
+    "id": "eef92616-996b-4717-83f3-940fc9a459dd",
+    "action": "Open worklist A (normal Remarks plus only one work with an empty Remark) and open the `Remark` filter.",
+    "data": "",
+    "result": "A single `-` option is shown first."
+   },
+   {
+    "no": 9,
+    "id": "96498235-96fd-42f8-92d6-6710d8dcd07e",
+    "action": "Tick `-`.",
+    "data": "",
+    "result": "Only the work with the empty Remark is shown."
+   },
+   {
+    "no": 10,
+    "id": "596d82d9-ae7f-4058-9df8-20092cd097a1",
+    "action": "Open worklist B (normal Remarks plus only one work with a spaces-only Remark), open the `Remark` filter and tick `-`.",
+    "data": "",
+    "result": "A single `-` option is first and only the spaces-only work is shown."
+   },
+   {
+    "no": 11,
+    "id": "ea1c37a4-9da0-4d53-bfe2-d9482a521f64",
+    "action": "Open worklist C (normal Remarks plus only one work with the Remark `-`), open the `Remark` filter and tick `-`.",
+    "data": "",
+    "result": "A single `-` option is first and only the work with `-` is shown."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8652",
+  "issueId": "2299447",
+  "steps": [
+   {
+    "no": 1,
+    "id": "966f1d2e-fb6d-45d1-a7a7-4d4b1baf6e15",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens."
+   },
+   {
+    "no": 2,
+    "id": "6943c31a-586b-4997-99cf-cf66dad54c0b",
+    "action": "Look for the options `--`, `- a`, `- ` and ` - `.",
+    "data": "",
+    "result": "All four are listed as separate options after `-`, none merged into `-`, none trimmed; `- ` and ` - ` are two different options."
+   },
+   {
+    "no": 3,
+    "id": "4e5e52ad-9c19-4097-bbf5-f911166ddd6f",
+    "action": "Tick only `-`.",
+    "data": "",
+    "result": "The table does not show W14, W15, W21 or W22."
+   },
+   {
+    "no": 4,
+    "id": "3ffb524f-f292-4bc0-a396-ab59a17d27f8",
+    "action": "Untick `-` and tick only `--`.",
+    "data": "",
+    "result": "The table shows only W14."
+   },
+   {
+    "no": 5,
+    "id": "f161b473-1bfc-4ce9-9e71-3d8fd3c95ba9",
+    "action": "Untick `--` and tick only `- `.",
+    "data": "",
+    "result": "The table shows only W21."
+   },
+   {
+    "no": 6,
+    "id": "ab7a13b5-fa7c-4aef-a883-85b4c7562493",
+    "action": "Untick `- ` and tick only ` - `.",
+    "data": "",
+    "result": "The table shows only W22."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8653",
+  "issueId": "2299448",
+  "steps": [
+   {
+    "no": 1,
+    "id": "3347eef0-086e-4906-b1e6-3ffee3a94e24",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The first option under `Select All` is `-`; `Note 1` and `Note 2` are listed."
+   },
+   {
+    "no": 2,
+    "id": "653d7fdf-95b1-43c6-b31d-e82a6036164c",
+    "action": "Open the menu `⋮` of W11 and click `Edit Work Details`.",
+    "data": "",
+    "result": "The page `Edit Work Details` opens."
+   },
+   {
+    "no": 3,
+    "id": "921e9b50-0d8b-4f34-8bda-b340986e7d0d",
+    "action": "Type `Filled now` in `Remark` and click `Save`.",
+    "data": "",
+    "result": "The work is saved without an error message."
+   },
+   {
+    "no": 4,
+    "id": "6073b54f-3c76-4320-a4a8-37fb37e6ef65",
+    "action": "Open the Worklist page again from the Plan Card and open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list contains `Filled now`, `Note 1` and `Note 2`."
+   },
+   {
+    "no": 5,
+    "id": "da790ab7-b82e-4826-9250-2b75de7f856c",
+    "action": "Look under `Select All` and search the list for `-`.",
+    "data": "",
+    "result": "The first option is `Filled now`; no option reads `-` because no work has a Blank Remark."
+   },
+   {
+    "no": 6,
+    "id": "7e5a76fd-c5ef-4a97-913c-a22a62456f69",
+    "action": "Open `Edit Work Details` of W05, change `Remark` to `Changed note` and click `Save`.",
+    "data": "",
+    "result": "The work is saved."
+   },
+   {
+    "no": 7,
+    "id": "de5959c8-57dc-423e-8c85-c4b07a15dc22",
+    "action": "Return to the Worklist table and open the filter on the `Remark` column.",
+    "data": "",
+    "result": "`Changed note` is listed; `Note 1` is no longer listed."
+   },
+   {
+    "no": 8,
+    "id": "815914b2-4654-4cab-9b4d-0b0d8d9f1532",
+    "action": "Tick `Changed note`.",
+    "data": "",
+    "result": "Only W05 is shown."
+   },
+   {
+    "no": 9,
+    "id": "fc3a2155-f7fb-48e9-ab0a-96982ed6a9e4",
+    "action": "Untick it, open `Edit Work Details` of W06, change `Remark` to `note 1` (different case from another option) and click `Save`.",
+    "data": "",
+    "result": "The work is saved."
+   },
+   {
+    "no": 10,
+    "id": "49c8815e-587c-4c14-a0c3-15799e906b3a",
+    "action": "Return to the Worklist table and open the filter on the `Remark` column.",
+    "data": "",
+    "result": "`Changed note`, `Filled now` and `note 1` are listed, and `Note 2` is no longer listed."
+   },
+   {
+    "no": 11,
+    "id": "c85abddb-b273-4779-8363-41d8ed9672ca",
+    "action": "Tick `note 1`.",
+    "data": "",
+    "result": "Only W06 is shown."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8654",
+  "issueId": "2299449",
+  "steps": [
+   {
+    "no": 1,
+    "id": "46b378ab-f45f-4b19-ae93-5968c716afe6",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens and shows only the first part of the options."
+   },
+   {
+    "no": 2,
+    "id": "d81d96c2-a401-4893-bec3-ae3e0e32e3e6",
+    "action": "Scroll down inside the filter list.",
+    "data": "",
+    "result": "The list moves inside the panel; the page behind does not scroll."
+   },
+   {
+    "no": 3,
+    "id": "bd626400-86ac-467d-95cd-5525d789859a",
+    "action": "Scroll to the end.",
+    "data": "",
+    "result": "`Remark 060` is shown last and can be ticked."
+   },
+   {
+    "no": 4,
+    "id": "dfb0e2aa-a82d-4d1c-a3ac-5c3f3d16a3e9",
+    "action": "Close the filter without ticking an option.",
+    "data": "",
+    "result": "The filter closes and the table is unchanged."
+   },
+   {
+    "no": 5,
+    "id": "ebe6a7ce-b71a-447f-9e3e-a104201d818d",
+    "action": "Look at the `Remark` cell of W17 in the table.",
+    "data": "",
+    "result": "The text is cut with an ellipsis (…)."
+   },
+   {
+    "no": 6,
+    "id": "e7be8c8c-e30f-46e8-a442-7cf46415fb3d",
+    "action": "Move the mouse over the cell.",
+    "data": "",
+    "result": "A hover text shows the full 200-character Remark."
+   },
+   {
+    "no": 7,
+    "id": "9590f376-99e7-4e39-b98b-6b3de66397e5",
+    "action": "Open the filter on the `Remark` column and close it without ticking.",
+    "data": "",
+    "result": "The cell of W17 still shows the ellipsis, nothing changed."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8655",
+  "issueId": "2299450",
+  "steps": [
+   {
+    "no": 1,
+    "id": "08bcf042-cf81-4a79-8596-b033c141f329",
+    "action": "Open the filter on the `Remark` column and tick `Note 2`.",
+    "data": "",
+    "result": "The option is ticked."
+   },
+   {
+    "no": 2,
+    "id": "5ee0c7cb-fd9d-4089-acb2-711bf1064753",
+    "action": "Look at the table.",
+    "data": "",
+    "result": "Only W06 is shown and `Total Results` equals 1."
+   },
+   {
+    "no": 3,
+    "id": "553802c5-22de-4163-bd66-8c792fac779d",
+    "action": "Untick `Note 2`.",
+    "data": "",
+    "result": "All works are shown again."
+   },
+   {
+    "no": 4,
+    "id": "d93d4692-b1e8-44ff-9360-7dde18e4523b",
+    "action": "Tick `Note 1` and `Note 10`.",
+    "data": "",
+    "result": "Both options are ticked."
+   },
+   {
+    "no": 5,
+    "id": "bafc7457-eb5e-49b3-8047-e1a8348c1a4b",
+    "action": "Look at the table.",
+    "data": "",
+    "result": "Only W05 and W07 are shown."
+   },
+   {
+    "no": 6,
+    "id": "59dd75cb-c619-4904-b2c2-e020b4e0e03c",
+    "action": "Also tick `-`.",
+    "data": "",
+    "result": "The table shows W05, W07, W11, W12 and W13."
+   },
+   {
+    "no": 7,
+    "id": "bdf9e563-94bd-433a-b1d7-1aebfbeed0de",
+    "action": "Untick `Note 1`.",
+    "data": "",
+    "result": "`Note 10` and `-` stay ticked; the table shows W07, W11, W12 and W13."
+   },
+   {
+    "no": 8,
+    "id": "027cb973-0ecc-4aeb-8e07-6c59b4434eca",
+    "action": "Untick `Note 10`.",
+    "data": "",
+    "result": "Only `-` stays ticked; the table shows exactly W11, W12 and W13 (W14 `--` is not shown) and `Total Results` shows 3, equal to the number of rows."
+   },
+   {
+    "no": 9,
+    "id": "bf7e48a0-8cfb-43a3-aec2-5acc449eb477",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown."
+   },
+   {
+    "no": 10,
+    "id": "ed7b8339-1898-4edf-9f45-ccc8f5ed37af",
+    "action": "Open the filter on the `Job Description` column and tick `Select All`.",
+    "data": "",
+    "result": "Every option is ticked."
+   },
+   {
+    "no": 11,
+    "id": "5f4b90aa-7b1f-4490-934d-6e054b30bf75",
+    "action": "Untick `Select All` in the `Job Description` filter.",
+    "data": "",
+    "result": "Every option is unticked; the number of rows shown by the table is written down as the Job Description reference."
+   },
+   {
+    "no": 12,
+    "id": "e625f635-8705-4e18-8f08-34bd0d560cff",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown."
+   },
+   {
+    "no": 13,
+    "id": "302b284a-aa61-4546-9f20-6d8f07b90b14",
+    "action": "Open the filter on the `Remark` column and tick `Select All`.",
+    "data": "",
+    "result": "Every option is ticked and the table shows all works."
+   },
+   {
+    "no": 14,
+    "id": "167d58dc-9c49-48c7-b339-302e1793c5a7",
+    "action": "Untick `Note 1`.",
+    "data": "",
+    "result": "The table shows all works except W05; `Select All` shows the same partly ticked state as the `Job Description` filter does in the same situation."
+   },
+   {
+    "no": 15,
+    "id": "bab398fe-61eb-4985-aa4b-a337aaa80994",
+    "action": "Untick `Select All`.",
+    "data": "",
+    "result": "Every option is unticked."
+   },
+   {
+    "no": 16,
+    "id": "4a47a1c5-9792-4d2c-b94e-5ac9e247bd85",
+    "action": "Look at the table.",
+    "data": "",
+    "result": "The table shows the same number of rows as the Job Description reference from step 11."
+   },
+   {
+    "no": 17,
+    "id": "5213673d-6061-48fd-8487-d5a539a3d4a9",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown."
+   },
+   {
+    "no": 18,
+    "id": "b3412e61-a794-44f7-8df2-e149eca91692",
+    "action": "Tick one option in the `Job Description` filter and untick it again.",
+    "data": "",
+    "result": "No option is ticked and the number of rows shown is written down as the single-untick reference."
+   },
+   {
+    "no": 19,
+    "id": "e86f52f6-6e25-4eb7-aad4-c7d43b61b142",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown."
+   },
+   {
+    "no": 20,
+    "id": "8b4572c9-5fb8-4da5-9cac-dd27fe35c783",
+    "action": "Open the filter on the `Remark` column and tick only `Note 1`.",
+    "data": "",
+    "result": "Only W05 is shown."
+   },
+   {
+    "no": 21,
+    "id": "c88edc33-fe3d-43ce-938b-480683015795",
+    "action": "Untick `Note 1`.",
+    "data": "",
+    "result": "No option is ticked."
+   },
+   {
+    "no": 22,
+    "id": "90816275-b129-4efa-9766-986164241870",
+    "action": "Look at the table.",
+    "data": "",
+    "result": "The table shows the same number of rows as the single-untick reference from step 18."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8656",
+  "issueId": "2299451",
+  "steps": [
+   {
+    "no": 1,
+    "id": "1cc0819f-fb0a-4bff-9bcb-6d018cc98648",
+    "action": "Open the filter on the `Remark` column and type `note` in the search box.",
+    "data": "",
+    "result": "The list shows only `Note 1`, `Note 2` and `Note 10`, the same way the `Job Description` filter lists options such as `W01` when `w0` is typed in lowercase."
+   },
+   {
+    "no": 2,
+    "id": "c51f0168-bf13-443d-a6f2-49e940318ec5",
+    "action": "Type `NOTE 1` instead.",
+    "data": "",
+    "result": "The list shows `Note 1` and `Note 10`; letter case is ignored exactly as in the `Job Description` filter with `W0`."
+   },
+   {
+    "no": 3,
+    "id": "c280d394-08a3-4d8e-8168-a42b9d8efb62",
+    "action": "Clear the search box.",
+    "data": "",
+    "result": "The full list is shown again."
+   },
+   {
+    "no": 4,
+    "id": "8e95a37c-f175-41ef-b68b-25a9e72505f9",
+    "action": "Type `Note` in the search box.",
+    "data": "",
+    "result": "Three options are listed."
+   },
+   {
+    "no": 5,
+    "id": "e0ecda8d-aaf8-4f69-9c51-a7a927bab821",
+    "action": "Tick `Select All`.",
+    "data": "",
+    "result": "The three Note options are ticked."
+   },
+   {
+    "no": 6,
+    "id": "92ad2a71-e9a8-4a8e-9576-524b94ba754f",
+    "action": "Clear the search box.",
+    "data": "",
+    "result": "The other options are not ticked."
+   },
+   {
+    "no": 7,
+    "id": "15b4107d-5540-4373-a7e2-d1047cd002ac",
+    "action": "Look at the table.",
+    "data": "",
+    "result": "Only W05, W06 and W07 are shown."
+   },
+   {
+    "no": 8,
+    "id": "5ab9470e-7176-49bf-a4e1-29668e9195b5",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown."
+   },
+   {
+    "no": 9,
+    "id": "8439e39a-642b-4391-8a1b-baff72ce9ba7",
+    "action": "Open the filter on the `Remark` column and note the number of rows in the table.",
+    "data": "",
+    "result": "The row count is written down."
+   },
+   {
+    "no": 10,
+    "id": "91c70434-2c81-4d5f-b0e2-142a4ef924d1",
+    "action": "Type `zzzz` in the search box.",
+    "data": "",
+    "result": "No value option is listed under `Select All` and no `-` option is listed."
+   },
+   {
+    "no": 11,
+    "id": "f408b96f-94e1-4264-87c9-1198e77a0336",
+    "action": "Tick `Select All`.",
+    "data": "",
+    "result": "No row is added to or removed from the table; the row count is the same as the count written down in step 9."
+   },
+   {
+    "no": 12,
+    "id": "a52b79f5-7e35-4243-80fb-efd4db7967f0",
+    "action": "Clear the search box.",
+    "data": "",
+    "result": "The full list of options is shown again."
+   },
+   {
+    "no": 13,
+    "id": "d3aed1f5-cb15-4b2b-9d69-50c677fa0eb7",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown."
+   },
+   {
+    "no": 14,
+    "id": "1de18ff0-10d5-4735-ac46-7878edba96cb",
+    "action": "Open the filter on the `Remark` column and type `-` in the search box.",
+    "data": "",
+    "result": "The options `-`, `--`, `- a`, `- ` and ` - ` are listed; options without a hyphen (for example `Note 1`) are not listed."
+   },
+   {
+    "no": 15,
+    "id": "7cd10925-b10b-422b-bd46-dd4cf896bea6",
+    "action": "Tick only the option `-`.",
+    "data": "",
+    "result": "The table shows W11, W12 and W13, not W14, W15, W21 or W22."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8657",
+  "issueId": "2299452",
+  "steps": [
+   {
+    "no": 1,
+    "id": "08f6e915-090b-4299-b124-4976da1005cd",
+    "action": "Open the filter on the `Job Description` column.",
+    "data": "",
+    "result": "The panel is shown; its look is noted."
+   },
+   {
+    "no": 2,
+    "id": "e529bc9a-e80e-435e-80a5-c6d4bef36fe5",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The panel is shown."
+   },
+   {
+    "no": 3,
+    "id": "944e1dcd-471c-46c4-acb2-44dc56cb3330",
+    "action": "Compare fonts, checkbox style, spacing and search box.",
+    "data": "",
+    "result": "Both panels use the same components and look the same."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8658",
+  "issueId": "2299453",
+  "steps": [
+   {
+    "no": 1,
+    "id": "1ca0297a-fe70-4eda-814f-acc3ee181fdf",
+    "action": "Type `W0` in the search box `Search work number and job description`.",
+    "data": "",
+    "result": "Only W01 to W09 are shown (Job Descriptions `W01` to `W09`)."
+   },
+   {
+    "no": 2,
+    "id": "ca3ff25e-186b-4189-8bbc-39334434f067",
+    "action": "Open the filter on the `Remark` column and tick `Note 1` and `Note 2`.",
+    "data": "",
+    "result": "Only W05 and W06 are shown."
+   },
+   {
+    "no": 3,
+    "id": "096b6511-eb18-4b87-955e-74dbc0440d1f",
+    "action": "Sort the `Job Description` column ascending.",
+    "data": "",
+    "result": "W05 is shown above W06."
+   },
+   {
+    "no": 4,
+    "id": "6e7c426f-bd9e-40d0-b83a-a1fc3d93edef",
+    "action": "Sort it descending.",
+    "data": "",
+    "result": "W06 is shown above W05."
+   },
+   {
+    "no": 5,
+    "id": "6f943341-bf45-45a0-a413-6ea2501de5a4",
+    "action": "Open the filter on the `Job Owner` column and tick `Somchai Test`.",
+    "data": "",
+    "result": "Only W05 is shown."
+   },
+   {
+    "no": 6,
+    "id": "a35c4bb0-1d2e-47e4-94b1-3d8d1f3dfd49",
+    "action": "Clear the search box.",
+    "data": "",
+    "result": "Only W05 is shown (the Remark and Job Owner filters stay)."
+   },
+   {
+    "no": 7,
+    "id": "3bea13c0-b313-477c-975c-9674612ae005",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens."
+   },
+   {
+    "no": 8,
+    "id": "3070a1be-9699-465c-a7d8-be18769dc658",
+    "action": "Look at the options.",
+    "data": "",
+    "result": "`-`, `Note 1`, `Note 2`, `Note 10`, `Test` and all other Remark values of the worklist are listed, not only `Note 1` and `Note 2`."
+   },
+   {
+    "no": 9,
+    "id": "5d98aa66-6a4f-4e90-8237-c33f411c726d",
+    "action": "Type `W05` in the search box `Search work number and job description`.",
+    "data": "",
+    "result": "Only W05 is shown."
+   },
+   {
+    "no": 10,
+    "id": "fdf5abd5-4c22-4b81-a4e8-eca75123b913",
+    "action": "Look at the options of the `Remark` filter again.",
+    "data": "",
+    "result": "The same options as in step 8 are listed."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8659",
+  "issueId": "2299454",
+  "steps": [
+   {
+    "no": 1,
+    "id": "d512e3ae-9bcb-4bfe-a6f6-b9e90e0ba1a5",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens."
+   },
+   {
+    "no": 2,
+    "id": "c7ef48e9-0fed-44df-9ca0-20a96ef78ea7",
+    "action": "Read the options for W10, W16, W17, W18 and W19.",
+    "data": "",
+    "result": "Each is shown exactly as stored: `ซ่อมด่วน`, `Check valve 🔧`, the 200-character text, `Valve A, B`, `100% <b>ok</b> \"x\" & y` (no bold text, no cut characters)."
+   },
+   {
+    "no": 3,
+    "id": "93784240-61f8-4fd3-9fc1-11fa64c90a91",
+    "action": "Type the stored value of one strange Remark into the search box.",
+    "data": "",
+    "result": "Only that option is listed."
+   },
+   {
+    "no": 4,
+    "id": "b66d8b4e-bed5-44b1-81cb-14ec91e9b560",
+    "action": "Tick that option.",
+    "data": "",
+    "result": "Only its work is shown."
+   },
+   {
+    "no": 5,
+    "id": "8c79c29a-8cea-4e84-92f9-c2e049a3b675",
+    "action": "Repeat steps 3 and 4 for each strange value.",
+    "data": "",
+    "result": "Each time only the matching work is shown and the page stays usable."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8660",
+  "issueId": "2299455",
+  "steps": [
+   {
+    "no": 1,
+    "id": "52e0a22b-abb9-46b7-a6bb-38a78bdae465",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The list opens and no alert dialog appears."
+   },
+   {
+    "no": 2,
+    "id": "ff614370-045d-4e76-966b-a74b78a98b6d",
+    "action": "Read the two options.",
+    "data": "",
+    "result": "They read exactly `<b>x</b>` and `<script>alert(1)</script>` as plain text; the first is not shown in bold."
+   },
+   {
+    "no": 3,
+    "id": "c0d82e76-5278-4ea3-ae03-104f0ea470dd",
+    "action": "Tick the option `<script>alert(1)</script>`.",
+    "data": "",
+    "result": "Only its work is shown, its Remark cell shows the same plain text and no alert dialog appears."
+   },
+   {
+    "no": 4,
+    "id": "3d215994-8d17-4a0b-9078-ffcefadc1e64",
+    "action": "Type `<b>` in the search box.",
+    "data": "",
+    "result": "The option `<b>x</b>` is listed as plain text."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8661",
+  "issueId": "2299456",
+  "steps": [
+   {
+    "no": 1,
+    "id": "696e37e6-3e4d-47a7-8a09-fc4c6501c12d",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The panel opens without an error."
+   },
+   {
+    "no": 2,
+    "id": "af2b5ce1-0f42-44e8-9718-a1374315d9c7",
+    "action": "Look at the list.",
+    "data": "",
+    "result": "No `-` option and no value options are listed."
+   },
+   {
+    "no": 3,
+    "id": "a08c9172-c543-4ae7-a225-97e3a76ccb6b",
+    "action": "Close the panel.",
+    "data": "",
+    "result": "The table still shows `No results found`."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8662",
+  "issueId": "2299457",
+  "steps": [
+   {
+    "no": 1,
+    "id": "8fbb88d7-b344-43ee-93ff-f52c8412b4e3",
+    "action": "Open the filter on the `Remark` column and tick `Valve A, B`.",
+    "data": "",
+    "result": "Only W18 is shown."
+   },
+   {
+    "no": 2,
+    "id": "24c224f1-05fa-47c6-81d3-f3acc5a2967f",
+    "action": "Reload the page.",
+    "data": "",
+    "result": "Only W18 is shown and `Valve A, B` is ticked as one option; no other option is ticked."
+   },
+   {
+    "no": 3,
+    "id": "6f976553-4c99-4617-8705-c9c387622b07",
+    "action": "Untick it and tick `100% <b>ok</b> \"x\" & y`.",
+    "data": "",
+    "result": "Only W19 is shown."
+   },
+   {
+    "no": 4,
+    "id": "b73b9c2e-d58c-4e5d-9965-e5f0769a62b3",
+    "action": "Reload the page.",
+    "data": "",
+    "result": "Only W19 is shown and that option is ticked; no other option is ticked."
+   },
+   {
+    "no": 5,
+    "id": "d9b9db1a-33be-48f0-8141-384f58f355ab",
+    "action": "Untick it and tick `-`.",
+    "data": "",
+    "result": "W11, W12 and W13 are shown."
+   },
+   {
+    "no": 6,
+    "id": "b48a47b5-f827-4bf4-af46-c27f392cb7ce",
+    "action": "Reload the page.",
+    "data": "",
+    "result": "W11, W12 and W13 are shown and `-` is ticked; no other option is ticked."
+   },
+   {
+    "no": 7,
+    "id": "289f9cb3-b21b-4d68-9852-c5c51b6115b5",
+    "action": "Untick it and tick the option with one space before `Test`.",
+    "data": "",
+    "result": "Only W03 is shown."
+   },
+   {
+    "no": 8,
+    "id": "45ee4202-c9a7-44e0-a312-894786406868",
+    "action": "Reload the page.",
+    "data": "",
+    "result": "Only W03 is shown and that option is ticked; the option `Test` is not ticked."
+   }
+  ]
+ },
+ {
+  "key": "ETM-8663",
+  "issueId": "2299458",
+  "steps": [
+   {
+    "no": 1,
+    "id": "68434057-096f-4523-b901-2fd43524cddf",
+    "action": "Before the release, as the test user, set the Remark text filter `Contains` `Note` and the `Job Owner` filter `Somchai Test`.",
+    "data": "",
+    "result": "The table shows only works that match both filters."
+   },
+   {
+    "no": 2,
+    "id": "84bfefd0-dad8-4806-826e-161d2b34f898",
+    "action": "Copy the page address that holds the old Remark parameter and the Job Owner parameter.",
+    "data": "",
+    "result": "The old address is saved for later."
+   },
+   {
+    "no": 3,
+    "id": "38f5971f-931d-4f8a-9718-58a61454c926",
+    "action": "After the release, log in with the same user and open the Worklist from the Plan Card.",
+    "data": "",
+    "result": "The page opens normally with no error message."
+   },
+   {
+    "no": 4,
+    "id": "60282897-5c3f-4cc9-8d5d-7b88bf88aa89",
+    "action": "Open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The checkbox list opens with `Select All` and every option ticked; no `Contains`, `Blank` or `Not blank` condition is left."
+   },
+   {
+    "no": 5,
+    "id": "5ede4348-a4fc-4ac7-aa5f-4db909c99449",
+    "action": "Look at the table.",
+    "data": "",
+    "result": "The Remark filter does not narrow the rows: the table shows all works of `Somchai Test`."
+   },
+   {
+    "no": 6,
+    "id": "e4dbbb0e-44fa-4d43-98ab-f898310310a8",
+    "action": "Open the filter on the `Job Owner` column.",
+    "data": "",
+    "result": "Only `Somchai Test` is still ticked (the saved Job Owner filter is unaffected)."
+   },
+   {
+    "no": 7,
+    "id": "2c23ecf8-9f07-45f5-a5ce-7f9254bfbb11",
+    "action": "Click `Reset Table Filter`.",
+    "data": "",
+    "result": "All works are shown and the Job Owner filter is cleared."
+   },
+   {
+    "no": 8,
+    "id": "ebe42bb8-47fc-4366-bbc0-5e48906379dd",
+    "action": "Open the old address from step 2 in a new tab.",
+    "data": "",
+    "result": "The Worklist page opens normally without an error message and without a redirect to the Shutdown Event List page."
+   },
+   {
+    "no": 9,
+    "id": "7e6f1e95-d5ab-4938-8484-b322604ec691",
+    "action": "Look at the table and open the filter on the `Remark` column.",
+    "data": "",
+    "result": "The table shows only the works of `Somchai Test` (the Job Owner parameter is still applied) and every Remark option is ticked, so the old Remark parameter is ignored."
+   }
+  ]
+ }
+]
