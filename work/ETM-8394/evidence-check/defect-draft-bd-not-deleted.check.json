@@ -1,0 +1,22 @@
+{ "id": "defect-draft-bd-not-deleted", "sourceHash": "9444e040b8bd", "overall": "not-proven",
+  "steps": [
+    { "n": 1,
+      "sees": "Full screen, QA app. Worklist: Wide Plan B - NN (Initial, Active), event NN TEST QA. Search box empty, no filter. Group Mechanical (PM) with 16 visible rows: 44443, 65432, TC7125-*, TC7127A-*, TC7127B-*, TC7133-W1-*; all Status N. Total Results: 210. No Work Z2 visible, no breakdown rows or panel open, no import dialog, no message.",
+      "verdict": "cannot-tell", "pictureOk": false }
+  ],
+  "expectedSources": [
+    "BA answer Round 4 Q2 2026-11-25 (ba-answers.md: breakdowns of a deleted Work must be flagged deleted together with the Work)",
+    "questions-for-BA.md intro citing ETM-6843 AC 1.4 (Delete on Work is soft delete, Delete on Breakdown is permanent)",
+    "Xray ETM-8767 (xray-steps-proposed.json Z2 step: Work Status Deleted and breakdown removed permanently)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "The only picture is a generic Worklist; it shows neither Z2, its breakdown, the import, nor any delete state. Nothing about the defect is visible.",
+    "The actual behaviour (breakdown row left in shutdown_activity_breakdown, no flag) is database-only; no screen evidence that a user sees a wrong result.",
+    "Sources disagree on the form: AC 1.4 and Xray say the breakdown row is removed permanently; BA Round 4 says flagged deleted. Align the draft wording.",
+    "Picture is test-failed-1.png from an automated run, not step evidence; the Worklist with Z2 gone and the breakdown check are not captured.",
+    "Steps lack the Plan name shown on screen (Wide Plan B - NN vs 'Plan 6843') and how to see the breakdown after delete without a database.",
+    "Role in Environment says TM and JO, but delete via import is a TM action; JO role is irrelevant or unclear."
+  ],
+  "summary": "ยังพิสูจน์ไม่ได้: รูปเดียวที่แนบเป็นหน้า Worklist ทั่วไป ไม่เห็น Z2 หรือ breakdown เลย และผลจริง (breakdown ยังอยู่ในตาราง ไม่มี flag) เห็นได้จาก DB เท่านั้น; Expected มีที่มา (BA รอบ 4, AC 1.4, Xray ETM-8767) แต่ AC/Xray บอกลบถาวร ส่วน BA บอก flag ว่าลบ ควรเขียนให้ตรงกัน"
+}

@@ -17,4 +17,4 @@ The Work `Z2` is deleted (`shutdown_activity.sdw_is_delete = 'Y'`, gone from the
 The breakdowns of the deleted Work are flagged deleted too (soft delete together with the Work).
 Xray: Test ETM-8767, Test Execution ETM-8774.
 
-Pictures: PICS
+Pictures: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-24_205244_ETM-8394/fe-e2e-importWork-verifyIm-7c39e-etes-as-in-the-import-rules-chromium/test-failed-1.png

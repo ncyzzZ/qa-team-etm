@@ -1,0 +1,22 @@
+{ "id": "defect-draft-uuid-msg", "sourceHash": "ea3aa729f79c", "overall": "not-proven",
+  "steps": [
+    { "n": 1,
+      "sees": "Full-screen Worklist page 'Worklist: Wide Plan B - NN' (tags Initial, Active), event NN TEST QA. Table grouped Mechanical (PM) with rows 44443, 65432, TC7125-*, TC7127A-*, TC7127B-*, TC7133-W1-*; Total Results 205. No import dialog, no upload validation table, no error banner, no Invalid Detail message, no Import/Confirm button state. No Work Y1 or Y2 visible.",
+      "verdict": "cannot-tell",
+      "pictureOk": false }
+  ],
+  "expectedSources": [
+    "AC 3.4 (Story v4, 18 Nov): Revise on a deleted Work gives the UUID Error",
+    "BA answer round 4 Q1 (ba-answers.md, answer 6a): message must be 'The UUID you entered is not exist in the system.'",
+    "Xray ETM-8766 step (xray-steps-before-2026-11-24.json): breakdown row shows the UUID message and Confirm is disabled"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "The only picture shows the Worklist, not the import validation result; the actual message is not visible anywhere.",
+    "Picture does not show Works Y1/Y2 or that Y1 was deleted; steps 1-2 are not evidenced.",
+    "Brief says 'Import is disabled', Xray step says 'Confirm is disabled'; align the button name with the screen.",
+    "Plan named 'Wide Plan B - NN' in picture; brief says Plan 6843. Confirm it is the same plan.",
+    "Need a full-screen picture of the upload result dialog showing the breakdown row message before logging."
+  ],
+  "summary": "ภาพที่แนบเป็นหน้า Worklist ไม่ใช่ผลการ upload ไฟล์ จึงไม่เห็นข้อความ error ของแถว breakdown เลย ยังพิสูจน์ defect ไม่ได้ Expected มีที่มาชัด (AC 3.4 และคำตอบ BA) ต้องถ่ายภาพหน้าผล validation ใหม่ก่อน log"
+}

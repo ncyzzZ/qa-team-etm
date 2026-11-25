@@ -17,4 +17,4 @@ The breakdown row shows "The work breakdown with the entered UUID is already ass
 The breakdown row shows "The UUID you entered is not exist in the system." (AC 3.4). `Import` is disabled.
 Xray: Test ETM-8766, Test Execution ETM-8774.
 
-Pictures: PICS
+Pictures: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-24_205244_ETM-8394/fe-e2e-importWork-verifyIm-47ec3-d-Work-gives-the-UUID-Error-chromium/test-failed-1.png
