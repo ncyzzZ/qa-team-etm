@@ -2,6 +2,7 @@
 // Standing run approval (user, chat 2026-11-24: "อนุญาต 1-3"): may the lead run these tests without asking?
 //
 //   node tools/run-policy.mjs <KEY> <spec|folder>... [-g "<filter>"] [other run-card flags]
+//   node tools/run-policy.mjs <KEY> --manual <TEST>...   (manual-runner: one line for the Tests of work/<KEY>/manual-steps-*.md)
 //
 // Prints one line `RUN-POLICY: auto|ask <KEY> ...` and exits 0 (auto: run, no question) or 3 (ask the user first).
 // Auto when nothing in the run can touch data other testers use, i.e. ONE of:
@@ -85,11 +86,43 @@ export function classify({ key, specs, grep, flags = [], repo = pwRepo(), root =
   return { auto: true, reasons: [...why], tests: keys };
 }
 
+/** Manual Tests (TEAM.md Phase 6b): auto when every Test has a section `## <TEST> ...` in work/<KEY>/manual-steps-*.md
+ *  whose `writes data:` line is `no` (the browser only reads). Ask when a Test writes data, has no section (an ad-hoc check:
+ *  write a steps section with `writes data: no` first, then it is auto), or needs Excel. */
+export function classifyManual({ key, tests, root = ROOT }) {
+  const dir = path.join(root, 'work', key);
+  const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /^manual-steps.*\.md$/.test(f)) : [];
+  const sections = new Map();
+  for (const f of files) {
+    const parts = fs.readFileSync(path.join(dir, f), 'utf8').split(/^## /m).slice(1);
+    for (const p of parts) { const id = (p.match(/^(ETM-\d+)/) ?? [])[1]; if (id && !sections.has(id)) sections.set(id, { file: f, text: p }); }
+  }
+  const ask = (why) => ({ auto: false, reasons: [why], tests });
+  if (!tests.length) return ask('no Test given');
+  const writes = [], missing = [], excel = [];
+  for (const t of tests) {
+    const s = sections.get(t);
+    if (!s) { missing.push(t); continue; }
+    const w = (s.text.match(/^writes data:\s*(\S+)/im) ?? [])[1]?.toLowerCase();
+    if (w !== 'no') writes.push(`${t} (writes data: ${w ?? 'not stated'})`);
+    if (/^needs:\s*excel/im.test(s.text)) excel.push(t);
+  }
+  if (missing.length) return ask(`no manual-steps section in work/${key}/ for ${missing.join(', ')}: write one with "writes data: no" for a read-only check, then it is auto`);
+  if (excel.length) return ask(`needs: excel (a person does it): ${excel.join(', ')}`);
+  if (writes.length) return ask(`writes data: ${writes.join('; ')} - name the step that writes and what`);
+  return { auto: true, reasons: ['manual, read only (writes data: no)'], tests };
+}
+
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const args = process.argv.slice(2);
   const key = args.shift();
   if (!/^ETM-\d+$/.test(key ?? '')) { console.error('Usage: node tools/run-policy.mjs <KEY> <spec|folder>... [-g "<filter>"] [flags]'); process.exit(2); }
+  if (args[0] === '--manual') {
+    const r = classifyManual({ key, tests: args.slice(1).filter((a) => /^ETM-\d+$/.test(a)) });
+    console.log(`RUN-POLICY: ${r.auto ? 'auto' : 'ask'} ${key} tests=${r.tests.join(',') || '-'} | ${r.reasons.join(' | ')}`);
+    process.exit(r.auto ? 0 : 3);
+  }
   const specs = [], flags = [];
   let grep = '';
   for (let i = 0; i < args.length; i++) {

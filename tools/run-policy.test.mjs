@@ -68,3 +68,21 @@ test('A covers only tests of this card; another card\'s new test asks', () => {
   assert.equal(r.auto, false);
   assert.match(r.reasons[0], /ETM-21/);
 });
+
+import { classifyManual } from './run-policy.mjs';
+function manualRoot(files) {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'rp-man-'));
+  fs.mkdirSync(path.join(root, 'work', 'ETM-1'), { recursive: true });
+  for (const [n, t] of Object.entries(files)) fs.writeFileSync(path.join(root, 'work', 'ETM-1', n), t);
+  return root;
+}
+const STEPS = `# steps\n\n## ETM-11 - reads only (3 steps)\nwrites data: no\nrole: turnaroundManager\n| # | Do |\n\n## ETM-12 - saves (2 steps)\nwrites data: yes\n\n## ETM-13 - excel\nwrites data: no\nneeds: excel\n\n## ETM-14 - no line\nrole: x\n`;
+test('manual: read-only Tests are auto', () => {
+  const r = classifyManual({ key: 'ETM-1', tests: ['ETM-11'], root: manualRoot({ 'manual-steps-a.md': STEPS }) });
+  assert.equal(r.auto, true);
+});
+test('manual: a Test that writes, needs Excel, has no writes line or no section asks', () => {
+  const root = manualRoot({ 'manual-steps-a.md': STEPS });
+  for (const t of ['ETM-12', 'ETM-13', 'ETM-14', 'ETM-99']) assert.equal(classifyManual({ key: 'ETM-1', tests: ['ETM-11', t], root }).auto, false, t);
+  assert.match(classifyManual({ key: 'ETM-1', tests: ['ETM-99'], root }).reasons[0], /write one with "writes data: no"/);
+});
