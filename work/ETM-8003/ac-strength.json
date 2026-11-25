@@ -1,8 +1,8 @@
 {
  "card": "ETM-8003",
- "date": "2026-11-19",
+ "date": "2026-11-24",
  "verdict": "partly",
- "note": "Read-only review of the scripts on 2026-11-19 (before the false-pass fix d60881a); nothing run on the app.",
+ "note": "Updated 2026-11-24: S-Curve is a canvas. Dash/solid, dots, hidden labels and label values cannot be proven by script (marked not-checked, never PASSED). Colors are proven as \"present on the canvas\" only.",
  "ac": [
   {
    "id": "AC-1",
@@ -12,8 +12,8 @@
     "ETM-8808",
     "ETM-8809"
    ],
-   "rating": "strong",
-   "why": "stroke hex and dash asserted"
+   "rating": "partial",
+   "why": "hex present on canvas (and exact in legend); dash/solid read from pixels, not asserted (not-checked when unclear)"
   },
   {
    "id": "AC-2",
@@ -22,8 +22,8 @@
     "ETM-8801",
     "ETM-8808"
    ],
-   "rating": "strong",
-   "why": "stroke hex and dash asserted"
+   "rating": "partial",
+   "why": "hex present on canvas (and exact in legend); dash/solid read from pixels, not asserted (not-checked when unclear)"
   },
   {
    "id": "AC-3",
