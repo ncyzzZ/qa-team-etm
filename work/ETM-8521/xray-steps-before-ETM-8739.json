@@ -1,0 +1,6 @@
+{"testKey":"ETM-8739","issueId":"2300043","saved":"2026-11-24","reason":"user ruled wrong test (b): remove step 5 drag lower-right corner","steps":[
+{"id":"48a4186b-b6c6-4b11-979f-ffae42a4d9a3","action":"Copy the single Excel cell `16`.","data":"","result":"The value is on the clipboard."},
+{"id":"046cac16-2dd6-49d5-94d2-2a739e462876","action":"Select the Duration cells of 4 Lv4 rows with Shift+click.","data":"","result":"The 4 cells are highlighted."},
+{"id":"fe5a8eba-ec80-4daf-afb1-1ba49936dc94","action":"Press Ctrl+V.","data":"","result":"All 4 Duration cells show `16`."},
+{"id":"60e65c4e-6aed-497f-9a09-711e49412ead","action":"Check the Duration cells above and below the selection.","data":"","result":"They are unchanged."},
+{"id":"0b5fc691-b589-4c75-80b8-66cd04f7cbae","action":"Select 4 Duration cells again by dragging the lower-right corner of the first selected cell down over them, and paste the same `16`.","data":"","result":"All 4 selected Duration cells show `16`, the cells outside the selection are unchanged."}]}

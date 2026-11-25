@@ -1,0 +1,6 @@
+{"testKey":"ETM-8763","issueId":"2300067","saved":"2026-11-24","reason":"user: step 4 must follow real user behaviour (paste a valid Predecessor C)","steps":[
+{"id":"84eafe74-a63d-4763-bd63-b833b7f4952c","action":"Record that Save is enabled.","data":"","result":"Save is enabled before the paste."},
+{"id":"3f71ca5f-d017-468a-bd1f-0a85e65aa1d4","action":"Paste the name of task A into the Predecessor cell of task B.","data":"","result":"A circular dependency now exists (A depends on B and B depends on A)."},
+{"id":"fd8283a0-e01b-4b11-98ae-11c72139dd22","action":"Check Save.","data":"","result":"Save is disabled."},
+{"id":"bbc24818-e724-4d85-af61-7f9855a8b71a","action":"Paste the old Predecessor value back into the cell of task B.","data":"","result":"The circular dependency is gone."},
+{"id":"25266692-f0ca-4d3f-8ef5-6cf5a18d822d","action":"Check Save.","data":"","result":"Save is enabled again."}]}
