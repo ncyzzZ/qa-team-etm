@@ -1,0 +1,47 @@
+{
+  "defect": "ETM-6907",
+  "story": "ETM-6538",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "SIMOP shows Allow for every pair (screen and Excel column R): Restriction / Prohibit from the Activities SIMOP Matrix never appear.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6538",
+  "run": "STORY-ETM-6538",
+  "frozen": "evals/exams/_story-ETM-6538/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "simop"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "simop",
+          "column r"
+        ],
+        [
+          "prohibit",
+          "restriction"
+        ],
+        [
+          "matrix",
+          "conflict",
+          "overlap",
+          "same time",
+          "same location",
+          "working location",
+          "work conflicted"
+        ],
+        [
+          "!",
+          "override"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Export Story: column R shows Allow / Restriction / Prohibit with colours. The bug is in the SIMOP rule; caught only by a case that builds a real Restriction/Prohibit pair (not by Override) and reads it."
+}

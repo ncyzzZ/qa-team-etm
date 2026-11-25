@@ -1,0 +1,47 @@
+{
+  "defect": "ETM-7456",
+  "story": "ETM-6843",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Import: text in Duration shows both \"input format\" and \"exceeds the allowed boundary\" errors for the same cell.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6843",
+  "run": "STORY-ETM-6843",
+  "frozen": "evals/exams/_story-ETM-6843/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "import"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "text",
+          "letters",
+          "abc",
+          "non-numeric",
+          "not a number",
+          "alphabet"
+        ],
+        [
+          "input format"
+        ],
+        [
+          "only",
+          "one error",
+          "single",
+          "no other",
+          "1 error",
+          "exactly one",
+          "not also",
+          "one row"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Validation matrix: wrong data type = input format message. That the boundary message is not added is implied."
+}

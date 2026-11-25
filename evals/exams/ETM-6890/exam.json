@@ -1,0 +1,52 @@
+{
+  "defect": "ETM-6890",
+  "story": "ETM-6538",
+  "in_story": true,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Export Excel column L (Hot Bed) shows \"N\" instead of \"No\".",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6538",
+  "run": "STORY-ETM-6538",
+  "frozen": "evals/exams/_story-ETM-6538/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "hot bed",
+          "column l"
+        ],
+        [
+          "\"no\"",
+          "`no`",
+          "\"yes\"",
+          "`yes`",
+          "yes/no",
+          "yes / no",
+          "yes or no",
+          "'no'",
+          "'yes'"
+        ],
+        [
+          "column l",
+          "file",
+          "excel",
+          "sheet",
+          "export",
+          "downloaded",
+          "workbook",
+          "cell"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Field spec: Hot Bed enum Yes / No."
+}

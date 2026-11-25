@@ -1,0 +1,56 @@
+{
+  "defect": "ETM-7328",
+  "story": "ETM-6373",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "View Diagnosis opens the panel on the last-used tab (e.g. Optimization Setting) instead of Diagnosis.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6373",
+  "run": "STORY-ETM-6373",
+  "frozen": "evals/exams/_story-ETM-6373/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "diagnosis"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "optimization setting"
+        ],
+        [
+          "tab",
+          "click",
+          "open",
+          "switch"
+        ]
+      ],
+      [
+        [
+          "view diagnosis",
+          "reopen",
+          "again"
+        ],
+        [
+          "diagnosis tab",
+          "diagnosis` tab",
+          "on the diagnosis",
+          "on `diagnosis`",
+          "diagnosis is active",
+          "diagnosis is selected",
+          "diagnosis is the active",
+          "diagnosis` is selected",
+          "diagnosis` is active",
+          "opens on diagnosis",
+          "diagnosis` tab is",
+          "diagnosis tab is"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 1.5: failure shows Diagnosis and Optimization Setting tabs with the blocks under Diagnosis; the panel opening on Diagnosis is implied."
+}

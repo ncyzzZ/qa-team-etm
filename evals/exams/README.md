@@ -169,6 +169,26 @@ First run with the reloaded agent file: each reviewer wrote all five tables in o
 
 Drafts and bug-checks: `_story-<KEY>/runs/2026-11-25-*`. qa-check could not read the exam folder (it wants a card key). It was not run.
 
+### Sixth set (2026-11-25): the two rules made from the fifth set
+
+Rules added after the fifth set (commits c7a5e5c, 1ddc3ee): "a value shown on more than one screen is checked on every screen" (Effects and their reverse, bug-check check 5) and "strange input in every free-text field" (Grid and input habits, check 4). Measured on three Stories no exam had used: ETM-6538 (Export Gantt Table into Excel; defects found by the user while running her own Tests, not designed in this repo), ETM-6373 (Optimization Feedback panel, Dechathon), ETM-6843 (Import Work and Work Breakdown, user). Story text frozen before each Story's first defect. No module doc names these defects; nothing withheld. Bug-check agents were told to re-read the Bug-check section of `test-reviewer.md` from disk (it changed in this session). Dropped: ETM-6864 (Story says POB center-aligned and blank, the defect wants right-aligned and "-"), ETM-6881 (template file not available), ETM-6857 / 6858 (Gantt screen, other Story), ETM-7379 (Story gives the "not exist" message the defect rejects), ETM-7477 (Story says FL / Equipment Number are ignored on import), ETM-7369 (expected message not defined), ETM-7260 / 7262 (Figma look), ETM-7580 (long chain, kept for later).
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-6888 | yes | CAUGHT (TC-023) | CAUGHT | full names as a table of expected values; step 2 "They equal the table". First scored MISSED (signature wanted the name in the step line); second form added, test added. |
+| ETM-6889 | partly (format; value = screen implied) | CAUGHT (TC-023) | CAUGHT | precondition date `02 Jan 2025, 15:30`, BO equals it in the table. First scored CAUGHT by 5 cases: "bo" inside "both" / "bold" and "same rows"; signature tightened (word boundary, a real date-time needed), tests added. |
+| ETM-6890 | yes | MISSED | MISSED | Hot Bed is read only on an empty row ("blank, not `No`"); no case exports a set Hot Bed and reads column L. |
+| ETM-6871 | no (screen order) | MISSED | MISSED | TC-024 expects `Dayshift, Nightshift` (already ascending); no case compares the order with the screen. Bug-check row 111 "Gantt and file show the same value" listed screens but not this column. |
+| ETM-6907 | partly | MISSED | MISSED | "Rows with SIMOP Allow, Restriction, Prohibit exist": the data is assumed, never built from the matrix. |
+| ETM-7300 | yes | MISSED | MISSED | fix round TC-008 step 6 checks the reverse: setting changed after the run, panel keeps the sent one. Changed before the run is not tested. |
+| ETM-7316 | partly | MISSED | **CAUGHT (TC-008 step 8)** | bug-check check 5: "Summary Schedule/Event dates vs Gantt and Event Details, no day shift". The new rule. |
+| ETM-7328 | partly | CAUGHT (TC-009) | CAUGHT | |
+| ETM-7565 | partly | MISSED | MISSED | first scored CAUGHT by fix-round TC-004 step 7: a failed run saved and reloaded expects the old dates, which passes on the bug. Signature narrowed, test added. Reload after a successful run + Save has no case. |
+| ETM-7450 | partly | MISSED | MISSED | TC-037 loops the message matrix: "shows the message", never "only this message". |
+| ETM-7456 | partly | MISSED | MISSED | same as ETM-7450. |
+
+3/11 -> 4/11 (rule in Story: 2/3 -> 2/3). Bug-check opened 40 / 44 / 26 rows; the fix rounds added 12 / 9 / 19 cases (38->50, 31->40, 65->84). One new catch, by the new "every screen" rule through check 5 (ETM-7316). The strange-input rule was used by every designer without being asked (ETM-6538 TC-032, ETM-6373 TC-030, ETM-6843 TC-076), but no defect of this set is that kind, so it is not measured here. Misses left: an enum column read only when empty (ETM-6890), screen order of a list (ETM-6871), test data assumed instead of built through the real rule (ETM-6907), the one direction of "change then check" not tested (ETM-7300, ETM-7565), and "only this message" for one cell (ETM-7450/7456). Candidate rules, not added: "every enum column of an export is read with each of its values, not only empty"; "a message check also says no other message is shown for that cell". Measure on another set first.
+
 ### Totals (fresh designer + bug-check + one fix round)
 
 | Set | Draft | After bug-check |
@@ -178,4 +198,5 @@ Drafts and bug-checks: `_story-<KEY>/runs/2026-11-25-*`. qa-check could not read
 | ETM-7902/7314 (never used for a rule) | 5/7 | 6/7 |
 | ETM-7899/7350/7315 (never used for a rule) | 5/9 | 5/9; 8/9 with check 5 (made from this set) |
 | ETM-7900/7349/7351/7310 (never used for a rule, 5 checks in one call) | 5/8 | 5/8 |
-| All unseen sets (3rd, 4th first run, 5th) | 15/24 | 16/24 |
+| ETM-6538/6373/6843 (never used for a rule; with the two rules from the 5th set) | 3/11 | 4/11 |
+| All unseen sets (3rd, 4th first run, 5th, 6th) | 18/35 | 20/35 |

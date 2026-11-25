@@ -1,0 +1,82 @@
+{
+  "defect": "ETM-6888",
+  "story": "ETM-6538",
+  "in_story": true,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Export Excel column BN (Constraint Type) shows short codes (SNET, MSO, ...) instead of the full names.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6538",
+  "run": "STORY-ETM-6538",
+  "frozen": "evals/exams/_story-ETM-6538/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "any": [
+      {
+        "block": [
+          [
+            "export",
+            "excel"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "constraint type",
+              "re:\\bbn\\b"
+            ],
+            [
+              "start no earlier than",
+              "start no later than",
+              "finish no earlier than",
+              "finish no later than",
+              "must start on",
+              "must finish on"
+            ],
+            [
+              "re:\\bbn\\b",
+              "file",
+              "excel",
+              "sheet",
+              "export",
+              "downloaded",
+              "workbook"
+            ],
+            [
+              "!",
+              "snet",
+              "mso",
+              "short code"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "export",
+            "excel"
+          ],
+          [
+            "re:\\|\\s*`(start no|finish no|must (start|finish) on)[^`|]*`\\s*\\|"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "re:\\bbn\\b"
+            ],
+            [
+              "equal",
+              "table",
+              "match",
+              "shows"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null,
+  "note": "AC 5.7 + field spec: exact full names. A step that only sets the type on screen does not count: the step must read the file. Second form: expected values as a table of backticked full names, read by a BN step (ETM-6538 first draft TC-023)."
+}

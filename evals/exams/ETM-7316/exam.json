@@ -1,0 +1,45 @@
+{
+  "defect": "ETM-7316",
+  "story": "ETM-6373",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Optimization Result Summary: Schedule Start / End are 7 hours ahead of the Gantt (and Duration shows seconds).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6373",
+  "run": "STORY-ETM-6373",
+  "frozen": "evals/exams/_story-ETM-6373/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "summary",
+        "view detail"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "schedule start",
+          "schedule end",
+          "schedule date",
+          "schedule/event",
+          "schedule / event",
+          "start and end"
+        ],
+        [
+          "gantt",
+          "earliest",
+          "latest",
+          "first task",
+          "last task",
+          "same as",
+          "match",
+          "equal"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 1.3 lists Schedule/Event dates; that they equal the Gantt is implied (new rule). Only the dates half is used; the seconds format is not in the Story."
+}

@@ -1,0 +1,62 @@
+{
+  "defect": "ETM-7300",
+  "story": "ETM-6373",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Optimize does not send the new Hard Constraint setting: View Detail > Optimization Setting shows the old setting after the run.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6373",
+  "run": "STORY-ETM-6373",
+  "frozen": "evals/exams/_story-ETM-6373/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "setting"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "change",
+          "uncheck",
+          "tick",
+          "untick",
+          "check `",
+          "check ",
+          "switch",
+          "set ",
+          "select"
+        ],
+        [
+          "hard constraint",
+          "fix maximum duration",
+          "fix resource capacity",
+          "weight",
+          "soft constraint"
+        ]
+      ],
+      [
+        [
+          "view detail",
+          "optimization setting",
+          "panel"
+        ],
+        [
+          "new",
+          "changed",
+          "updated",
+          "confirmed",
+          "set in step",
+          "from step",
+          "just",
+          "sent",
+          "not the old"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 1.3: the panel displays the sent settings. Caught when a case changes a setting, runs, and checks the panel shows the changed one."
+}

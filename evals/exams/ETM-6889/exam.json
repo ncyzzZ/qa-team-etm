@@ -1,0 +1,66 @@
+{
+  "defect": "ETM-6889",
+  "story": "ETM-6538",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Export Excel column BO (Constraint Date) is 7 hours earlier than the date set on screen (UTC instead of local time).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6538",
+  "run": "STORY-ETM-6538",
+  "frozen": "evals/exams/_story-ETM-6538/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "excel"
+      ],
+      [
+        "re:\\d{1,2} [a-z]{3} \\d{4}, \\d{2}:\\d{2}",
+        "as set",
+        "on screen",
+        "as entered",
+        "set in step",
+        "timezone",
+        "utc"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "constraint date",
+          "re:\\bbo\\b"
+        ],
+        [
+          "re:\\bbo\\b",
+          "file",
+          "excel",
+          "sheet",
+          "export",
+          "downloaded",
+          "workbook"
+        ],
+        [
+          "same date",
+          "same as",
+          "same value",
+          "same time",
+          "match",
+          "equal",
+          "as set",
+          "as entered",
+          "set in step",
+          "on screen",
+          "identical",
+          "timezone",
+          "utc",
+          "hours",
+          "re:\\d{1,2} [a-z]{3} \\d{4}, \\d{2}:\\d{2}"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story gives the format only; the value equal to the screen is implied (new rule: a value shown on several screens). Format-only steps (dd Mmm yyyy, hh:mm) do not count. The case must name a real date-time or compare with the screen (TC-023 of the first draft: precondition date 02 Jan 2025, 15:30, BO equals it in the table)."
+}

@@ -1,0 +1,43 @@
+{
+  "defect": "ETM-6871",
+  "story": "ETM-6538",
+  "in_story": false,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Export Excel column BQ (Working Calendar) lists Resource Calendar shift names in a different order from the screen (screen sorts ascending).",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6538",
+  "run": "STORY-ETM-6538",
+  "frozen": "evals/exams/_story-ETM-6538/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export",
+        "excel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "working calendar",
+          "bq",
+          "shift"
+        ],
+        [
+          "order",
+          "sorted",
+          "ascending",
+          "alphabetical",
+          "same as the screen",
+          "as on screen",
+          "as shown on",
+          "same as shown",
+          "sequence"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: \"comma-separated Shift Names\", no order. The screen order is the expected one (new rule: a value shown on several screens)."
+}

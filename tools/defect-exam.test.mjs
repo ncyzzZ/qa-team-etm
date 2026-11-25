@@ -264,3 +264,47 @@ test('fifth set: signature fixes from the first drafts (read by hand)', () => {
   assert.deepEqual(ids('### TC-013 Verify a WBS parent row shows only when a child is active on D\nPrecondition: common; Work Header W1 has children active on D, Work Header W2 has children only on other days.\n1. Export Daily Plan with `Focus Timeframe`. -> The export finishes.\n2. Open the PDF for date D. -> W1 and its active children are listed.\n3. Look for W2. -> W2 is not listed and none of its children are.', 'ETM-8513'), ['TC-013']);
   assert.deepEqual(ids('### TC-013 x\nPrecondition: Work Header W2 has children only on other days.\n1. Export Daily Plan PDF. -> Done.\n2. Look for W2. -> W2 is listed with its children.', 'ETM-8513'), []);
 });
+
+const set6 = {
+  'ETM-6888': ['### TC-1 Constraint Type names\n1. Set Constraint Type `Must start on` on WB row 3 and Save. -> Saved.\n2. Export Excel and read column BN of row 3. -> BN shows `Must start on` (full name).',
+               '### TC-1 Constraint Type default\n1. Export Excel and read column BN of a row with no constraint. -> BN shows `None`.'],
+  'ETM-6889': ['### TC-1 Constraint Date value\n1. Set Constraint Date 21 May 2026, 06:00 on WB row 3 and Save. -> Saved.\n2. Export Excel and read column BO of row 3. -> BO shows `21 May 2026, 06:00`, the same as set on screen.',
+               '### TC-1 Constraint Date format\n1. Export Excel and read column BO of a row with a constraint. -> BO uses the format dd Mmm yyyy, hh:mm.'],
+  'ETM-6890': ['### TC-1 Hot Bed\n1. Export Excel and read column L of Work row 3 (Hot Bed off). -> Column L shows `No`.',
+               '### TC-1 Hot Bed\n1. Export Excel and read column L of Work row 3. -> Column L is filled.'],
+  'ETM-6871': ['### TC-1 Shift names\n1. Export Excel and read column BQ of a WB row with two shifts. -> BQ lists the shift names in the same order as shown on screen, comma separated.',
+               '### TC-1 Shift names\n1. Export Excel and read column BQ of a WB row with two shifts. -> BQ lists both shift names, comma separated.'],
+  'ETM-6907': ['### TC-1 SIMOP Prohibit\n1. Give WB 7 and WB 10 the same time, the same Working Location and Work Conflicted pair marked P in the matrix; Save. -> Saved.\n2. Export Excel and read column R of WB 7. -> R shows `Prohibit` in red, as the matrix conflict gives.',
+               '### TC-1 SIMOP colour\n1. Set SIMOP of WB 7 to Prohibit with Override Conflict and Save. -> Saved.\n2. Export Excel and read column R of WB 7. -> R shows `Prohibit` in red; work conflicted override kept.'],
+  'ETM-7300': ['### TC-1 Sent setting\n1. Open Optimization Setting and uncheck `Fix Maximum Duration`, check `Fix Resource Capacity`. -> Changed.\n2. Run Optimize, then click `View Detail`. -> Optimization Setting shows the changed Hard Constraint (Fix Resource Capacity on).',
+               '### TC-1 Setting shown\n1. Run Optimize, then click `View Detail`. -> Optimization Setting section is shown.'],
+  'ETM-7316': ['### TC-1 Summary dates\n1. Run Optimize, click `View Detail`. -> Summary opens.\n2. Read Schedule Start and Schedule End. -> They equal the earliest task start and the latest task finish on the Gantt.',
+               '### TC-1 Summary dates\n1. Run Optimize, click `View Detail`. -> Summary shows Duration, Gap, Schedule Start and Schedule End.'],
+  'ETM-7328': ['### TC-1 Default tab\n1. Click `View Diagnosis`, then the `Optimization Setting` tab. -> Settings shown.\n2. Click Back, then `View Diagnosis` again. -> The panel opens on the Diagnosis tab.',
+               '### TC-1 Default tab\n1. Click `View Diagnosis`. -> The panel opens on the Diagnosis tab.'],
+  'ETM-7565': ['### TC-1 Saved result\n1. Run Optimize, then click Save and confirm. -> Saved.\n2. Refresh the page. -> The optimized Start / End dates are still shown.',
+               '### TC-1 Unsaved result\n1. Run Optimize, then click Save. -> Saved.\n2. Run Optimize again and refresh without saving. -> The unsaved result is gone.'],
+  'ETM-7450': ['### TC-1 Blank mandatory\n1. Import a file with Action C5 left blank. -> Invalid Detail lists only "This field is mandatory." for C5 (one error).',
+               '### TC-1 Blank mandatory\n1. Import a file with Action C5 left blank. -> Invalid Detail shows "This field is mandatory." for C5.'],
+  'ETM-7456': ['### TC-1 Text in Duration\n1. Import a file with `abc` in Duration W6. -> Only the input format error is listed for W6.',
+               '### TC-1 Text in Duration\n1. Import a file with `abc` in Duration W6. -> The input format error is listed for W6.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set6)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('sixth set: signature fixes from the first drafts (read by hand)', () => {
+  // ETM-6538 first draft TC-023: expected values in a table, the step says "They equal the table"
+  const tc023 = '### TC-023 Constraint values\nPrecondition: the `Must start on` row has the date `02 Jan 2025, 15:30`.\n1. Click `Export` and open the sheet. -> The sheet opens.\n2. Read columns BN and BO of each row. -> They equal the table.\n\n| Constraint Type in the app | BN | BO |\n|---|---|---|\n| Must start on | `Must start on` | `02 Jan 2025, 15:30` |';
+  assert.deepEqual(ids(tc023, 'ETM-6888'), ['TC-023']);
+  assert.deepEqual(ids(tc023, 'ETM-6889'), ['TC-023']);
+  // format-only table, and "bo" inside other words ("both", "bold"), do not count
+  assert.deepEqual(ids('### TC-1 x\n1. Export Excel. -> Opens.\n2. Read BO of each row. -> They equal the table.\n\n| Must start on | `dd Mmm yyyy, hh:mm` |', 'ETM-6889'), []);
+  assert.deepEqual(ids('### TC-1 x\n1. Export with filter and search both off. -> Row count equals the saved count (same file content).', 'ETM-6889'), []);
+});
+test('sixth set: a failed run saved and reloaded is not ETM-7565', () => {
+  // ETM-6373 fix-round TC-004 step 7: expects the dates from before the run, which is what the bug shows
+  assert.deepEqual(ids('### TC-004 Failed run\n6. Click `Save`. -> Saved.\n7. Reload the page. -> The plan shows the same task dates and times as before the run, with no day shift.', 'ETM-7565'), []);
+});

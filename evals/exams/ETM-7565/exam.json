@@ -1,0 +1,70 @@
+{
+  "defect": "ETM-7565",
+  "story": "ETM-6373",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "After Optimize and Save, a refresh or reopening the page shows the schedule from before the Optimize run.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6373",
+  "run": "STORY-ETM-6373",
+  "frozen": "evals/exams/_story-ETM-6373/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "save"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "refresh",
+          "reload",
+          "f5",
+          "reopen",
+          "open the page again",
+          "open the plan again",
+          "open again",
+          "come back",
+          "navigate back"
+        ],
+        [
+          "optimiz",
+          "result",
+          "schedule",
+          "start / end",
+          "start/end",
+          "dates",
+          "view detail",
+          "toolbar"
+        ],
+        [
+          "still",
+          "kept",
+          "same",
+          "remains",
+          "unchanged",
+          "persist"
+        ],
+        [
+          "!",
+          "not saved",
+          "without sav",
+          "unsaved",
+          "discard",
+          "gone",
+          "lost",
+          "no longer",
+          "disappear",
+          "before the run",
+          "from before",
+          "pre-run",
+          "as before"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 1.1.2: the toolbar stays until a new run; Save exists. The saved result surviving a reload is implied. A failed run saved then reloaded (dates as before the run) is not this bug: the bug needs a successful run whose result is saved (ETM-6373 fix-round TC-004 step 7, read by hand)."
+}
