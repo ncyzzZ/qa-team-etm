@@ -13,7 +13,9 @@
   "catch": {
     "block": [
       [
-        "filter"
+        "filter",
+        "panel",
+        "select all"
       ]
     ],
     "steps": [

@@ -25,3 +25,10 @@ On QA, the Job Owner test account opens the Daily Report of the Active Plan "QA 
 - Must a Job Owner be added to the Event (organization / member) or be the Job Owner of a work in the Plan before they can see its Active Daily Report?
 - If yes, how is that done on the screen, so QA can set it up?
 - If no, the Job Owner should see the table, and this is a defect.
+
+## Q6 (25 Nov 2026). What decides which Active Plans a Job Owner can open? (ANSWERED 25 Nov: the Daily Report row of the Plan must be Active too; see ba-answers.md)
+Your answer to Q5: "the Plan must be Active, then the Job Owner sees it". On QA the Job Owner test account opens the Daily Report of only 2 of 8 Active Plans we tried: "ART PSD" (FREEZE) and "PLCPP2 FSD (QA)" (OPTIMIZATION). It gets "Access Denied" on the other 6, among them "QA ETM-7343 Colors" (Event "QA ETM-7343", the only Active Plan of that Event). The TA Manager opens all of them.
+In the database the Job Owner is not a member of any Event organization and is not the Job Owner of any work in any of these Plans, and the Event status, asset and platform do not separate the two groups.
+- Besides the Plan being Active, what must be true for a Job Owner to open a Plan's Daily Report (access granted per Event or asset somewhere else, a role on the Event, something else)?
+- How does QA set that up on the screen for the Event "QA ETM-7343"?
+- If nothing else is needed, the Access Denied on the other 6 is a defect and we will log it.

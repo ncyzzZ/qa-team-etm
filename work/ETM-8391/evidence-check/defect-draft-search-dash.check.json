@@ -1,0 +1,35 @@
+{
+  "id": "defect-draft-search-dash",
+  "sourceHash": "4ca89179efb4",
+  "overall": "not-proven",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Full-screen Worklist 'QA-AUTO ETM-8391 set 20261125-1458' (Initial), Total Results 21. Remark filter is open with an empty Search box. The option list shows Select All, '-', '-', 'Test', '-', '- a', all ticked; nothing else is visible (no scrollbar shown, so 'Note 1', '--' and the rest are either scrolled away or cut). A caption says 'ETM-8656 - Step 3: Clear the search box'. In the grid, Remark of W11 = '-', W12 = empty cell, W13 = '-', W14 = '--', W15 = '- a', W21 = '-', W22 = '-'.",
+      "verdict": "cannot-tell",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Same Worklist, full viewport, Total Results 21. Remark filter open with '-' typed in Search. Listed: Select All, '-', '-', '- a', '--', all ticked. Four options under Select All; no option is labelled Blank, and the two '-' options look the same.",
+      "verdict": "cannot-tell",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "Xray ETM-8656 step 14 (work/ETM-8391/xray-steps-before.json): options '-', '--', '- a', '- ' and ' - ' are listed",
+    "Xray ETM-8656 step 15: ticking only '-' shows W11, W12 and W13"
+  ],
+  "uiReachable": "no",
+  "problems": [
+    "Pic 2 shows 4 options where step 14 expects 5; which one is missing (Blank, '- ' or ' - ') cannot be seen: all three render as '-'.",
+    "Draft's claim 'the Blank option is not listed' is not proven: two '-' options are listed after the search.",
+    "W21 '- ' and W22 ' - ' have leading/trailing spaces; team rule treats these as not UI-reachable unless BA confirms the screen keeps them.",
+    "W12 Remark shows an empty cell while W11 (said to be empty) shows '-': W12 may hold a spaces-only value; data list in the brief omits W12.",
+    "Expected comes only from QA's own Xray step; BA Q2 (is '- ', ' - ' Blank?) has no recorded answer in ba-answers.md.",
+    "BA rule recorded is only 'search behaves like the other columns'; no picture shows a reference column searching '-' against a Blank option.",
+    "Pic 1 is captioned ETM-8656 step 3, not the defect step 2, and its option list is cut, so 'Blank first' is not shown.",
+    "Possible second explanation: options with the same trimmed text are merged, not the Blank dropped. Re-prove with only empty and '-' data."
+  ],
+  "summary": "ยังพิสูจน์ไม่ได้: หลังพิมพ์ '-' รูปแสดง 4 ตัวเลือก ('-', '-', '- a', '--') จากที่ Xray คาด 5 ตัว แต่ดูไม่ออกว่าตัวที่หายคือ Blank หรือค่า '- '/' - ' (ซึ่งมีช่องว่างหน้า/หลัง อาจกรอกจากหน้าจอไม่ได้) ควรพิสูจน์ใหม่ด้วยข้อมูลแค่ Remark ว่างกับ '-'"
+}

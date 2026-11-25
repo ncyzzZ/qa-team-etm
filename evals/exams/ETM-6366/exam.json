@@ -24,7 +24,8 @@
               "reservation"
             ],
             [
-              "collaps"
+              "collaps",
+              "chevron"
             ],
             [
               "dlog status"
@@ -44,7 +45,8 @@
         "steps": [
           [
             [
-              "collaps"
+              "collaps",
+              "chevron"
             ],
             [
               "each group",

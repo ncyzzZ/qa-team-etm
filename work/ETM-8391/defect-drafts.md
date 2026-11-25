@@ -146,6 +146,22 @@ Xray: no Test step covers this flow. Link to ETM-8662 (reload with Blank) as the
 
 ---
 
+## Defect 5 - Searching "-" in the Remark filter does not list the Blank option "-"
+
+Found: Playwright ETM-8656 step 14 (runs 2026-11-25 14:00 and 14:55), confirmed by hand on the live page 25 Nov; the user agreed it is wrong (chat 25 Nov).
+Data (made through the UI, reachable): a worklist with works whose Remark is empty (W11), `-` (W13), `--` (W14), `- a` (W15), `- ` (W21), ` - ` (W22).
+
+Steps:
+1. Open the Worklist, open the filter on the Remark column.
+2. The list shows the Blank option `-` first (empty Remarks).
+3. Type `-` in the Search box of the filter.
+
+Expected: the options that contain `-` are listed, including the Blank option `-` (TC ETM-8656 step 14: `-`, `--`, `- a`, `- `, ` - `).
+Actual: only `--`, `- a`, `- `, ` - ` are listed; the Blank option `-` is missing, so it cannot be found or ticked through the search (step 15 "tick only -" cannot be done this way).
+Likely cause (for the dev brief): the search matches the stored value (empty) instead of the shown label `-`.
+Evidence: output/runs/2026-11-25_145518_ETM-8391 (ETM-8656 step 14 picture).
+Status: draft, not logged. Logging needs the user's yes.
+
 ## Not drafted (still unclear, may be script)
 
 - ETM-8658: W06 above W05 after sorting the Remark column. This may follow from Defect 1 (`Note 2` vs `Note 1` order). Decide after Defect 1.

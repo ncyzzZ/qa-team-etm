@@ -46,3 +46,6 @@ Card: ETM-7343 Daily Report, Actual (%) font color from Plan (%). Story status o
 ## 25 Nov: Xray push
 - Pushed PASSED with evidence: 8681, 8697, 8698, 8699, 8700, 8725. ETM-8703 now 14 PASSED, 4 TO DO (8678 BA Q5; 8687/8691/8724 data not reachable from UI).
 - ETM-8700 steps 2-3 reworded (one whole date, no mix; > again only if on first date). Old text: xray-backup-8700-steps-before-fix.json.
+
+## 25 Nov: 8678 solved
+- Cause: the Daily Report row switch of the Plan was Inactive (JO needs Plan Active + Daily Report row Active). Setup spec has a new step that turns it Active via the UI. 8678 PASSED as JO. Xray 8678 still TO DO: push waits for the user.

@@ -14,7 +14,10 @@
     "block": [
       [
         "resource",
-        "category"
+        "category",
+        "personnel",
+        "placeholder",
+        "worker"
       ]
     ],
     "steps": [
