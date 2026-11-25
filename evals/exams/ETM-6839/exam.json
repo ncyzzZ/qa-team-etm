@@ -1,0 +1,50 @@
+{
+  "defect": "ETM-6839",
+  "story": "ETM-6396",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Manpower Mob Plan: Export stays enabled while the table has unsaved changes.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-6396",
+  "run": "STORY-ETM-6396",
+  "frozen": "evals/exams/_story-ETM-6396/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "unsaved",
+          "not saved",
+          "without saving",
+          "before saving",
+          "pending",
+          "save is enabled",
+          "until the change is saved",
+          "until saved",
+          "until it is saved",
+          "do not save",
+          "changes are saved",
+          "after saving"
+        ],
+        [
+          "export"
+        ],
+        [
+          "disabled",
+          "greyed",
+          "grayed",
+          "not clickable",
+          "cannot be clicked"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: only persisted data is exported. That Export is disabled while there are unsaved changes is implied (dirty-state rule)."
+}

@@ -1,0 +1,53 @@
+{
+  "defect": "ETM-6211",
+  "story": "ETM-5838",
+  "in_story": false,
+  "found_by": "another tester (Nuchanart), the team never designed this Story in this repo",
+  "bug": "Edit Route: Save is enabled as soon as the panel opens, before any change.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5838",
+  "run": "STORY-ETM-5838",
+  "frozen": "evals/exams/_story-ETM-5838/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "edit route",
+        "existing route"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "open",
+          "opens",
+          "without chang",
+          "no change",
+          "nothing changed",
+          "before any"
+        ],
+        [
+          "save"
+        ],
+        [
+          "disabled",
+          "not enabled",
+          "greyed",
+          "grayed"
+        ],
+        [
+          "!",
+          "blank",
+          "empty",
+          "written down",
+          "record",
+          "required field",
+          "a user expects"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story silent on Save state; the rule \"Save disabled until a change\" (added after the eighth set) covers it."
+}

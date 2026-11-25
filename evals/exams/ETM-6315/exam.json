@@ -1,0 +1,40 @@
+{
+  "defect": "ETM-6315",
+  "story": "ETM-5836",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Add Personnel: the new row has Hot Bed (and Accommodation, D/N Shift) empty instead of the default Hot Bed `No`. Only the Hot Bed half is used: the other defaults are not in the Story.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5836",
+  "run": "STORY-ETM-5836",
+  "frozen": "evals/exams/_story-ETM-5836/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "add personnel",
+        "new row",
+        "new personnel"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "hot bed"
+        ],
+        [
+          "`no`",
+          "\"no\"",
+          "'no'",
+          "defaults to no",
+          "default no",
+          "is no",
+          "= no"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: Hot Bed defaults to No."
+}

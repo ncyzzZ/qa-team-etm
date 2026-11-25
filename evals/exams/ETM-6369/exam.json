@@ -1,0 +1,48 @@
+{
+  "defect": "ETM-6369",
+  "story": "ETM-5836",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "After a personnel row is edited and saved it moves to the bottom of its Resource group instead of keeping the order rows were added in.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5836",
+  "run": "STORY-ETM-5836",
+  "frozen": "evals/exams/_story-ETM-5836/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "edit",
+        "change"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "order",
+          "position",
+          "place"
+        ],
+        [
+          "same",
+          "kept",
+          "unchanged",
+          "stays",
+          "still",
+          "original",
+          "not moved",
+          "keeps"
+        ],
+        [
+          "row",
+          "personnel",
+          "person",
+          "worker"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Not in the Story; a list keeps its order after an edit (rule: the same rows in the same order)."
+}

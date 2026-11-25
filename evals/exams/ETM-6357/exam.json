@@ -1,0 +1,49 @@
+{
+  "defect": "ETM-6357",
+  "story": "ETM-5836",
+  "in_story": false,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Mob / Demob Date calendars open on the current month instead of the month shown in the timeline.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5836",
+  "run": "STORY-ETM-5836",
+  "frozen": "evals/exams/_story-ETM-5836/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "mob date",
+        "demob date"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "calendar",
+          "picker",
+          "date picker"
+        ],
+        [
+          "opens on",
+          "opens at",
+          "opens in",
+          "month of",
+          "month shown",
+          "timeline month",
+          "plan month",
+          "month that",
+          "month where",
+          "starts on"
+        ],
+        [
+          "!",
+          "current month",
+          "this month"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Not in the Story; grid habit \"date pickers open on the month that matters\"."
+}

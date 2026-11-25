@@ -406,3 +406,28 @@ for (const [d, [hitTxt, nearTxt]] of Object.entries(set8)) {
 test('eighth set: Save state only written down is not ETM-6886', () => {
   assert.deepEqual(ids('### TC-027 Undo\n1. Open Edit for "Graph A" and change nothing. -> Save state is written down (question 3: a user expects Save disabled because there is nothing to save).', 'ETM-6886'), []);
 });
+
+const set9 = {
+  'ETM-6211': ['### TC-1 Edit Route opens clean\n1. Click an existing route to open Edit Route without changing anything. -> `Save` is disabled.',
+               '### TC-1 Edit Route required\n1. Open Edit Route and clear Day so the required field is empty. -> `Save` is disabled.'],
+  'ETM-6469': ['### TC-1 Origin options\n1. Open Add Route and open Origin. -> Only three options: Accommodation, the event field (ERA) and SKL; no other field.',
+               '### TC-1 Origin sort\n1. Open Add Route and open Origin. -> The options are sorted A to Z.'],
+  'ETM-6839': ['### TC-1 Export with unsaved edits\n1. Change a Mob Date and do not save. -> Save is enabled.\n2. Look at Export. -> Export is disabled until the change is saved.',
+               '### TC-1 Export saved data only\n1. Change a Mob Date and do not save. -> Save is enabled.\n2. Click Export and open the file. -> The file holds the saved Mob Date.'],
+  'ETM-6315': ['### TC-1 Defaults\n1. Click Add Personnel on DRT. -> A new row is added.\n2. Read Hot Bed of the new row. -> Hot Bed is `No`.',
+               '### TC-1 Defaults\n1. Click Add Personnel on DRT. -> A new row is added with empty Name.'],
+  'ETM-6369': ['### TC-1 Order after edit\n1. Edit the Route No. of the second personnel row and Save. -> Saved.\n2. Read the rows of the group. -> The edited row stays in its original position.',
+               '### TC-1 Edit saved\n1. Edit the Route No. of the second personnel row and Save. -> The new Route No. is shown.'],
+  'ETM-6359': ['### TC-1 Clear optional\n1. Clear the Mob Date of a saved row and Save. -> Mob Date stays empty after Save.',
+               '### TC-1 Clear mandatory\n1. Clear the Mob Date and Name of a row and Save. -> Name is red; it cannot be saved.'],
+  'ETM-6357': ['### TC-1 Calendar month\n1. Open the Mob Date calendar on a row. -> The calendar opens on the month shown in the timeline.',
+               '### TC-1 Calendar\n1. Open the Mob Date calendar on a row. -> The calendar opens on the current month.'],
+  'ETM-6354': ['### TC-1 Onboard needs transportation\n1. Leave Transportation empty and enter a Mob Date. -> Onboard Date stays empty.',
+               '### TC-1 Onboard\n1. Select Transportation Helicopter and enter a Mob Date. -> Onboard Date is filled.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set9)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}

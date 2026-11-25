@@ -1,0 +1,54 @@
+{
+  "defect": "ETM-6359",
+  "story": "ETM-5836",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Transportation, Mob Date and Demob Date (not mandatory) cannot be cleared: the old value comes back.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5836",
+  "run": "STORY-ETM-5836",
+  "frozen": "evals/exams/_story-ETM-5836/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "save",
+        "clear"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "clear",
+          "delete the value",
+          "remove the value",
+          "backspace",
+          "empty it"
+        ],
+        [
+          "mob date",
+          "demob date",
+          "transportation"
+        ],
+        [
+          "empty",
+          "blank",
+          "cleared",
+          "no value",
+          "accepted",
+          "saved"
+        ],
+        [
+          "!",
+          "mandatory",
+          "cannot be saved",
+          "red",
+          "required"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: only Name, Accommodation, D/N Shift and Hot Bed are mandatory; the others can be left empty."
+}

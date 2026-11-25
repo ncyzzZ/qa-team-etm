@@ -1,0 +1,49 @@
+{
+  "defect": "ETM-6469",
+  "story": "ETM-5838",
+  "in_story": "partly",
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Origin / Destination dropdowns list every field (FUN, SAT, PLA ...) instead of only Accommodation, the event's field and SKL.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5838",
+  "run": "STORY-ETM-5838",
+  "frozen": "evals/exams/_story-ETM-5838/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "origin",
+        "destination"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "origin",
+          "destination"
+        ],
+        [
+          "only",
+          "exactly",
+          "three",
+          "3 options",
+          "no other",
+          "not list",
+          "not shown",
+          "just"
+        ],
+        [
+          "accommodation",
+          "skl",
+          "field of asset",
+          "field of the event",
+          "event's field",
+          "event field"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: list [Accommodation, [Field of Asset] (from the active Shutdown Event), SKL]. That other fields are not offered is implied."
+}

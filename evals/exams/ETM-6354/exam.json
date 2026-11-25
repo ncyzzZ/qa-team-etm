@@ -1,0 +1,43 @@
+{
+  "defect": "ETM-6354",
+  "story": "ETM-5836",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story in this repo",
+  "bug": "Onboard Date is filled as soon as Mob Date is entered, while Transportation is still empty.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-5836",
+  "run": "STORY-ETM-5836",
+  "frozen": "evals/exams/_story-ETM-5836/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "transportation"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "onboard date"
+        ],
+        [
+          "empty",
+          "blank",
+          "not shown",
+          "not filled",
+          "stays empty",
+          "no value",
+          "not calculated",
+          "not displayed"
+        ],
+        [
+          "mob date",
+          "transportation"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: Onboard Date derived from Mob Transportation and Mob Date."
+}
