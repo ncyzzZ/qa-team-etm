@@ -1,0 +1,62 @@
+{
+  "defect": "ETM-7860",
+  "story": "ETM-7310",
+  "in_story": "partly",
+  "found_by": "another tester (Nuchanart), the team never designed this Story",
+  "bug": "WIN# No. (CCU No.) strips special characters (CCU@12 # -> CCU12) instead of keeping them.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7310",
+  "run": "STORY-ETM-7310",
+  "frozen": "evals/exams/_story-ETM-7310/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "win#",
+        "win #",
+        "ccu"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "win",
+          "ccu"
+        ],
+        [
+          "@",
+          "&",
+          "%",
+          "$",
+          "*",
+          "special char",
+          "symbol"
+        ],
+        [
+          "kept",
+          "exactly",
+          "unchanged",
+          "accepted",
+          "as typed",
+          "as pasted",
+          "saved as",
+          "shows `",
+          "displays `",
+          "remains `",
+          "stays `"
+        ],
+        [
+          "!",
+          "removed",
+          "stripped",
+          "not allowed",
+          "blocked",
+          "rejected"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Story: WIN# free text, max 100. Special characters kept is implied by free text. \";\" and emoji blocked was a later rule (ETM-7933, not used: not in the Story)."
+}

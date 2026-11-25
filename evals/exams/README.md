@@ -149,3 +149,33 @@ Order: first draft again -> bug-check (agents still loaded the old 4-check file:
 | ETM-8456 (cross-check) | MISSED | **CAUGHT (TC-029 step 4)** | (not fixed, already 4/4) | found by check 1 ("only Enter used") in the rerun, not by check 5: run-to-run variance of the same check. Check 5 opened 9 more rows on ETM-7902. |
 
 Fourth set: 5/9 -> 8/9 with check 5 (leading: rule made from these misses). Cross-check ETM-7902: 4/4, but not because of check 5. Check 5 opened 6 / 6 / 9 rows and the fixes added 0 / 4 / - cases (mostly steps in existing cases). Next: measure the full 5-check bug-check in one call (new session, so the agent file is reloaded) on a set never used for a rule.
+
+### Fifth set, never used for a rule (2026-11-25): full 5-check bug-check in one call
+
+First run with the reloaded agent file: each reviewer wrote all five tables in one call. Stories: ETM-7900 (Shutdown Logic PDF timeframe, Dechathon), ETM-7349 (Timeline progress, Dechathon), ETM-7351 (Equipment Mob Plan paste) and ETM-7310 (Add Equipment), both found by the user by hand. None of the four was designed by the team. Story text frozen from the Jira changelog before the Story's first defect. `equipment-mob-plan.md` was withheld for ETM-7351 and ETM-7310, and `shutdown-timeline.md` for ETM-7349: they name these defects or hold later answers. Dropped: ETM-7910 (Deck 30 overrules the Story's 100), ETM-7933 (`;` and emoji blocked is a later rule, not in the Story), ETM-7859 (Cancelled), ETM-8499 (badge colour only). Only the Timeline-tab half of ETM-8403 is used: the Edit Plan text was decided again later.
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Which check found it / note (checked by reading) |
+|---|---|---|---|---|
+| ETM-8398 | yes | CAUGHT (TC-023) | CAUGHT | Export closes the drawer. Draft |
+| ETM-8513 | yes | CAUGHT (TC-013) | CAUGHT (+TC-042 from check 5) | First scored as TC-008 only (empty day, "no task rows"). The real catch is TC-013: the setup is in the Precondition, and step 3 says "W2 is not listed". Signature widened, test added. |
+| ETM-8370 | yes (enum + read-only on Edit Plan) | MISSED | MISSED | TC-005 only clicks Status on Edit Plan ("read-only"). The fix round's TC-048 step 5 compares with "the saved values" but never checks the text. Check 5 opened "Close back to Open" (TC-077), but only on the Timeline. No check asks whether a value shows the same text on every screen. |
+| ETM-8403 | yes (exact text) | CAUGHT (TC-037) | CAUGHT | Draft |
+| ETM-7951 | yes | CAUGHT (TC-020, TC-021) | CAUGHT | Draft |
+| ETM-7979 | yes | CAUGHT (TC-022) | CAUGHT | Draft |
+| ETM-7860 | partly (free text) | MISSED | MISSED | Strange input is tested only in Remark and Department (TC-011). WIN# gets only `CCU-0001`. Bug-check did not flag it either. |
+| ETM-7846 | no | MISSED | MISSED | Check 4 marked "list opens in last rows after scrolling" as covered (TC-020: last row, scroll down). No step opens a popup and then scrolls sideways. |
+
+5/8 -> 5/8 (rule in Story: 5/7). Bug-check opened 20 / 28 / 26 / 27 rows. The fix rounds added 9 / 16 / 13 / 12 cases (36->45, 62->78, 47->60, 31->43), none of them on a missed defect. Check 5 wrote rows on every Story (11 / 15 / 14 / 17) and produced real new cases (ETM-7900 TC-042 parent row back after the filter is cleared, ETM-7351 TC-059 untouched cells after Save). On this unseen set it caught nothing new: every missed defect was a display or input rule applied on one screen or field and not on the next. Pattern: the same value shown on two screens (Status text on Timeline vs Edit Plan), and the same input rule on each field (strange characters on the free-text field the Story names, not only on Remark). Candidate rule, not added: "every value shown on more than one screen is compared on each screen; strange input goes into every free-text field". Measure it on another set before adding it.
+
+Drafts and bug-checks: `_story-<KEY>/runs/2026-11-25-*`. qa-check could not read the exam folder (it wants a card key). It was not run.
+
+### Totals (fresh designer + bug-check + one fix round)
+
+| Set | Draft | After bug-check |
+|---|---|---|
+| Sprint 26 cards + ETM-7345/7348 (rules were made from these) | 4/8 | 8/8 (ETM-9229/8902 with a leading prompt) |
+| Equipment Mob Plan ETM-7311/7306 | 3/12 | 4/12 |
+| ETM-7902/7314 (never used for a rule) | 5/7 | 6/7 |
+| ETM-7899/7350/7315 (never used for a rule) | 5/9 | 5/9; 8/9 with check 5 (made from this set) |
+| ETM-7900/7349/7351/7310 (never used for a rule, 5 checks in one call) | 5/8 | 5/8 |
+| All unseen sets (3rd, 4th first run, 5th) | 15/24 | 16/24 |

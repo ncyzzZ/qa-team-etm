@@ -1,0 +1,49 @@
+{
+  "defect": "ETM-8370",
+  "story": "ETM-7349",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Edit Shutdown Timeline Plan shows the read-only Status pills as OPEN / CLOSE (raw key) instead of Open / Close.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7349",
+  "run": "STORY-ETM-7349",
+  "frozen": "evals/exams/_story-ETM-7349/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "edit plan"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "status"
+        ],
+        [
+          "`open`",
+          "\"open\"",
+          "`close`",
+          "\"close\"",
+          "open/close",
+          "open / close",
+          "`open` /",
+          "shows open",
+          "shows close"
+        ],
+        [
+          "read-only",
+          "read only",
+          "disabled",
+          "not editable",
+          "cannot",
+          "no dropdown",
+          "edit plan"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 1.2 Status enum Open / Close; AC 1.4 read-only on the Edit Plan screen. Edit Plan screen belongs to ETM-7348; the pill text is checked here. Case-insensitive matching: a step that expects the `Open` / `Close` pill on Edit Plan counts."
+}

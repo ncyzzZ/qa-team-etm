@@ -1,0 +1,166 @@
+{
+  "defect": "ETM-8513",
+  "story": "ETM-7900",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Daily Plan PDF keeps WBS parent rows (Work Header / Platform) that have no child task active on that day; an empty day is not headers only.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7900",
+  "run": "STORY-ETM-7900",
+  "frozen": "evals/exams/_story-ETM-7900/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "any": [
+      {
+        "block": [
+          [
+            "daily"
+          ],
+          [
+            "pdf"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "no task",
+              "no child",
+              "no active",
+              "none of its",
+              "no activity",
+              "not active",
+              "without any active",
+              "inactive on"
+            ]
+          ],
+          [
+            [
+              "parent",
+              "work header",
+              "wbs",
+              "platform"
+            ],
+            [
+              "hidden",
+              "not shown",
+              "not displayed",
+              "absent",
+              "not appear",
+              "omitted",
+              "not listed",
+              "not in the pdf",
+              "does not show",
+              "not included"
+            ],
+            [
+              "!",
+              "parent row is shown",
+              "parent row stays",
+              "parent row remains",
+              "parent row is still",
+              "parents stay",
+              "still shown"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "daily"
+          ],
+          [
+            "pdf"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "day"
+            ],
+            [
+              "no task",
+              "no tasks",
+              "no activity",
+              "nothing active",
+              "no active"
+            ]
+          ],
+          [
+            [
+              "headers only",
+              "header only",
+              "only the header",
+              "only headers",
+              "column headers only",
+              "no rows",
+              "no task rows",
+              "empty body"
+            ],
+            [
+              "!",
+              "parent row is shown",
+              "parent row stays",
+              "parent row remains",
+              "parent row is still",
+              "parents stay",
+              "still shown"
+            ]
+          ]
+        ]
+      },
+      {
+        "block": [
+          [
+            "daily"
+          ],
+          [
+            "pdf"
+          ],
+          [
+            "parent",
+            "work header",
+            "wbs"
+          ],
+          [
+            "only on other days",
+            "children only on",
+            "no child active",
+            "no active child",
+            "not active on",
+            "has no active",
+            "no task active",
+            "no task on"
+          ]
+        ],
+        "steps": [
+          [
+            [
+              "not listed",
+              "hidden",
+              "not shown",
+              "not displayed",
+              "absent",
+              "omitted",
+              "not included",
+              "does not appear",
+              "not appear"
+            ],
+            [
+              "!",
+              "parent row is shown",
+              "parent row stays",
+              "parent row remains",
+              "parent row is still",
+              "parents stay",
+              "still shown"
+            ]
+          ]
+        ]
+      }
+    ]
+  },
+  "baseline": null,
+  "note": "AC 3.2 WBS Parent Summary Row Visibility: parent shown iff at least one child is active on D. Third form (read by hand, TC-013 of the first draft): setup in the Precondition (a Work Header with children only on other days), step \"W2 is not listed\"."
+}

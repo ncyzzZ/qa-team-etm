@@ -1,0 +1,66 @@
+{
+  "defect": "ETM-7846",
+  "story": "ETM-7310",
+  "in_story": false,
+  "found_by": "another tester (Nuchanart), the team never designed this Story",
+  "bug": "An open dropdown or date picker popup stays at its screen position (floats over other columns) when the table is scrolled horizontally.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7310",
+  "run": "STORY-ETM-7310",
+  "frozen": "evals/exams/_story-ETM-7310/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "dropdown",
+        "date picker",
+        "popup",
+        "popover",
+        "calendar",
+        "list"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "scroll"
+        ],
+        [
+          "horizontal",
+          "left",
+          "right",
+          "sideways"
+        ]
+      ],
+      [
+        [
+          "popup",
+          "popover",
+          "list",
+          "calendar",
+          "picker",
+          "dropdown"
+        ],
+        [
+          "attached",
+          "follows",
+          "moves with",
+          "stays with",
+          "closes",
+          "stays next",
+          "anchored",
+          "with the cell",
+          "with its field",
+          "with the field",
+          "under its",
+          "below its",
+          "next to its",
+          "aligned with"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "Not in the Story; grid habit \"a list opens in every row, also after scrolling\" is near it. Expected: the popup follows its field or closes."
+}

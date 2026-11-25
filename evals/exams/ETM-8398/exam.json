@@ -1,0 +1,57 @@
+{
+  "defect": "ETM-8398",
+  "story": "ETM-7900",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Clicking Export in the Export Shutdown Logic drawer exports the file but the drawer stays open.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7900",
+  "run": "STORY-ETM-7900",
+  "frozen": "evals/exams/_story-ETM-7900/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "export"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "click `export`",
+          "click export",
+          "clicking `export`",
+          "clicking export",
+          "click the `export`",
+          "click the export",
+          "click `[ export ]`",
+          "click [ export ]",
+          "click `[export]`",
+          "press `export`"
+        ],
+        [
+          "drawer",
+          "panel"
+        ],
+        [
+          "close",
+          "dismiss",
+          "disappear",
+          "hidden",
+          "not visible",
+          "goes away"
+        ],
+        [
+          "!",
+          "stays open",
+          "remains open",
+          "still open",
+          "does not close"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 4.3 / 4.5: clicking Export dismisses the drawer at the process start. Cancel and the overlay closing it are not the bug."
+}

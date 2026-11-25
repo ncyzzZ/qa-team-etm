@@ -1,0 +1,37 @@
+{
+  "defect": "ETM-8403",
+  "story": "ETM-7349",
+  "in_story": true,
+  "found_by": "another tester (Dechathon), the team never designed this Story",
+  "bug": "Timeline tab: hover text on the red Total Progress Actual (%) cell (> 100.0) is \"The overall actual progress must not exceed 100%.\" instead of \"The overall progress must not exceed 100%.\"",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7349",
+  "run": "STORY-ETM-7349",
+  "frozen": "evals/exams/_story-ETM-7349/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "actual"
+      ],
+      [
+        "100"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "hover",
+          "tooltip",
+          "mouse over"
+        ],
+        [
+          "overall progress must not exceed 100"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 4.2 exact tooltip text. Only the Timeline-tab half is used: the Edit Plan Plan (%) text was decided again later (docs/modules/shutdown-timeline.md, withheld)."
+}

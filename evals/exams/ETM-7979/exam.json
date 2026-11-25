@@ -1,0 +1,65 @@
+{
+  "defect": "ETM-7979",
+  "story": "ETM-7351",
+  "in_story": true,
+  "found_by": "another tester (Nuchanart), the team never designed this Story",
+  "bug": "Pasting an empty cell into a mandatory field clears it but shows no Paste Validation Failed modal, no red background, Save not disabled.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7351",
+  "run": "STORY-ETM-7351",
+  "frozen": "evals/exams/_story-ETM-7351/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "paste",
+        "ctrl+v",
+        "cmd+v"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "empty cell",
+          "empty value",
+          "empty clipboard",
+          "blank cell",
+          "an empty",
+          "a blank",
+          "empty input",
+          "empty string",
+          "copy an empty",
+          "copied empty",
+          "empty text",
+          "nothing in the clipboard"
+        ],
+        [
+          "material description",
+          "win#",
+          "contact person",
+          "width",
+          "length",
+          "height",
+          "gross wt",
+          "mandatory"
+        ]
+      ],
+      [
+        [
+          "red",
+          "paste validation failed",
+          "validation modal",
+          "save` is disabled",
+          "save is disabled",
+          "save disabled",
+          "disables save",
+          "disables the save",
+          "save` disabled"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 3.1.1 / 3.4.1: empty input into a mandatory field = modal, blank, red background, Save disabled."
+}

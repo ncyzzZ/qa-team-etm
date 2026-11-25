@@ -228,3 +228,39 @@ test('ETM-7350 set: wording of the check-5 fix round (read by hand)', () => {
   // ETM-8361: every untouched activity date equals the recorded value after Save (TC-052 step 3)
   assert.deepEqual(ids('### TC-052 x\n2. In Edit Plan move only the End Date of the last activity to an earlier week, click `Save`. -> Edit Plan saves.\n3. Reload the Edit Plan page. -> Every other activity date equals the recorded value; no date moved by a day.', 'ETM-8361'), ['TC-052']);
 });
+
+// Fifth set: ETM-7900 (Shutdown Logic PDF timeframe), ETM-7349 (Timeline progress), ETM-7351 (Equipment Mob Plan paste), ETM-7310 (Add Equipment)
+const set5 = {
+  'ETM-8398': ['### TC-1 Export closes the drawer\n1. Open the Export drawer, pick PDF File > Daily Plan > Focus Timeframe. -> Selected.\n2. Click `Export`. -> The drawer closes at once; the file downloads.',
+               '### TC-1 Cancel closes the drawer\n1. Open the Export drawer, pick Focus Timeframe. -> Selected.\n2. Click `Cancel`. -> The Export drawer closes.'],
+  'ETM-8513': ['### TC-1 Daily Plan parent rows\n1. Export PDF File > Daily Plan > Full Shutdown Timeframe for a plan where Work Header `Modification` has no task active on Day 3. -> PDFs download.\n2. Open the Day 3 PDF. -> The `Modification` Work Header row and its Platform row are hidden.',
+               '### TC-1 Daily Plan rows\n1. Export PDF File > Daily Plan > Full Shutdown Timeframe. -> PDFs download.\n2. Open the Day 3 PDF. -> Tasks active on Day 3 show with their Work Header and Platform rows.'],
+  'ETM-8370': ['### TC-1 Status on Edit Plan\n1. Set one Activity to Close on the Timeline and click `Update Progress`. -> Saved.\n2. Click `Edit Plan` and look at Status. -> Status pills show `Open` / `Close` (same text as the Timeline), read-only.',
+               '### TC-1 Status on Edit Plan\n1. Click `Edit Plan`. -> Edit Plan opens.\n2. Click a Status pill. -> Nothing opens; Status is read-only.'],
+  'ETM-8403': ['### TC-1 Actual over 100\n1. Type actuals so Total Progress Actual (%) is 105.0. -> The total cell turns red; Update Progress disabled.\n2. Hover the red total cell. -> Tooltip `The overall progress must not exceed 100%.` in red.',
+               '### TC-1 Actual over 100\n1. Type actuals so Total Progress Actual (%) is 105.0. -> The total cell turns red; `Update Progress` is disabled.'],
+  'ETM-7951': ['### TC-1 Date order on paste\n1. Paste `10 Jan 2026` into Material Ready at SKL of row 1. -> Kept.\n2. Paste `05 Jan 2026` into Require at Offshore (earlier than Material Ready). -> The Require at Offshore cell is cleared to blank and the Paste Validation Failed modal shows once.',
+               '### TC-1 Date format on paste\n1. Paste `abc` into Require at Offshore of row 1. -> The cell is cleared to blank and the Paste Validation Failed modal shows.'],
+  'ETM-7979': ['### TC-1 Empty paste into mandatory\n1. Copy an empty cell from Excel and paste it into Contact Person of row 1. -> The Paste Validation Failed modal shows; the cell is blank with a red background; Save is disabled.',
+               '### TC-1 Invalid paste into mandatory\n1. Paste `abc` into Width (m) of row 1. -> The Paste Validation Failed modal shows; the cell is cleared to blank with a red background.'],
+  'ETM-7860': ['### TC-1 WIN# free text\n1. In WIN# No. (CCU No.) type `CCU@12 #-9` and press Enter. -> The value is kept exactly as typed.',
+               '### TC-1 WIN# max length\n1. In WIN# No. (CCU No.) type 101 characters and press Enter. -> Only 100 characters are kept.'],
+  'ETM-7846': ['### TC-1 Popup while scrolling\n1. Open the Deck dropdown of row 1. -> The list opens under the cell.\n2. Scroll the table horizontally to the right. -> The list moves with its cell or closes; it does not float over other columns.',
+               '### TC-1 Dropdown in last row\n1. Scroll down to the last row and open its Deck dropdown. -> The list opens and all options can be chosen.'],
+};
+for (const [d, [hitTxt, nearTxt]] of Object.entries(set5)) {
+  test(`${d}: the right case is caught, a near miss is not`, () => {
+    assert.deepEqual(ids(hitTxt, d), ['TC-1']);
+    assert.deepEqual(ids(nearTxt, d), []);
+  });
+}
+test('fifth set: cases that expect the bug are not counted', () => {
+  assert.deepEqual(ids('### TC-1 x\n2. Click `Export`. -> The file downloads; the drawer stays open until Cancel.', 'ETM-8398'), []);
+  assert.deepEqual(ids('### TC-1 x\n1. In WIN# No. (CCU No.) type `CCU@12`. -> The `@` is removed; `CCU12` kept.', 'ETM-7860'), []);
+  assert.deepEqual(ids('### TC-1 x\n1. Hover the red Total Actual (%) cell. -> Tooltip `The overall actual progress must not exceed 100%.`', 'ETM-8403'), []);
+});
+test('fifth set: signature fixes from the first drafts (read by hand)', () => {
+  // ETM-8513: setup lives in the Precondition, the step names the header only as "W2" (TC-013 of the ETM-7900 first draft)
+  assert.deepEqual(ids('### TC-013 Verify a WBS parent row shows only when a child is active on D\nPrecondition: common; Work Header W1 has children active on D, Work Header W2 has children only on other days.\n1. Export Daily Plan with `Focus Timeframe`. -> The export finishes.\n2. Open the PDF for date D. -> W1 and its active children are listed.\n3. Look for W2. -> W2 is not listed and none of its children are.', 'ETM-8513'), ['TC-013']);
+  assert.deepEqual(ids('### TC-013 x\nPrecondition: Work Header W2 has children only on other days.\n1. Export Daily Plan PDF. -> Done.\n2. Look for W2. -> W2 is listed with its children.', 'ETM-8513'), []);
+});

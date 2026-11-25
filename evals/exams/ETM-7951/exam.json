@@ -1,0 +1,59 @@
+{
+  "defect": "ETM-7951",
+  "story": "ETM-7351",
+  "in_story": true,
+  "found_by": "another tester (Nuchanart), the team never designed this Story",
+  "bug": "Pasting Require at Offshore earlier than Material Ready at SKL keeps the value: no rejection, no Paste Validation Failed modal.",
+  "inputs": [
+    "story.md"
+  ],
+  "inputs_dir": "_story-ETM-7351",
+  "run": "STORY-ETM-7351",
+  "frozen": "evals/exams/_story-ETM-7351/story.md: Jira description version before the first exam defect of the Story (changelog), comments before it; no analyst.md",
+  "catch": {
+    "block": [
+      [
+        "paste",
+        "ctrl+v",
+        "cmd+v"
+      ]
+    ],
+    "steps": [
+      [
+        [
+          "require at offshore",
+          "backload"
+        ],
+        [
+          "earlier",
+          "before",
+          "less than",
+          " < ",
+          "sequence",
+          "chronolog",
+          "out of order",
+          "wrong order",
+          "conflict",
+          "violat"
+        ]
+      ],
+      [
+        [
+          "require at offshore",
+          "backload",
+          "date"
+        ],
+        [
+          "cleared",
+          "blank",
+          "rejected",
+          "paste validation failed",
+          "not applied",
+          "red"
+        ]
+      ]
+    ]
+  },
+  "baseline": null,
+  "note": "AC 3.3 date sequence on paste: conflicting date cleared and modal. The defect expected red + Save disabled (later QA decision); the Story says cleared, no red. Either expectation fails on the bug (value kept, nothing shown)."
+}
