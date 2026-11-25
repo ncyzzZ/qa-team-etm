@@ -6,15 +6,17 @@
  "checkerOverall": "not-proven",
  "steps": [],
  "warnings": [
+  "step 1: picture blank, cut or not full screen",
   "step 2: picture blank, cut or not full screen",
-  "Picture 1 shows only one tag; the three earlier tags (Main Deck, Cellar Deck, Dock Area) are not visible, so steps 2-4 are unproven.",
-  "The one visible tag reads 'DOCK AREA', not 'Dock Area'; the picture does not show 'variant not added', it may show a replaced tag or a lost entry.",
-  "Typed 'DOCK AREA' is still in the input: picture may be taken before Enter was processed.",
-  "Deck column header is hidden by the dropdown; the cell is not proven to be Deck.",
-  "Picture 2 shows the worklist without a Deck column or the new work; it does not show the after-Save result.",
-  "Xray backup is the pre-2026-11-24 version; the step 8 wording quoted in the brief could not be checked against it.",
-  "AC 6.2 text was not found in the card files; only BA answers back the expected result."
+  "step 3: picture blank, cut or not full screen",
+  "No picture shows step 5 (DOCK AREA typed) result; no picture is labelled step 8.",
+  "Even the step 4 'Dock Area' tag is not visible; narrow Deck cell may hide chips, so missing tags are not proven.",
+  "No picture after Save showing the saved Deck cell value.",
+  "pic-2 does not show the Deck cell at all; pic-1 caption covers the dropdown.",
+  "pic-1 caption 'What should be seen' repeats the action, not an expected result.",
+  "Earlier BA row Q32 'Partly' says one Deck per Create Work row; final Q32 answer overrides it - confirm.",
+  "Xray backup is the pre-2026-11-24 version; current step 8 text not checked."
  ],
- "summary": "ภาพไม่พิสูจน์ defect: ภาพ 1 เห็น tag เดียวคือ 'DOCK AREA' ไม่เห็น Main Deck/Cellar Deck/Dock Area และข้อความยังค้างในช่อง ส่วนภาพ 2 เป็น worklist ที่ไม่มีคอลัมน์ Deck ต้องถ่ายภาพเต็มจอใหม่ให้เห็น tag ครบทั้งก่อนและหลังกด Enter ครั้งที่ 4 และค่าหลัง Save",
- "sourceHash": "d0ffc0b79f44"
+ "summary": "ภาพทั้ง 3 ไม่พิสูจน์ defect: ไม่มีภาพหลังพิมพ์ DOCK AREA (step 5/8) หรือหลัง Save และช่อง Deck แคบจนอาจซ่อน tag (แม้แต่ Dock Area ก็มองไม่เห็น) ควรถ่ายใหม่โดยขยายช่องหรือแสดงค่าที่บันทึกแล้ว Expected มีที่มาชัด (BA Q34, Q32, Xray ETM-8788)",
+ "sourceHash": "c15168d819d7"
 }

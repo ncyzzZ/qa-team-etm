@@ -44,7 +44,9 @@ Manual (Xray ETM-8786 step 2, see `manual-checklist-8786-8787-8789.md`). File: `
 4. Control: `Helipad,Helipad` (exact same spelling) is still rejected as duplicate.
 5. Clean up `WK-F27-1` afterwards (`delete-scratch-leftovers.cjs`).
 
-Related, same rule: TC-015 (ETM-8788) Create Work form will not add `DOCK AREA` after `Dock Area` in one cell (question to BA, no defect yet). When ETM-9223 is fixed, re-run ETM-8788 too and check the form follows the same rule.
+Related, same rule: TC-015 (ETM-8788) Create Work form will not add `DOCK AREA` after `Dock Area` in one cell. BA Q34 (25 Nov 2026, "3a"): the cell may hold both, so this is a defect of the same kind (draft `defect-draft-create-work-case-variant.md`, not logged yet). When ETM-9223 is fixed, re-run ETM-8788 too.
+
+BA Q33 (25 Nov 2026): ETM-9225 stands; a new `main deck` must become `Main Deck`. TC-020 expected result unchanged.
 
 ## After the retest
 

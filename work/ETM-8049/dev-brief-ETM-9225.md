@@ -2,7 +2,8 @@
 
 Story: ETM-8049 (Worklist: Working Location columns). Defect: ETM-9225.
 
-**Read first:** the old value `main deck` used in this test was set directly in the QA database, because the screen now converts every new entry and cannot make it. A question to BA is open: do such old lower-case values really exist in production, and must a new entry still be converted when they do? (file `questions-for-BA-ETM-9225.en.md`, also Q33 in `questions-for-BA.en.md`). If the BA says this data cannot exist, QA will close the defect. Please wait for that answer before you spend time on it.
+**Read first:** the old value `main deck` used in this test was set directly in the QA database, because the screen now converts every new entry and cannot make it.
+**BA answer (Q33, 25 Nov 2026):** "แปลงค่าตาม master กรณีที่ค่าเป็นแบบเดียวกับ master แต่ถ้า free text ก็ยึดตามนั้น" = a value that matches Master Data in any letter case is converted to the Master Data spelling; free text stays as typed. So a new entry `main deck` must become `Main Deck`, even when the event already holds the old `main deck`. The defect stands. (The BA did not say whether such old lower-case data exists in production.)
 
 ## 1. What is wrong
 
@@ -35,7 +36,7 @@ In Edit Work Breakdown, a Deck value typed in a different letter case from Maste
 - ETM-8049 AC 6.3: "On screens where the user types or pastes, the converted spelling is shown in the field as soon as the value is entered, before saving."
 - ETM-8049 AC 6.4: "Only Deck values added or changed in the save are converted. Values already stored and not changed keep their stored spelling. There is no data migration."
 - BA answer Q26 (24 Nov 2026): AC 6.1 reads "Edit Work Breakdown" only.
-- Not yet answered: Q33 / `questions-for-BA-ETM-9225.en.md` (see the note at the top).
+- BA answer Q33 (25 Nov 2026): a value that matches Master Data (any letter case) is converted to the Master Data spelling; free text stays as typed (see the note at the top).
 
 ## 6. Hints for the fix (guesses, not checked in code)
 

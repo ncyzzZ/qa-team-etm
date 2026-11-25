@@ -43,7 +43,7 @@ Import Excel rejects a Working Location (Deck) cell whose values differ only by 
 
 - Manual: Xray ETM-8786 step 2 (Excel import of Deck values), with the same file.
 - Pass: no validation error on R5/R6, Import is enabled, `WK-F27-1` and its breakdown show Deck `Helipad` and `helipad` as two values. Control: `Helipad,Helipad` (same spelling) is still rejected as a duplicate.
-- Related, same rule, no defect yet: TC-015 (ETM-8788), the Create Work form will not add `DOCK AREA` after `Dock Area` in one cell (question Q34 to BA). QA will re-run it after the fix.
+- Related, same rule: TC-015 (ETM-8788), the Create Work form will not add `DOCK AREA` after `Dock Area` in one cell. BA answer Q34 (25 Nov 2026, "3a"): one Create Work / Edit Work Breakdown cell may hold `Dock Area` and `DOCK AREA` together, so the form has the same problem. If you fix the shared duplicate check, please check the form too. QA will re-run ETM-8788 after the fix.
 
 ## 8. Out of scope / do not change
 

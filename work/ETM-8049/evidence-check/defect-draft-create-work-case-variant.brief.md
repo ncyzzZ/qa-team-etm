@@ -1,12 +1,12 @@
 # Evidence check defect-draft-create-work-case-variant (ETM-8049, defect)
 
-sourceHash: d0ffc0b79f44
+sourceHash: c15168d819d7
 
 You read this BLIND: the first agent's result is not here on purpose. Do not open the source file, the run log,
 findings.json, verdict-table.md or any file that states a result for this check. Read the pictures yourself.
 
 ## Environment
-QA (https://stms-qa.apps.pttep.com), 24 Nov 2026, user Turnaround Manager. Event NN TEST QA, Plan "QA ETM-8049 Scratch". Found by Playwright run 2026-11-24_213619 (ETM-8788).
+QA (https://stms-qa.apps.pttep.com), 24 Nov 2026, user Turnaround Manager. Event NN TEST QA, Plan "QA ETM-8049 Scratch". Found by Playwright run 2026-11-24_213619 and seen again in run 2026-11-25_150630 (ETM-8788).
 
 ## Steps
 1. Open the Worklist of Plan "QA ETM-8049 Scratch" and click `Create Work` > `Manual Create`.
@@ -22,5 +22,6 @@ QA (https://stms-qa.apps.pttep.com), 24 Nov 2026, user Turnaround Manager. Event
 - Xray ETM-8788 (TC-015), step 8, expects "A fourth tag shows DOCK AREA exactly as typed".
 
 ## Pictures
-- /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8049/evidence-check/defect-draft-create-work-case-variant.pics/pic-1.jpg
-- /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8049/evidence-check/defect-draft-create-work-case-variant.pics/pic-2.png
+- /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8049/evidence-check/defect-draft-create-work-case-variant.pics/pic-1.png
+- /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8049/evidence-check/defect-draft-create-work-case-variant.pics/pic-2.jpg
+- /Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8049/evidence-check/defect-draft-create-work-case-variant.pics/pic-3.jpg
