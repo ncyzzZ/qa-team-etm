@@ -25,8 +25,9 @@
           "border",
           "background",
           "highlight",
-          "look",
-          "outline"
+          "outline",
+          "selected cell",
+          "active cell"
         ],
         [
           "same",
@@ -44,5 +45,5 @@
     ]
   },
   "baseline": null,
-  "note": "Story lists four pages with one shortcut behaviour; the same look of the active cell on each page is implied (rule: the same thing shown on several screens)."
+  "note": "Story lists four pages with one shortcut behaviour; the same look of the active cell on each page is implied (rule: the same thing shown on several screens). \"Look at\" is not a style check (ETM-6928 fix-round TC-055, panel scroll, read by hand)."
 }

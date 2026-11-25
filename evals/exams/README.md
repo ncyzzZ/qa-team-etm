@@ -189,6 +189,22 @@ Rules added after the fifth set (commits c7a5e5c, 1ddc3ee): "a value shown on mo
 
 3/11 -> 4/11 (rule in Story: 2/3 -> 2/3). Bug-check opened 40 / 44 / 26 rows; the fix rounds added 12 / 9 / 19 cases (38->50, 31->40, 65->84). One new catch, by the new "every screen" rule through check 5 (ETM-7316). The strange-input rule was used by every designer without being asked (ETM-6538 TC-032, ETM-6373 TC-030, ETM-6843 TC-076), but no defect of this set is that kind, so it is not measured here. Misses left: an enum column read only when empty (ETM-6890), screen order of a list (ETM-6871), test data assumed instead of built through the real rule (ETM-6907), the one direction of "change then check" not tested (ETM-7300, ETM-7565), and "only this message" for one cell (ETM-7450/7456). Candidate rules, not added: "every enum column of an export is read with each of its values, not only empty"; "a message check also says no other message is shown for that cell". Measure on another set first.
 
+### Seventh set (2026-11-25): with the two rules made from the sixth set
+
+Rules added after the sixth set (commit 7aea1f4, check 5): "a fixed-list column is read with each of its values where it is shown" and "a message check also says no other message shows for that cell". The two fifth-set rules stay. Stories no exam had used: ETM-7984 (Shutdown Size change, user found the defects running her own Tests; `shutdown-timeline.md` withheld, it holds later notes), ETM-6844 (Export Work and Work Breakdown, Dechathon), ETM-6928 (keyboard shortcuts for editable tables, Dechathon), ETM-7321 (Daily Report PDF header colour, user). Dropped: ETM-7879 (both defects contradict the Story's alignment), ETM-7381 (console error, race), the format half of ETM-7272 and the Tab half of ETM-7294 (not in the Story). ETM-7984 had no fix round: its draft already caught all three.
+
+| Exam | Rule in Story | Draft | After bug-check + fix | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-8470 | yes | CAUGHT (TC-023, TC-029) | (no fix round) | edited text kept after "a change to another size"; first scored MISSED: block wanted "Shutdown Size". Signature widened, test added. |
+| ETM-8471 | yes | CAUGHT (TC-027) | (no fix round) | "shown again as the last task of the group". Same signature fix. |
+| ETM-8490 | partly | CAUGHT (TC-041, TC-043) | (no fix round) | exact tooltip "and no other message": the new message rule written by the designer. |
+| ETM-7272 | no (Work order = page) | MISSED | MISSED | only the hierarchy (Work then its breakdowns) is checked; first scored CAUGHT by TC-005 (column-header order); signature narrowed, test added. |
+| ETM-7281 | partly | MISSED | MISSED | fix-round TC-006 step 4 checks the dropdown on the last exported row, but no case exports more than 3,000 rows. |
+| ETM-7294 | no (same look on each page) | MISSED | MISSED | no case compares the selected-cell look across the four pages; first scored CAUGHT by fix-round TC-055 (panel scroll, "Look at"); signature narrowed, test added. |
+| ETM-7352 | partly | MISSED | MISSED | no case checks the PDF holds every task of the page; first scored CAUGHT by a TC-010 precondition ("Key Activities"); signature narrowed, test added. |
+
+3/7 -> 3/7 (rule in Story: 3/3 + partly 1/3). Bug-check opened 27 / 26 / 31 / 23 rows; the fix rounds added 3 / 16 / 7 cases (34->37, 43->59, 24->31). The designers used every new rule without being asked: fixed-list values (ETM-6844 TC-015 and TC-018, ETM-6928 TC-058), "no other message" (ETM-7984 TC-041, ETM-6844 TC-006), strange input in every field, values on every screen. None of the four misses is one of those kinds. Every miss is the "same on every screen" idea applied to something that is not a single value: the order of a list (ETM-7272), the full content of an export (ETM-7352), the look of a control on each page (ETM-7294), and a size limit (ETM-7281). Candidate rule, not added: "an export or second screen shows the same rows, in the same order, as the source screen; a control shared by several pages looks and acts the same on each". Four signatures were too wide at first and one too narrow; every score here was read by hand.
+
 ### Totals (fresh designer + bug-check + one fix round)
 
 | Set | Draft | After bug-check |
@@ -199,4 +215,5 @@ Rules added after the fifth set (commits c7a5e5c, 1ddc3ee): "a value shown on mo
 | ETM-7899/7350/7315 (never used for a rule) | 5/9 | 5/9; 8/9 with check 5 (made from this set) |
 | ETM-7900/7349/7351/7310 (never used for a rule, 5 checks in one call) | 5/8 | 5/8 |
 | ETM-6538/6373/6843 (never used for a rule; with the two rules from the 5th set) | 3/11 | 4/11 |
-| All unseen sets (3rd, 4th first run, 5th, 6th) | 18/35 | 20/35 |
+| ETM-7984/6844/6928/7321 (never used for a rule; with the two rules from the 6th set) | 3/7 | 3/7 |
+| All unseen sets (3rd, 4th first run, 5th, 6th, 7th) | 21/42 | 23/42 |

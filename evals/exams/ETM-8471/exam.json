@@ -13,12 +13,17 @@
   "catch": {
     "block": [
       [
-        "shutdown size"
+        "shutdown size",
+        "size",
+        "medium sd",
+        "minor sd",
+        "major sd"
       ],
       [
         "delete",
         "deleted",
-        "removed"
+        "removed",
+        "trash"
       ]
     ],
     "steps": [
@@ -43,5 +48,5 @@
     ]
   },
   "baseline": null,
-  "note": "AC 4.1 / 4.2: missing template items are added at the bottom (At Last), in template order."
+  "note": "AC 4.1 / 4.2: missing template items are added at the bottom (At Last), in template order. The draft says \"Confirm a change to another size\" / \"to Medium SD\", not \"Shutdown Size\" (ETM-7984 first draft TC-023 / TC-027, read by hand)."
 }

@@ -13,7 +13,11 @@
   "catch": {
     "block": [
       [
-        "shutdown size"
+        "shutdown size",
+        "size",
+        "medium sd",
+        "minor sd",
+        "major sd"
       ],
       [
         "edit",
@@ -54,5 +58,5 @@
     ]
   },
   "baseline": null,
-  "note": "AC 3.1 / 3.2: text edits and custom order strictly preserved (Template ID match)."
+  "note": "AC 3.1 / 3.2: text edits and custom order strictly preserved (Template ID match). The draft says \"Confirm a change to another size\" / \"to Medium SD\", not \"Shutdown Size\" (ETM-7984 first draft TC-023 / TC-027, read by hand)."
 }

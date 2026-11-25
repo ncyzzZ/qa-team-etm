@@ -368,3 +368,19 @@ test('Manpower Mob Plan set: cases that expect the bug are not counted', () => {
   assert.deepEqual(ids('### TC-1 x\n1. Untick every Company option in the filter. -> `No data found matching your filter.` is shown.', 'ETM-6664'), []);
   assert.deepEqual(ids('### TC-1 x\nPrecondition: 10 graphs.\n1. Hover a date. -> The legend lists every graph.', 'ETM-6774'), []);
 });
+test('seventh set: "change to another size" counts as the size change (ETM-8470 / ETM-8471)', () => {
+  assert.deepEqual(ids('### TC-023 Text kept\n1. Change the Action By of row 18 to `Offshore team A` (edited text). -> Shown.\n3. Confirm a change to another size. -> Applied.\n4. Read the Activity, Action By and Focal Point of row 18. -> The cells still show `Offshore team A`.', 'ETM-8470'), ['TC-023']);
+  assert.deepEqual(ids('### TC-027 Deleted task back\n1. Click the trash icon on row 18. -> The row is removed.\n2. Confirm a change to Medium SD. -> Applied.\n3. Look at the group. -> Row 18 is shown again as the last task of the group.', 'ETM-8471'), ['TC-027']);
+});
+test('Manpower Mob Plan set: signature fixes from the first ETM-5614 draft (read by hand)', () => {
+  // TC-010 step 4 says "chevron", not "collapse"; TC-026 names a category (`Scaffolder`), not the word "resource"
+  assert.deepEqual(ids('### TC-010 Collapse each group\n4. Click the chevron of the `Reservation` group. -> Only `Dlog Status` stays; `Booking No.` is hidden.', 'ETM-6366'), ['TC-010']);
+  assert.deepEqual(ids('### TC-026 [FE][MT] Verify "No personnel assigned" placeholder (POS) [Auto]\nPrecondition: common; snapshotted `Scaffolder` with no personnel\n1. Look under `Scaffolder`. -> The `Required Manpower` row is shown and the row `No personnel assigned` is directly beneath it.', 'ETM-6852'), ['TC-026']);
+});
+test('seventh set: "Look at ... same line" is not a style check (ETM-7294)', () => {
+  assert.deepEqual(ids('### TC-055 Two panels\n1. Click a cell and scroll. -> Scrolls.\n2. Look at the daily schedule beside the table. -> Each schedule row is on the same line as its personnel row.', 'ETM-7294'), []);
+});
+test('Manpower Mob Plan set: the Filter Panel is often called "the Panel" (ETM-5615 first draft, read by hand)', () => {
+  assert.deepEqual(ids('### TC-022 [FE][MT] Verify unchecking everything gives zero rows and the empty message (NEG) [Auto]\n1. Open `Name` and uncheck `Select All`. -> No checkbox is checked.\n2. Look at the grid. -> No personnel rows are shown in the left table and right schedule; the grid shows `No data available`.', 'ETM-6664'), ['TC-022']);
+  assert.deepEqual(ids('### TC-015 [FE][MT] Verify free-text sections list distinct values sorted A-Z (POS) [Auto]\nPrecondition: common; the plan has values such as `Crew 2`, `Crew 10`, `crew 3`, `Crew 3` in the text fields\n1. Open the Panel and expand `Name`. -> The names are listed once each, A-Z dictionary style.\n7. Expand `Booking No.`. -> Distinct, A-Z; the order is compared with the dictionary rule in the Story (case variants next to each other, not split).', 'ETM-6634'), ['TC-015']);
+});
