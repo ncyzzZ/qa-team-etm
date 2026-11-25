@@ -37,7 +37,29 @@ Test cases are drafted (23). Only the points below are still waiting.
 7. (AC-8.2) A Daily Report created while the Plan's worklist has no work opens on the Ramp Down date itself (Ramp Down 15 Feb 2026 09:00 -> first day 15 Feb), not by the 18:00 rule (14 Feb). Is that intended? — BA: yes, correct behaviour.
 8. (AC-8.2) In the same case the Daily Report Gantt shows Jan 2026 instead of the snapshot Ramp Down/Up range. Is that intended? — BA: not an issue while there is no work from the worklist.
 
-9. (AC-8.2, ETM-4127 AC 3) Old Daily Report without a snapshot (QA: Export 5000 / "Optimize Pass", event Planned Date 17 Jun 2026 10:00 - 15 Jul 2026 06:00): the Planned S-Curve on screen and in the PDF ends around 12 Apr 2027, the end of the last task, not on the event Planned end 15 Jul 2026. For a report made before ETM-8042, should the Planned S-Curve end on the event Planned end (15 Jul 2026) or on the last task end? Was this already the behaviour before the ETM-8042 release? — open
+9. (AC-8.2, ETM-4127 AC 3) Old Daily Report without a snapshot (QA: Export 5000 / "Optimize Pass", event Planned Date 17 Jun 2026 10:00 - 15 Jul 2026 06:00): the Planned S-Curve on screen and in the PDF ends around 12 Apr 2027, the end of the last task, not on the event Planned end 15 Jul 2026. For a report made before ETM-8042, should the Planned S-Curve end on the event Planned end (15 Jul 2026) or on the last task end? Was this already the behaviour before the ETM-8042 release? — open (ETM-4127 AC 3 and ETM-8042 AC 8.2 say the event end day plus extended days; only the before-release behaviour is still unknown) — BA 24 Nov: ends on the last execution day = snapshot Ramp Up + extended days; old report snapshot = Event Planned end; last task end (12 Apr 2027) is a defect.
 
 ## Raised during the QA run, 2026-11-23
-10. (AC-8.1, ETM-5492, AC 6 "no upper limit on the range") On a Plan with a 3-year Ramp Down/Up Date (15 Feb 2026 08:00 - 15 Feb 2029 20:15, QA event "QA S26 Ramp", Plan "Plan Scenario Long Name Plan Scenario Long Name 12"), the Shutdown Logic `Export` dialog shows `Excel File` disabled; only `PDF File` can be chosen. On a 10-day Plan (Plan Scenario A, 15 - 25 Feb 2026) `Excel File` is enabled. Is there a maximum timeframe for the Excel export (if yes, what is it, and should the user see a reason)? Or should Excel be available for any Ramp Down/Up range? — open
+10. (AC-8.1, ETM-5492, AC 6 "no upper limit on the range") On a Plan with a 3-year Ramp Down/Up Date (15 Feb 2026 08:00 - 15 Feb 2029 20:15, QA event "QA S26 Ramp", Plan "Plan Scenario Long Name Plan Scenario Long Name 12"), the Shutdown Logic `Export` dialog shows `Excel File` disabled; only `PDF File` can be chosen. On a 10-day Plan (Plan Scenario A, 15 - 25 Feb 2026) `Excel File` is enabled. Is there a maximum timeframe for the Excel export (if yes, what is it, and should the user see a reason)? Or should Excel be available for any Ramp Down/Up range? — answered from existing Stories 24 Nov: no maximum timeframe (ETM-5492), Excel is disabled only while the page has unsaved edits (ETM-3461 AC 1.2). QA treats the disabled card as a defect candidate; no need to send unless the BA disagrees. BA 24 Nov: QA asks Dev why Excel is disabled.
+
+## Raised by the Sprint 26 TC/script audit, 2026-11-24
+11. (AC-3, ETM-8851, your answer S1 of 18 Nov) You wrote that after pasting an invalid date (`31 Feb 2026 08:00`, `2026-02-08 08:00`) the field keeps its previous value. On QA the picker clears that part instead, and Save becomes disabled until a valid date is entered. On 20 Nov the QA team changed ETM-8851 to follow the app, but that was a QA decision, not yours. Which is correct: (a) keep the previous value, which would make the current app a defect, or (b) clear the part and disable Save, which means S1 is updated? — BA 24 Nov: (b), the app is correct, S1 / DEC-052 updated.
+
+## Raised 2026-11-24 night (ETM-8851 re-check by hand)
+12. (AC 1.2, ETM-8851, your answer to Q11) An invalid date typed or pasted into the Ramp Down/Up Date picker.
+    Where: QA, event "QA S26 Ramp" > Planning tab > Plan Card "Plan Scenario A" > three-dot > Edit Plan. Current value `15 Feb 2026 09:00 -> 25 Feb 2026 18:00`. Checked 24 Nov 2026, Turnaround Manager, nothing saved.
+
+    | Case | Input | Your Q11 answer / AC 1.2 (expected) | QA app now (actual) |
+    |---|---|---|---|
+    | 1 | Paste `31 Feb 2026 08:00` into Start | Start is cleared, Save disabled | While typing: invalid text shown, no red border, no message, Save disabled. After leaving the field: Start goes back to `15 Feb 2026 09:00` (on the next click, not on Tab) |
+    | 2 | Paste `31 Feb 2026 08:00` into End | End is cleared, Save disabled | Same; End goes back to `25 Feb 2026 18:00` on Tab |
+    | 3 | Paste `2026-02-08 08:00` into End | End is cleared, Save disabled | Same as case 2 |
+    | 4 | Type `31 Feb 2026 08:00` into End | End is cleared, Save disabled | Same as case 2 |
+
+    In every case nothing invalid is saved; the difference is only "cleared" vs "previous value put back".
+    Pictures (full screen, 8 files): case1-a-before-leave … case4-b-after-leave (a = right after the input, b = after leaving the field). Save is disabled in all of them; no red border or message.
+
+    Which is correct?
+    (a) Clear the part and disable Save (Q11, AC 1.2): the current app is a **defect**.
+    (b) Put back the previous valid value: AC 1.2 and ETM-8851 are updated, no defect.
+    Also: should Start and End behave the same (Start puts the value back only on the next click, End already on Tab)?

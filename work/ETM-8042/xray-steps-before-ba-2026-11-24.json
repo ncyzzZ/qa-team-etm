@@ -1,0 +1,4 @@
+{"saved":"2026-11-24","reason":"before BA Q9 step edits","steps":[
+{"test":"ETM-8840","no":7,"id":"5cdce39b-f71a-40e4-ba95-3243d288874d","action":"Look at the end of the yellow dashed Planned S-Curve (ETM-4127).","data":"","result":"The curve ends on `25 Feb 2026`, not on `22 Feb 2026`."},
+{"test":"ETM-8840","no":15,"id":"70bbcb13-846d-4f4e-bcf8-bf910141c922","action":"Look at the end of the Planned S-Curve.","data":"","result":"The curve ends on `25 Feb 2026`."},
+{"test":"ETM-8849","no":5,"id":"daa3b371-5622-401f-8c85-d684d3570685","action":"Look at the end of the Planned S-Curve.","data":"","result":"It ends on `15 Jul 2026`."}]}
