@@ -110,7 +110,7 @@ Rule in Story: 3/5 -> 4/5. Not in Story: 0/7 -> 0/7. Bug-check fixes wrong or he
 | Sprint 26 cards + ETM-7345/7348 (rules were made from these) | 4/8 | 8/8 (ETM-9229/8902 with a leading prompt) |
 | Equipment Mob Plan ETM-7311/7306 | 3/12 | 4/12 |
 | ETM-7902/7314 (never used for a rule) | 5/7 | 6/7 |
-| ETM-7899/7350/7315 (never used for a rule) | 5/9 | 5/9 |
+| ETM-7899/7350/7315 (never used for a rule) | 5/9 | 5/9; 8/9 with check 5 (made from this set) |
 
 ### Fourth set, never seen by the team (2026-11-25): ETM-7899, ETM-7350, ETM-7315
 
@@ -131,3 +131,21 @@ Stories of another tester (Dechathon); the team never designed them. Same method
 5/9 -> 5/9 (rule in Story: 5/7). Bug-check opened 11 / 22 / 13 rows and the fix round added 9 / 16 / 8 cases (42->51, 36->52, 37->45), none of them on the missed defects. Pattern of the misses: the case does the first half of the flow and stops ("gone" without coming back, a new value made on the same page instead of the page where users make it, AND with one other filter instead of each). Candidate rule, not added yet: for "X is removed/hidden when Y" also undo Y and check X stays removed; for "new values appear", create the value on every page that can create it. Measure on another set before adding.
 
 Drafts and bug-checks: `_story-<KEY>/runs/2026-11-25-*`. qa-check could not read the exam path for the designers (they passed a key); not checked.
+
+### Check 5 "Effects and their reverse" (2026-11-25), made from the fourth set
+
+New section in `design-techniques.md` and check 5 of bug-check (`test-reviewer.md`): each trigger undone, each place that creates a value, each kind of control combined (and one that leaves nothing under a parent), untouched values after Save. Made from the misses above, so the fourth set measures "with lessons" (leading); ETM-7902 is the cross-check.
+
+Order: first draft again -> bug-check (agents still loaded the old 4-check file: the agent definition is read when the session starts, so no table 5 was written) -> fix -> check 5 alone, rule text in the prompt -> fix.
+
+| Exam | First run (4 checks) | Rerun 4 checks | + check 5 | Note (checked by reading) |
+|---|---|---|---|---|
+| ETM-8433 | CAUGHT | CAUGHT | CAUGHT | |
+| ETM-8437 | MISSED | MISSED | MISSED | Date row added to the AND table, but "P1 + Date that excludes some P1 tasks": P1 keeps tasks, so the Platform row rightly stays. The "nothing left under a parent" item was not combined with Date. |
+| ETM-8439 | MISSED | MISSED | **CAUGHT (TC-027 step 5)** | value created from the Worklist |
+| ETM-8295 | CAUGHT | CAUGHT | CAUGHT | |
+| ETM-8328 | MISSED | MISSED | **CAUGHT (TC-035 step 4, TC-036 step 6)** | Shutdown Type back / Actual typed back, note must not return. Signature widened ("back to the old", "value back"), test added. |
+| ETM-8361 | MISSED | MISSED | **CAUGHT (TC-052 step 3)** | other activity dates equal the recorded ones after Save. Signature widened ("activity date", "equals the recorded"), test added. |
+| ETM-8456 (cross-check) | MISSED | **CAUGHT (TC-029 step 4)** | (not fixed, already 4/4) | found by check 1 ("only Enter used") in the rerun, not by check 5: run-to-run variance of the same check. Check 5 opened 9 more rows on ETM-7902. |
+
+Fourth set: 5/9 -> 8/9 with check 5 (leading: rule made from these misses). Cross-check ETM-7902: 4/4, but not because of check 5. Check 5 opened 6 / 6 / 9 rows and the fixes added 0 / 4 / - cases (mostly steps in existing cases). Next: measure the full 5-check bug-check in one call (new session, so the agent file is reloaded) on a set never used for a rule.

@@ -222,3 +222,9 @@ test('ETM-7899/7350 set: signature fixes from the first draft (read by hand)', (
   // ETM-8361: "End Date ... inside the same week" is not a check that the dates did not move (TC-034)
   assert.deepEqual(ids('### TC-034 x\n1. In Edit Plan, change the last End Date by a few days inside the same week, click `Save`. -> Save completes; no warning.\n2. Open the Timeline. -> The grid End week is the same; the note in that week is still there.', 'ETM-8361'), []);
 });
+test('ETM-7350 set: wording of the check-5 fix round (read by hand)', () => {
+  // ETM-8328: Actual typed back after the shrink, note must not return (TC-036 steps 2 and 6)
+  assert.deepEqual(ids('### TC-036 x\nPrecondition: a note in the outer week\n2. Delete the Actual (%) of that outer week and click `Update Progress`. -> The progress saves.\n6. (Undo) Type the deleted Actual (%) value back in that outer week and click `Update Progress`. -> The outer week shows again; the deleted note does not come back; its cell is empty.', 'ETM-8328'), ['TC-036']);
+  // ETM-8361: every untouched activity date equals the recorded value after Save (TC-052 step 3)
+  assert.deepEqual(ids('### TC-052 x\n2. In Edit Plan move only the End Date of the last activity to an earlier week, click `Save`. -> Edit Plan saves.\n3. Reload the Edit Plan page. -> Every other activity date equals the recorded value; no date moved by a day.', 'ETM-8361'), ['TC-052']);
+});

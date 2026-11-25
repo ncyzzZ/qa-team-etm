@@ -110,3 +110,20 @@ question.
   alignment rule.
 - Someone else changes or deletes the object while it is open (second tab or
   user): the next Save, Export or edit shows the proper message.
+
+## Effects and their reverse (finish the flow)
+A case often sets up the effect and stops: the note is gone, the new value is
+listed, the filter result looks right. Bugs live in the second half. For each
+rule of the Story:
+- "When Y happens, X is removed / hidden / deleted / reset": for EACH trigger
+  Y the Story names (not only the first), do Y, then undo Y (extend back,
+  re-check, change the value back, restore the range) and check X stays as the
+  rule says. "X is not shown" right after Y passes even when X was only hidden.
+- "The list shows values that exist / new values appear": create or change the
+  value from every place that can make it (this page, other pages such as the
+  Worklist or Event Details, import), then check this list.
+- "Filters / conditions combine (AND)": the control under test with each other
+  kind of control at least once (list, text, number, date range, toggles), and
+  a combination that leaves nothing under a parent row.
+- Save on an edit page: after Save and reload, every value the user did not
+  touch is unchanged, dates and times included (no day shift).

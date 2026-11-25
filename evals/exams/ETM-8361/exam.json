@@ -26,7 +26,8 @@
         [
           "start date",
           "end date",
-          "dates"
+          "dates",
+          "activity date"
         ],
         [
           "unchanged",
@@ -41,7 +42,9 @@
           "kept",
           "not move",
           "the new date",
-          "the entered date"
+          "the entered date",
+          "equals the recorded",
+          "no date moved"
         ],
         [
           "!",
