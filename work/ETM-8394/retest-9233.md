@@ -1,5 +1,7 @@
 # ETM-9233 retest plan (Defect of ETM-8394, Xray Test ETM-8755, Test Execution ETM-8774)
 
+> **2026-11-25: OBSOLETE.** QA lead decided ETM-9233 is not a defect (blank `Action` in the export is correct). See `handover.md`.
+
 Wait for: dev moves ETM-9233 to Resolved / Ready for Retest **and** the BA answers `questions-for-BA-round5.md` Q1 (which fix: export fills Revise, or import treats blank Action on a UUID row as Revise).
 
 ## Data

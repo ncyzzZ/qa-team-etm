@@ -40,3 +40,9 @@
 - 2026-11-24 21:36: Defect ETM-9233 logged for ETM-8755 (assignee Peeranat, [BE] ETM-8602), [QA] ETM-9234 Done 20m, 2 pictures embedded (repro `tests/fe/explore/etm9233Repro.spec.ts`, no save), Xray ETM-8755 FAILED with evidence, step 3 FAILED + defect linked (verified).
 - 2026-11-24: ETM-8756 healed (button names "swap Change ...") and passed. Next: user decisions on 8765, 8766, 8767.
 - 2026-11-24 (D-5): ETM-8765 reads the template the user downloads by hand: `PW_REPO/output/manual-input/ETM-8394/import-template.xlsx` (or env ETM_8394_TEMPLATE). No file = skipped (Not proven). tsc 0, qa-check 0.
+
+## 2026-11-25: ETM-9233 is NOT a defect (QA lead decision)
+- Lead: the system is right. The export leaves `Action` blank on purpose; an unchanged export uploaded again must show "This field is mandatory." The user has to fill `Action` first.
+- Lead deletes ETM-9233 in Jira by hand. Files `dev-brief-ETM-9233.md` and `retest-9233.md` are obsolete.
+- To do (needs the user's yes, Xray write): ETM-8755 step 3 -> "fill `Action = Revise` on every row, then upload" (expected: no error, Confirm enabled); set ETM-8755 back from FAILED, remove the defect link on step 3; re-run ETM-8755.
+- `questions-for-BA-round5.md` Q1 and Q3 closed by this decision; Q2 (export follows the filter?) still open.

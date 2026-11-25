@@ -1,5 +1,7 @@
 # ETM-8394 Questions for BA, round 5 (Defect ETM-9233, 24 Nov 2026)
 
+> **2026-11-25 update:** Q1 and Q3 are closed (QA lead: blank `Action` in the export is correct, the user fills it before import; Defect ETM-9233 withdrawn). Only Q2 is still open.
+
 **Story:** [Improvement] Import Work and Work Breakdown - Import Work Status and Breakdown Status
 **Defect:** ETM-9233 "Exported Worklist cannot be imported back unchanged" (found by Xray Test ETM-8755, Test Execution ETM-8774).
 ⭐ = affects an Expected Result directly. Each question says what QA assumes until you answer.

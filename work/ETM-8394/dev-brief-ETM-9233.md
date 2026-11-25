@@ -1,5 +1,7 @@
 # Dev brief: ETM-9233 (Story ETM-8394)
 
+> **2026-11-25: OBSOLETE.** QA lead decided ETM-9233 is not a defect (blank `Action` in the export is correct). See `handover.md`.
+
 ## 1. What is wrong
 An exported Worklist cannot be imported back unchanged. The export leaves the `Action` column blank on every row, so the import rejects every row with "This field is mandatory." and `Confirm` stays disabled. ETM-8394 AC 4 needs "export, then import again" to work and keep each Work's status.
 
