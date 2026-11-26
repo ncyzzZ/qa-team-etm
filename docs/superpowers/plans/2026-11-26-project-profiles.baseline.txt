@@ -1,0 +1,4 @@
+Baseline at fa315d8 (2026-11-26), per-file node --test --test-reporter=tap, 120 s cap:
+41 files, pass 445, fail 0
+Excluded: tools/team-board.test.mjs (no result within 90 s; known hang, run alone).
+Check command: see Task 0 in the plan; full 'node --test tools/' hangs on team-board.test.mjs.
