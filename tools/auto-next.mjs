@@ -92,6 +92,6 @@ if (isMain) {
   console.log(`[auto-next] ${key}: rerun ${plan.rerun.length} (env/flaky) | heal ready ${plan.heal.length}${applied.length ? `, applied ${applied.length}` : ''} | live ${plan.live.length} | ask ${plan.ask.length}`);
   if (again.length) console.log(`RERUN: node tools/run-card.mjs ${key} ${plan.specs.join(' ')} -g "${again.join('|')}"`);
   if (applied.length) console.log(`THEN: node tools/auto-next.mjs ${key} <new run folder> --check-heals ${dir}`);
-  if (plan.live.length) console.log(`LIVE: call playwright-healer for ${plan.live.map((p) => `#${p.id} ${p.test}`).join(', ')}`);
+  if (plan.live.length) console.log(`LIVE: ${plan.live.map((p) => `#${p.id} ${p.test}`).join(', ')} still needs-live: the healer step comes BEFORE auto-next (TEAM.md Phase 7): playwright-healer, save as ${dir}/healer-<id>.md, node tools/heal/auto-heal.mjs live ${dir} <id> ${dir}/healer-<id>.md; those heals go in the next round`);
   if (plan.ask.length) console.log(`ASK: node tools/verdicts.mjs table ${key} ${dir}   (${plan.ask.map((a) => `${a.key} ${a.why}`).join('; ')})`);
 }

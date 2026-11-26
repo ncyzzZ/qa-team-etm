@@ -91,3 +91,43 @@ test('skip marks open proposals skipped; non-locator rows are ignored', () => {
   skip(s.run, 'all');
   assert.equal(JSON.parse(fs.readFileSync(path.join(s.run, 'heal-proposals.json'))).proposals[0].status, 'skipped');
 });
+
+// Live healer answers (user, chat 2026-11-26: "อยากให้มันแก้เอง"): needs-live -> ready when the healer's one-line diff passes the guard.
+import { fromLive } from './auto-heal.mjs';
+const BRYNTUM = "  bar = () => this.page.locator('.b-gantt-task-old');";
+const liveSetup = () => { const s = setup(BRYNTUM, [row({ locator: "locator('.b-gantt-task-old')" })]); propose(s.run, { pwRepo: s.pw, feRepo: s.fe }); return s; };
+const answer = (newLine, extra = '') => `test: ETM-1   page: pages/plan.ts:2   source: live
+old: .b-gantt-task-old
+new: .b-gantt-task
+cause: locator
+why: the bar class is b-gantt-task on the live page
+- a prose bullet that is not part of the diff
+diff:
+\`\`\`
+--- a/pages/plan.ts
++++ b/pages/plan.ts
+@@ -2,1 +2,1 @@
+-${BRYNTUM}
++${newLine}
+${extra}\`\`\`
+`;
+
+test('live: a guarded one-line heal becomes ready and auto-next can apply it', async () => {
+  const { pw, run } = liveSetup();
+  assert.equal(JSON.parse(fs.readFileSync(path.join(run, 'heal-proposals.json'))).proposals[0].status, 'needs-live');
+  const p = fromLive(run, 1, answer("  bar = () => this.page.locator('.b-gantt-task');"), { pwRepo: pw });
+  assert.equal(p.status, 'ready'); assert.equal(p.source, 'live'); assert.equal(p.page, 'pages/plan.ts:2');
+  assert.equal(apply(run, '1', { pwRepo: pw }).length, 1);
+  assert.match(fs.readFileSync(path.join(pw, 'pages', 'plan.ts'), 'utf8'), /'\.b-gantt-task'\)/);
+});
+
+test('live: widening, structure change, extra lines and not-a-locator go to a person', () => {
+  let s = liveSetup();
+  assert.equal(fromLive(s.run, 1, answer("  bar = () => this.page.locator('.b-gantt-task').first();"), { pwRepo: s.pw }).status, 'manual');
+  s = liveSetup();
+  assert.match(fromLive(s.run, 1, answer("  bar = () => this.page.locator('.b-gantt-task');", "+  extra = 1;\n"), { pwRepo: s.pw }).reason, /not one changed line/);
+  s = liveSetup();
+  assert.match(fromLive(s.run, 1, 'test: ETM-1\ncause: not-a-locator\nwhy: the bar is gone\ndiff:\nnone', { pwRepo: s.pw }).reason, /not-a-locator/);
+  s = liveSetup();
+  assert.throws(() => fromLive(s.run, 1, answer('x').replace('test: ETM-1', 'test: ETM-2'), { pwRepo: s.pw }), /for ETM-2/);
+});

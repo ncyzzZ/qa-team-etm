@@ -7,6 +7,7 @@
 //   node tools/heal/auto-heal.mjs apply <run folder> <ids|all>    applies ready proposals (only after the user's Apply)
 //   node tools/heal/auto-heal.mjs revert <run folder> <ids|all>   puts the old line back for applied heals
 //   node tools/heal/auto-heal.mjs skip <run folder> <ids|all>     marks them skipped
+//   node tools/heal/auto-heal.mjs live <run folder> <id> <healer answer file>   needs-live -> ready when the healer's diff passes the guard
 // Status per proposal: ready (diff passed the guard) | needs-live (call playwright-healer) | manual (a person fixes it)
 // | applied | skipped.
 import fs from 'node:fs';
@@ -132,6 +133,41 @@ export function revert(runDir, ids, { pwRepo = resolveRepos().pwRepo } = {}) {
   return done;
 }
 
+/**
+ * The live healer's answer turns a needs-live proposal into a ready one (user, chat 2026-11-26: "อยากให้มันแก้เอง").
+ * The healer still edits nothing: its return block (test, cause, diff) is read here, the one changed line is checked
+ * with the same guard as a source heal, and then auto-next applies it, re-runs it and reverts it if it still fails.
+ * @param text the healer's return block. @returns the proposal (status ready | manual) or throws.
+ */
+export function fromLive(runDir, id, text, { pwRepo = resolveRepos().pwRepo } = {}) {
+  const data = JSON.parse(fs.readFileSync(path.join(runDir, FILE), 'utf8'));
+  const p = data.proposals.find((x) => x.id === Number(id));
+  if (!p) throw new Error(`no proposal #${id}`);
+  if (p.status !== 'needs-live') throw new Error(`#${id} is ${p.status}, not needs-live`);
+  const field = (n) => (text.match(new RegExp(`^\\s*${n}:\\s*(.+)$`, 'mi')) || [])[1]?.trim() ?? '';
+  const fail = (reason) => { p.status = 'manual'; p.reason = reason; p.source = 'live'; write(runDir, data); return p; };
+  if (field('test') && !field('test').startsWith(p.test)) throw new Error(`healer answer is for ${field('test').split(/\s/)[0]}, proposal #${id} is ${p.test}`);
+  if (!/^locator\b/.test(field('cause'))) return fail(`healer: ${field('cause') || 'no cause'}${field('why') ? ` - ${field('why')}` : ''}`);
+  const all = text.replace(/\r\n?/g, '\n').split('\n');
+  const lines = all.slice(all.findIndex((l) => /^\s*diff:/.test(l)) + 1).filter((l) => !/^```/.test(l));   // only the diff part
+  const file = (lines.find((l) => l.startsWith('+++ b/')) || '').slice(6).trim();
+  const minus = lines.filter((l) => l.startsWith('-') && !l.startsWith('---'));
+  const plus = lines.filter((l) => l.startsWith('+') && !l.startsWith('+++'));
+  if (!file || minus.length !== 1 || plus.length !== 1) return fail(`healer diff is not one changed line (${minus.length} removed, ${plus.length} added): a person applies it`);
+  const oldLine = minus[0].slice(1), newLine = plus[0].slice(1);
+  const abs = path.join(pwRepo, file);
+  if (!fs.existsSync(abs)) return fail(`healer diff names ${file}, not found`);
+  const at = fs.readFileSync(abs, 'utf8').split(/\r?\n/).map((l, i) => (l === oldLine ? i + 1 : 0)).filter(Boolean);
+  if (at.length !== 1) return fail(`the old line is in ${file} ${at.length} times (must be once)`);
+  const diff = [`diff --git a/${file} b/${file}`, `--- a/${file}`, `+++ b/${file}`, `@@ -${at[0]},1 +${at[0]},1 @@`, `-${oldLine}`, `+${newLine}`, ''].join('\n');
+  const guard = checkHealDiff(diff);
+  if (!guard.ok) return fail(`heal guard refused the live heal: ${guard.errors[0]}`);
+  Object.assign(p, { status: 'ready', source: 'live', page: `${file}:${at[0]}`, old: oldLine.trim(), new: newLine.trim(), oldLine, newLine, diff, from: `live page: ${field('why')}`.slice(0, 200), reason: undefined });
+  fs.writeFileSync(path.join(runDir, `heal-${p.id}.diff`), diff);
+  write(runDir, data);
+  return p;
+}
+
 export function skip(runDir, ids) {
   const data = JSON.parse(fs.readFileSync(path.join(runDir, FILE), 'utf8'));
   for (const p of pick(data, ids)) if (['ready', 'needs-live'].includes(p.status)) p.status = 'skipped';
@@ -149,6 +185,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   if (cmd === 'propose') { const d = propose(dir); console.log(d.proposals.length ? `[auto-heal] ${summaryLine(d)}  (${path.join(dir, 'heal-proposals.md')})` : '[auto-heal] no locator failures'); }
   else if (cmd === 'apply') { if (!ids) { console.error('apply needs ids or all'); process.exit(2); } const d = apply(dir, ids); console.log(`[auto-heal] applied ${d.length}: ${d.map((p) => `#${p.id} ${p.test} ${p.page}`).join(', ') || 'none'}`); }
   else if (cmd === 'revert') { const d = revert(dir, ids || 'all'); console.log(`[auto-heal] reverted ${d.length}: ${d.map((p) => `#${p.id} ${p.test}`).join(', ') || 'none'}`); }
+  else if (cmd === 'live') { const f = process.argv[5]; if (!ids || !f) { console.error('live needs <id> <healer answer file>'); process.exit(2); } try { const p = fromLive(dir, ids, fs.readFileSync(f, 'utf8')); console.log(`[auto-heal] #${p.id} ${p.test}: ${p.status}${p.status === 'ready' ? ` ${p.old} -> ${p.new} (auto-next --apply-heals applies and re-runs it)` : ` - ${p.reason}`}`); } catch (e) { console.error(`[auto-heal] ${e.message}`); process.exit(1); } }
   else if (cmd === 'skip') { skip(dir, ids || 'all'); console.log('[auto-heal] skipped'); }
   else { console.error(`unknown command ${cmd}`); process.exit(2); }
 }
