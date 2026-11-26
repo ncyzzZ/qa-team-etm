@@ -1,6 +1,6 @@
 # ETM project rules
 
-Rules that hold only for ETM (EP-Turnaround Management). They reach Claude through `.claude/active-profile.md` (CLAUDE.md imports it). The generic process is in `CLAUDE.md` and `TEAM.md`; a new rule from the lead that is about ETM's pages, roles or data goes here.
+Rules that hold only for ETM (EP-Turnaround Management). They reach Claude through `.claude/active-profile.md` (the SessionStart hook prints it) and the end of every exported account skill (`tools/export-skills.mjs`). The generic process is in `CLAUDE.md` and `TEAM.md`; a new rule from the lead that is about ETM's pages, roles or data goes here.
 
 ## Roles
 

@@ -38,6 +38,15 @@ export function settingsBlock(p) {
   ].join('\n');
 }
 
+/** rules.md of the profile (its "# ..." title line dropped) as a section for the exported SKILL.md; '' when there is none. */
+export function rulesBlock(p) {
+  const name = p.docs?.rules || 'rules.md';
+  let text;
+  try { text = fs.readFileSync(path.join(p.dir, name), 'utf8').replace(/\r\n/g, '\n'); } catch { return ''; }
+  text = text.replace(/^# .*\n+/, '').trim();
+  return text ? `\n## Project rules (synced from profiles/${p.name}/${name})\n\n${text}\n` : '';
+}
+
 /** @returns {string[]} the zip files written */
 export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'account-skills'), date = new Date().toISOString().slice(0, 10), p = profile() } = {}) {
   const src = path.join(root, '.claude', 'skills');
@@ -50,7 +59,7 @@ export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'accou
     fs.cpSync(path.join(src, n), path.join(out, n), { recursive: true });
     const md = path.join(out, n, 'SKILL.md');
     const text = accountDescription(fs.readFileSync(md, 'utf8'), date);
-    fs.writeFileSync(md, (text.endsWith('\n') ? text : text + '\n') + settingsBlock(p));
+    fs.writeFileSync(md, (text.endsWith('\n') ? text : text + '\n') + settingsBlock(p) + rulesBlock(p));
     zip(out, n);
     made.push(path.join(out, `${n}.zip`));
   }

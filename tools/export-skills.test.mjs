@@ -46,3 +46,21 @@ test('exportSkills: appends the profile settings block (site, key, id, board, fi
   assert.match(block, /^\n## Project settings \(synced from profiles\/acme\)\n/);
   for (const v of ['acme.atlassian.net', 'ACME', '77', '88', 'foundInEnvironment', 'customfield_1', 'QA=501', 'sprint', 'customfield_2']) assert.ok(block.includes(v), v);
 });
+
+test('exportSkills: appends the project rules (rules.md without its title line) after the settings block', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'export-skills-r-'));
+  fs.mkdirSync(path.join(root, '.claude/skills/d-skill'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.claude/skills/d-skill/SKILL.md'), '---\nname: d-skill\ndescription: D\n---\n# D\n');
+  const dir = path.join(root, 'profiles', 'acme');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'rules.md'), '# ACME project rules\n\n## Roles\n\n- Only ADMIN on QA.\n');
+  const p = { name: 'acme', dir, docs: { rules: 'rules.md' }, jira: { site: 'acme.atlassian.net', projectKey: 'ACME' } };
+  const out = path.join(root, 'out');
+  exportSkills({ root, out, date: '2026-11-26', p });
+  const md = fs.readFileSync(path.join(out, 'd-skill', 'SKILL.md'), 'utf8');
+  const iS = md.indexOf('## Project settings (synced from profiles/acme)');
+  const iR = md.indexOf('## Project rules (synced from profiles/acme/rules.md)');
+  assert.ok(iS > 0 && iR > iS, 'rules section after settings');
+  assert.match(md.slice(iR), /## Roles\n\n- Only ADMIN on QA\.\n$/);
+  assert.ok(!md.includes('# ACME project rules'), 'title line stripped');
+});
