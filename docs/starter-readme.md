@@ -108,11 +108,20 @@ The first card is slower and asks more, because there is no UI map yet and few p
   ทีมคุณควรอ่านแล้วตัดสินใจเอง แก้หรือลบข้อที่ไม่เห็นด้วย ก่อนใช้กับงานจริง
   `CLAUDE.md` item 3d and `TEAM.md` "Standing approvals" list things Claude does without asking (some test runs, re-runs, applying heals), approved by the original team.
   Read them and decide as a team; change or remove what you do not agree with before real use.
-- **Playwright repo ต้องมีโครงตามนี้ถึงจะรันอัตโนมัติได้** / **Your Playwright repo needs this layout for automated runs:**
-  `node_modules/@playwright/test` (ติดตั้งแล้ว / installed), ผลรันไปที่ / results in `output/runs/`,
-  ข้อมูลเทสของการ์ด / card test data in `scripts/seed/cards/<KEY>.data.cjs`, login ผ่าน / login through `seed.<role>.spec.ts`.
-  ถ้ายังไม่มี ขั้นออกแบบ test case และ Jira/Xray ใช้ได้ แต่ขั้นรันอัตโนมัติต้องปรับ repo ก่อน
-  Without it, test design and Jira/Xray work, but automated runs need the repo adapted first.
+- **Playwright repo ของคุณต้องมีอะไร** / **What your Playwright repo needs**
+
+  ขั้นต่ำ: ติดตั้ง Playwright แล้ว และชื่อเทสมีเลขการ์ด ส่วนที่เหลือเพิ่มทีหลังได้
+  Minimum: Playwright installed, and the card key in test titles. The rest can come later.
+
+  | ส่วน / Part | ต้องมี / Needs | ถ้าไม่มี / Without it |
+  |---|---|---|
+  | รันเทสอัตโนมัติ / automated runs (`tools/run-card.mjs`) | **บังคับ** / **required**: `npm install` แล้ว (มี `node_modules/@playwright/test`) | รันไม่ได้ / cannot run ("Playwright CLI not found") |
+  | ชื่อเทส / test titles | **บังคับ** / **required**: มีเลขการ์ด เช่น / has the card key, e.g. `ACME-123 TC-01 ...` | รันได้ แต่ report และ Xray ผูกผลกับการ์ดไม่ได้ / runs, but report and Xray cannot link results |
+  | ข้อมูลเทสของการ์ด / card test data | ไม่บังคับ / optional: `scripts/seed/cards/<KEY>.data.cjs` | รันได้ แค่ไม่ reset ข้อมูลก่อนรัน / runs, data is not reset first |
+  | เทส manual โดย agent / manual tests by the agent | ไม่บังคับ / optional: `tests/fe/manual/seed.<role>.spec.ts` + `.auth/<role>.json` | agent เปิดเบราว์เซอร์ไม่ได้ คนต้องกดเอง / the agent cannot open the browser; a person runs them |
+  | Self-healing จาก source / from source | ไม่บังคับ / optional: FE repo ของ dev (`FE_REPO`) | ยังแก้ locator จากหน้าเว็บจริงได้ / locators are still healed from the live page |
+
+  ผลรันถูกเก็บที่ `output/runs/` ใน Playwright repo (สร้างให้เอง) / Run results go to `output/runs/` in the Playwright repo (created for you).
 - **เทสของเครื่องมือมีมาไม่ครบ** / **Only some tool tests are included** (7 files). ถ้าแก้ไฟล์ใน `tools/` ให้เพิ่มเทสเอง / If you change `tools/`, add tests.
 
 ---
