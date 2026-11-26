@@ -50,6 +50,40 @@ export function keysIn(text, p = profile()) { return [...new Set(String(text).ma
 export function firstKey(text, p = profile()) { return keysIn(text, p)[0] || ''; }
 export function browseUrl(key, p = profile()) { return `https://${p.jira.site}/browse/${key}`; }
 
+/** Text of .claude/active-profile.md: header, settings from profile.json, then the profile's rules.md as is. */
+export function renderActiveProfile(p) {
+  const rulesName = p.docs?.rules || 'rules.md';
+  const rel = `profiles/${p.name}/${rulesName}`;
+  let rules;
+  try { rules = fs.readFileSync(path.join(p.dir, rulesName), 'utf8').replace(/\r\n/g, '\n'); }
+  catch { rules = `(no ${rel} yet: write the project's rules there)\n`; }
+  const j = p.jira, r = p.repos, d = p.docs || {};
+  const settings = [
+    `## Settings (from profiles/${p.name}/profile.json)`,
+    '',
+    `- Jira site: ${j.site}. Project key: ${j.projectKey}${j.projectId !== undefined ? ` (project id ${j.projectId})` : ''}.${j.boardId !== undefined ? ` Board id: ${j.boardId}.` : ''}`,
+    `- \`<KEY>\` in CLAUDE.md, TEAM.md, agents and skills means ${j.projectKey}; \`<KEY>-1234\` is a card of this project. Jira links: https://${j.site}/browse/<card>.`,
+    `- Playwright repo folder: \`${r.pwRepoDir}\` (PW_REPO). FE repo folder: \`${r.feRepoDir}\` (FE_REPO), branch \`${r.feBranch || 'develop'}\`.`,
+    `- UI map: ${d.uiMap ? `\`${d.uiMap}\`` : '(none)'}. Templates: ${d.templates ? `\`${d.templates}/\`` : '(none)'}.`,
+    `- Full profile: \`node tools/profile.mjs show\`.`,
+  ].join('\n');
+  return `<!-- generated from ${rel}; edit that file -->\n# Active project: ${p.title || j.projectKey}\n\n${settings}\n\n${rules.endsWith('\n') ? rules : rules + '\n'}`;
+}
+
+/** Writes <root>/.claude/active-profile.md (imported by CLAUDE.md; git-ignored). check: true only compares. */
+export function syncActiveProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, p = profile(), check = false } = {}) {
+  const file = path.join(root, '.claude', 'active-profile.md');
+  const want = renderActiveProfile(p);
+  let have = null;
+  try { have = fs.readFileSync(file, 'utf8'); } catch {}
+  const changed = have !== want;
+  if (changed && !check) {
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, want);
+  }
+  return { path: file, changed };
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const cmd = process.argv[2];
   try {

@@ -35,6 +35,9 @@ evals/metrics/out.html
 # personal Claude Code overrides
 .claude/settings.local.json
 
+# generated from profiles/<name>/rules.md by team.mjs start / setup.mjs --sync-profile
+.claude/active-profile.md
+
 # Playwright MCP working files (overlay scripts, downloads, snapshots)
 .playwright-mcp/
 

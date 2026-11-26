@@ -3,6 +3,7 @@
 //
 //   node tools/setup.mjs                          show the current setup (changes nothing)
 //   node tools/setup.mjs <folder of ep-etm-fe-qa>  check that folder, then save it as PW_REPO in the git-ignored .env
+//   node tools/setup.mjs --sync-profile           write .claude/active-profile.md (project rules CLAUDE.md imports) from profiles/<name>/
 //
 // Windows example:  node tools/setup.mjs "D:\mac\DocforAi\PTTEP_Auto\ep-etm-fe-qa"
 // Mac example:      node tools/setup.mjs ~/Documents/PTTEP_Auto/ep-etm-fe-qa
@@ -13,7 +14,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { resolveRepos } from './heal/config.mjs';
-import { profile } from './profile.mjs';
+import { profile, syncActiveProfile } from './profile.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ENV_FILE = path.join(ROOT, '.env');
@@ -28,6 +29,11 @@ const fromEnvFile = (name) => { const m = readEnvFile().match(new RegExp(`^\\s*$
 const expand = (p) => (p.startsWith('~') ? path.join(os.homedir(), p.slice(1)) : p);
 
 const arg = process.argv[2];
+if (arg === '--sync-profile') {
+  const s = syncActiveProfile();
+  console.log(`[setup] ${path.relative(ROOT, s.path)} ${s.changed ? 'written' : 'already up to date'} (profile ${profile().name}, from profiles/${profile().name}/rules.md)`);
+  process.exit(0);
+}
 console.log(`[setup] ${process.platform}, repo ${ROOT}`);
 
 // 1) PW_REPO
@@ -64,6 +70,11 @@ if (fs.existsSync(repo)) info(`Playwright repo has its own .env (logins): ${fs.e
 need(!!(process.env.XRAY_CLIENT_ID && process.env.XRAY_CLIENT_SECRET), 'XRAY_CLIENT_ID and XRAY_CLIENT_SECRET are set', 'set XRAY_CLIENT_ID and XRAY_CLIENT_SECRET as environment variables (never in a committed file)');
 const py = ['python3', 'python'].map((c) => ({ c, r: spawnSync(c, ['--version'], { encoding: 'utf8' }) })).find((x) => x.r.status === 0);
 info(py ? `${py.c} found (only the delete-test-executions skill needs it; on Mac the command is python3)` : 'Python not found (only the delete-test-executions skill needs it)');
+{ // .claude/active-profile.md: the project's rules for Claude (imported by CLAUDE.md, git-ignored, made by team.mjs start)
+  const s = syncActiveProfile({ check: true });
+  if (!s.changed) ok(`active profile ${profile().name}`);
+  else console.log(`  WARN  .claude/active-profile.md is ${fs.existsSync(s.path) ? 'stale' : 'missing'}: run node tools/setup.mjs --sync-profile`);
+}
 const hasBoard = fs.existsSync(path.join(ROOT, '.claude', 'team', 'team.mjs'));
 need(hasBoard, 'status board script found', 'the .claude/team folder is missing: re-clone the repo');
 

@@ -19,7 +19,7 @@
 //   node .claude/team/team.mjs open | stop | status
 // Several cards at once: add --job ETM-1234 to start/set/ask/clear/log so each card has its own tab.
 import fs from 'node:fs';
-import { profile, escapeKey } from '../../tools/profile.mjs';
+import { profile, escapeKey, syncActiveProfile } from '../../tools/profile.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync } from 'node:child_process';
@@ -120,6 +120,11 @@ if (cmd === 'start') {
   const started = await ensureServer(true);
   add({ type: 'set', agent: 'lead', state: 'working', text: 'เริ่มงาน ' + key });
   console.log('Board: ' + URL_BASE + (started ? ' (opened)' : ' (already running)'));
+  // project rules for Claude: .claude/active-profile.md from profiles/<name>/rules.md (CLAUDE.md imports it); never stops start
+  try {
+    const s = syncActiveProfile();
+    if (s.changed) console.log('Active profile written: ' + path.relative(process.cwd(), s.path) + ' (from profiles/' + profile().name + '/rules.md)');
+  } catch (e) { console.log('WARN active profile not written: ' + e.message + ' (run node tools/setup.mjs --sync-profile)'); }
   // the lead's AI-miss rules, printed at every card start so they cannot be skipped (TEAM.md "AI misses")
   try {
     const { show } = await import(new URL('../../tools/ai-miss.mjs', import.meta.url).href);
