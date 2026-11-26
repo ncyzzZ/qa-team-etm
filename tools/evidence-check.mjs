@@ -17,6 +17,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { checkText, sourceFiles, summaryFiles } from './expected-source.mjs';
 
 const ROOT = process.env.EVIDENCE_CHECK_ROOT || path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');   // env: tests
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
@@ -174,6 +175,10 @@ export function gate(key, id, root = ROOT) {
   const cmp = readJson(path.join(CHECK_DIR(key, root), `${id}.compare.json`), null);
   if (!cmp) return { ok: false, why: `no compare for ${id}: the evidence-checker has not read it (brief, agent, compare)` };
   if (cmp.sourceHash !== src.hash) return { ok: false, why: `${id}: the draft or a picture changed after the check; brief and check again` };
+  if (src.kind === 'defect') { // gate G-exp: the Expected Result quotes the AC / BA answer / QA lead ruling word for word
+    const errs = checkText(fs.readFileSync(src.file, 'utf8'), { sources: sourceFiles(root), summaries: summaryFiles(root), root }).filter((p) => p.lvl === 'ERR');
+    if (errs.length) return { ok: false, why: `${id}: Expected Result source (tools/expected-source.mjs): ${errs.map((e) => e.msg).join(' | ').slice(0, 400)}` };
+  }
   return { ok: true, cmp };
 }
 

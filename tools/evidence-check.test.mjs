@@ -20,7 +20,9 @@ function fixture() {
     '# Defect draft', '**Summary:** search is case sensitive', '**Environment:** QA, TM',
     '### Step to Reproduce', '1. Open the filter', '2. Type `wk-2`',
     '### Actual Result', '- "No matches."', 'Pictures:', '- work/ETM-1/search-lowercase-no-match.png',
-    '### Expected Result', '- `wk-2` finds WK-2-A (Xray ETM-9 step 3)', '**Fields:**', '- Labels: FE'].join('\n'));
+    '### Expected Result', '- `wk-2` finds WK-2-A (Xray ETM-9 step 3)', 'Source:', '> ETM-1 AC 2: "search ignores upper and lower case"', '**Fields:**', '- Labels: FE'].join('\n'));
+  fs.mkdirSync(path.join(w, 'source'), { recursive: true });
+  fs.writeFileSync(path.join(w, 'source', 'jira-ETM-1.md'), 'AC 2: The search ignores upper and lower case.\n');
   const run = path.join(root, 'run'); fs.mkdirSync(path.join(run, 'evidence', 'ETM-5'), { recursive: true });
   fs.writeFileSync(path.join(run, 'evidence', 'ETM-5', 'step-1.png'), PNG);
   fs.writeFileSync(path.join(run, 'verdict-ETM-5.json'), JSON.stringify({ key: 'ETM-1', test: 'ETM-5', title: 'T', role: 'turnaroundManager',
@@ -94,6 +96,18 @@ test('gate: blocked without check, ok after compare, blocked again when a pictur
   const g = gate('ETM-1', src.id, root);
   assert.equal(g.ok, false);
   assert.match(g.why, /changed after the check/);
+});
+
+test('gate: blocked when the Expected Result quote is not in a source file (G-exp)', () => {
+  const { root, draft } = fixture();
+  fs.writeFileSync(path.join(root, 'work', 'ETM-1', 'source', 'jira-ETM-1.md'), 'AC 2: something else\n');
+  const src = defectSource(draft, root);
+  brief('ETM-1', src, root);
+  fs.writeFileSync(path.join(CHECK_DIR('ETM-1', root), `${src.id}.check.json`), JSON.stringify(okCheck(src.hash)));
+  runCompare('ETM-1', src.id, root);
+  const g = gate('ETM-1', src.id, root);
+  assert.equal(g.ok, false);
+  assert.match(g.why, /not word for word in any source file/);
 });
 
 test('team.mjs ask --gate defect refuses a question without the card and the check', () => {
