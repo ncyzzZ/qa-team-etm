@@ -1,0 +1,33 @@
+{
+  "id": "ETM-8635",
+  "sourceHash": "5a88d79a7d8f",
+  "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Shutdown Logic: New Plan 20,000 Work, Save disabled, no histogram (collapse handle at bottom). Rows 1-8: CBWA expanded, Mechanical (PM), Works 0001/0091/0201 with breakdown rows. No row count on screen; the number 22442 is only in the agent's caption (from grid height).", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "CBWA (row 1) shows a right arrow (collapsed); next row is 709 ETWA expanded, then 710 Mechanical (CM), 711 Work 0153, 712-715 breakdown rows. All rows drawn fully. Save button now enabled (blue). Count 21735 only in caption.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "CBWA expanded again (down arrow); rows 1-8 same text and order as picture 1. Save disabled again. Total row count is not on screen; 22442 only in caption.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 4, "sees": "Custom View panel open: Platform box -, Work Header +, Work +, Work Breakdown +. Table shows only Platform rows, all collapsed: 1 CBWA, 709 ETWA, 1367 ETWB, 1876 KPWA, 3335 KPWB, 4044 KPWC, 6103 KPWD, 7538 KPWE. Save enabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Panel: Work Header -, Work +, Work Breakdown +. Table: 1 CBWA expanded, its Work Header rows (Mechanical (PM) 2, Valve and Actuator Replacement 103, Valve Greasing 254, Stud bolt... 355, Electrical and Instrument (PM) 406, Inspection - CVI 457, Other 658) all collapsed. No Work rows visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "Panel: Work Header +, Work +, Work Breakdown +. Table again only Platform rows 1, 709, 1367, 1876, 3335, 4044, 6103, 7538, all collapsed. No error message, no leftover child rows in view.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "Panel: Work Header -, Work -, Work Breakdown -. Rows 1-8 identical to picture 1 (CBWA, Mechanical (PM), Work 0001, breakdown, Work 0091, Calibration, Work 0201, breakdown). Save disabled. The intermediate P+H state is not pictured; total count only in caption.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 8, "sees": "Custom View panel closed. Table scrolled to rows 11264-11271: 11264 Work 4992, 11265 Stroke Test, 11266 Other (Work Header, expanded), 11267 Work 0010, 11268 Calibration, 11269 Work 0100, 11270 Calibration, 11271 Work 0210. Save disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 9, "sees": "Same scroll area: 11264, 11265 at the top, 11266 Other now collapsed (right arrow) in the same screen position as picture 8; next visible rows 11370 8K PM Compressor and 11371 Work 0337. Caption covers rows between. No jump to top. Save enabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 10, "sees": "11266 Other expanded (down arrow, highlighted) at the same position; 11264, 11265 above; 11269, 11270 Calibration, 11271 below (11267-11268 under caption). Save disabled. One still picture; responsiveness only implied.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "ETM-8449 AC 2 'works as before' (quoted in work/ETM-8449/questions-for-BA.md)",
+    "User ruling 25 Nov 2026 in ba-answers.md: cascade as ETM-2431, 8635 s5/s7 expect P+H then + Work Breakdown brings back N0",
+    "BA answer F-6 2026-11-24 in ba-answers.md (Platform box cannot switch; - hides level)",
+    "Xray step text ETM-8635 s5/s7 updated 25 Nov 2026 (ba-answers.md line 44); no xray-steps backup file found"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Row counts (N0 22442, 21735, 18, 167) appear only in the agent's captions; no count is visible on screen in any picture.",
+    "Step 7: the intermediate P+H state after + Work Header has no picture; only the final full state is shown.",
+    "Steps 8-10 scroll-position rule: no specific AC or BA answer found; source is only the generic 'as before' AC 2.",
+    "Captions cover rows in pictures 9 and 10 (rows between 11266 and 11370, and 11267-11268).",
+    "Save button turns enabled after collapse and disabled after expand; worth asking whether expand/collapse should mark the plan changed.",
+    "Step 10 'page does not freeze' cannot be proven by one still picture."
+  ],
+  "summary": "ภาพทุกขั้นแสดงพฤติกรรมตรงกับ Expected (collapse/expand, Custom View แบบ cascade, ตำแหน่ง scroll ไม่กระโดด) แต่จำนวนแถว N0/22442 มีแค่ในคำบรรยายของ agent ไม่เห็นบนจอ และขั้น 7 ไม่มีภาพสถานะ P+H จึงยืนยันได้ไม่ครบ (cannot-tell) ข้อสังเกต: ปุ่ม Save เปิดใช้งานเมื่อ collapse"
+}

@@ -1,0 +1,79 @@
+{
+ "id": "ETM-8635",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 9,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 10,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Row counts (N0 22442, 21735, 18, 167) appear only in the agent's captions; no count is visible on screen in any picture.",
+  "Step 7: the intermediate P+H state after + Work Header has no picture; only the final full state is shown.",
+  "Steps 8-10 scroll-position rule: no specific AC or BA answer found; source is only the generic 'as before' AC 2.",
+  "Captions cover rows in pictures 9 and 10 (rows between 11266 and 11370, and 11267-11268).",
+  "Save button turns enabled after collapse and disabled after expand; worth asking whether expand/collapse should mark the plan changed.",
+  "Step 10 'page does not freeze' cannot be proven by one still picture."
+ ],
+ "summary": "ภาพทุกขั้นแสดงพฤติกรรมตรงกับ Expected (collapse/expand, Custom View แบบ cascade, ตำแหน่ง scroll ไม่กระโดด) แต่จำนวนแถว N0/22442 มีแค่ในคำบรรยายของ agent ไม่เห็นบนจอ และขั้น 7 ไม่มีภาพสถานะ P+H จึงยืนยันได้ไม่ครบ (cannot-tell) ข้อสังเกต: ปุ่ม Save เปิดใช้งานเมื่อ collapse",
+ "sourceHash": "5a88d79a7d8f"
+}
