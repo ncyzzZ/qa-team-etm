@@ -1,0 +1,139 @@
+{
+ "numPages": 3,
+ "found": {
+  "PP": {
+   "page": 1,
+   "yPx": 1072,
+   "bgNextToName": "CDDBF5",
+   "textFarthestFromBg": "595959",
+   "bandTop": [
+    [
+     "FFFFFF",
+     1213
+    ],
+    [
+     "004166",
+     1138
+    ],
+    [
+     "CDDBF5",
+     527
+    ],
+    [
+     "CEDBF5",
+     521
+    ]
+   ]
+  },
+  "Mechanical (PM)": {
+   "page": 1,
+   "yPx": 1106,
+   "bgNextToName": "E8EEF0",
+   "textFarthestFromBg": "1D39C4",
+   "bandTop": [
+    [
+     "FFFFFF",
+     1214
+    ],
+    [
+     "004166",
+     1137
+    ],
+    [
+     "E9EEF0",
+     438
+    ],
+    [
+     "E8EEF0",
+     329
+    ]
+   ]
+  },
+  "QA test breakdown 1 for ETM-7106": {
+   "page": 1,
+   "yPx": 1172,
+   "bgNextToName": "FFD6E7",
+   "textFarthestFromBg": "595959",
+   "bandTop": [
+    [
+     "FFFFFF",
+     2261
+    ],
+    [
+     "FFD6E7",
+     807
+    ],
+    [
+     "F5CEDE",
+     102
+    ],
+    [
+     "F5CDDE",
+     34
+    ]
+   ]
+  }
+ },
+ "texts": [
+  "FP",
+  " ",
+  "Sept",
+  "",
+  "03",
+  " ",
+  "649.00",
+  " ",
+  "-",
+  " ",
+  "-",
+  " ",
+  "-",
+  " ",
+  "-",
+  "1",
+  "",
+  "Valve Greasing",
+  " ",
+  "Sept",
+  "",
+  "03",
+  " ",
+  "649.00",
+  " ",
+  "-",
+  " ",
+  "-",
+  " ",
+  "-",
+  " ",
+  "-",
+  "2",
+  "",
+  "Lnw-ZA007 : Inspect and clean hea…",
+  " ",
+  "Sept",
+  "",
+  "03",
+  " ",
+  "649.00",
+  " ",
+  "-",
+  " ",
+  "-",
+  " ",
+  "CONCOR[13]",
+  " ",
+  "Crane Opt[10]",
+  " ",
+  "ECM[13]",
+  " ",
+  "+3",
+  " ",
+  "Overhaul gate valve GV-2207 on the ma…",
+  "3",
+  "",
+  "Inspect and clean heat exchanger E-…",
+  " ",
+  "Sept"
+ ]
+}

@@ -1,0 +1,225 @@
+{
+ "rows": [
+  {
+   "key": "platform",
+   "id": "platform:PP#1",
+   "bg": "D6E4FF",
+   "text": null,
+   "name": "PP",
+   "cells": [
+    {
+     "col": "sequenceNumber",
+     "bg": "D6E4FF",
+     "text": "1A1A1A"
+    },
+    {
+     "col": "name",
+     "bg": "D6E4FF",
+     "text": "595959"
+    },
+    {
+     "col": "durationHours",
+     "bg": "D6E4FF",
+     "text": "595959"
+    },
+    {
+     "col": "predecessors",
+     "bg": "D6E4FF",
+     "text": "595959"
+    },
+    {
+     "col": "equipmentNumber",
+     "bg": "D6E4FF",
+     "text": "595959"
+    },
+    {
+     "col": "manpowerResources",
+     "bg": "D6E4FF",
+     "text": "595959"
+    },
+    {
+     "col": "remark",
+     "bg": "D6E4FF",
+     "text": "595959"
+    }
+   ]
+  },
+  {
+   "key": "header",
+   "id": "platform:PP#1/wh:MECH_PM#0",
+   "bg": null,
+   "text": "1D39C4",
+   "name": "Mechanical (PM)",
+   "cells": [
+    {
+     "col": "sequenceNumber",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    },
+    {
+     "col": "name",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    },
+    {
+     "col": "durationHours",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    },
+    {
+     "col": "predecessors",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    },
+    {
+     "col": "equipmentNumber",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    },
+    {
+     "col": "manpowerResources",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    },
+    {
+     "col": "remark",
+     "bg": "F2F8FA",
+     "text": "1D39C4"
+    }
+   ]
+  },
+  {
+   "key": "work",
+   "id": "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0",
+   "bg": "FFE58F",
+   "text": "D48806",
+   "name": "Maimai",
+   "cells": [
+    {
+     "col": "sequenceNumber",
+     "bg": "FFE58F",
+     "text": "D48806"
+    },
+    {
+     "col": "name",
+     "bg": "FFE58F",
+     "text": "D48806"
+    },
+    {
+     "col": "durationHours",
+     "bg": "FFE58F",
+     "text": "D48806"
+    },
+    {
+     "col": "predecessors",
+     "bg": "FFE58F",
+     "text": "D48806"
+    },
+    {
+     "col": "equipmentNumber",
+     "bg": "FFE58F",
+     "text": "D48806"
+    },
+    {
+     "col": "manpowerResources",
+     "bg": "FFE58F",
+     "text": "D48806"
+    },
+    {
+     "col": "remark",
+     "bg": "FFE58F",
+     "text": "D48806"
+    }
+   ]
+  },
+  {
+   "key": "breakdown",
+   "id": "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0/task:c571a546-5c8e-4810-a6b6-0b6c16f545f3#0",
+   "bg": "FFD6E7",
+   "text": null,
+   "name": "QA test breakdown 1 for ETM-7106",
+   "cells": [
+    {
+     "col": "sequenceNumber",
+     "bg": "FFD6E7",
+     "text": "1A1A1A"
+    },
+    {
+     "col": "name",
+     "bg": "FFD6E7",
+     "text": "595959"
+    },
+    {
+     "col": "durationHours",
+     "bg": "FFD6E7",
+     "text": "595959"
+    },
+    {
+     "col": "predecessors",
+     "bg": "FFD6E7",
+     "text": "595959"
+    },
+    {
+     "col": "equipmentNumber",
+     "bg": "FFD6E7",
+     "text": "595959"
+    },
+    {
+     "col": "manpowerResources",
+     "bg": "FFD6E7",
+     "text": "595959"
+    },
+    {
+     "col": "remark",
+     "bg": "FFD6E7",
+     "text": "595959"
+    }
+   ]
+  },
+  {
+   "key": "none",
+   "id": "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1",
+   "bg": null,
+   "text": null,
+   "name": "QA test work 1 for ETM-7125",
+   "cells": [
+    {
+     "col": "sequenceNumber",
+     "bg": "F2F8FA",
+     "text": "1A1A1A"
+    },
+    {
+     "col": "name",
+     "bg": "F2F8FA",
+     "text": "595959"
+    },
+    {
+     "col": "durationHours",
+     "bg": "F2F8FA",
+     "text": "595959"
+    },
+    {
+     "col": "predecessors",
+     "bg": "F2F8FA",
+     "text": "595959"
+    },
+    {
+     "col": "equipmentNumber",
+     "bg": "F2F8FA",
+     "text": "595959"
+    },
+    {
+     "col": "manpowerResources",
+     "bg": "F2F8FA",
+     "text": "595959"
+    },
+    {
+     "col": "remark",
+     "bg": "F2F8FA",
+     "text": "595959"
+    }
+   ]
+  }
+ ],
+ "pdf": "output/evidence/ETM-8870/NN TEST QA_S26 Row Colour_Overall_20261126.pdf"
+}

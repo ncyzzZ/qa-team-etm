@@ -90,3 +90,8 @@ Spec change for 8859 (steps 22/26) is in ep-etm-fe-qa, not committed.
 - Run 2026-11-26_092144: 8862 PASSED (21 steps), 8867 PASSED (precondition + 8 steps), both first attempt. The 25 Nov "original Platform lost FFCCC7" is not seen again; no defect (user's hand check agrees).
 - Waiting for the user's yes: Xray ETM-8875 8862 TO DO->PASSED and 8867 TO DO->PASSED with run pictures; Xray ETM-8862 step 8 expected result text -> "The Work Details modal closes and the row shows the new value (no toast)".
 - 09:45 user "ทำได้ทั้งหมด" (chat): Xray ETM-8862 step 8 expected result changed (backup `xray-steps-before-8862-step8-2026-11-26.json`), and ETM-8875 8862 + 8867 pushed PASSED with run pictures. Read back: 14 PASSED, 1 FAILED (8868), 4 TO DO (8860, 8861, 8869, 8870).
+
+## Update 26 Nov 11:30 - ETM-8870 run (user "รันได้")
+- Probe: Export PDF (Overall) of plan S26 Row Colour; PDF colours equal the screen in all 7 columns; uncoloured row default. All 5 steps proposed pass. Details `manual-run-8870-20261126/result.md`. Colours reset to No Color and saved.
+- Not pushed yet: waiting for the user's yes to push 8870 PASSED with the 5 pictures.
+- 11:40 user "push ได้" (chat): ETM-8870 pushed PASSED to ETM-8875 with 5 pictures (manual check, no Playwright run result). Read back: 15 PASSED, 1 FAILED (8868), 3 TO DO (8860, 8861, 8869).
