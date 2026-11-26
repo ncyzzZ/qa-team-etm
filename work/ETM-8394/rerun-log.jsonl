@@ -1,0 +1,3 @@
+{"t":"2026-11-26T09:02:34.692Z","forced":["ETM-8767"],"why":"spec changed: steps 9/13 Worklist search helper fixed (double Enter + wait for search response)","args":"tests/fe/e2e/importWork/verifyImportWorkStatus.spec.ts -g ETM-8767 --reporter=line"}
+{"t":"2026-11-26T09:18:34.984Z","forced":["ETM-8767"],"why":"spec changed: steps 9/13 check Status D on the Worklist (deleted Work stays in grid)","args":"tests/fe/e2e/importWork/verifyImportWorkStatus.spec.ts -g ETM-8767 --reporter=line"}
+{"t":"2026-11-26T09:27:51.778Z","forced":["ETM-8767"],"why":"Wide Plan B - NN made Active again (user yes); JO steps were blocked","args":"tests/fe/e2e/importWork/verifyImportWorkStatus.spec.ts -g ETM-8767 --reporter=line"}

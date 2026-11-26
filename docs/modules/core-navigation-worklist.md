@@ -104,3 +104,7 @@ Shutdown Event List  (หน้าแรกหลัง login)
 - Title "Create Worklist" · `*Worklist Name` (0/50) · `Worklist Status` (default Initial) · `Active Status` (toggle, default Inactive) · `Description` (0/200) · ปุ่ม "Cancel" / "Save"
 
 ---
+
+## Live checks
+Facts checked on QA (read only) before a script step was written. Same rule: newest date wins.
+- Import Work with Action Delete on a Work (and Delete on its breakdown rows) is a soft delete: shutdown_work.sdw_is_delete = 'Y', sdw_status kept, the Work stays in the Worklist grid with Status D; breakdown rows stay in shutdown_activity_breakdown (seen in the ETM-8394 runs, dev answer ETM-10051) (ETM-8394, 2026-11-24, live check by automator)

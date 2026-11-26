@@ -137,3 +137,33 @@
 - 2026-11-26: [QA] Execute ETM-8565 -> Done (user "ปิด QA subtask ของ 8394 ได้เลย"). [QA] Create ETM-8564 was already Done. Not done: resolve-tested-by, Test Execution ETM-8774 Done, Story to Ready for UAT (each needs its own yes).
 - 2026-11-26 closeout (user "ทำต่อเลย"): 19 Tests Resolved (Done) -> Closed, assignee already the user (JQL count 19). Test Execution ETM-8774 Open -> In Progress -> Done. Story ETM-8394 -> Ready for UAT. BE subtasks ETM-8602/8604 still In Progress (not QA, not touched).
 - Note: Story AC 7 still says "a Work Breakdown is removed permanently"; that part now belongs to the improvement story from ETM-10051 (no key yet).
+- 2026-11-26 12:43 ETM-10051 check (user "ทั้ง 8042 และ 10051"): ETM-10051 is "Deployed to QA", but run 2026-11-26_124337 (8767 with CHECK_ETM10051=1, which turns the breakdown check of steps 9/13 back on) failed on both attempts: breakdown 1 of Z2 is still there after Delete. Not fixed on QA. Xray 8767 stays PASSED (this run was the defect check only; run-results.json restored). Nothing written to Jira.
+- 2026-11-26 12:50 (user "ใส่ comment"): ETM-10051 comment 600973 "Retest: Failed" with @mention of the assignee and 3 pictures (step7, step8, test-failed-1 of run 124337). Draft work/ETM-8394/retest-failed-ETM-10051.md (expected-source 0 errors; AC 7 source saved in work/ETM-8394/source/). Not done (each needs its own yes): [QA] Reopen Defect sub-task, defect back to Open, Xray step FAILED (8767 step 9 no longer checks this).
+- 2026-11-26 12:58 (user: dev fixes only the import delete of a breakdown row for now; "ใส่เลย"): ETM-10051 comment 600974 (scope): breakdown-row Delete with the Work kept passes (8747, run 113015); Work + breakdown Delete still leaves breakdowns -> improvement story. Not reopened, no [QA] Reopen sub-task (user).
+- 2026-11-26 13:00 (user "ปิด defect ไปได้เลย"): ETM-10051 Deployed to QA -> Ready for UAT (team convention after retest; the workflow has no Closed, only Deployed to UAT / Cancelled as done states).
+- 2026-11-26 (user "รอ story มีก่อน"): TC for Work + breakdown Delete (old 8767 steps 9/13, TM Z2 and JO Z3) waits for the improvement story key. Script ready: CHECK_ETM10051=1 on ETM-8767.
+- 2026-11-26 15:30 ETM-10051 re-check (user "เช็คใหม่อีกที"): run 2026-11-26_153052 (CHECK_ETM10051=1, 8767 + 8747). 8747 (Delete a breakdown row, Work kept) passed. 8767 failed: "Breakdown 1 of W-8394-Z2-qkoo is deleted": the breakdown of a deleted Work is still live. Same as 12:43. run-results.json 8767 restored to run 112533 (scoped test stays PASSED). Nothing written to Jira/Xray.
+- 2026-11-26 (user, chat): no improvement story. Dev and BA say the current behaviour is correct (deleting a Work by import keeps its breakdowns in the table). QA accepts it. Questions for dev on what this design means: work/ETM-8394/questions-for-dev-ETM-10051.md (not sent yet). The "open: TC for the improvement story" item above is dropped.
+- 2026-11-26 dev answers (work/ETM-8394/dev-answers-ETM-10051.md, from code reading, not run on QA):
+  - Work delete is a soft delete; its breakdowns are hidden via the Work filter and hard-deleted by a daily job after 30 days.
+  - A breakdown Delete row under a deleted Work is validated but skipped.
+  - A breakdown UUID under a deleted Work gives "UUID does not exist", not the ETM-8766 message.
+  - Restore brings the breakdowns back.
+  - RISK: a Manpower Mob created from a saved Gantt before it is saved again still counts the deleted Work's breakdowns (not reproduced). Candidate new TC.
+  - AC 7 wording proposed by dev: "the Work is deleted and its breakdowns are no longer shown. They are removed for good after 30 days."
+- 2026-11-26 16:00-16:25 ("Do both"):
+  - Spec 8767 steps 9/13 now also check the Worklist: searching the Work Number finds it once with Status D. QA keeps deleted Works in the grid, which contradicts dev answer 3, "Worklist hidden".
+    - Run 161832: step 9 (TM, Z2) passed. Step 11 (JO upload) failed: the Worklist does not load for the JO.
+    - Cause: event NN TEST QA has no Active Plan. "Wide Plan B - NN" was set inactive at 12:42 local, and its Worklist item swl_active_status is false. Turning it Active needs the user's yes (shared data).
+    - Xray steps not changed yet.
+  - New spec tests/fe/e2e/importWork/verifyMobPlanAfterWorkDelete.spec.ts (ETM-8394-MOB, no Xray Test yet). Run 161408 FAILED in the product:
+    - the Manpower Mob Plan created after deleting Work DEL (Gantt not saved again) counts DEL: "QA8394 Del" 5/day, total 10;
+    - KEEP: 3/day, total 6.
+    - This confirms dev's point 3. Defect candidate; needs the user's yes.
+  - Data file ETM-8394.data.cjs got a `mob` plan (automator).
+- 2026-11-26 16:27:
+  - User "Turn it Active": "Wide Plan B - NN" made Active again with its Worklist ON (DB confirmed). turnPlanActive is now exported from importStatus.helpers.
+  - Run 162749: 8767 13/13 passed with the new Status D check.
+  - Xray step 9/13 update was refused: "Issue 2300071 is not editable" (the Test is Closed after closeout). Text before saved in xray-steps-8767-9-13-before-2026-11-26.json. Reopening the Test needs the user's yes.
+- 2026-11-26 16:41 (user: no reopen of 8767, 'ใส่ comment ไว้'): ETM-10051 comment 601208 = final summary (by design, 8747 passed, 8767 13/13 with Status D check, Mob follow-up found). Xray 8767 steps 9/13 left as they are (Test Closed).
+- 2026-11-26 (user pasted dev follow-up): the Mob count of a deleted Work stays for good, even after the Gantt is saved (the Mob stores its snapshot in manpower_mob_resource/period). A Mob Plan created after a Gantt save is correct. Recorded in dev-answers-ETM-10051.md. Defect: user 'Not now'.
