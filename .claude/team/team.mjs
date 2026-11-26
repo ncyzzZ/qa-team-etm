@@ -123,7 +123,7 @@ if (cmd === 'start') {
   // project rules for Claude: .claude/active-profile.md from profiles/<name>/rules.md (CLAUDE.md imports it); never stops start
   try {
     const s = syncActiveProfile();
-    if (s.changed) console.log('Active profile written: ' + path.relative(process.cwd(), s.path) + ' (from profiles/' + profile().name + '/rules.md)');
+    if (s.changed) console.log('project rules changed: re-read .claude/active-profile.md (from profiles/' + profile().name + '/rules.md)');
   } catch (e) { console.log('WARN active profile not written: ' + e.message + ' (run node tools/setup.mjs --sync-profile)'); }
   // the lead's AI-miss rules, printed at every card start so they cannot be skipped (TEAM.md "AI misses")
   try {

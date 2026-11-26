@@ -1,6 +1,9 @@
 {
   "title": "ACME",
-  "jira": { "site": "acme.atlassian.net", "projectKey": "ACME", "projectId": 0, "boardId": 0 },
+  "jira": {
+    "site": "acme.atlassian.net", "projectKey": "ACME", "projectId": 0, "boardId": 0,
+    "fields": {"foundInEnvironment": {"id": "", "options": {"DEV": "", "QA": "", "UAT": "", "PROD": ""}}, "epic": {"id": ""}, "sprint": {"id": ""}}
+  },
   "repos": { "pwRepoDir": "acme-fe-qa", "feRepoDir": "acme-fe", "feBranch": "develop" },
   "ui": { "libraryTokenRe": "^$" },
   "docs": { "rules": "rules.md", "uiMap": null, "templates": null }

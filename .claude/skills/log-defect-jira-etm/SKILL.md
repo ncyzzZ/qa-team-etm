@@ -46,12 +46,12 @@ If the Test Case / AC behind the defect conflicts with what the user describes a
 ## Step 2 - Determine the fields
 
 - **Work type**: `Defect` if Found-in Environment is QA; `Bug` if UAT or PROD. Ask if the environment isn't stated.
-- **Found-in Environment** (`customfield_15852`, radio, required for Defect/Bug): DEV=`16335`, QA=`16336`, UAT=`16337`, PROD=`16338`.
+- **Found-in Environment** (field `jira.fields.foundInEnvironment.id` of the active profile, radio, required for Defect/Bug): option ids DEV / QA / UAT / PROD in `jira.fields.foundInEnvironment.options` (`node tools/profile.mjs show`; account copies: "Project settings" at the end of this skill).
 - **Summary**: prefix with the originating Story's key, e.g. `[<KEY>-6317] Save button stays disabled after collapsing rows...`. If a follow-up defect does not repeat the Story key but the context (same feature, file, session) clearly continues the previous defect's Story, reuse that key.
-- **Epic**: read the originating Story's parent Epic and set it on both `parent` and `customfield_10014`.
+- **Epic**: read the originating Story's parent Epic and set it on both `parent` and the Epic field (`jira.fields.epic.id`).
 - **Labels**: for a UI or Frontend (FE) issue set **both** `FE` and `UI`, never just one.
 - **Issue link**: link to the originating Story with the standard "Relates" type. Never the Tests / is-tested-by type (reserved for Test issues).
-- **Sprint**: set the Defect/Bug's Sprint to the originating Story's active sprint (read the Story's `customfield_10020`, copy the sprint id). Easy to forget: do it in this same step.
+- **Sprint**: set the Defect/Bug's Sprint to the originating Story's active sprint (read the Story's Sprint field `jira.fields.sprint.id`, copy the sprint id). Easy to forget: do it in this same step.
 - **Original Estimate / time tracking**: NEVER set an Original Estimate on the Defect/Bug or on its `[QA]` sub-task (Step 8). Leave `timetracking.originalEstimate` empty everywhere in this flow. Do not set a Remaining estimate either (changed 18 Nov 2026, user: "no Original Estimate, take it out of raising a defect"): setting one through `editJiraIssue` makes Jira copy it into Original Estimate and the MCP tool cannot clear it again. The only time tracking in this flow is the worklog on the sub-task (Step 8, estimated per defect).
 
 ## Step 3 - Resolve the assignee automatically (do not ask, do not guess)
@@ -70,13 +70,13 @@ Always confirm against the actual Story or `lookupJiraAccountId`; other develope
 
 ## Step 4 - Create the issue
 
-First search for an existing defect (`project = <KEY> AND issuetype in (Defect, Bug) AND summary ~ "<Story key>"`, narrow `fields`) with the same symptom; if one exists, tell the user instead of creating a duplicate. After an error from `createJiraIssue`, search again before retrying. Create via `createJiraIssue` with the fields above and `contentFormat: "markdown"`. Do not pass `timetracking` / Original Estimate. `customfield_10020` (Sprint) takes a plain number (the sprint id), not an array: `"customfield_10020": 17028`.
+First search for an existing defect (`project = <KEY> AND issuetype in (Defect, Bug) AND summary ~ "<Story key>"`, narrow `fields`) with the same symptom; if one exists, tell the user instead of creating a duplicate. After an error from `createJiraIssue`, search again before retrying. Create via `createJiraIssue` with the fields above and `contentFormat: "markdown"`. Do not pass `timetracking` / Original Estimate. The Sprint field (`jira.fields.sprint.id`) takes a plain number (the sprint id), not an array: `"<jira.fields.sprint.id>": <sprint id>` (an example id is in the active project's rules).
 
 When creating an issue link (`createIssueLink`) pass `type`, `inwardIssue` and `outwardIssue` as plain strings (`type: "Relates"`, `inwardIssue: "<KEY>-6857"`, `outwardIssue: "<KEY>-6538"`), not JSON objects. Use `getIssueLinkTypes` first if the exact link type name is in doubt.
 
 ## Step 5 - Known automation quirk (parked, do not attempt to fix)
 
-A known project automation has been seen to silently flip a newly created QA Defect's Work type / Found-in Environment (`customfield_15852`) shortly after creation. This is parked pending the user's own decision: do not re-fetch-and-correct it. If you notice it happened, mention it to the user in passing and do not change the field back.
+The project automations known to change a newly created Defect's fields are listed in the active project's rules (Data rules). They are parked pending the user's own decision: do not re-fetch-and-correct them. If you notice one happened, mention it to the user in passing and do not change the field back.
 
 ## Step 6 - Embed evidence images the token-lean way (hard rule, one exception)
 
@@ -136,7 +136,7 @@ Create a sub-task under the new Defect/Bug every time, right after the Defect/Bu
   - 30m+: hard to reproduce (intermittent, several tries), cross-module, or needed investigation of the API/network.
   Put the estimate and a few words of why in the go-ahead question (e.g. "worklog 15m: repro + GIF"), so the user can change it before it is logged.
 - **No Original Estimate and no Remaining estimate on the sub-task, ever** (corrected 16 Nov 2026, and again 18 Nov 2026 when the user dropped the 15m Remaining estimate: Jira copies any estimate set by `editJiraIssue` into Original Estimate, and the MCP tool cannot clear it; on <KEY>-8673 and <KEY>-8674 the user had to remove it by hand). So: create the sub-task with NO `timetracking` field at all; add only the worklog with `addWorklogToJiraIssue` (the tool has no remaining-estimate parameter; Remaining then shows `0m`, that is accepted); never call `editJiraIssue` on `timetracking`. Then re-read the sub-task (`getJiraIssue`, `fields: ["timetracking"]`) and confirm `originalEstimate` is empty; if it is set, tell the user in Step 9 (do not try to clear it). The parent Defect/Bug never gets any estimate (Step 2).
-- A sub-task cannot be given a Sprint directly (the API rejects `customfield_10020` on a sub-task); it inherits the parent's sprint (Step 2), so leave that field out.
+- A sub-task cannot be given a Sprint directly (the API rejects the Sprint field `jira.fields.sprint.id` on a sub-task); it inherits the parent's sprint (Step 2), so leave that field out.
 - **When the parent is a Defect or Bug, mark the sub-task Done immediately at creation** (confirmed 25 Sep 2026; on <KEY>-6767 Jira's own automation had already set it to Done). Transition Open -> "Start implementation" (In Progress) -> "Finished" (Done); if the transition list comes back empty, check the status again: automation may already have moved it to Done, then nothing more is needed.
 
 ## Step 9 - Confirm

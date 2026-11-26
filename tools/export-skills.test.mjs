@@ -29,3 +29,20 @@ test('exportSkills: one zip per skill folder with every file of the skill, in a 
   assert.match(fs.readFileSync(path.join(out, 'a-skill', 'SKILL.md'), 'utf8'), /Synced from the qa-team-etm repo on 2026-11-24\. A/);
   assert.ok(fs.existsSync(path.join(out, 'a-skill', 'helper.py')));
 });
+
+test('exportSkills: appends the profile settings block (site, key, id, board, fields) and leaves the rest as is', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'export-skills-p-'));
+  const body = "---\nname: c-skill\ndescription: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). C\n---\n# C\nUse <KEY>.\n";
+  fs.mkdirSync(path.join(root, '.claude/skills/c-skill'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.claude/skills/c-skill/SKILL.md'), body);
+  const p = { name: 'acme', jira: { site: 'acme.atlassian.net', projectKey: 'ACME', projectId: 77, boardId: 88,
+    fields: { foundInEnvironment: { id: 'customfield_1', options: { QA: '501' } }, sprint: { id: 'customfield_2' } } } };
+  const out = path.join(root, 'out');
+  exportSkills({ root, out, date: '2026-11-26', p });
+  const md = fs.readFileSync(path.join(out, 'c-skill', 'SKILL.md'), 'utf8');
+  const head = accountDescription(body, '2026-11-26');
+  assert.ok(md.startsWith(head), 'original text kept');
+  const block = md.slice(head.length);
+  assert.match(block, /^\n## Project settings \(synced from profiles\/acme\)\n/);
+  for (const v of ['acme.atlassian.net', 'ACME', '77', '88', 'foundInEnvironment', 'customfield_1', 'QA=501', 'sprint', 'customfield_2']) assert.ok(block.includes(v), v);
+});

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Bulk delete helper for the active profile's Jira project. Secrets come from env, never printed.
 Env: JIRA_EMAIL, JIRA_API_TOKEN, XRAY_CLIENT_ID, XRAY_CLIENT_SECRET
-Site and project key: env JIRA_SITE and PROJECT_KEY, else `node tools/profile.mjs show` of this repo.
+Site and project key: env JIRA_SITE and PROJECT_KEY (both or neither), else `node tools/profile.mjs show` of this repo.
   whoami                                          -> checks Jira + Xray credentials
   folder  <folder path e.g. "/Manual Test/Bin">   -> prints keys in that Xray folder (no sub-folders)
   tree                                            -> prints the Xray folder tree of the project (find a path)
@@ -20,13 +20,15 @@ def profile():
     if _PROFILE:
         return _PROFILE
     site, key = os.environ.get("JIRA_SITE"), os.environ.get("PROJECT_KEY")
+    if bool(site) != bool(key):
+        sys.exit("set both JIRA_SITE and PROJECT_KEY, or neither (then the repo's active profile is used)")
     if not (site and key):
         root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
         try:
             out = subprocess.run(["node", os.path.join(root, "tools", "profile.mjs"), "show"],
                                  capture_output=True, text=True, timeout=30)
             j = json.loads(out.stdout)["jira"]
-            site, key = site or j["site"], key or j["projectKey"]
+            site, key = j["site"], j["projectKey"]
         except Exception as e:
             sys.exit(f"project profile not read ({e}): run inside the QA repo, or set JIRA_SITE and PROJECT_KEY")
     site = site if site.startswith("http") else "https://" + site
@@ -125,6 +127,8 @@ def main():
         allowed = {"Test Execution"}
         if args and args[0] == "--types":
             allowed = {t.strip() for t in args[1].split(",")}; args = args[2:]
+        site, project = profile()
+        print(f"SITE {site} PROJECT {project}")  # shown before anything is deleted
         ok = fail = 0
         for key in args:
             code, r = jira("GET", f"/rest/api/3/issue/{key}?fields=issuetype")

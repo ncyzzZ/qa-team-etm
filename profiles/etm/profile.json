@@ -1,6 +1,9 @@
 {
   "title": "ETM (EP-Turnaround Management)",
-  "jira": { "site": "pttep.atlassian.net", "projectKey": "ETM", "projectId": 14436, "boardId": 4014 },
+  "jira": {
+    "site": "pttep.atlassian.net", "projectKey": "ETM", "projectId": 14436, "boardId": 4014,
+    "fields": {"foundInEnvironment": {"id": "customfield_15852", "options": {"DEV": "16335", "QA": "16336", "UAT": "16337", "PROD": "16338"}}, "epic": {"id": "customfield_10014"}, "sprint": {"id": "customfield_10020"}}
+  },
   "repos": { "pwRepoDir": "ep-etm-fe-qa", "feRepoDir": "stms-fe", "feBranch": "develop" },
   "ui": { "libraryTokenRe": "^(b|ag|ant|nz|ql)-" },
   "docs": { "rules": "rules.md", "uiMap": "docs/UI_Map_ETM.md", "templates": "docs/ETM_Templates" }

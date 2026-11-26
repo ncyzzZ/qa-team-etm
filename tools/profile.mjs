@@ -50,6 +50,16 @@ export function keysIn(text, p = profile()) { return [...new Set(String(text).ma
 export function firstKey(text, p = profile()) { return keysIn(text, p)[0] || ''; }
 export function browseUrl(key, p = profile()) { return `https://${p.jira.site}/browse/${key}`; }
 
+/** "- Jira fields: ..." lines for jira.fields ({name: {id, options?}}); empty when the profile has none. */
+export function fieldLines(fields) {
+  const list = Object.entries(fields || {}).filter(([, f]) => f && f.id);
+  if (!list.length) return [];
+  return ['- Jira fields (`jira.fields.<name>`):', ...list.map(([n, f]) => {
+    const opts = Object.entries(f.options || {}).filter(([, v]) => v).map(([k, v]) => `${k}=${v}`).join(', ');
+    return `  - \`${n}\`: \`${f.id}\`${opts ? ` (options ${opts})` : ''}`;
+  })];
+}
+
 /** Text of .claude/active-profile.md: header, settings from profile.json, then the profile's rules.md as is. */
 export function renderActiveProfile(p) {
   const rulesName = p.docs?.rules || 'rules.md';
@@ -65,6 +75,7 @@ export function renderActiveProfile(p) {
     `- \`<KEY>\` in CLAUDE.md, TEAM.md, agents and skills means ${j.projectKey}; \`<KEY>-1234\` is a card of this project. Jira links: https://${j.site}/browse/<card>.`,
     `- Playwright repo folder: \`${r.pwRepoDir}\` (PW_REPO). FE repo folder: \`${r.feRepoDir}\` (FE_REPO), branch \`${r.feBranch || 'develop'}\`.`,
     `- UI map: ${d.uiMap ? `\`${d.uiMap}\`` : '(none)'}. Templates: ${d.templates ? `\`${d.templates}/\`` : '(none)'}.`,
+    ...fieldLines(j.fields),
     `- Full profile: \`node tools/profile.mjs show\`.`,
   ].join('\n');
   return `<!-- generated from ${rel}; edit that file -->\n# Active project: ${p.title || j.projectKey}\n\n${settings}\n\n${rules.endsWith('\n') ? rules : rules + '\n'}`;
@@ -86,9 +97,19 @@ export function syncActiveProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, 
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const cmd = process.argv[2];
+  if (cmd === 'session-context') {
+    // SessionStart hook (.claude/settings.json): stdout goes into Claude's context. Never blocks a session.
+    try {
+      const p = profile();
+      const text = renderActiveProfile(p);
+      try { syncActiveProfile({ p }); } catch {} // a read-only checkout still gets the rules in context
+      process.stdout.write(text);
+    } catch (e) { console.log(`PROJECT PROFILE NOT LOADED: ${e.message} — run node tools/setup.mjs`); }
+    process.exit(0);
+  }
   try {
     if (cmd === 'show') console.log(JSON.stringify(profile(), null, 2));
     else if (cmd === 'key') console.log(profile().jira.projectKey);
-    else { console.error('usage: node tools/profile.mjs show|key'); process.exit(2); }
+    else { console.error('usage: node tools/profile.mjs show|key|session-context'); process.exit(2); }
   } catch (e) { console.error(e.message); process.exit(1); }
 }

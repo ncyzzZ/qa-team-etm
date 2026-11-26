@@ -14,7 +14,7 @@ The cycle itself (who does what, checkpoints, board, agents) is in `TEAM.md`; th
 The user's whole message is one or more Jira Story links/keys. That runs the cycle in `TEAM.md`.
 - **Several cards**: quick scan, then (after the quick-scan review) create the two `[QA]` subtasks and propose Original Estimates, for each card. Report all together and wait. If a card fails to load, say which and continue.
 - **Only one part asked** ("just quick scan", "just the scripts"): do only that part.
-- Any defect, bug or retest: load skill `log-defect-jira-etm` fresh and follow it (section 8). SIMOP / Work Conflict Matrix Stories: also `etm-simop-rules` (settled rules are not BA questions). If either skill is not available, say so plainly; never work from memory.
+- Any defect, bug or retest: load skill `log-defect-jira-etm` fresh and follow it (section 8). Stories the active project's Page rules name a project-only skill for: also load that skill (settled rules are not BA questions). If either skill is not available, say so plainly; never work from memory.
 
 ## Settings
 

@@ -50,3 +50,26 @@ test('syncActiveProfile check mode reports stale without writing', () => {
   assert.equal(r.changed, true);
   assert.equal(fs.existsSync(r.path), false);
 });
+
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const CLI = path.join(path.dirname(fileURLToPath(import.meta.url)), 'profile.mjs');
+const runCli = (root, name) => spawnSync(process.execPath, [CLI, 'session-context'], {
+  encoding: 'utf8', env: { ...process.env, QA_PROFILE_ROOT: root, QA_PROFILE: name },
+});
+
+test('session-context prints the active profile (header + rules) and writes the file', () => {
+  const { root } = setup();
+  const r = runCli(root, 'acme');
+  assert.equal(r.status, 0);
+  assert.equal(r.stdout.split('\n')[0], '<!-- generated from profiles/acme/rules.md; edit that file -->');
+  assert.match(r.stdout, /Only ADMIN on QA\./);
+  assert.ok(fs.existsSync(path.join(root, '.claude', 'active-profile.md')));
+});
+
+test('session-context with a broken profile prints one NOT LOADED line and exits 0', () => {
+  const { root } = setup();
+  const r = runCli(root, 'nosuch');
+  assert.equal(r.status, 0);
+  assert.match(r.stdout, /^PROJECT PROFILE NOT LOADED: .*profile "nosuch" not found.* — run node tools\/setup\.mjs\n$/);
+});

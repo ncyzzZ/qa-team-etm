@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { profile, fieldLines } from './profile.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -26,8 +27,19 @@ function zip(cwd, name) {
   if (r.status !== 0) throw new Error(`zip of ${name} failed: ${(r.stderr || r.error?.message || '').trim()}`);
 }
 
+/** Settings block appended to each exported SKILL.md: account copies run outside this repo, with no profile to read. */
+export function settingsBlock(p) {
+  const j = p.jira;
+  return [
+    '', `## Project settings (synced from profiles/${p.name})`, '',
+    `- Jira site: ${j.site}. Project key: ${j.projectKey} (\`<KEY>\` in this skill)${j.projectId !== undefined ? `, project id ${j.projectId}` : ''}${j.boardId !== undefined ? `, board id ${j.boardId}` : ''}.`,
+    ...fieldLines(j.fields),
+    '',
+  ].join('\n');
+}
+
 /** @returns {string[]} the zip files written */
-export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'account-skills'), date = new Date().toISOString().slice(0, 10) } = {}) {
+export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'account-skills'), date = new Date().toISOString().slice(0, 10), p = profile() } = {}) {
   const src = path.join(root, '.claude', 'skills');
   const names = fs.readdirSync(src, { withFileTypes: true }).filter((e) => e.isDirectory() && fs.existsSync(path.join(src, e.name, 'SKILL.md'))).map((e) => e.name).sort();
   fs.mkdirSync(out, { recursive: true });
@@ -37,7 +49,8 @@ export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'accou
     fs.rmSync(path.join(out, `${n}.zip`), { force: true });
     fs.cpSync(path.join(src, n), path.join(out, n), { recursive: true });
     const md = path.join(out, n, 'SKILL.md');
-    fs.writeFileSync(md, accountDescription(fs.readFileSync(md, 'utf8'), date));
+    const text = accountDescription(fs.readFileSync(md, 'utf8'), date);
+    fs.writeFileSync(md, (text.endsWith('\n') ? text : text + '\n') + settingsBlock(p));
     zip(out, n);
     made.push(path.join(out, `${n}.zip`));
   }
