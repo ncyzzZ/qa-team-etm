@@ -49,3 +49,21 @@ Card: ETM-7343 Daily Report, Actual (%) font color from Plan (%). Story status o
 
 ## 25 Nov: 8678 solved
 - Cause: the Daily Report row switch of the Plan was Inactive (JO needs Plan Active + Daily Report row Active). Setup spec has a new step that turns it Active via the UI. 8678 PASSED as JO. Xray 8678 still TO DO: push waits for the user.
+
+## 25 Nov 2026 late: the last 3 TO DO (session etm-7343 clear)
+Xray ETM-8703 live: 15 PASSED, TO DO = ETM-8687, ETM-8691, ETM-8724. All 3 skipped in run-results.json (never PASSED).
+- ETM-8724 (TC-016, empty Plan/Actual): BLOCKER = not applicable by BA (24 Nov, DB columns NOT NULL). Stays TO DO; the user decides whether to remove it from ETM-8703 (Jira write) or leave it.
+- ETM-8691 (TC-008 edge pairs): pairs 0/0, 1/0, 0/1 are NOT reachable from the UI (a task is on screen only once started, so Plan 0 is never shown; Plan 1 needs a task of 1000+ h). Pairs 50/49, 50/50, 50/51 CAN be made: the colour rule uses the shown numbers (8725), and a Day-shift task of 41 h starting 09 Jul 07:00 ends 12 Jul ~13:30 (scheduler: 07:00-11:00, 1.5 h break, then to 22:00; read from Half A/B/C) -> Plan on 10 Jul = 39/78.5 = 49.7, shown 50. Pairs 100/99, 100/100 exist (Ramp Mixed#1 on 10 Jul, minPercent 40).
+- ETM-8687 (TC-006): steps 2-3 pass (Half A 49/49); step 4 (0/0 row) not reachable, same reason.
+- Proposal (asked on the board, job ETM-7343): add Work "Ramp Fifty" (41 h, plan ramp, card's own Event, plan NOT Active) through setup, reword 8691 without 0/0, 1/0, 0/1 and 8687 without step 4-5 (Xray write, backup first), re-run, push PASSED. Waits for the user's yes (setup and Xray writes are always asked).
+
+## 25 Nov evening: lead chose "เพิ่มงาน 41h + แก้ TC"
+- Xray reworded (backup: xray-backup-8687-8691-before-fix.json): ETM-8687 steps 4-5 (0/0) removed, summary without "including 0% and 0%", description updated; ETM-8691 pairs 0/0, 1/0, 0/1 removed from steps 1 and 3 data and from the description. Spec updated the same way (PW_REPO verifyDailyReportActualColor.spec.ts).
+- Plan "QA ETM-7343 Fifty" (41 h + 24 h) built by setup: scheduler ended the 41 h task on 12 Jul 12:00 (wall 77 h), Plan on 10 Jul = 50.6, shown 51: NOT usable, kept (card's Event, not Active, no seed).
+- Plan "QA ETM-7343 Fifty 65h" built by setup (SETUP_PLAN=fifty65): Fifty Long 1 = 09 Jul 07:00 - 14 Jul 12:00 (wall 125 h) -> Plan on 11 Jul = 50.4, shown 50; Fifty Full B 1 ends 10 Jul 22:00 -> Plan 100. Data file: plans.fifty65 + dailyReports.fifty65 (08-10 Jul frozen, 11 Jul open; Actuals Long 30 min 10, Full B 60 min 40).
+- `reset --apply` for report fifty65 (24 progress rows, 4 freeze rows; other reports 0 changes) was blocked by the permission check: asked on the board. After yes: reset --apply, then run 8691 with ETM7343_REPORT=fifty65 and 8687 with ETM7343_REPORT=ramp.
+- ETM-8724: stays TO DO, BLOCKER = N/A by BA (Actual/Plan NOT NULL); remove from ETM-8703 only on the user's yes.
+- 25 Nov 19:30: reset --apply (user "apply ได้"), READY. ETM-8687 PASSED on ramp (run 2026-11-25_193022), ETM-8691 PASSED on fifty65 (run 2026-11-25_193112, all 5 exact pairs: 50/49 red, 50/50 black, 50/51 green, 100/99 red, 100/100 black). Push of these 2 asked on the board (gate push). ETM-8724 BLOCKER: N/A by BA, stays TO DO.
+- 25 Nov ~19:40: pushed (user "push ได้") ETM-8687 and ETM-8691 PASSED with evidence (work/ETM-7343/xray-evidence-push-20261125/). Read back ETM-8703: 17 PASSED, 1 TO DO.
+- LEFT: ETM-8724 TO DO, named BLOCKER = not applicable by BA 24 Nov (Plan/Actual columns NOT NULL, an empty saved value cannot exist). Next only on the user's word: remove it from ETM-8703, or leave it TO DO. Phase 8 closeout only on "ปิดงานได้เลย".
+- Unused card data on QA: plan "QA ETM-7343 Fifty" (card's own Event, not Active). Code changes in PW_REPO not committed (data file, spec).

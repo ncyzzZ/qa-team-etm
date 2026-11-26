@@ -1,0 +1,7 @@
+{"saved":"2026-11-25","why":"lead chose 'เพิ่มงาน 41h + แก้ TC': drop pairs 0/0, 1/0, 0/1 (8691) and steps 4-5 0/0 (8687), not reachable from the UI",
+"ETM-8687":{"summary":"[FE][MT] Verify Actual (%) equal to Plan (%) below 100% is black, including 0% and 0% (BND)",
+ "descriptionPrecondition":"... The Input Progress table has a Work Breakdown row where Actual (%) equals Plan (%) and both are above 0% and below 100%, and a row where Plan (%) is 0% and Actual (%) is 0%. ...",
+ "steps":[{"id":"ab064f31-0b02-4cad-9600-8c4cc2447467","action":"Find the row with Plan (%) 0% and Actual (%) 0%.","result":"The row shows `0%` in both columns."},{"id":"4c157b8b-02a3-47ca-b6f5-88e6946b1746","action":"Look at the Actual (%) number.","result":"The number is black (default), not green and not red."}]},
+"ETM-8691":{"summary":"[FE][MT] Verify the color for each Plan/Actual pair at the edge values (BND)",
+ "stepData":"Plan (%) / Actual (%) / Expected color:\n50 / 49 / red\n50 / 50 / black\n50 / 51 / green\n100 / 99 / red\n100 / 100 / black\n0 / 0 / black\n1 / 0 / red\n0 / 1 / green",
+ "descriptionPairs":"50 / 49 / red; 50 / 50 / black; 50 / 51 / green; 100 / 99 / red; 100 / 100 / black; 0 / 0 / black; 1 / 0 / red; 0 / 1 / green."}}
