@@ -4,6 +4,7 @@
 //
 //   node evidence-report.mjs --input <results.json> [<results2.json> ...]  (several runs -> ONE report; a test run twice keeps the last one) --out <folder> --manifest <tc-manifest.json> --title "..." --story ETM-1234 [--review <review.json>]
 //   review.json: {"ETM-8339": {"steps": {"10": {"verdict": "script|defect|tc-update|ba-pending|accepted", "note": "..."}}}}  (accepted = not counted as a fail)
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -252,7 +253,7 @@ const testHtml = (t) => `
   <summary><span class="badge ${t.status}">${t.status === 'passed' ? (t.expectedFail ? 'PASS (คาดว่าจะพัง)' : t.accepted ? 'PASS (ยอมรับ)' : 'PASS') : t.status === 'failed' ? 'FAIL' : 'SKIP'}</span>${t.status === 'failed' && TRIAGE[t.tcKey] ? `<span class="cause cause-${esc(TRIAGE[t.tcKey])}">${esc(CAUSE_TXT[TRIAGE[t.tcKey]] || TRIAGE[t.tcKey])}</span>` : ''}
     <b>${esc(MTC[t.tcKey]?.summary ? t.tcKey + ' ' + MTC[t.tcKey].summary : t.title)}</b><span class="mut">${fmtMs(t.ms)}</span></summary>
   <div class="body">
-    <div class="links">${/^ETM-\d+$/.test(t.tcKey) ? `TC: <a href="${JIRA}${t.tcKey}" target="_blank">${t.tcKey}</a>` : ''}
+    <div class="links">${isKey(t.tcKey) ? `TC: <a href="${JIRA}${t.tcKey}" target="_blank">${t.tcKey}</a>` : ''}
       ${/^ETM-/.test(t.story) ? `การ์ด: <a href="${JIRA}${t.story}" target="_blank">${esc(t.story)}</a>` : ''}
     </div>
     ${t.notes.length ? `<div class="notes">${t.notes.map((n) => `<div><b>หมายเหตุจากสคริปต์:</b> ${esc(NOTE[n.type])}${n.text ? ' - ' + esc(n.text) : ''}</div>`).join('')}</div>` : ''}

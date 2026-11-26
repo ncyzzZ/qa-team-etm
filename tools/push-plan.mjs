@@ -7,6 +7,7 @@
 // Rules: passed -> PASSED. failed + verdict app -> FAILED (with the defect key when known).
 // failed with another verdict or none, and every skipped / Not proven / awaiting test -> stays TO DO (not sent).
 // A plan never sends PASSED for a test whose latest result is not passed (AI miss M-1; push-guard checks it again).
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -31,7 +32,7 @@ export function plan(key, root = ROOT) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const key = process.argv[2];
-  if (!/^ETM-\d+$/.test(key ?? '')) { console.error('Usage: node tools/push-plan.mjs <KEY>'); process.exit(2); }
+  if (!isKey(key ?? '')) { console.error('Usage: node tools/push-plan.mjs <KEY>'); process.exit(2); }
   const rows = plan(key);
   if (!rows.length) { console.error(`${key}: no work/${key}/run-results.json results`); process.exit(1); }
   const sent = rows.filter((r) => r.send);

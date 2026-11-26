@@ -6,6 +6,7 @@
 //   node tools/build-change.mjs <KEY> [<run folder>]     print what changed since each failing test last passed
 //
 // tools/verdicts.mjs table calls annotate() and buildSuggest() itself; this CLI is for a quick look.
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -146,7 +147,7 @@ export function sinceCell(r) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [card, runArg] = process.argv.slice(2);
-  if (!/^ETM-\d+$/.test(card ?? '')) { console.error('Usage: node tools/build-change.mjs <KEY> [<run folder>]'); process.exit(2); }
+  if (!isKey(card ?? '')) { console.error('Usage: node tools/build-change.mjs <KEY> [<run folder>]'); process.exit(2); }
   const { resolveRepos } = await import('./heal/config.mjs');
   const runs = path.join(resolveRepos().pwRepo, 'output', 'runs');
   const dir = runArg || path.join(runs, (fs.readdirSync(runs).filter((d) => d.endsWith(`_${card}`) && fs.existsSync(path.join(runs, d, 'triage.json'))).sort().at(-1) || ''));

@@ -11,6 +11,7 @@
 // Exit 0 = every planned Test pushed and read back the same (dry run: always 0, it lists the Tests left out).
 // Exit 1 = a planned Test was not pushed (step count differs at push time, or an error) or reads back different; listed under NOT PUSHED.
 // Env: XRAY_CLIENT_ID, XRAY_CLIENT_SECRET (same auth as xray-toolkit/index.mjs), optional XRAY_BASE.
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -116,8 +117,8 @@ export async function main(argv, { gql = null, log = console.log } = {}) {
   const opt = (n) => (argv.includes(n) ? argv[argv.indexOf(n) + 1] : '');
   const runDir = argv[0], exec = opt('--exec'), apply = argv.includes('--apply');
   const only = opt('--only') ? new Set(opt('--only').split(',').map((s) => s.trim())) : null;
-  if (!runDir || !fs.existsSync(runDir) || !/^ETM-\d+$/.test(exec)) {
-    log('usage: node tools/xray-step-push.mjs <runDir> --exec ETM-<n> [--only ETM-a,ETM-b] [--apply]');
+  if (!runDir || !fs.existsSync(runDir) || !isKey(exec)) {
+    log(`usage: node tools/xray-step-push.mjs <runDir> --exec ${profile().jira.projectKey}-<n> [--only ${profile().jira.projectKey}-a,${profile().jira.projectKey}-b] [--apply]`);
     return 2;
   }
   const verdicts = readVerdicts(runDir).filter((v) => !only || only.has(v.test));

@@ -9,6 +9,7 @@
 // --decide writes the person's answers into the verdict file (decidedBy: "user", and the Test confirmedBy: "user"); --confirm marks a Test
 // confirmed as proposed ("ยืนยันผลทั้งหมด", refused while a step is needs-human). Then results.json is rebuilt from all verdict files.
 // Only a confirmed Test counts as a result (run-results.json) and can be pushed (xray-step-push.mjs).
+import { isKey } from '../profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -102,7 +103,7 @@ function parseDecide(argv) {
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] !== '--decide') continue;
     const test = argv[++i];
-    if (!/^ETM-\d+$/.test(test || '')) throw new Error('--decide <TEST> <n>=pass|fail[:answer] ...');
+    if (!isKey(test || '')) throw new Error('--decide <TEST> <n>=pass|fail[:answer] ...');
     const list = by.get(test) || [];
     while (argv[i + 1] && !argv[i + 1].startsWith('--')) {
       const m = argv[++i].match(/^(\d+)=(pass|fail)(?::(.*))?$/);
@@ -121,11 +122,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     if (!runDir || !fs.existsSync(runDir)) throw new Error('usage: node tools/manual/results.mjs <runDir> [--decide <TEST> <n>=pass|fail ...]');
     for (const test of rest.flatMap((a, i) => (a === '--confirm' ? [rest[i + 1]] : []))) {
       const f = path.join(runDir, `verdict-${test}.json`);
-      if (!/^ETM-\d+$/.test(test || '') || !fs.existsSync(f)) throw new Error(`--confirm ${test}: no ${f}`);
+      if (!isKey(test || '') || !fs.existsSync(f)) throw new Error(`--confirm ${test}: no ${f}`);
       // confirmed as proposed = the person accepts the agent's reading: only after a fresh blind evidence check (TEAM.md "Decision cards")
       const card = JSON.parse(fs.readFileSync(f, 'utf8')).key;
       const { gate } = await import('../evidence-check.mjs');
-      const g = /^ETM-\d+$/.test(card || '') ? gate(card, test) : { ok: false, why: 'the verdict file has no Story key' };
+      const g = isKey(card || '') ? gate(card, test) : { ok: false, why: 'the verdict file has no Story key' };
       if (!g.ok) throw new Error(`--confirm ${test}: no fresh evidence check (${g.why}). Run evidence-check brief --manual, the evidence-checker, compare; or answer the steps with --decide`);
       fs.writeFileSync(f, JSON.stringify(confirm(JSON.parse(fs.readFileSync(f, 'utf8'))), null, 1) + '\n');
     }

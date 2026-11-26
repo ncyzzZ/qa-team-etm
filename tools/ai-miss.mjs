@@ -9,6 +9,7 @@
 //   node tools/ai-miss.mjs list [--all]        every active miss, readable (with --all also retired ones)
 //   node tools/ai-miss.mjs stats               count per agent and kind
 //   node tools/ai-miss.mjs retire <M-n> "<why>"   a rule that turned out wrong or no longer needed
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -51,7 +52,7 @@ export function add(o, f = file()) {
   if (miss.length) throw new Error(`missing ${miss.join(', ')}`);
   if (!AGENTS.includes(o.agent)) throw new Error(`--agent must be one of: ${AGENTS.join(', ')}`);
   if (!KINDS.includes(o.kind)) throw new Error(`--kind must be one of: ${KINDS.join(', ')}`);
-  if (o.card && !/^ETM-\d+$/.test(o.card)) throw new Error('--card must look like ETM-1234');
+  if (o.card && !isKey(o.card)) throw new Error(`--card must look like ${profile().jira.projectKey}-1234`);
   const list = load(f);
   const n = list.reduce((m, x) => Math.max(m, Number(String(x.id).slice(2)) || 0), 0) + 1;
   const entry = {

@@ -5,6 +5,7 @@
 // Used by the Xray MCP server (xray_import_results) and xray-toolkit/xray-import.mjs before any status push.
 //
 //   node tools/push-guard.mjs ETM-8679=PASSED ETM-8680=FAILED     check a planned push; exit 1 when one is blocked
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -53,8 +54,8 @@ export function blockMessage(blocked) {
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const tests = process.argv.slice(2).map((a) => { const [testKey, status] = a.split('='); return { testKey, status }; });
-  if (!tests.length || tests.some((t) => !/^ETM-\d+$/.test(t.testKey || '') || !t.status)) {
-    console.error('Usage: node tools/push-guard.mjs ETM-1234=PASSED [ETM-1235=FAILED ...]');
+  if (!tests.length || tests.some((t) => !isKey(t.testKey || '') || !t.status)) {
+    console.error(`Usage: node tools/push-guard.mjs ${profile().jira.projectKey}-1234=PASSED [${profile().jira.projectKey}-1235=FAILED ...]`);
     process.exit(2);
   }
   const { blocked, noResult } = checkPush(tests);

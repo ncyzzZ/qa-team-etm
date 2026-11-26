@@ -14,6 +14,7 @@
 //   node tools/delete-plan.mjs done <KEY> <D-n> [--failed "<why>"]
 //   node tools/delete-plan.mjs list <KEY>
 // Not in the queue: the card data cleanup of run-card (ledger ids, standing approval) - it never asks.
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -105,7 +106,7 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   const [cmd, key, ...a] = process.argv.slice(2);
   const root = process.env.DELETE_PLAN_ROOT || ROOT0;
-  if (!/^ETM-\d+$/.test(key || '')) { console.error('Usage: node tools/delete-plan.mjs <add|plan|approve|ok|done|list> <KEY> ...'); process.exit(2); }
+  if (!isKey(key || '')) { console.error('Usage: node tools/delete-plan.mjs <add|plan|approve|ok|done|list> <KEY> ...'); process.exit(2); }
   try {
     if (cmd === 'add') {
       const r = add(root, key, { what: positional(a)[0], where: flag(a, '--where'), ids: (flag(a, '--ids') || '').split(',').filter(Boolean), permanent: has(a, '--permanent'), shared: has(a, '--shared'), blocks: has(a, '--blocks') });

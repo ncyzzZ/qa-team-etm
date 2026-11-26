@@ -18,6 +18,7 @@
 //   node tools/expected-source.mjs check <file.md ...> [--root <dir>]   ERR / WARN per file (exit 1 on ERR)
 //   node tools/expected-source.mjs manual <KEY>                         WARN: strong words in manual-steps Expected not in the Xray step
 //   node tools/expected-source.mjs sources                              list the source files
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -146,7 +147,7 @@ if (isMain) {
       for (const p of ps) console.log(`  ${p.lvl === 'ERR' ? 'ERR ' : 'WARN'} ${p.msg}`);
     }
     process.exit(e ? 1 : 0);
-  } else if (cmd === 'manual' && /^ETM-\d+$/.test(args[0] || '')) {
+  } else if (cmd === 'manual' && isKey(args[0] || '')) {
     const ps = await checkManualFiles(args[0], root);
     for (const p of ps) console.log(`  WARN ${p.msg}`);
     console.log(`[expected-source manual ${args[0]}] ${ps.length} warning(s)`);

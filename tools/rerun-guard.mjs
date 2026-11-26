@@ -11,6 +11,7 @@
 // The lead overrides with `run-card ... --force-rerun "<why>"`; each override goes to work/<KEY>/rerun-log.jsonl.
 //
 //   node tools/rerun-guard.mjs <KEY> <spec ...> [-g "<filter>"]     print what run-card would run and drop (read only)
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -154,7 +155,7 @@ export function logForce(root, key, entry) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [key, ...rest] = process.argv.slice(2);
-  if (!/^ETM-\d+$/.test(key || '')) { console.error('Usage: node tools/rerun-guard.mjs <KEY> <spec ...> [-g "<filter>"]'); process.exit(2); }
+  if (!isKey(key || '')) { console.error('Usage: node tools/rerun-guard.mjs <KEY> <spec ...> [-g "<filter>"]'); process.exit(2); }
   const { resolveRepos } = await import('./heal/config.mjs');
   const { specFilesFrom } = await import('./heal/run-plan.mjs');
   const { pwRepo } = resolveRepos();

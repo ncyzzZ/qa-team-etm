@@ -1,4 +1,5 @@
 // specs.mjs - index of the listable Playwright specs for regress.mjs: folder, Xray test keys, locator tokens, owner card.
+import { isKey } from '../profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { extractTokens, GENERIC_TOKENS, isLibraryToken } from '../heal/selectors.mjs';
@@ -53,7 +54,7 @@ function storyTests(teamRoot) {
   const out = new Map();
   for (const base of [path.join(teamRoot, 'work'), path.join(teamRoot, '.claude', 'team', 'work')]) {
     let dirs = [];
-    try { dirs = fs.readdirSync(base).filter((d) => /^ETM-\d+$/.test(d)); } catch { continue; }
+    try { dirs = fs.readdirSync(base).filter((d) => isKey(d)); } catch { continue; }
     for (const d of dirs) {
       if (out.has(d)) continue;
       let keys = [];

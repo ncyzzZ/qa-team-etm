@@ -20,7 +20,7 @@ import { propose as proposeHeals, summaryLine } from './heal/auto-heal.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
 import { resolveRepos } from './heal/config.mjs';
-import { profile } from './profile.mjs';
+import { isKey, profile } from './profile.mjs';
 import { dataGate, holdLock } from './data-gate.mjs';
 import { hasCreate, ledgerEmpty, planFlow, runStep, lockHeld } from './card-data-flow.mjs';
 import { recordRunResults, sourceOf, rowsFromResults } from './run-results.mjs';
@@ -41,8 +41,8 @@ const KEEP_DATA = argsIn.includes('--keep-data');
 const fi = argsIn.indexOf('--force-rerun');
 const FORCE_RERUN = fi >= 0 ? (argsIn[fi + 1] || '') : null;
 const rest = argsIn.filter((a, i) => a !== '--no-data-check' && a !== '--keep-data' && i !== fi && !(fi >= 0 && i === fi + 1));
-if (!key || !/^ETM-\d+$/.test(key)) {
-  console.error('Usage: node tools/run-card.mjs ETM-1234 <spec> [-g "ETM-1|ETM-2"] [--no-data-check] [--keep-data] [playwright flags]\n   or: node tools/run-card.mjs ETM-1234 --build-only <result-folder>');
+if (!key || !isKey(key)) {
+  console.error(`Usage: node tools/run-card.mjs ${profile().jira.projectKey}-1234 <spec> [-g "${profile().jira.projectKey}-1|${profile().jira.projectKey}-2"] [--no-data-check] [--keep-data] [playwright flags]\n   or: node tools/run-card.mjs ${profile().jira.projectKey}-1234 --build-only <result-folder>`);
   process.exit(2);
 }
 if (!fs.existsSync(GEN)) { console.error(`Generator not found: ${GEN}`); process.exit(2); }

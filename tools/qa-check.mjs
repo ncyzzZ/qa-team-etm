@@ -14,6 +14,7 @@
 //   node tools/qa-check.mjs stats                                (how often each gate failed, from .claude/team/metrics.jsonl)
 //
 // Exit code 1 when there is at least one ERR. WARN lines are advice. Run it before handing anything to the user.
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -111,7 +112,7 @@ function storyLeafCount(story) {
 function checkDraft() {
   const arg0 = pos[0];
   if (!arg0) { console.error('Usage: qa-check draft <KEY | path>'); process.exit(2); }
-  const file = /^ETM-\d+$/.test(arg0) ? path.join(WORK(arg0), 'draft-tc.md') : path.resolve(arg0);
+  const file = isKey(arg0) ? path.join(WORK(arg0), 'draft-tc.md') : path.resolve(arg0);
   const text = read(file);
   if (text == null) { err(`file not found: ${file}`); return finish('draft'); }
   const cases = parseDraft(text);
@@ -122,7 +123,7 @@ function checkDraft() {
   if (!/coverage/i.test(text)) warn('no coverage map found (the designer must list every AC item and screen state)');
   if (!/\b(high|medium|low)\b/i.test(text)) warn('no High / Medium / Low priority counts found');
   // traceability: every AC-n of analyst.md must be in the Trace: line of a case (the coverage map alone does not count)
-  const keyOf = (/^ETM-\d+$/.test(arg0) ? arg0 : (file.match(/ETM-\d+/) || [])[0]) || '';
+  const keyOf = (isKey(arg0) ? arg0 : (file.match(/ETM-\d+/) || [])[0]) || '';
   const anFile = arg('--analyst') || (keyOf ? path.join(WORK(keyOf), 'analyst.md') : '');
   const an = anFile ? read(path.resolve(anFile)) : null;
   for (const c of cases) if (!c.trace) err(`${c.id} (line ${c.line}): no "Trace: AC-1, AC-2" line (or "Trace: none (<what it covers>)")`);
@@ -266,7 +267,7 @@ function checkSpec() {
       const secKey = (t.title.match(/^\[(ETM-\d+)\]\[Security\]/) || [])[1];
       const skipped = /^test\.(skip|fixme)\(/.test(t.whole);
       const key = (t.title.match(/^(ETM-\d+)\b/) || [])[1] || secKey;
-      if (!key) err(`${name}: test "${t.title.slice(0, 50)}" - title must start with the Xray key (ETM-1234 - ...)`);
+      if (!key) err(`${name}: test "${t.title.slice(0, 50)}" - title must start with the Xray key (${profile().jira.projectKey}-1234 - ...)`);
       else if (testsMd && !secKey && !testsMd.includes(key)) warn(`${name}: ${key} is not in the card's tests file`);
       // A step is a direct test.step(...) or a call of the shared steps() helper (`const S = steps(page, KEY)`, then `await S('...', ...)`):
       // the helper runs one test.step and takes one evidence picture per call, so each call counts as a step and a picture.
@@ -307,7 +308,7 @@ const CONTRACT = {
 };
 function checkWork() {
   const [key, role] = pos;
-  if (!/^ETM-\d+$/.test(key || '') || !role) { console.error('Usage: qa-check work <KEY> <analyst|inspector|designer|reviewer|automator>'); process.exit(2); }
+  if (!isKey(key || '') || !role) { console.error('Usage: qa-check work <KEY> <analyst|inspector|designer|reviewer|automator>'); process.exit(2); }
   if (role === 'designer') return checkDraft();
   const c = CONTRACT[role];
   if (!c) { console.error(`unknown role ${role}`); process.exit(2); }
@@ -336,11 +337,11 @@ function checkManifest() {
   if (!j.stories || typeof j.stories !== 'object') { err('missing "stories" object'); return finish('manifest'); }
   let n = 0, noSteps = 0;
   for (const [story, list] of Object.entries(j.stories)) {
-    if (!/^ETM-\d+$/.test(story)) warn(`story key "${story}" is not ETM-nnnn`);
+    if (!isKey(story)) warn(`story key "${story}" is not ${profile().jira.projectKey}-nnnn`);
     if (!Array.isArray(list)) { err(`${story}: must be an array of Tests`); continue; }
     for (const t of list) {
       n++;
-      if (!/^ETM-\d+$/.test(t.key || '')) err(`${story}: a Test has no valid key`);
+      if (!isKey(t.key || '')) err(`${story}: a Test has no valid key`);
       if (!t.summary) warn(`${t.key}: no summary`);
       if (typeof t.automated !== 'boolean') err(`${t.key}: "automated" must be true or false`);
       if (t.automated === false && !t.reason) warn(`${t.key}: manual Test without "reason"`);
@@ -399,7 +400,7 @@ export function questionIds(dir) {
 function checkFindings() {
   const a = pos[0];
   if (!a) { console.error('Usage: qa-check findings <KEY | folder>'); process.exit(2); }
-  const dir = /^ETM-\d+$/.test(a) ? path.join(ROOT, 'work', a) : path.resolve(a);
+  const dir = isKey(a) ? path.join(ROOT, 'work', a) : path.resolve(a);
   const raw = read(path.join(dir, 'findings.json'));
   if (raw == null) { err(`missing ${path.join(dir, 'findings.json')}`); return finish('findings'); }
   let list; try { list = JSON.parse(raw); } catch (e) { err(`findings.json is not valid JSON: ${e.message}`); return finish('findings'); }
@@ -413,7 +414,7 @@ function checkFindings() {
     for (const k of Object.keys(FINDING)) if (!FINDING[k].includes(f[k])) err(`${at}: ${k} "${f[k]}" is not one of ${FINDING[k].join(', ')}`);
     if (!/^\d{4}-\d{2}-\d{2}/.test(f.raised || '')) err(`${at}: raised must be a date YYYY-MM-DD`);
     if (f.outcome && f.outcome !== 'open' && !f.outcome_date) err(`${at}: outcome "${f.outcome}" needs an outcome_date`);
-    if (f.later_defect && !/^ETM-\d+$/.test(f.later_defect)) warn(`${at}: later_defect "${f.later_defect}" is not an ETM key`);
+    if (f.later_defect && !isKey(f.later_defect)) warn(`${at}: later_defect "${f.later_defect}" is not a ${profile().jira.projectKey} key`);
     if (!f.story_status) warn(`${at}: no story_status (needed to split "before dev" and "after dev started")`);
   }
   const qs = new Set();
@@ -427,7 +428,7 @@ function checkFindings() {
 function coverage() {
   const key = pos[0];
   if (!key) { console.error('Usage: qa-check coverage <KEY | draft.md> [--analyst analyst.md]'); process.exit(2); }
-  const dFile = /^ETM-\d+$/.test(key) ? path.join(WORK(key), 'draft-tc.md') : path.resolve(key);
+  const dFile = isKey(key) ? path.join(WORK(key), 'draft-tc.md') : path.resolve(key);
   const aFile = arg('--analyst') || path.join(path.dirname(dFile), 'analyst.md');
   const d = read(dFile), a = read(path.resolve(aFile));
   if (d == null || a == null) { console.error(`missing ${d == null ? dFile : aFile}`); process.exit(2); }
@@ -469,7 +470,7 @@ function checkStrength() {
   const raw = read(file);
   if (raw == null) { err(`not found: ${path.relative(ROOT, file)}`); return finish('strength'); }
   let j; try { j = JSON.parse(raw); } catch (e) { err(`not valid JSON: ${e.message}`); return finish('strength'); }
-  if (!/^ETM-\d+$/.test(j.card || '')) err('card must be the Story key (ETM-1234)');
+  if (!isKey(j.card || '')) err(`card must be the Story key (${profile().jira.projectKey}-1234)`);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(j.date || '')) err('date must be YYYY-MM-DD');
   if (!['ready', 'partly', 'not-ready'].includes(j.verdict)) err('verdict must be ready, partly or not-ready');
   if (!Array.isArray(j.ac) || !j.ac.length) err('ac must list every AC item');
@@ -522,7 +523,7 @@ function stats() {
 // ---------------------------------------------------------------- state (G0): the card's state.json against its files
 function checkState() {
   const key = pos[0];
-  if (!/^ETM-\d+$/.test(key || '')) { console.error('Usage: qa-check state <KEY> [--root <dir>]'); process.exit(2); }
+  if (!isKey(key || '')) { console.error('Usage: qa-check state <KEY> [--root <dir>]'); process.exit(2); }
   const root = arg('--root') || ROOT;
   const { pwRepo } = resolveRepos();
   const { state: s, errors } = loadState(key, root);
@@ -559,7 +560,7 @@ function checkState() {
 // ---------------------------------------------------------------- manual (work/<KEY>/manual-steps-*.md, the manual runner's input)
 function checkManualSteps() {
   const key = pos[0];
-  if (!/^ETM-\d+$/.test(key || '')) { console.error('Usage: qa-check manual <KEY> [--root <dir>]'); process.exit(2); }
+  if (!isKey(key || '')) { console.error('Usage: qa-check manual <KEY> [--root <dir>]'); process.exit(2); }
   const root = arg('--root') || ROOT, dir = path.join(root, 'work', key);
   const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /^manual-steps-.*\.md$/.test(f)).sort() : [];
   if (!files.length) { err(`no work/${key}/manual-steps-*.md`); return finish(`manual ${key}`); }
@@ -570,7 +571,7 @@ function checkManualSteps() {
   const seen = new Map();
   for (const f of files) {
     const tests = parseManualSteps(read(path.join(dir, f)));
-    if (!tests.length) err(`${f}: no "## ETM-<n> - <title> (<N> steps)" section`);
+    if (!tests.length) err(`${f}: no "## ${profile().jira.projectKey}-<n> - <title> (<N> steps)" section`);
     for (const t of tests) { if (seen.has(t.key)) err(`${t.key} is in ${seen.get(t.key)} and in ${f}`); seen.set(t.key, f); }
     for (const e of checkManual(tests, xray)) err(`${f}: ${e}`);
     for (const t of tests) if (testsMd && xray[t.key] == null) warn(`${f}: ${t.key} is not in tests.md`);

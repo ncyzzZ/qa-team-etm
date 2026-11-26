@@ -12,6 +12,7 @@
 //       after that re-run: a healed test that still fails gets its heal reverted; a healed test that passes is kept
 //       and listed in work/<KEY>/auto-actions.json "toConfirm" (the user keeps or reverts them all at the end, one question).
 // Never: change an assertion, retry an assertion / unknown / data failure, or re-run a test a second time the same day.
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -78,7 +79,7 @@ export function checkHeals(key, newRun, oldRun, { root = ROOT, pwRepo } = {}) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [key, dir, ...rest] = process.argv.slice(2);
-  if (!/^ETM-\d+$/.test(key ?? '') || !dir || !fs.existsSync(dir)) { console.error('Usage: node tools/auto-next.mjs <KEY> <run folder> [--apply-heals] | <KEY> <new run> --check-heals <old run>'); process.exit(2); }
+  if (!isKey(key ?? '') || !dir || !fs.existsSync(dir)) { console.error('Usage: node tools/auto-next.mjs <KEY> <run folder> [--apply-heals] | <KEY> <new run> --check-heals <old run>'); process.exit(2); }
   const ci = rest.indexOf('--check-heals');
   if (ci >= 0) {
     const { kept, reverted } = checkHeals(key, dir, rest[ci + 1]);

@@ -4,6 +4,7 @@
 //                                               then the card lock <PW_REPO>/output/seed/<KEY>.lock with owner "manual-runner"
 //   node tools/manual/gate.mjs <KEY> release   removes the lock, only when manual-runner owns it
 // Exit 2 with the reason (and the lock owner) when refused. The agent releases the lock at the end of the Test, also on error.
+import { isKey } from '../profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,7 +37,7 @@ export async function gate({ pwRepo, key, action, runCheck, run = null, now = ne
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [key, action, ...rest] = process.argv.slice(2);
   const run = rest.includes('--run') ? rest[rest.indexOf('--run') + 1] : null;
-  if (!/^ETM-\d+$/.test(key || '') || !['take', 'release'].includes(action)) {
+  if (!isKey(key || '') || !['take', 'release'].includes(action)) {
     console.error('Usage: node tools/manual/gate.mjs <KEY> take [--run <run folder>] | release');
     process.exit(2);
   }

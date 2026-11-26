@@ -9,6 +9,7 @@
 //                                                          save the user's answers to work/<KEY>/verdicts.json
 // Verdicts: script (script bug), tc (test wording wrong), app (real app bug; logging the defect still needs its own yes),
 // env (environment / VPN / login), flaky (passes on a re-run).
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -68,7 +69,7 @@ export function record(key, pairs, { source, evidence }, root = ROOT) {
   const at = new Date().toISOString();
   for (const p of pairs) {
     const m = p.match(/^(ETM-\d+)=(\w+)(?::(ETM-\d+))?$/);
-    if (!m || !VERDICTS.includes(m[2])) throw new Error(`bad answer "${p}": use ETM-<n>=${VERDICTS.join('|')}[:<defect key>]`);
+    if (!m || !VERDICTS.includes(m[2])) throw new Error(`bad answer "${p}": use ${profile().jira.projectKey}-<n>=${VERDICTS.join('|')}[:<defect key>]`);
     all[m[1]] = { verdict: m[2], ...(m[3] ? { defect: m[3] } : {}), source, evidence: evidence.slice(0, 200), at };
   }
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -79,8 +80,8 @@ export function record(key, pairs, { source, evidence }, root = ROOT) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [cmd, key, ...rest] = process.argv.slice(2);
-  if (!['table', 'record'].includes(cmd) || !/^ETM-\d+$/.test(key ?? '')) {
-    console.error('Usage: node tools/verdicts.mjs table <KEY> [<run folder>] | record <KEY> ETM-1=script ... --source chat|board --evidence "..."'); process.exit(2);
+  if (!['table', 'record'].includes(cmd) || !isKey(key ?? '')) {
+    console.error(`Usage: node tools/verdicts.mjs table <KEY> [<run folder>] | record <KEY> ${profile().jira.projectKey}-1=script ... --source chat|board --evidence "..."`); process.exit(2);
   }
   try {
     if (cmd === 'table') {

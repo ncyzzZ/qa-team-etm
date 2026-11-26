@@ -2,6 +2,7 @@
 //   node tools/team-metrics.mjs [--cutoff 2026-11-24T22:45:49+07:00] [--events <file>] [--json]
 // Default cutoff: commit 5aee0ca (standing approvals). A run = an evidence-report link on the board (run-card posts one per run).
 // An ask is answered by the first board answer or chat answer (`team.mjs answered`) of the same card after it; `clear` closes it unanswered.
+import { isKey } from './profile.mjs';
 import fs from 'node:fs'; import path from 'node:path'; import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const DEFAULT_CUTOFF = '2026-11-24T22:45:49+07:00';
@@ -47,7 +48,7 @@ export function summary(events, from, to) {
   const ev = events.filter(e => e.t >= from && e.t < to);
   const a = asks(events).filter(x => x.t >= from && x.t < to);
   const runs = ev.filter(e => e.type === 'link' && e.kind === 'report');
-  const cards = new Set(ev.filter(e => /^ETM-\d+$/.test(e.job || '')).map(e => e.job));
+  const cards = new Set(ev.filter(e => isKey(e.job || '')).map(e => e.job));
   const hours = new Set(ev.map(e => Math.floor(e.t / 3600000))).size;
   const waits = a.map(x => x.waitMin).filter(x => x != null);
   const runsBy = {}; for (const r of runs) runsBy[r.job] = (runsBy[r.job] || 0) + 1;
@@ -56,7 +57,7 @@ export function summary(events, from, to) {
     events: ev.length, activeHours: hours, cards: cards.size,
     asks: a.length, approveAsks: a.filter(x => x.kind === 'approve').length,
     asksPerActiveHour: hours ? +(a.length / hours).toFixed(2) : null,
-    asksPerCard: cards.size ? +(a.filter(x => /^ETM-\d+$/.test(x.job)).length / cards.size).toFixed(2) : null,
+    asksPerCard: cards.size ? +(a.filter(x => isKey(x.job)).length / cards.size).toFixed(2) : null,
     answered: { board: a.filter(x => x.how === 'board').length, chat: a.filter(x => x.how === 'chat').length, cleared: a.filter(x => x.how === 'cleared').length, replaced: a.filter(x => x.how === 'replaced').length, open: a.filter(x => x.how === 'open').length },
     waitMedianMin: waits.length ? +median(waits).toFixed(1) : null, waitP75Min: waits.length ? +pct(waits, 0.75).toFixed(1) : null,
     runs: runs.length, runsPerCard: Object.keys(runsBy).length ? +(runs.length / Object.keys(runsBy).length).toFixed(2) : null,

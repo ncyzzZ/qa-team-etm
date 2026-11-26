@@ -1,6 +1,7 @@
 // core.mjs - the card state object (.claude/team/work/<KEY>/state.json): schema, validation, checksum, atomic save.
 // Only tools/state.mjs (the lead) writes through save(). A record here is never an approval: approvals are a chat
 // reply or the ANSWER: line of team.mjs wait (CLAUDE.md rule 3); this file only remembers them with their evidence.
+import { isKey, profile } from '../profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -33,7 +34,7 @@ export function validate(s, key) {
   const e = [];
   if (!isObj(s)) return ['state is not an object'];
   if (s.schemaVersion !== 1) e.push(`schemaVersion must be 1, got ${s.schemaVersion}`);
-  if (!/^ETM-\d+$/.test(s.card || '')) e.push(`card must be ETM-<n>, got ${s.card}`);
+  if (!isKey(s.card || '')) e.push(`card must be ${profile().jira.projectKey}-<n>, got ${s.card}`);
   if (key && s.card !== key) e.push(`card ${s.card} does not match folder ${key}`);
   if (!PHASES.includes(s.phase)) e.push(`unknown phase "${s.phase}" (one of: ${PHASES.join(', ')})`);
   if (!isStr(s.next)) e.push('next must be text');

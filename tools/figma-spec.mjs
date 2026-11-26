@@ -13,6 +13,7 @@
 //                    "css": { "background-color": "#1677FF", "font-size": "14px" } }] }]
 // }
 // "sample": true = the text is a mockup sample (numbers, names): the text is not checked, the css still is.
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -122,8 +123,8 @@ function copy(key) {
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
 if (isMain) {
   const [cmd, key] = process.argv.slice(2);
-  if (!['check', 'images', 'copy'].includes(cmd) || !/^ETM-\d+$/.test(key ?? '')) {
-    console.error('Usage: node tools/figma-spec.mjs <check|images|copy> <ETM-KEY>'); process.exit(2);
+  if (!['check', 'images', 'copy'].includes(cmd) || !isKey(key ?? '')) {
+    console.error(`Usage: node tools/figma-spec.mjs <check|images|copy> <${profile().jira.projectKey}-KEY>`); process.exit(2);
   }
   if (cmd === 'check') {
     const { dir, spec } = load(key);

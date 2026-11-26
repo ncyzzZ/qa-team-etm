@@ -13,6 +13,7 @@
 // Files in work/<KEY>/evidence-check/: <ID>.brief.md (for the checker), <ID>.check.json (written by the checker),
 // <ID>.compare.json. <ID> is the draft's file name without .md, or the Test key. A check is stale when the draft, the
 // verdict file or a picture changed after the brief (sourceHash).
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -194,7 +195,7 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   const [cmd, key, ...rest] = process.argv.slice(2);
   const usage = () => { console.error('Usage: evidence-check.mjs brief <KEY> --defect <draft.md> | brief <KEY> --manual <runDir> <TEST> | compare|gate|card <KEY> <ID>'); process.exit(2); };
-  if (!/^ETM-\d+$/.test(key || '')) usage();
+  if (!isKey(key || '')) usage();
   try {
     if (cmd === 'brief') {
       const src = rest[0] === '--defect' ? defectSource(path.resolve(rest[1]))

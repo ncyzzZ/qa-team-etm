@@ -13,6 +13,7 @@
 // Always ask when: a matched test (or its describe) is tagged @shared-data (writes data others use: another plan,
 // Active switch, shared event) or @security (API probes), the flags have --no-data-check, or no test matches.
 // The data file's own "NEEDS SETUP" / "NEEDS MANUAL" (card-data.cjs check) still asks: setup is not part of a run.
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -112,9 +113,9 @@ const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPat
 if (isMain) {
   const args = process.argv.slice(2);
   const key = args.shift();
-  if (!/^ETM-\d+$/.test(key ?? '')) { console.error('Usage: node tools/run-policy.mjs <KEY> <spec|folder>... [-g "<filter>"] [flags]'); process.exit(2); }
+  if (!isKey(key ?? '')) { console.error('Usage: node tools/run-policy.mjs <KEY> <spec|folder>... [-g "<filter>"] [flags]'); process.exit(2); }
   if (args[0] === '--manual') {
-    const r = classifyManual({ key, tests: args.slice(1).filter((a) => /^ETM-\d+$/.test(a)) });
+    const r = classifyManual({ key, tests: args.slice(1).filter((a) => isKey(a)) });
     console.log(`RUN-POLICY: ${r.auto ? 'auto' : 'ask'} ${key} tests=${r.tests.join(',') || '-'} | ${r.reasons.join(' | ')}`);
     process.exit(r.auto ? 0 : 3);
   }

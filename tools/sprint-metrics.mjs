@@ -6,6 +6,7 @@
 // Reads <work>/SPRINT<N>/jira.json (saved by the lead from JQL) and <work>/<KEY>/findings.json (one per card).
 // Writes one self-contained HTML report (default <work>/SPRINT<latest>/metrics.html) and prints a short summary.
 // Found in QA = issue type Defect; escaped to UAT/PROD = Bug. "Stopped before code" = ac-changed + dev-fixed.
+import { isKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -33,7 +34,7 @@ export function loadSprints(work, errors = []) {
 export function loadFindings(work, errors = []) {
   const out = {};
   for (const d of fs.existsSync(work) ? fs.readdirSync(work) : []) {
-    if (!/^ETM-\d+$/.test(d)) continue;
+    if (!isKey(d)) continue;
     const f = path.join(work, d, 'findings.json'); if (!fs.existsSync(f)) continue;
     try { out[d] = JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { errors.push(`${f}: ${e.message}`); }
   }
