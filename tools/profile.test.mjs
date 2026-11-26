@@ -38,6 +38,12 @@ test('loads etm by default', () => {
   assert.equal(etm.jira.projectKey, 'ETM');
 });
 
+test('with nothing selected, the only profile folder is the default', () => {
+  const r = root({ acme: mk('ACME') });
+  fs.mkdirSync(path.join(r, 'profiles', '_template'), { recursive: true });
+  assert.equal(load({ root: r }).name, 'acme');
+});
+
 test('.env QA_PROFILE selects profile; env var beats .env', () => {
   const r = root({ etm: mk(), acme: mk('ACME') }, 'QA_PROFILE=acme\n');
   assert.equal(load({ root: r, envFile: path.join(r, '.env') }).name, 'acme');

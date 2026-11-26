@@ -1,0 +1,10 @@
+[
+  { "source": "ETM-\\d" },
+  { "source": "pttep", "flags": "i" },
+  { "source": "\\bstms\\b|stms-fe", "flags": "i" },
+  { "source": "ep-etm" },
+  { "source": "14436" },
+  { "source": "\\bSTMS\\b" },
+  { "source": "Shutdown Logic|SIMOP|Daily Report|Turnaround", "flags": "i" },
+  { "source": "nuchanart|extosoft", "flags": "i" }
+]

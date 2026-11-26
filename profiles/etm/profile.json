@@ -6,5 +6,6 @@
   },
   "repos": { "pwRepoDir": "ep-etm-fe-qa", "feRepoDir": "stms-fe", "feBranch": "develop" },
   "ui": { "libraryTokenRe": "^(b|ag|ant|nz|ql)-" },
+  "export": { "skip": [".claude/skills/etm-simop-rules/", "docs/etm-"] },
   "docs": { "rules": "rules.md", "uiMap": "docs/UI_Map_ETM.md", "templates": "docs/ETM_Templates" }
 }

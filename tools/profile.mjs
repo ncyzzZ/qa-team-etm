@@ -1,5 +1,5 @@
 // profile.mjs - the active project profile (profiles/<name>/profile.json).
-// Name order: name argument, env QA_PROFILE, QA_PROFILE= in .env, else 'etm'.
+// Name order: name argument, env QA_PROFILE, QA_PROFILE= in .env, else the only profile folder (not _template), else 'etm'.
 // Root (folder that contains profiles/): env QA_PROFILE_ROOT, else the repo root.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -18,9 +18,17 @@ export function escapeKey(key) {
   return String(key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** The single profile folder under <root>/profiles (not _template), or '' when there are none or several. */
+function onlyProfile(root) {
+  try {
+    const list = fs.readdirSync(path.join(root, 'profiles'), { withFileTypes: true }).filter((e) => e.isDirectory() && e.name !== '_template');
+    return list.length === 1 ? list[0].name : '';
+  } catch { return ''; }
+}
+
 export function loadProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, envFile, name } = {}) {
   envFile = envFile ?? path.join(ROOT, '.env');
-  const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || 'etm';
+  const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || onlyProfile(root) || 'etm';
   if (!/^[a-z0-9][a-z0-9_-]*$/i.test(pname)) throw new Error('profile name "' + pname + '" is not allowed');
   const dir = path.join(root, 'profiles', pname);
   const file = path.join(dir, 'profile.json');
