@@ -48,3 +48,7 @@ Earlier the same day, Q1 and Q3 had been matched to the Story (`work/SPRINT26/ba
 1. ✅ **(c)** `Action` stays blank in the export, and the user must fill it. A blank `Action` gives the mandatory Error. → **ETM-9233 is not a defect.** ETM-8755 step 3 becomes "fill `Action = Revise` on every row, then upload". The script already does this, and ETM-8755 passed in run 2026-11-25_140423.
 2. ✅ "ใช่ ออกหมด": the export holds the whole Worklist and ignores the search and column filters. This is correct. ETM-8755 step 1 wording: "Export the Worklist (the file holds every Work; keep only the seven Works)".
 3. Not needed (Q1 is not (b)).
+
+## 2026-11-26 QA lead decision (round 5 Q2)
+- Export Worklist holds the WHOLE Worklist; the search box and the column filters are not applied. This is correct: nothing to fix, no defect (user, main chat 2026-11-26, relayed by the lead session).
+- Xray ETM-8755 step 1 already says so ("the file holds every Work of the Worklist; the search box and column filters are not applied"); no Xray change. ETM-8755 stays PASSED.
