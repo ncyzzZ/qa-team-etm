@@ -414,7 +414,7 @@ function checkFindings() {
     for (const k of Object.keys(FINDING)) if (!FINDING[k].includes(f[k])) err(`${at}: ${k} "${f[k]}" is not one of ${FINDING[k].join(', ')}`);
     if (!/^\d{4}-\d{2}-\d{2}/.test(f.raised || '')) err(`${at}: raised must be a date YYYY-MM-DD`);
     if (f.outcome && f.outcome !== 'open' && !f.outcome_date) err(`${at}: outcome "${f.outcome}" needs an outcome_date`);
-    if (f.later_defect && !isKey(f.later_defect)) warn(`${at}: later_defect "${f.later_defect}" is not a ${profile().jira.projectKey} key`);
+    if (f.later_defect && !isKey(f.later_defect)) warn(`${at}: later_defect "${f.later_defect}" is not ${/^[AEIOU]/.test(profile().jira.projectKey) ? 'an' : 'a'} ${profile().jira.projectKey} key`);
     if (!f.story_status) warn(`${at}: no story_status (needed to split "before dev" and "after dev started")`);
   }
   const qs = new Set();

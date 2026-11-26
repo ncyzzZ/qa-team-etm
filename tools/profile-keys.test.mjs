@@ -13,12 +13,13 @@ fs.writeFileSync(path.join(tmp, 'profiles', 'ab2', 'profile.json'), JSON.stringi
   jira: { site: 'x.atlassian.net', projectKey: 'AB2' },
   repos: { pwRepoDir: 'pw', feRepoDir: 'fe' },
 }));
+const noRepo = path.join(tmp, 'no-such-repo'); // env wins over .env in resolveRepos, so the real repos are never reached
 const stateRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'pk-state-'));
 
 function run(script, args) {
   return spawnSync('node', [path.join(ROOT, 'tools', script), ...args], {
     cwd: ROOT, encoding: 'utf8', timeout: 60000,
-    env: { ...process.env, QA_PROFILE_ROOT: tmp, QA_PROFILE: 'ab2', STATE_ROOT: stateRoot },
+    env: { ...process.env, QA_PROFILE_ROOT: tmp, QA_PROFILE: 'ab2', STATE_ROOT: stateRoot, PW_REPO: noRepo, FE_REPO: noRepo },
   });
 }
 
