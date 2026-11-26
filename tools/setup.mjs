@@ -4,6 +4,8 @@
 //   node tools/setup.mjs                          show the current setup (changes nothing)
 //   node tools/setup.mjs <folder of ep-etm-fe-qa>  check that folder, then save it as PW_REPO in the git-ignored .env
 //   node tools/setup.mjs --sync-profile           write .claude/active-profile.md (project rules CLAUDE.md imports) from profiles/<name>/
+//   node tools/setup.mjs --new-profile <name> --key <KEY> --site <host> --project-id <n> --board <n> --pw-repo-dir <dir> --fe-repo-dir <dir> [--fe-branch <b>]
+//                                                 make profiles/<name>/ from the template, select it in .env, then run the check
 //
 // Windows example:  node tools/setup.mjs "D:\mac\DocforAi\PTTEP_Auto\ep-etm-fe-qa"
 // Mac example:      node tools/setup.mjs ~/Documents/PTTEP_Auto/ep-etm-fe-qa
@@ -14,10 +16,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { resolveRepos } from './heal/config.mjs';
-import { profile, syncActiveProfile } from './profile.mjs';
+import { loadProfile, profile, syncActiveProfile } from './profile.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ENV_FILE = path.join(ROOT, '.env');
+const ENV_FILE = process.env.QA_ENV_FILE || path.join(ROOT, '.env');
+const PROFILES_ROOT = process.env.QA_PROFILE_ROOT || ROOT;
 const ok = (m) => console.log(`  OK    ${m}`);
 const bad = (m) => console.log(`  FIX   ${m}`);
 const info = (m) => console.log(`  info  ${m}`);
@@ -28,7 +31,48 @@ const readEnvFile = () => { try { return fs.readFileSync(ENV_FILE, 'utf8').repla
 const fromEnvFile = (name) => { const m = readEnvFile().match(new RegExp(`^\\s*${name}\\s*=\\s*(.+?)\\s*$`, 'm')); return m ? m[1].replace(/^["']|["']$/g, '') : ''; };
 const expand = (p) => (p.startsWith('~') ? path.join(os.homedir(), p.slice(1)) : p);
 
-const arg = process.argv[2];
+// --new-profile: copy profiles/_template to profiles/<name>, fill profile.json, select it in .env.
+function newProfile(argv) {
+  const fail = (m) => { console.error(`[setup] ${m}`); process.exit(2); };
+  const flags = {};
+  const names = { '--key': 'key', '--site': 'site', '--project-id': 'projectId', '--board': 'board', '--pw-repo-dir': 'pwRepoDir', '--fe-repo-dir': 'feRepoDir', '--fe-branch': 'feBranch' };
+  const [name, ...rest] = argv;
+  for (let i = 0; i < rest.length; i += 2) {
+    if (!names[rest[i]]) fail(`unknown flag ${rest[i]}`);
+    flags[names[rest[i]]] = rest[i + 1];
+  }
+  const missing = Object.entries(names).filter(([f, k]) => k !== 'feBranch' && !flags[k]).map(([f]) => f);
+  if (!name || name.startsWith('--')) fail('usage: node tools/setup.mjs --new-profile <name> ' + Object.keys(names).map((f) => (f === '--fe-branch' ? `[${f} <b>]` : `${f} <v>`)).join(' '));
+  if (!/^[a-z][a-z0-9-]{1,30}$/.test(name)) fail(`profile name "${name}" is not allowed: use ^[a-z][a-z0-9-]{1,30}$`);
+  if (missing.length) fail(`missing flags: ${missing.join(', ')}`);
+  if (!/^[A-Z][A-Z0-9_]{1,9}$/.test(flags.key)) fail(`jira.projectKey "${flags.key}" must match ^[A-Z][A-Z0-9_]{1,9}$`);
+  for (const k of ['projectId', 'board']) if (!/^\d+$/.test(flags[k])) fail(`--${k === 'board' ? 'board' : 'project-id'} must be a number`);
+  const dir = path.join(PROFILES_ROOT, 'profiles', name);
+  if (fs.existsSync(dir)) fail(`profile "${name}" already exists (profiles/${name})`);
+  const tpl = path.join(PROFILES_ROOT, 'profiles', '_template');
+  if (!fs.existsSync(tpl)) fail('profiles/_template not found');
+  fs.cpSync(tpl, dir, { recursive: true });
+  const file = path.join(dir, 'profile.json');
+  const j = JSON.parse(fs.readFileSync(file, 'utf8'));
+  j.title = flags.key;
+  Object.assign(j.jira, { site: flags.site, projectKey: flags.key, projectId: Number(flags.projectId), boardId: Number(flags.board) });
+  Object.assign(j.repos, { pwRepoDir: flags.pwRepoDir, feRepoDir: flags.feRepoDir, feBranch: flags.feBranch || 'develop' });
+  fs.writeFileSync(file, JSON.stringify(j, null, 2) + '\n');
+  let lines = [];
+  try { lines = fs.readFileSync(ENV_FILE, 'utf8').replace(/\r\n/g, '\n').split('\n'); } catch {}
+  while (lines.length && lines[lines.length - 1] === '') lines.pop();
+  const at = lines.findIndex((l) => /^\s*QA_PROFILE\s*=/.test(l));
+  if (at >= 0) lines[at] = `QA_PROFILE=${name}`; else lines.push(`QA_PROFILE=${name}`);
+  fs.writeFileSync(ENV_FILE, lines.join('\n') + '\n');
+  process.env.QA_PROFILE = name; // the check below reads the new profile
+  console.log(`[setup] profile "${name}" created in profiles/${name}/ and selected (QA_PROFILE=${name} in ${path.basename(ENV_FILE)})`);
+  console.log(`  info  next: edit profiles/${name}/rules.md and the jira.fields ids in profile.json`);
+  syncActiveProfile({ root: PROFILES_ROOT, p: loadProfile({ root: PROFILES_ROOT, envFile: ENV_FILE, name }) });
+}
+
+const isNew = process.argv[2] === '--new-profile';
+const arg = isNew ? undefined : process.argv[2];
+if (isNew) newProfile(process.argv.slice(3));
 if (arg === '--sync-profile') {
   const s = syncActiveProfile();
   console.log(`[setup] ${path.relative(ROOT, s.path)} ${s.changed ? 'written' : 'already up to date'} (profile ${profile().name}, from profiles/${profile().name}/rules.md)`);
@@ -79,4 +123,4 @@ const hasBoard = fs.existsSync(path.join(ROOT, '.claude', 'team', 'team.mjs'));
 need(hasBoard, 'status board script found', 'the .claude/team folder is missing: re-clone the repo');
 
 console.log(problems ? `[setup] ${problems} thing(s) to fix` : '[setup] all good');
-process.exit(problems ? 1 : 0);
+process.exit(problems && !isNew ? 1 : 0);
