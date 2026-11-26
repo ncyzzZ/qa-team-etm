@@ -1,0 +1,26 @@
+=== ETM-8042 12:59
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-69ef9-cond-Extension-and-a-delete-chromium/test-failed-1.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-69ef9-cond-Extension-and-a-delete-chromium-retry1/test-failed-1.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-709bb-n-Up-Date-of-existing-Plans-chromium/test-failed-2.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-709bb-n-Up-Date-of-existing-Plans-chromium/test-failed-1.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-709bb-n-Up-Date-of-existing-Plans-chromium-retry1/test-failed-1.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-30f89-ck-Panel-Summary-shows-them-chromium/test-failed-1.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-30f89-ck-Panel-Summary-shows-them-chromium-retry1/test-failed-1.png
+    output/runs/2026-11-26_125954_ETM-8042/fe-e2e-planning-etm8042-ve-f7feb--loops-over-the-data-table--chromium/test-failed-1.png
+  5 failed
+  18 passed (28.0m)
+[auto-heal] needs-live 2  (/Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_125954_ETM-8042/heal-proposals.md)
+[auto-heal] NEXT: lead starts the heal loop now (TEAM.md Phase 7), no need to be asked
+== ETM-8042: ran 25 | passed 18 | failed 5 | flaky 1 | skipped 1
+  FLAKY ETM-8832 - Ramp Up equal to, one picker step after and outside the Pla (failed, then passed on retry: not a clean pass)
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_125954_ETM-8042/evidence-report-ETM-8042-20261126-125954.html
+=== import 13:28 /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_125954_import-rerun
+[ETM-7130_header_only_no_records] import failed | Import enabled: false | | (Supported file type: .xlsx, .xls | Maximum file size limit: 8 MB) | Import Failed. No data rows were found in the file. |
+[ETM-7132_a_sheet_renamed_Sheet1] import failed | Import enabled: false | | (Supported file type: .xlsx, .xls | Maximum file size limit: 8 MB) | Import Failed. The sheet name does not match the required template. |
+[ETM-7131_b_3001_rows] import failed | Import enabled: false | | (Supported file type: .xlsx, .xls | Maximum file size limit: 8 MB) | Import Failed. The file exceeds the maximum limit of 3,000 rows. |
+    output/runs/2026-11-26_125954_import-rerun/artifacts/fe-e2e-importWork-verifyIm-ed306-vise-a-Work-Job-Description-chromium/test-failed-1.png
+    output/runs/2026-11-26_125954_import-rerun/artifacts/fe-e2e-importWork-verifyIm-c0407-Status-and-Breakdown-Status-chromium/test-failed-1.png
+  3 failed
+  5 did not run
+  52 passed (26.5m)
+=== DONE 13:54

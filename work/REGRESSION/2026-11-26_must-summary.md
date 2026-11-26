@@ -32,3 +32,8 @@ ETM-8391 was not re-run here: its card session ran the whole RemarkFilter spec o
 ## Next
 
 Re-run: Import Work (after the `.env` fix), ETM-8042 Must specs, Equipment Mob Plan after its plans are checked.
+
+## Re-run 12:59-13:54 (log: `2026-11-26_rerun-import-8042.log`)
+
+- **ETM-8042 (no clash this time):** 18 passed, 5 failed, 1 flaky (8832). Failures: 8837 Manpower and Equipment Mob Plan Excel export (click timeout), 8842 Extend Daily Report (click timeout), 8831 Edit Shutdown Event Save stays disabled, 8839 Optimization Setting does not open. Sent to the 8042 card session for the heal loop (Phase 7) and a script / data / app call. Xray stays 24/24 PASSED.
+- **Import Work (after the `.env` fix):** 52 passed, 3 failed, 5 did not run. All 3 failures are data: the fixed test files 7107, 7122 and 7114 c hold Work UUIDs that no longer exist on QA ("The UUID you entered is not exist in the system"). The files need fresh UUIDs from the current plan.
