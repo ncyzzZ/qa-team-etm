@@ -1,0 +1,7 @@
+{
+  "title": "ETM (EP-Turnaround Management)",
+  "jira": { "site": "pttep.atlassian.net", "projectKey": "ETM", "projectId": 14436, "boardId": 4014 },
+  "repos": { "pwRepoDir": "ep-etm-fe-qa", "feRepoDir": "stms-fe", "feBranch": "develop" },
+  "ui": { "libraryTokenRe": "^(b|ag|ant|nz|ql)-" },
+  "docs": { "rules": "rules.md", "uiMap": "docs/UI_Map_ETM.md", "templates": "docs/ETM_Templates" }
+}

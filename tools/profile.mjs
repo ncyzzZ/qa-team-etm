@@ -1,0 +1,59 @@
+// profile.mjs - the active project profile (profiles/<name>/profile.json).
+// Name order: name argument, env QA_PROFILE, QA_PROFILE= in .env, else 'etm'.
+// Root (folder that contains profiles/): env QA_PROFILE_ROOT, else the repo root.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+function envFileValue(envFile, name) {
+  try {
+    const m = fs.readFileSync(envFile, 'utf8').match(new RegExp(`^\\s*${name}\\s*=\\s*(.+?)\\s*$`, 'm'));
+    return m ? m[1].replace(/^["']|["']$/g, '') : '';
+  } catch { return ''; }
+}
+
+export function escapeKey(key) {
+  return String(key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function loadProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, envFile, name } = {}) {
+  envFile = envFile ?? path.join(ROOT, '.env');
+  const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || 'etm';
+  const dir = path.join(root, 'profiles', pname);
+  const file = path.join(dir, 'profile.json');
+  if (!fs.existsSync(file)) throw new Error(`profile "${pname}" not found (profiles/${pname}/profile.json)`);
+  let raw;
+  try { raw = JSON.parse(fs.readFileSync(file, 'utf8')); }
+  catch (e) { throw new Error(`profile "${pname}": profile.json is not valid JSON (${e.message})`); }
+  const need = (p, v) => { if (v === undefined || v === null || v === '') throw new Error(`profile "${pname}": ${p} missing`); };
+  need('jira.site', raw.jira?.site);
+  need('jira.projectKey', raw.jira?.projectKey);
+  if (!/^[A-Z][A-Z0-9_]{1,9}$/.test(raw.jira.projectKey)) throw new Error(`profile "${pname}": jira.projectKey must match ^[A-Z][A-Z0-9_]{1,9}$`);
+  need('repos.pwRepoDir', raw.repos?.pwRepoDir);
+  need('repos.feRepoDir', raw.repos?.feRepoDir);
+  return { ...raw, repos: { ...raw.repos, feBranch: raw.repos.feBranch || 'develop' }, name: pname, dir };
+}
+
+let cached;
+export function profile() { return (cached ??= loadProfile()); }
+export function _resetProfileCache() { cached = undefined; }
+
+export function keyRe(p, { anchored = false, global = false } = {}) {
+  const k = escapeKey(p.jira.projectKey);
+  return new RegExp(anchored ? `^${k}-\\d+$` : `\\b${k}-\\d+\\b`, global ? 'g' : '');
+}
+export function isKey(s, p = profile()) { return keyRe(p, { anchored: true }).test(String(s)); }
+export function keysIn(text, p = profile()) { return [...new Set(String(text).match(keyRe(p, { global: true })) || [])]; }
+export function firstKey(text, p = profile()) { return keysIn(text, p)[0] || ''; }
+export function browseUrl(key, p = profile()) { return `https://${p.jira.site}/browse/${key}`; }
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const cmd = process.argv[2];
+  try {
+    if (cmd === 'show') console.log(JSON.stringify(profile(), null, 2));
+    else if (cmd === 'key') console.log(profile().jira.projectKey);
+    else { console.error('usage: node tools/profile.mjs show|key'); process.exit(2); }
+  } catch (e) { console.error(e.message); process.exit(1); }
+}

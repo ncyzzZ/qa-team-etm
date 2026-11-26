@@ -1,0 +1,7 @@
+{
+  "title": "ACME",
+  "jira": { "site": "acme.atlassian.net", "projectKey": "ACME", "projectId": 0, "boardId": 0 },
+  "repos": { "pwRepoDir": "acme-fe-qa", "feRepoDir": "acme-fe", "feBranch": "develop" },
+  "ui": { "libraryTokenRe": "^$" },
+  "docs": { "rules": "rules.md", "uiMap": null, "templates": null }
+}
