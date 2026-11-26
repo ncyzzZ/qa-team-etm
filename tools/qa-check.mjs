@@ -464,7 +464,15 @@ function selftest() {
 //   "tier":"regression|card|manual" (optional, default card), "manualWhy":"..." (tier manual only)}]}
 const RATINGS = ['strong', 'weak', 'blocked', 'none'];
 const TIERS = ['regression', 'card', 'manual'];   // regression: core flow, every stms-fe build; card: this Story; manual: not E2E (manualWhy)
-export const STRONG_TARGET = 80;
+export const STRONG_TARGET = 100;   // team standard 2026-11-26: every non-manual AC strong
+const MANUAL_WHY = /^(ui|job|email|user):\s*\S/;   // eye judgement, job run, email, the user's ruling
+/** Spec titles that carry @high, per Xray key (PW_REPO tests/). */
+function highTagged(pwRepo) {
+  const out = new Map();
+  const walk = (d) => { for (const e of fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }) : []) { const f = path.join(d, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules') walk(f); } else if (/\.spec\.ts$/.test(e.name)) for (const m of fs.readFileSync(f, 'utf8').matchAll(/\btest(?:\.\w+)?\(\s*(['"`])((?:ETM-\d+)[^'"`]*)\1/g)) { const k = m[2].match(/^ETM-\d+/)[0]; out.set(k, (out.get(k) || false) || /@high\b/.test(m[2])); } } };
+  walk(path.join(pwRepo, 'tests'));
+  return out;
+}
 function checkStrength() {
   const key = pos[0];
   if (!key) { console.error('Usage: qa-check strength <KEY | path/to/ac-strength.json>'); process.exit(2); }
@@ -484,7 +492,7 @@ function checkStrength() {
     if (!a.why || String(a.why).length < 5) err(`${id}: why is missing`);
     if (a.rating !== 'none' && !(a.tests || []).length) err(`${id}: a ${a.rating} rating needs the Xray test keys`);
     if (a.tier != null && !TIERS.includes(a.tier)) err(`${id}: tier must be one of ${TIERS.join(', ')}`);
-    if (a.tier === 'manual' && !/\S{3}/.test(a.manualWhy || '')) err(`${id}: tier manual needs "manualWhy" (eye judgement, runs once, outside system, or the user's ruling)`);
+    if (a.tier === 'manual' && !MANUAL_WHY.test(a.manualWhy || '')) err(`${id}: tier manual needs "manualWhy" starting ui: / job: / email: / user: (TEAM.md "How much E2E")`);
   }
   // every AC of analyst.md must be rated (when the analyst file lists AC-n ids)
   const analyst = read(path.join(WORK(j.card || key), 'analyst.md')) || '';
@@ -512,9 +520,13 @@ function checkStrength() {
   const pct = auto.length ? Math.round((100 * strongAuto) / auto.length) : 100;
   if (auto.length && pct < target) {
     const list = (r) => auto.filter((a) => a.rating === r).map((a) => a.id).join(', ');
-    warn(`coverage ${pct}% strong of ${auto.length} automatable AC (target ${target}%): ${['weak', 'blocked', 'none'].filter((r) => list(r)).map((r) => `${r} ${list(r)}`).join('; ')}. Fix weak first (can pass without checking), or mark an AC tier "manual" with manualWhy`);
+    warn(`coverage ${pct}% strong of ${auto.length} automatable AC (target ${target}%): ${['weak', 'blocked', 'none'].filter((r) => list(r)).map((r) => `${r} ${list(r)}`).join('; ')}. Fix weak first (can pass without checking); manual only for ui: / job: / email: / user:`);
   }
   const reg = (j.ac || []).filter((a) => a.tier === 'regression');
+  if (reg.length) {
+    let tags = null; try { const pw = arg('--pw') || resolveRepos().pwRepo; if (fs.existsSync(path.join(pw, 'tests'))) tags = highTagged(pw); } catch { /* no PW_REPO */ }
+    if (tags) for (const a of reg) for (const k of a.tests || []) if (tags.has(k) && !tags.get(k)) warn(`${a.id} is High (tier regression) but ${k} has no @high in its title: add " @high" at the end of the test title`);
+  }
   if (reg.some((a) => a.rating !== 'strong')) warn(`tier regression AC not strong: ${reg.filter((a) => a.rating !== 'strong').map((a) => a.id).join(', ')}: a regression test must assert the rule`);
   finish('strength', ` | AC proven ${proven}/${total} | strong ${pct}% of ${auto.length} automatable (target ${target}%) | strong on paper ${n.strong}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}${reg.length ? ` | regression ${reg.length}` : ''}`);
 }
