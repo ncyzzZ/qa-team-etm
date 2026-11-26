@@ -1,0 +1,14 @@
+=== ETM-8034 08:00
+    output/runs/2026-11-26_080004_ETM-8034/fe-e2e-shutdownLogic-verif-d8210-own-row-copies-both-colours-chromium/test-failed-1.png
+    output/runs/2026-11-26_080004_ETM-8034/fe-e2e-shutdownLogic-verif-d8210-own-row-copies-both-colours-chromium-retry1/test-failed-1.png
+    expect(locator).toContainText(expected) failed
+    output/runs/2026-11-26_080004_ETM-8034/fe-e2e-shutdownLogic-verif-528a2-colour-is-kept-after-reload-chromium/test-failed-1.png
+    expect(locator).toContainText(expected) failed
+    output/runs/2026-11-26_080004_ETM-8034/fe-e2e-shutdownLogic-verif-528a2-colour-is-kept-after-reload-chromium-retry1/test-failed-1.png
+  4 failed
+  12 passed (1.1h)
+[auto-heal] needs-live 1  (/Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_080004_ETM-8034/heal-proposals.md)
+[auto-heal] NEXT: lead starts the heal loop now (TEAM.md Phase 7), no need to be asked
+== ETM-8034: ran 16 | passed 12 | failed 4 | flaky 0 | skipped 0
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_080004_ETM-8034/evidence-report-ETM-8034-20261126-080004.html
+=== ETM-8042 09:03

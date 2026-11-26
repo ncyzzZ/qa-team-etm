@@ -1,0 +1,14 @@
+=== ETM-8034 09:46
+[rerun-guard] DROP ETM-8860: failed in 4 runs today (limit 3): stop and offer it as manual (TEAM.md fix rounds)
+[rerun-guard] DROP ETM-8862: same result expected: passed in 2026-11-26_092144 and nothing changed since (spec, its imports, card data, stms-fe)
+[rerun-guard] DROP ETM-8867: same result expected: passed in 2026-11-26_092144 and nothing changed since (spec, its imports, card data, stms-fe)
+    output/runs/2026-11-26_094609_ETM-8034/fe-e2e-shutdownLogic-verif-00119-ighlight-and-no-text-colour-chromium/test-failed-2.png
+    output/runs/2026-11-26_094609_ETM-8034/fe-e2e-shutdownLogic-verif-00119-ighlight-and-no-text-colour-chromium/test-failed-1.png
+    output/runs/2026-11-26_094609_ETM-8034/fe-e2e-shutdownLogic-verif-00119-ighlight-and-no-text-colour-chromium-retry1/test-failed-1.png
+    output/runs/2026-11-26_094609_ETM-8034/fe-e2e-shutdownLogic-verif-d8210-own-row-copies-both-colours-chromium/test-failed-1.png
+    output/runs/2026-11-26_094609_ETM-8034/fe-e2e-shutdownLogic-verif-d8210-own-row-copies-both-colours-chromium-retry1/test-failed-1.png
+  2 failed
+  11 passed (47.7m)
+== ETM-8034: ran 13 | passed 11 | failed 2 | flaky 0 | skipped 0
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_094609_ETM-8034/evidence-report-ETM-8034-20261126-094609.html
+=== ETM-8042 10:33
