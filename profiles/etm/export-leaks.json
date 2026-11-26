@@ -6,7 +6,6 @@
   {"source": "14436"},
   {"source": "\\bSTMS\\b"},
   {"source": "Shutdown Logic|SIMOP|Daily Report|Turnaround", "flags": "i"},
-  {"source": "nuchanart|extosoft", "flags": "i"},
   {"source": "\\betm\\b", "flags": "i"},
   {"source": "etm[-_]|[-_]etm\\b", "flags": "i"},
   {"source": "shutdown[-_ ]?(logic|event)|shutdownLogic|gantt", "flags": "i"},

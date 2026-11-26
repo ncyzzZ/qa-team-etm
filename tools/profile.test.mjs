@@ -116,3 +116,22 @@ test('rejects unsafe profile names', () => {
   assert.throws(() => load({ root: root(), name: '../x' }), { message: 'profile name "../x" is not allowed' });
   assert.throws(() => withEnv({ QA_PROFILE: '../x', QA_PROFILE_ROOT: undefined }, () => loadProfile({ root: root() })), { message: 'profile name "../x" is not allowed' });
 });
+
+test('feBranch must be a plain branch name', () => {
+  for (const ok of ['develop', 'release/2.1', 'feat_x-1', 'v1.0']) {
+    const p = mk(); p.repos.feBranch = ok;
+    assert.equal(load({ root: root({ x: p }), name: 'x' }).repos.feBranch, ok);
+  }
+  for (const bad of ['-x', '--upload-pack=evil', 'a b', 'dev;rm', 'a$(b)', 'x\ny']) {
+    const p = mk(); p.repos.feBranch = bad;
+    assert.throws(() => load({ root: root({ x: p }), name: 'x' }), /repos\.feBranch .* is not a plain branch name/);
+  }
+});
+
+test('QA_ENV_FILE is the .env read for QA_PROFILE when no envFile is given', () => {
+  const r = root({ etm: mk(), acme: mk('ACME') });
+  const envFile = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'prof-env-')), 'other.env');
+  fs.writeFileSync(envFile, 'QA_PROFILE=acme\n');
+  assert.equal(withEnv({ QA_PROFILE: undefined, QA_PROFILE_ROOT: undefined, QA_ENV_FILE: envFile }, () => loadProfile({ root: r })).name, 'acme');
+  assert.throws(() => withEnv({ QA_PROFILE: undefined, QA_PROFILE_ROOT: undefined, QA_ENV_FILE: path.join(r, 'none.env') }, () => loadProfile({ root: r })), /no profile selected/);
+});

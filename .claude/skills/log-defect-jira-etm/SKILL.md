@@ -1,6 +1,6 @@
 ---
 name: log-defect-jira-etm
-description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use instead of log-defect-jira for the Jira project of the active profile. Runs the full project-specific defect-logging procedure end-to-end - correct fields, environment-based Work type, auto-resolved FE/BE assignee from the originating Story, mandatory embedded evidence images, FE/UI labels, QA sub-task, and Xray step-level linking.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use to log a defect in the Jira project of the active profile, rather than any generic defect-logging skill. Runs the full project-specific defect-logging procedure end-to-end - correct fields, environment-based Work type, auto-resolved FE/BE assignee from the originating Story, mandatory embedded evidence images, FE/UI labels, QA sub-task, and Xray step-level linking.
 ---
 
 # Log a Defect/Bug in the active project's Jira

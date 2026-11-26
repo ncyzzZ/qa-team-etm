@@ -28,7 +28,7 @@ function onlyProfile(root) {
 }
 
 export function loadProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, envFile, name } = {}) {
-  envFile = envFile ?? path.join(ROOT, '.env');
+  envFile = envFile ?? (process.env.QA_ENV_FILE || path.join(ROOT, '.env'));
   const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || onlyProfile(root);
   if (!pname) throw new Error('no profile selected: set QA_PROFILE=<name> in .env (node tools/setup.mjs --new-profile <name> does it), there is not exactly one folder under profiles/');
   if (!/^[a-z0-9][a-z0-9_-]*$/i.test(pname)) throw new Error('profile name "' + pname + '" is not allowed');
@@ -44,6 +44,7 @@ export function loadProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, envFil
   if (!/^[A-Z][A-Z0-9_]{1,9}$/.test(raw.jira.projectKey)) throw new Error(`profile "${pname}": jira.projectKey must match ^[A-Z][A-Z0-9_]{1,9}$`);
   need('repos.pwRepoDir', raw.repos?.pwRepoDir);
   need('repos.feRepoDir', raw.repos?.feRepoDir);
+  if (raw.repos.feBranch !== undefined && raw.repos.feBranch !== '' && !/^[A-Za-z0-9._/][A-Za-z0-9._/-]*$/.test(String(raw.repos.feBranch))) throw new Error(`profile "${pname}": repos.feBranch ${JSON.stringify(String(raw.repos.feBranch))} is not a plain branch name`);
   return { ...raw, repos: { ...raw.repos, feBranch: raw.repos.feBranch || 'develop' }, name: pname, dir };
 }
 
@@ -116,11 +117,12 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       try { syncActiveProfile({ p }); } catch {} // a read-only checkout still gets the rules in context
       process.stdout.write(text);
     } catch (e) { console.log(`PROJECT PROFILE NOT LOADED: ${e.message} — run node tools/setup.mjs`); }
-    process.exit(0);
+    process.exitCode = 0; // not process.exit(): a piped stdout (the hook) is async on macOS and would be cut
+  } else {
+    try {
+      if (cmd === 'show') console.log(JSON.stringify(profile(), null, 2));
+      else if (cmd === 'key') console.log(profile().jira.projectKey);
+      else { console.error('usage: node tools/profile.mjs show|key|session-context'); process.exitCode = 2; }
+    } catch (e) { console.error(e.message); process.exitCode = 1; }
   }
-  try {
-    if (cmd === 'show') console.log(JSON.stringify(profile(), null, 2));
-    else if (cmd === 'key') console.log(profile().jira.projectKey);
-    else { console.error('usage: node tools/profile.mjs show|key|session-context'); process.exit(2); }
-  } catch (e) { console.error(e.message); process.exit(1); }
 }

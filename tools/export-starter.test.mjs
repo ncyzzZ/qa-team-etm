@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { planExport, leakScan, namePatterns, leakPatterns, projectSkips, projectRenames, renamePath, renameText } from './export-starter.mjs';
+import { planExport, leakScan, namePatterns, leakPatterns, projectSkips, projectRenames, renamePath, renameText, exportStarter } from './export-starter.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tmpDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'starter-'));
@@ -135,4 +135,40 @@ test('CLI: an out folder reached through a symlink into the repo is refused', ()
   assert.equal(res.status, 2);
   assert.match(res.stderr, /inside the repo/);
   assert.ok(!fs.existsSync(path.join(ROOT, 'tmp-starter-y')));
+});
+
+test('exportStarter: a file with a NUL byte is skipped whatever its extension, except under .claude/team/assets/', () => {
+  const r = tmpDir();
+  write(r, 'profiles/_template/profile.json', JSON.stringify({ jira: { site: 'acme.atlassian.net', projectKey: 'ACME' }, repos: { pwRepoDir: 'a', feRepoDir: 'b' } }));
+  write(r, 'profiles/_template/rules.md', '# rules\n');
+  write(r, 'tools/a.mjs', 'export const a = 1;\n');
+  fs.writeFileSync(path.join(r, 'tools/blob.mjs'), Buffer.from([0x61, 0x00, 0x62]));
+  fs.writeFileSync(path.join(r, 'tools/odd.txt'), Buffer.from([0x00, 0x01]));
+  fs.mkdirSync(path.join(r, '.claude/team/assets'), { recursive: true });
+  fs.writeFileSync(path.join(r, '.claude/team/assets/font.woff2'), Buffer.from([0x77, 0x00, 0x46]));
+  const g = (...a) => spawnSync('git', a, { cwd: r, encoding: 'utf8' });
+  g('init', '-q'); g('add', '-A');
+  const out = path.join(tmpDir(), 'out');
+  fs.mkdirSync(out);
+  const { skipped } = exportStarter(out, { root: r, patterns: [] });
+  assert.ok(fs.existsSync(path.join(out, 'tools/a.mjs')));
+  assert.ok(!fs.existsSync(path.join(out, 'tools/blob.mjs')));
+  assert.ok(!fs.existsSync(path.join(out, 'tools/odd.txt')));
+  assert.ok(fs.existsSync(path.join(out, '.claude/team/assets/font.woff2')));
+  assert.deepEqual(skipped.filter((s) => s.why === 'binary (NUL byte)').map((s) => s.file).sort(), ['tools/blob.mjs', 'tools/odd.txt']);
+});
+
+test('leakPatterns: the git-ignored export-leaks.local.json of a profile is merged in', () => {
+  const r = tmpDir();
+  write(r, 'profiles/zed/profile.json', JSON.stringify({ jira: { site: 'zedcorp.atlassian.net', projectKey: 'ZED' }, repos: { pwRepoDir: 'zed-qa', feRepoDir: 'zed-web' } }));
+  write(r, 'profiles/zed/export-leaks.json', JSON.stringify(['Moon Base']));
+  write(r, 'profiles/zed/export-leaks.local.json', JSON.stringify([{ source: 'jane\\s+roe|bigco', flags: 'i' }]));
+  const d = tmpDir();
+  write(d, 'a.md', ['Moon Base', 'by Jane  Roe', 'BigCo ltd', 'clean'].join('\n'));
+  assert.deepEqual(leakScan(d, leakPatterns({ root: r })).map((h) => h.line), [1, 2, 3]);
+  const g = tmpDir();
+  fs.copyFileSync(path.join(ROOT, '.gitignore'), path.join(g, '.gitignore'));
+  spawnSync('git', ['init', '-q'], { cwd: g });
+  const ign = spawnSync('git', ['check-ignore', '-q', 'profiles/some-team/export-leaks.local.json'], { cwd: g });
+  assert.equal(ign.status, 0, 'profiles/*/export-leaks.local.json is git-ignored');
 });

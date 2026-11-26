@@ -47,3 +47,6 @@ dist/account-skills/*/
 .claude/team/inbox.jsonl
 .claude/team/inbox-sent.jsonl
 .superpowers/
+
+# per-profile leak terms that must not be committed themselves (tools/export-starter.mjs reads them)
+profiles/*/export-leaks.local.json

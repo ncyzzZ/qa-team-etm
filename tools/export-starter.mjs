@@ -6,7 +6,7 @@
 //   result (contents and file names) with leakPatterns. Any hit: prints "file:line match",
 //   exits 1 and leaves the folder for inspection.
 // Leak patterns come from every project profile (key, site, project id, repo folders), from
-// profiles/<name>/export-leaks.json (extra terms of that project) and from the names in
+// profiles/<name>/export-leaks.json (extra terms of that project; plus the git-ignored export-leaks.local.json) and from the names in
 // .claude/team/people.local.md (printed as name#<n>, never written out; a missing file is refused unless
 // --people <file> or --no-people is given). profiles/<name>/export-renames.json renames tokens (skill names)
 // in the starter's paths and texts; the scan runs on the renamed result.
@@ -125,7 +125,8 @@ export function leakPatterns({ root = ROOT, people } = {}) {
     }
     if (p?.jira?.projectId) out.push(new RegExp(`(?<![0-9])${escapeKey(String(p.jira.projectId))}(?![0-9])`));
     for (const d of [p?.repos?.pwRepoDir, p?.repos?.feRepoDir]) if (d) out.push(new RegExp(escapeKey(d), 'i'));
-    const extra = readJson(path.join(pdir, n, 'export-leaks.json')) || [];
+    // export-leaks.local.json (git-ignored): terms that must not be committed themselves, e.g. people or company names
+    const extra = [...(readJson(path.join(pdir, n, 'export-leaks.json')) || []), ...(readJson(path.join(pdir, n, 'export-leaks.local.json')) || [])];
     for (const e of extra) out.push(typeof e === 'string' ? new RegExp(escapeKey(e), 'i') : new RegExp(e.source, e.flags || ''));
   }
   if (people) out.push(...namePatterns(fs.readFileSync(people, 'utf8'))); // null = names not scanned (--no-people)
@@ -228,6 +229,7 @@ export function exportStarter(outDir, { root = ROOT, patterns = [] } = {}) {
     if (!fs.existsSync(src) || !fs.statSync(src).isFile()) continue; // deleted in the work tree
     const outRel = renamePath(rel, renames);
     const buf = fs.readFileSync(src);
+    if (buf.includes(0) && !rel.startsWith('.claude/team/assets/')) { plan.skip.push({ file: rel, why: 'binary (NUL byte)' }); continue; }
     const data = buf.includes(0) || !Object.keys(renames).length ? buf : Buffer.from(renameText(buf.toString('utf8'), renames));
     // a fixture is judged as it would ship (after renames): one that still names the project is left out
     if (isFixture(rel) && (first(outRel) || (!data.includes(0) && data.toString('utf8').split('\n').some((l) => first(l))))) {
