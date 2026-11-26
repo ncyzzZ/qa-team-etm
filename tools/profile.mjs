@@ -21,6 +21,7 @@ export function escapeKey(key) {
 export function loadProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, envFile, name } = {}) {
   envFile = envFile ?? path.join(ROOT, '.env');
   const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || 'etm';
+  if (!/^[a-z0-9][a-z0-9_-]*$/i.test(pname)) throw new Error('profile name "' + pname + '" is not allowed');
   const dir = path.join(root, 'profiles', pname);
   const file = path.join(dir, 'profile.json');
   if (!fs.existsSync(file)) throw new Error(`profile "${pname}" not found (profiles/${pname}/profile.json)`);

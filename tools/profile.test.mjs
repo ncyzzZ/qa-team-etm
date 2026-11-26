@@ -30,7 +30,7 @@ function withEnv(vars, fn) {
   try { return fn(); } finally { for (const k of Object.keys(old)) { if (old[k] === undefined) delete process.env[k]; else process.env[k] = old[k]; } }
 }
 
-const load = (opts) => withEnv({ QA_PROFILE: undefined, QA_PROFILE_ROOT: undefined }, () => loadProfile(opts));
+const load = (opts = {}) => withEnv({ QA_PROFILE: undefined, QA_PROFILE_ROOT: undefined }, () => loadProfile({ envFile: path.join(opts.root || os.tmpdir(), 'no-such.env'), ...opts }));
 const etm = load({ root: root() });
 
 test('loads etm by default', () => {
@@ -93,4 +93,9 @@ test('QA_PROFILE_ROOT is the default root', () => {
   const p = withEnv({ QA_PROFILE: 'zed', QA_PROFILE_ROOT: r }, () => loadProfile());
   assert.equal(p.name, 'zed');
   assert.equal(p.dir, path.join(r, 'profiles', 'zed'));
+});
+
+test('rejects unsafe profile names', () => {
+  assert.throws(() => load({ root: root(), name: '../x' }), { message: 'profile name "../x" is not allowed' });
+  assert.throws(() => withEnv({ QA_PROFILE: '../x', QA_PROFILE_ROOT: undefined }, () => loadProfile({ root: root() })), { message: 'profile name "../x" is not allowed' });
 });
