@@ -1,0 +1,106 @@
+{
+ "id": "ETM-8791",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 9,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 10,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 11,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 12,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 13,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 14,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  }
+ ],
+ "warnings": [
+  "Step 14: worklist name hidden by the note and columns differ from steps 4/8; cannot confirm it is the import target worklist.",
+  "Step 14: 0 results for the 31-char Deck search proves nothing unless worklist search covers the Deck column (not shown).",
+  "No sourced text for 'silent truncation, no message' at 31 characters; BA Q9 answer text not recorded.",
+  "Q12 (whole file vs row rejected) marked answered but text not recorded; step 14 expectation rests on the Jira summary only.",
+  "Step 7 picture is a fresh empty form, not the step 5-6 form; 'remove the text' action is not shown.",
+  "Steps 2, 3, 7, 9 pictures use test-only style changes (tag clip lifted); real screen cuts the tag at 80px.",
+  "Brief step 13 still says Next / Confirm; page only has Import (Xray reworded per 26 Nov note).",
+  "Pictures 1, 7 and step 14 are 1280x720 with white canvas below, unlike the 1500x1100 others.",
+  "Step 4 search box text did not filter the table (216 results); toasts in steps 4 and 8 not captured."
+ ],
+ "summary": "ขั้น 1-13 ภาพตรงกับผลที่คาด (Deck รับได้สูงสุด 30 ตัว, import ไฟล์ที่มีค่า 31 ตัวขึ้น error แถว 7-8 และปุ่ม Import ถูกปิด) แต่ขั้น 14 ยืนยันไม่ได้ เพราะชื่อ worklist ถูกบัง คอลัมน์ต่างจากขั้นอื่น และไม่แน่ว่าการค้นหาครอบคลุมคอลัมน์ Deck",
+ "sourceHash": "4f436d0c814e"
+}

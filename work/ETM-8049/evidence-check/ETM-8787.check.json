@@ -1,0 +1,32 @@
+{ "id": "ETM-8787", "sourceHash": "0df22b49272c", "overall": "pass",
+  "steps": [
+    { "n": 1, "sees": "Shutdown Logic: QA ETM-8049 Logic, Breakdown Setting modal, Breakdown Details tab, Task Description WK-1b-L-BD1. Working Location (Deck) is a tag field holding tag Helideck with remove x; X=1, Y=A; modal Save disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same modal, WK-1b-L-BD1. Deck field now holds tags Helideck and Main Deck; dropdown open with Main Deck ticked, Cellar/Mezzanine/Sub Cellar Deck listed. Modal Save now enabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Shutdown Logic Gantt table, modal closed, page Save greyed. Toast 'Save Shutdown Logic Successfully.' at bottom right. Deck column is not visible in this view (Location group collapsed).", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Worklist: QA ETM-8049 Logic (Initial), 7 results. WK-1b-L Working Location (Deck) = 'Main Deck, Helideck', Y = A. WK-18g-L Deck Helideck, Y B. WK-1a-L also 'Main Deck, Helideck'.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Breakdown Setting modal of WK-1b-L-BD1. Deck field tags: Main Deck, Helideck, and 'Deck-0123456789-0123456789-ABC' (I count 30 characters). No error message. Modal Save enabled. Typed input text itself not visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "Worklist: QA ETM-8049 Logic, 7 results. WK-1b-L Deck still 'Main Deck, Helideck'; no Deck-0123... value in any visible Deck cell.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "Shutdown Logic Gantt, Location group expanded showing Working Location (Deck). Row 4 WK-18g-L-BD1 Deck cell Helideck is highlighted blue with a red left border (selected). Page Save greyed.", "verdict": "pass", "pictureOk": true },
+    { "n": 8, "sees": "Same Gantt. WK-18g-L-BD1 Deck cell (selected) and parent row WK-18g-L both read 'Deck-0123456789-0123456789-ABC' (30 characters). No error shown. Page Save now enabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 9, "sees": "Same Gantt. WK-18g-L-BD1 Deck cell and parent WK-18g-L read 'Main Deck'. Other rows unchanged (WK-1b-L-BD1 'Main Deck, Helideck', others Helideck). Save enabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 10, "sees": "Gantt, Location group collapsed, page Save greyed. Toast 'Save Shutdown Logic Successfully.' at bottom right.", "verdict": "pass", "pictureOk": true },
+    { "n": 11, "sees": "Worklist: QA ETM-8049 Logic, 7 results. WK-18g-L Working Location (Deck) = 'Main Deck', Working Location (Y) = B. Other rows A, Deck Helideck where readable.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "Xray ETM-8787 steps 1-9, 11-12 (work/ETM-8049/xray-steps-ETM-8787-before-2026-11-24.json)",
+    "ETM-8049 AC 6.3 (converted spelling shown as soon as entered; quoted in dev-brief-ETM-9225.md)",
+    "BA answer Q33 2026-11-25 (match to Master Data converted to Master spelling)",
+    "BA correction Q29 2026-11-24 (X/Y only selected, Y paste step dropped; Y stays B)",
+    "ba-answers.md side note: Deck max length 30 in ETM-8049/686/1230/1106"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 5 expected says 31st not accepted (Xray: same as Create Work form); annotation says input held 31 chars, cut only on Enter.",
+    "Step 5 pass relies on an unsourced '26 Nov decision' that the input may show 31 while typing; confirm with BA/lead.",
+    "Deck max length conflict: 30 in Stories, 50 in docs/modules/shutdown-logic-validation.md (open in ba-answers.md).",
+    "Brief steps 10-11 differ from Xray (Y paste step removed per Q29); Xray steps need rewording before push.",
+    "Step 2 cannot show whether Main Deck came from conversion or Enter picking the filtered dropdown option.",
+    "Step 3 picture does not show the Deck cell after save; saved value proven only by step 4."
+  ],
+  "summary": "ภาพทั้ง 11 ภาพตรงกับผลที่คาดไว้ (Main Deck แปลงถูก, ตัดเหลือ 30 ตัว, ไม่ save เมื่อยกเลิก, Y ยังเป็น B) แต่ step 5 ช่อง input รับ 31 ตัวก่อนกด Enter ซึ่งต่างจากข้อความ Xray ว่า 'ไม่รับตัวที่ 31' ควรยืนยันกับ BA"
+}

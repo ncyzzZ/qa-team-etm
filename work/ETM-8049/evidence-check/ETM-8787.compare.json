@@ -1,0 +1,85 @@
+{
+ "id": "ETM-8787",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "cannot-tell",
+ "checkerOverall": "pass",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "needs-human",
+   "checker": "pass",
+   "match": false
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 9,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 10,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 11,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Step 5 expected says 31st not accepted (Xray: same as Create Work form); annotation says input held 31 chars, cut only on Enter.",
+  "Step 5 pass relies on an unsourced '26 Nov decision' that the input may show 31 while typing; confirm with BA/lead.",
+  "Deck max length conflict: 30 in Stories, 50 in docs/modules/shutdown-logic-validation.md (open in ba-answers.md).",
+  "Brief steps 10-11 differ from Xray (Y paste step removed per Q29); Xray steps need rewording before push.",
+  "Step 2 cannot show whether Main Deck came from conversion or Enter picking the filtered dropdown option.",
+  "Step 3 picture does not show the Deck cell after save; saved value proven only by step 4."
+ ],
+ "summary": "ภาพทั้ง 11 ภาพตรงกับผลที่คาดไว้ (Main Deck แปลงถูก, ตัดเหลือ 30 ตัว, ไม่ save เมื่อยกเลิก, Y ยังเป็น B) แต่ step 5 ช่อง input รับ 31 ตัวก่อนกด Enter ซึ่งต่างจากข้อความ Xray ว่า 'ไม่รับตัวที่ 31' ควรยืนยันกับ BA",
+ "sourceHash": "0df22b49272c"
+}

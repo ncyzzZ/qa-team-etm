@@ -1,0 +1,3 @@
+{"ETM-8787":{"9cc67dea-d2af-4c06-a171-32c01bdf538c":{"action":"Return to the same edit way of the same work and type the 31-character value in the Deck field.","result":"The field keeps 30 characters and the 31st character is not accepted, the same as in the Create Work form."}},
+ "ETM-8789":{"cca135f4-326b-46c5-80bb-47d8a6550d45":{"action":"Select the Deck cells of `WK-20a` to `WK-20d` in the Gantt table and paste.","result":"The four existing works receive the four values, no new work is created."}},
+ "ETM-8791":{"9d41148a-92b7-446f-8daa-a61f60e17c68":{"action":"NEG check: look at the `Next` or `Confirm` button of the data row.","result":"The button is disabled."}}}

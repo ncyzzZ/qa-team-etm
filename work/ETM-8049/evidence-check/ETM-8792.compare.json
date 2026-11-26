@@ -1,0 +1,107 @@
+{
+ "id": "ETM-8792",
+ "kind": "manual",
+ "result": "agree-with-warnings",
+ "firstOverall": "cannot-tell",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 7,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 9,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 10,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 11,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 12,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 13,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 14,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "step 8: picture blank, cut or not full screen",
+  "Steps 2, 4, 5 Expected Result is a placeholder 'the expected value'; the actual value appears only in the picture overlay.",
+  "Steps 6-7 and 10-13 expected (keep two spaces; comma not a separator) rest on Q7/Q13, whose answer text was never recorded.",
+  "Steps 6-7 used a synthetic paste event, not a real copy from Word/Excel; a developer cannot repeat it as written.",
+  "Two spaces in 'Deck  Two' cannot be proven from a picture; HTML collapses spaces. Needs DOM value or saved-data check.",
+  "Pictures 1 and 2 are the same screen; picture 1 already shows the step 2 result.",
+  "Picture 8 does not show the Deck cell or the worklist; 'nothing saved' rests on overlay text only.",
+  "Step 13 'no B' cannot be shown while the filter search is 'Zone A'; needs a search for 'B' or no search.",
+  "Data row for WK-19m2 (ดาดฟ้าหลัก) has no typing picture; step 2 shows only WK-19m1.",
+  "Step 14 includes 7 deleted WK-19z works from earlier runs; result still shows the new work."
+ ],
+ "summary": "ภาพส่วนใหญ่ตรงกับที่คาด (Main Deck, ดาดฟ้าหลัก, Zone A, B เป็น 1 tag และ filter มี option เดียว) แต่ยืนยันไม่ได้ว่า 'Deck  Two' เก็บช่องว่าง 2 ตัว, ภาพ step 8 ไม่เห็นช่อง Deck และ expected ของเรื่อง comma/ช่องว่างไม่มีคำตอบ BA ที่บันทึกไว้ จึงสรุปเป็น cannot-tell",
+ "sourceHash": "ad07ea390097"
+}

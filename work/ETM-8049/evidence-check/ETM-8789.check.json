@@ -1,0 +1,28 @@
+{ "id": "ETM-8789", "sourceHash": "3d86612ed550", "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Not an app screen: an HTML table rendered by a script from sheet2.xml of ETM-8789-four-spellings-0141.xlsx. 8 rows (Work + Work Breakdown for WK-Q1..Q4-0141). Deck column holds Quay Wall, Quay Wall, QUAY WALL, QUAY WALL, quay wall, quay wall, main deck, main deck in that order.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Worklist: QA ETM-8049 Scratch (Initial). Toast 'Create Success / Create Work Successfully.' Table still loading (spinner), only group 'Mechanical (PM)' shown, no rows and no count visible.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 3, "sees": "Same Worklist, search '-0141', Total Results 8: WK-Q1..Q4-0141 each twice (N row and D row). Working Location (Deck): WK-Q1 Quay Wall x2, WK-Q2 QUAY WALL x2, WK-Q3 quay wall x2.", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Same list, Total Results 8. WK-Q4-0141 both rows show Deck 'Main Deck'; the other rows unchanged (Quay Wall, QUAY WALL, quay wall).", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Shutdown Logic: QA ETM-8049 Logic, no histogram visible, Save disabled. Rows 4-16; WK-20a-L..WK-20d-L and their BD1 rows all show Deck 'Helideck'. Clipboard content appears only in the script's caption, not on the screen.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 6, "sees": "Same Shutdown Logic, Save enabled. Working Location (Deck): WK-20a-L and BD1 Quay Wall, WK-20b-L and BD1 QUAY WALL, WK-20c-L and BD1 quay wall, WK-20d-L and BD1 Main Deck. Last row number still 16 as in picture 5; other rows still Helideck.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "Same Shutdown Logic page, toast 'Save Success / Save Shutdown Logic Successfully.', Save button disabled again, rows 4-16 shown (Duration columns).", "verdict": "pass", "pictureOk": true },
+    { "n": 8, "sees": "Worklist: QA ETM-8049 Logic, Total Results 7. Deck: WK-18g-L, WK-1a-L, WK-1b-L Helideck; WK-20a-L Quay Wall, WK-20b-L QUAY WALL, WK-20c-L quay wall. WK-20d-L row present, Deck hidden by caption.", "verdict": "pass", "pictureOk": true },
+    { "n": 9, "sees": "Same Worklist, Total Results 7. WK-20d-L Deck shows 'Main Deck'; other rows unchanged.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "AC 6.1 (Master Data match converted to Master Data spelling; Excel import listed as entry point, quoted in dev-brief-ETM-9223.md)",
+    "AC 6.2 (free text saved exactly as entered; case variants stored separately)",
+    "BA answer Q15 (Story change 2026-11-18): case variants stored and shown as separate values",
+    "BA answer Q33 25 Nov 2026: value matching Master Data in any case converted; free text stays as typed"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 2 picture shows only the success toast while the table loads; four works are proven only by picture 3 (8 rows = 4 works x 2).",
+    "Step 5 clipboard content is shown only in the script caption; picture 6 shows the pasted values, which indirectly proves it.",
+    "No Xray step backup for ETM-8789 found; expected results checked against AC 6.1/6.2 and BA answers only.",
+    "Did not confirm AC 6.1 lists Shutdown Logic paste as an entry point; only Excel import and Edit Work Breakdown seen quoted.",
+    "Step 6 'no new work' rests on last row number 16 in pictures 5 and 6; full Gantt row count not visible."
+  ],
+  "summary": "ภาพยืนยันผลหลักครบ: Import Excel เก็บ Quay Wall/QUAY WALL/quay wall ตามที่พิมพ์ และ main deck เป็น Main Deck, การ paste ใน Shutdown Logic และ Save ให้ผลเดียวกันบน Worklist. ตัดสินเป็น cannot-tell เพราะภาพ step 2 (ตารางยังโหลด) และ step 5 (clipboard) พิสูจน์ด้วยตัวเองไม่ได้ แต่ภาพ 3 และ 6 ยืนยันแทนได้ ผู้ใช้ตัดสินได้ว่าจะให้ผ่านหรือไม่"
+}

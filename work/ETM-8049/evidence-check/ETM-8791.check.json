@@ -1,0 +1,42 @@
+{
+  "id": "ETM-8791",
+  "sourceHash": "4f436d0c814e",
+  "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Create Work page, Work Breakdown: Single Task, Manpower AT[1], POB 1, Duration 1, Man-hrs 1, Day. Work Details row: Other, WK-18b-791679, Deck empty (placeholder), X tag 1, Y tag A, Save disabled. Viewport 1280x720 with white canvas below; Work Header scrolled out of view.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same Create Work form (WK-18b-791679). Deck cell holds tag 'Deck-0123456789-0123456789-AB' (29 characters), Deck dropdown open (Weather Deck, Upper Deck). No error message visible. Save still disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Same form. Deck cell holds one tag 'Deck-0123456789-0123456789-ABC' (30 characters), no other tag, no message visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Worklist 'QA ETM-8049 Scratch' (Initial). Search box holds WK-18b-791679 but the table is not filtered (Total Results 216). Row WK-18b-791679, ASSET, QA Auto 8049, Deck cell 'Deck-0123456789-0123456789-ABC' (30), status N. No toast visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Create Work form again: Single Task, AT[1], Duration 1, Day. Work Details row: Other, WK-18c-791495, ASSET, Deck empty, X tag 1, Y tag A.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "Form WK-18c-791495. Deck input (being edited, widened) shows 'Deck-0123456789-0123456789-ABC' (30 characters), no D at the end. No message visible. Only the end state is shown, not the keystrokes.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "Create Work form at 1280x720, but an EMPTY form (Work Type, Work Number, Job Description, Manpower, Duration all blank), not the WK-18c-791495 form of step 6. Deck cell has a tag 'Deck-0123456789-0123456789-ABC' (30), editor empty, no message. Tag label shown with a test-only style change.", "verdict": "pass", "pictureOk": true },
+    { "n": 8, "sees": "Worklist 'QA ETM-8049 Scratch', search WK-18c-791495, Total Results 1. Row WK-18c-791495, ASSET, QA Auto 8049, Deck 'Deck-0123456789-0123456789-ABC' (30), status N. No toast visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 9, "sees": "Create Work form, empty row (Work Type, Work Number blank, Manpower 0/5). Deck cell holds tag 'Deck-0123456789-0123456789-ABC' (30). No error message visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 10, "sees": "Edit Work Breakdown page, 1 row WK-18b-791679, Priority P2, Y tag A, Manpower AT[1]. Deck cell editor open with text 'Deck-0123456789-0123456789-ABC' (30), no message, Save disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 11, "sees": "Import Work page: upload area (.xlsx/.xls, max 8 MB), Download Template link, Back button, Import button disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 12, "sees": "Import Work page after a file: red banner 'Data Validation Failed. 2 data validation errors were found in the file.' Table: Row 7 / R7 and Row 8 / R8, Field Working Location (Deck), detail 'The text you entered exceeds the maximum character limit. Please refer to the sheet name \"Dropdown Options\" for the maximum limit.'", "verdict": "pass", "pictureOk": true },
+    { "n": 13, "sees": "Same error report. Buttons: Back and Import; Import is greyed out (disabled). No Next or Confirm button exists on the page.", "verdict": "pass", "pictureOk": true },
+    { "n": 14, "sees": "Three worklist pictures (1280x720): searches for WK-31ok-1124, WK-31bad-1124 and 'Deck-0123456789-0123456789-ABCD', each 'No results found', Total Results 0. The page title and breadcrumb are covered by the note, so the worklist name is not visible; the column layout (POB column, no Deck column) differs from steps 4 and 8.", "verdict": "cannot-tell", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "ETM-8049 Story Deck max 30 characters (ba-answers.md side note; ac-strength AC-18 'Deck 30 chars')",
+    "ETM-8791 Jira summary 'an Excel import with a 31-character value blocks the whole file' (jira-text-ETM-8791-before-2026-11-24.json)",
+    "Xray ETM-8791 step 13 backup (xray-steps-8787-8789-8791-before-2026-11-26.json) 'Next or Confirm button disabled'",
+    "User decision 2026-11-26 in ba-answers.md: 8791 row B N/A, step 13 button is Import",
+    "ETM-6843 Import Work page (ba-answers.md, Q31 / 26 Nov note)",
+    "manual-steps-8784-8792.md ETM-8791 steps 1-14"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 14: worklist name hidden by the note and columns differ from steps 4/8; cannot confirm it is the import target worklist.",
+    "Step 14: 0 results for the 31-char Deck search proves nothing unless worklist search covers the Deck column (not shown).",
+    "No sourced text for 'silent truncation, no message' at 31 characters; BA Q9 answer text not recorded.",
+    "Q12 (whole file vs row rejected) marked answered but text not recorded; step 14 expectation rests on the Jira summary only.",
+    "Step 7 picture is a fresh empty form, not the step 5-6 form; 'remove the text' action is not shown.",
+    "Steps 2, 3, 7, 9 pictures use test-only style changes (tag clip lifted); real screen cuts the tag at 80px.",
+    "Brief step 13 still says Next / Confirm; page only has Import (Xray reworded per 26 Nov note).",
+    "Pictures 1, 7 and step 14 are 1280x720 with white canvas below, unlike the 1500x1100 others.",
+    "Step 4 search box text did not filter the table (216 results); toasts in steps 4 and 8 not captured."
+  ],
+  "summary": "ขั้น 1-13 ภาพตรงกับผลที่คาด (Deck รับได้สูงสุด 30 ตัว, import ไฟล์ที่มีค่า 31 ตัวขึ้น error แถว 7-8 และปุ่ม Import ถูกปิด) แต่ขั้น 14 ยืนยันไม่ได้ เพราะชื่อ worklist ถูกบัง คอลัมน์ต่างจากขั้นอื่น และไม่แน่ว่าการค้นหาครอบคลุมคอลัมน์ Deck"
+}

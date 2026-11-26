@@ -1,0 +1,40 @@
+{
+  "id": "ETM-8792",
+  "sourceHash": "ad07ea390097",
+  "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Create Work form open: Single Task, Manpower AT [1], Duration 1, Work row Other / WK-19m1-1304 / ASSET; Deck already holds tag 'Main Deck' with dropdown open (Main Deck ticked). Save disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same screen as picture 1 (same WK-19m1-1304 row, same dropdown): Deck tag 'Main Deck'. The typed text is not visible; only the result tag.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Worklist 'QA ETM-8049 Scratch' (Initial), toast 'Create Success - Create Work Successfully.'; visible rows are WK-16* works, the new works are not in view.", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Search WK-19m, Total Results 2: WK-19m1-1304 Working Location 'Main Deck', WK-19m2-1304 'ดาดฟ้าหลัก', status N; page renders normally.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Working Location filter open, search 'Main Deck': Select All and one option 'Main Deck', both ticked; Reset/Apply buttons.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "New empty Create Work form (Work Type, Work Number placeholders); Deck cell shows one tag 'Deck Two'. Two spaces vs one cannot be seen in rendered HTML. Overlay says synthetic paste event.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 7, "sees": "Same form, Deck shows one tag 'Deck Two' on one line. Looks identical to picture 6; clearing and re-paste not visible; tab or space count not visible.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 8, "sees": "Create Work page, General Information section: Job Owner and Remark empty, two dropdowns show 'LQ' and 'No', checkboxes unticked. Work Details/Deck area not in view; worklist Total 210 check not pictured.", "verdict": "cannot-tell", "pictureOk": false },
+    { "n": 9, "sees": "Create Work: AT [1], Duration 1, D/N Shift Day; row Other / WK-19m3-1307, X tag '1', Y tag 'A'; Deck column header visible, Deck cell empty.", "verdict": "pass", "pictureOk": true },
+    { "n": 10, "sees": "Deck cell of WK-19m3-1307 holds a single tag 'Zone A, B' (one x button); X '1', Y 'A'.", "verdict": "pass", "pictureOk": true },
+    { "n": 11, "sees": "Worklist with toast 'Create Success - Create Work Successfully.'; new work not in visible rows.", "verdict": "pass", "pictureOk": true },
+    { "n": 12, "sees": "Search WK-19m3, Total Results 1: WK-19m3-1307, Working Location 'Zone A, B', status N.", "verdict": "pass", "pictureOk": true },
+    { "n": 13, "sees": "Working Location filter, search 'Zone A': Select All and exactly one option 'Zone A, B'; no 'Zone A' option. A 'B' option would be hidden by this search anyway.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 14, "sees": "Table search empty, Total Results 8: WK-19m3-1307 (status N) plus 7 WK-19z-* works (status D), all Working Location 'Zone A, B'.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "BA answer Q33 2026-11-25 (value matching Master Data takes Master Data spelling: step 2 'Main Deck')",
+    "BA answer Q32 2026-11-24 (Create Work accepts several Deck values in one cell)",
+    "No recorded source: Q7 (comma inside a value) and Q13 (spaces, Main  Deck) answered 2026-11-19 but text not recorded (ba-answers.md)",
+    "No Xray step backup for ETM-8792 in work/ETM-8049"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Steps 2, 4, 5 Expected Result is a placeholder 'the expected value'; the actual value appears only in the picture overlay.",
+    "Steps 6-7 and 10-13 expected (keep two spaces; comma not a separator) rest on Q7/Q13, whose answer text was never recorded.",
+    "Steps 6-7 used a synthetic paste event, not a real copy from Word/Excel; a developer cannot repeat it as written.",
+    "Two spaces in 'Deck  Two' cannot be proven from a picture; HTML collapses spaces. Needs DOM value or saved-data check.",
+    "Pictures 1 and 2 are the same screen; picture 1 already shows the step 2 result.",
+    "Picture 8 does not show the Deck cell or the worklist; 'nothing saved' rests on overlay text only.",
+    "Step 13 'no B' cannot be shown while the filter search is 'Zone A'; needs a search for 'B' or no search.",
+    "Data row for WK-19m2 (ดาดฟ้าหลัก) has no typing picture; step 2 shows only WK-19m1.",
+    "Step 14 includes 7 deleted WK-19z works from earlier runs; result still shows the new work."
+  ],
+  "summary": "ภาพส่วนใหญ่ตรงกับที่คาด (Main Deck, ดาดฟ้าหลัก, Zone A, B เป็น 1 tag และ filter มี option เดียว) แต่ยืนยันไม่ได้ว่า 'Deck  Two' เก็บช่องว่าง 2 ตัว, ภาพ step 8 ไม่เห็นช่อง Deck และ expected ของเรื่อง comma/ช่องว่างไม่มีคำตอบ BA ที่บันทึกไว้ จึงสรุปเป็น cannot-tell"
+}

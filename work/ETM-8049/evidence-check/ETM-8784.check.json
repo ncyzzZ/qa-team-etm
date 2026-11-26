@@ -1,0 +1,54 @@
+{
+  "id": "ETM-8784",
+  "sourceHash": "25072b337bd8",
+  "overall": "cannot-tell",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Worklist: BA Plan B (Initial), event ZZ BA Claude Test - FSD 8 days. Export Worklist button framed, its tooltip shown. 2 rows: BATEST001, BATEST8049A, Total Results 2. No browser download bar or saved-file dialog on screen; the file name 'ZZ BA Claude Test - FSD 8 days_BA Plan B_Worklist_20261126.xlsx' appears only in the added note box, and the same name heads pictures 2-4.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Not Excel: an HTML table made by a script from the file, sheet Worklist_Data. Rows 7-10: row 7 Work (BATEST8049A, cell E7), rows 8-10 Work Breakdown. The page itself states that opening in Excel without a repair message was NOT checked.",
+      "verdict": "cannot-tell",
+      "pictureOk": false
+    },
+    {
+      "n": 3,
+      "sees": "Script-rendered row 7 (Work): R = 'Weather Deck,Main Deck,Cellar Deck,Aft Area,Helipad,HELIPAD,Main  Deck,Zone A, B,Zone C' (two spaces visible in 'Main  Deck'), S = '0,1,5,9', T = 'A,B,C,F'.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 4,
+      "sees": "Script-rendered rows 8-10 (Work Breakdown): row 8 R 'Main Deck,Main  Deck,Zone A, B,Zone C' S '0' T 'A'; row 9 R 'Weather Deck,Cellar Deck,Helipad' S '1,9' T 'B,F'; row 10 R 'Main Deck,Cellar Deck,Aft Area,HELIPAD' S '1,5' T 'A,C'.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 5,
+      "sees": "Full-screen worklist BA Plan B with Working Location (Deck) column widened. BATEST8049A Deck cell framed: 'Weather Deck, Main Deck, Cellar Deck, Aft Area, Helipad, HELIPAD, Main Deck, Zone A, B, Zone C'. Next column shows '0, 1, 5' (cut). Separator ', '; order same as file R. Double space in 'Main Deck' not visible (browser shows one space).",
+      "verdict": "pass",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "AC 5 (Story: Export no change), per questions-for-BA Q19; BA answer text to Q19 not recorded",
+    "work/ETM-8049/manual-steps-8784-8792.md ETM-8784 steps 1-5 and step 4 table (QA design, values of seeded work BATEST8049A)",
+    "ac-strength.json AC-13 'Export unchanged, R S T'"
+  ],
+  "uiReachable": "unknown",
+  "problems": [
+    "Step 2 not done as written: file read by script, not opened in Excel; no-repair-message check missing.",
+    "Pictures 2-4 are script renderings, not Excel screenshots; a manual step asked for Excel by eye.",
+    "Step 1: download itself not shown on screen; file name only in the added note and script headers.",
+    "File name pattern <event>_<plan>_Worklist_<date> has no AC or BA source found; Q19 answer text not recorded.",
+    "Expected R/S/T values come from QA's own seeded data design, not a BA-confirmed export format.",
+    "Step 5: screen collapses spaces, so 'Main  Deck' two spaces cannot be confirmed in the cell.",
+    "UI reach unclear: per Q33 'HELIPAD' may convert to Master 'Helipad' when typed; how BATEST8049A was seeded is not stated.",
+    "'Zone A, B' is one value with an inner comma; in the cell it looks like two values."
+  ],
+  "summary": "ไฟล์ export มีค่า R/S/T ตรงตามที่คาด (อ่านด้วย script) และลำดับในเซลล์ Deck ตรงกับไฟล์ แต่ยังไม่ได้เปิดไฟล์ใน Excel เพื่อดูว่าไม่มีข้อความ repair (step 2) จึงสรุปผ่านทั้งเคสไม่ได้ และที่มาของ Expected Result ส่วนใหญ่มาจากเอกสารออกแบบของ QA เอง"
+}

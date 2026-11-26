@@ -1,6 +1,6 @@
 # ETM-8049 handover (25 Nov 2026, Test Execution ETM-8822)
 
-Xray at start: 6 PASSED, 5 FAILED, 10 TO DO (21 tests). **Xray at 09:40, 26 Nov: 16 PASSED, 0 FAILED, 5 TO DO (8784, 8787, 8789, 8791, 8792).** Defects: ETM-9223 Ready for UAT (retest passed), ETM-9231 Ready for UAT (retest passed), ETM-9225 In Progress, ETM-10079 Open.
+Xray at start: 6 PASSED, 5 FAILED, 10 TO DO (21 tests). **Xray at 15:20, 26 Nov: 21 PASSED, 0 FAILED, 0 TO DO.** Defects: ETM-9223 Ready for UAT (retest passed), ETM-9231 Ready for UAT (retest passed), ETM-9225 Ready for UAT (retest passed), ETM-10079 Ready for UAT. Open: BA Q36 (Shutdown Logic Gantt cell editor and free text; Deck max 30 vs 50).
 
 ## Script fixes made 25 Nov (PW_REPO, not committed)
 - `verifyWorklistWorkingLocationEntry.spec.ts`: removed the stale "Q26 open" notChecked notes (BA Q26 answered 24 Nov, Xray TC-012/018/020 now say Edit Work Breakdown). TC-012 (ETM-8785) now runs both data rows of Xray (WK-1a `MAIN DECK`, WK-1b `mAiN dEcK`).
@@ -22,11 +22,11 @@ Xray at start: 6 PASSED, 5 FAILED, 10 TO DO (21 tests). **Xray at 09:40, 26 Nov:
 | ETM-8776 | TC-003 | **PASSED** | passed 2026-11-26_093206 | Done 26 Nov: row (b) passed, row (a) N/A (user decision; reason in the Xray comment and ba-answers.md). |
 | ETM-8777 | TC-004 | **PASSED** | passed 2026-11-26_092309 | Done 26 Nov: two TM sessions (user decision), JO read only on the Active Plan worklist. |
 | ETM-8779 | TC-006 | **PASSED** | manual runner 2026-11-26_092607: 6/6 | Done 26 Nov: Xray steps 5-6 reworded per Q35 (backup xray-steps-8779-before-2026-11-26.json), confirmed by the user, pushed step by step with 6 pictures. |
-| ETM-8784 | TC-011 | TO DO | not proven | Check by eye: a person opens the exported file in Excel (file content is checked by script). |
-| ETM-8787 | TC-014 | TO DO | not run | Not runnable yet: needs a card plan with a Shutdown Logic and works WK-1a, WK-1b, WK-18g (card data has none) → card data setup (needs a yes), then manual runner. Collapse the histogram first. |
-| ETM-8789 | TC-016 | TO DO | not proven | Steps 1-4 scripted and pass; steps 5-9 (Gantt paste into WK-20a..d) need a card plan with a Shutdown Logic and those works (not in card data) → setup first, then manual runner. |
-| ETM-8791 | TC-018 | TO DO | not proven 191937 | Steps 1-10 pass (step 10 now proven in Edit Work Breakdown). Steps 11-14: Excel import with a 31-character Deck in two templates (ETM-1008/1106 `Next`, ETM-6843 `Confirm`): manual, or script it (importFileBuilder makes only the ETM-6843 file). |
-| ETM-8792 | TC-019 | TO DO | not proven | Steps 6-7 (paste from Word and Excel) manual; the rest is scripted. |
+| ETM-8784 | TC-011 | **PASSED** | manual runner 2026-11-26_125018: 5/5 | Done 26 Nov: file content read by script, step 2 opened in Excel by the user ("Opens fine"), pushed step by step with 5 pictures; the exported .xlsx is attached to step 1 (user, 26 Nov). |
+| ETM-8787 | TC-014 | **PASSED** | manual runner 2026-11-26_133539: 11/11 | Done 26 Nov: Plan "QA ETM-8049 Logic" with Shutdown Logic made (user yes). Step 5 reworded ("1=tc"); Gantt cell editor makes no tag for free text -> BA Q36 (user "Pass, BA question, push"). Test run reset to the 11 current steps, pushed with 11 pictures. |
+| ETM-8789 | TC-016 | **PASSED** | manual runner 2026-11-26_133539: 9/9 | Done 26 Nov: step 6 reworded to paste one value per Breakdown row ("2=tc"); pushed with 9 pictures. |
+| ETM-8791 | TC-018 | **PASSED** | manual runner 2026-11-26_133539: 14/14 | Done 26 Nov: row B (ETM-1008/1106 template, `Next`) N/A ("3=na"), step 13 button `Import`; step 14 passed on the searches (user "Pass and push"); pushed with 14 pictures + step-14b/c + the import file. |
+| ETM-8792 | TC-019 | **PASSED** | manual runner 2026-11-26_125018: 14/14 | Done 26 Nov: steps 6-7 by simulated paste (Word html / Excel text+CRLF), accepted by the user; works WK-19m1/m2-1304, WK-19m3-1307 made and deleted; pushed step by step with 14 pictures. |
 
 
 ## Open items for the user (one batch)
