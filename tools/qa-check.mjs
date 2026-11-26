@@ -460,8 +460,11 @@ function selftest() {
 
 // ---------------------------------------------------------------- strength (work/<KEY>/ac-strength.json)
 // Written by the test-reviewer in script-review mode (Phase 5, after G6): does each AC have a running test that asserts it?
-// Shape: {"card":"ETM-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["ETM-2"],"rating":"strong|weak|blocked|none","why":"..."}]}
+// Shape: {"card":"ETM-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["ETM-2"],"rating":"strong|weak|blocked|none","why":"...",
+//   "tier":"regression|card|manual" (optional, default card), "manualWhy":"..." (tier manual only)}]}
 const RATINGS = ['strong', 'weak', 'blocked', 'none'];
+const TIERS = ['regression', 'card', 'manual'];   // regression: core flow, every stms-fe build; card: this Story; manual: not E2E (manualWhy)
+export const STRONG_TARGET = 80;
 function checkStrength() {
   const key = pos[0];
   if (!key) { console.error('Usage: qa-check strength <KEY | path/to/ac-strength.json>'); process.exit(2); }
@@ -480,6 +483,8 @@ function checkStrength() {
     if (!RATINGS.includes(a.rating)) err(`${id}: rating must be one of ${RATINGS.join(', ')}`); else n[a.rating]++;
     if (!a.why || String(a.why).length < 5) err(`${id}: why is missing`);
     if (a.rating !== 'none' && !(a.tests || []).length) err(`${id}: a ${a.rating} rating needs the Xray test keys`);
+    if (a.tier != null && !TIERS.includes(a.tier)) err(`${id}: tier must be one of ${TIERS.join(', ')}`);
+    if (a.tier === 'manual' && !/\S{3}/.test(a.manualWhy || '')) err(`${id}: tier manual needs "manualWhy" (eye judgement, runs once, outside system, or the user's ruling)`);
   }
   // every AC of analyst.md must be rated (when the analyst file lists AC-n ids)
   const analyst = read(path.join(WORK(j.card || key), 'analyst.md')) || '';
@@ -499,7 +504,19 @@ function checkStrength() {
     else if (runs && ts.length && !bad.length && a.rating !== 'none') warn(`${id}: rated ${a.rating} but all its tests passed in the last run: re-rate it`);
   }
   if (!runs) warn('no run yet (run-results.json missing): 0 AC proven; strong is only a reading of the code');
-  finish('strength', ` | AC proven ${proven}/${total} | strong on paper ${n.strong}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}`);
+  // Coverage target (user, chat 2026-11-26: "ทำเลย", TEAM.md "How much E2E"): of the AC that can be automated
+  // (tier is not manual), at least STRONG_TARGET % strong. Below it: warn with the AC to fix (weak first: they can pass unchecked).
+  const auto = (j.ac || []).filter((a) => a.tier !== 'manual');
+  const target = Number(arg('--target') || STRONG_TARGET);
+  const strongAuto = auto.filter((a) => a.rating === 'strong').length;
+  const pct = auto.length ? Math.round((100 * strongAuto) / auto.length) : 100;
+  if (auto.length && pct < target) {
+    const list = (r) => auto.filter((a) => a.rating === r).map((a) => a.id).join(', ');
+    warn(`coverage ${pct}% strong of ${auto.length} automatable AC (target ${target}%): ${['weak', 'blocked', 'none'].filter((r) => list(r)).map((r) => `${r} ${list(r)}`).join('; ')}. Fix weak first (can pass without checking), or mark an AC tier "manual" with manualWhy`);
+  }
+  const reg = (j.ac || []).filter((a) => a.tier === 'regression');
+  if (reg.some((a) => a.rating !== 'strong')) warn(`tier regression AC not strong: ${reg.filter((a) => a.rating !== 'strong').map((a) => a.id).join(', ')}: a regression test must assert the rule`);
+  finish('strength', ` | AC proven ${proven}/${total} | strong ${pct}% of ${auto.length} automatable (target ${target}%) | strong on paper ${n.strong}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}${reg.length ? ` | regression ${reg.length}` : ''}`);
 }
 
 // ---------------------------------------------------------------- stats (metrics.jsonl)

@@ -3,6 +3,10 @@
 Use in Step 7. Every case gets a decision: **Automate** or **Manual only**,
 with a one-line reason.
 
+## How much (TEAM.md "How much E2E")
+
+Three tiers per AC: `regression` (core flow, every build, few and exact), `card` (each AC of the Story asserted by at least one test; many values = one data-table test), `manual` (eye judgement, runs once, outside systems, the user's ruling). Target: at least 80% of the non-manual AC have a `strong` test. Field validation detail belongs to the developers' unit / API tests, not UI E2E. Prefer Yes over Partial: a step a person checks on a picture is turned into an assertion whenever the screen gives text, a number, a state or a colour.
+
 ## When to automate
 
 Mark **Automate** when most of these are true:

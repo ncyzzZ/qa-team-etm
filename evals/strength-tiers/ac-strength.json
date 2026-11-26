@@ -1,0 +1,11 @@
+{
+ "card": "ETM-1",
+ "date": "2026-11-26",
+ "verdict": "partly",
+ "ac": [
+  { "id": "AC-1", "rule": "save", "tests": ["ETM-2"], "rating": "strong", "why": "exact value", "tier": "regression" },
+  { "id": "AC-2", "rule": "filter", "tests": ["ETM-3"], "rating": "weak", "why": "count only" },
+  { "id": "AC-3", "rule": "looks right", "tests": [], "rating": "none", "why": "eye judgement", "tier": "manual", "manualWhy": "a person judges the layout" },
+  { "id": "AC-4", "rule": "export", "tests": [], "rating": "none", "why": "no script", "tier": "manual" }
+ ]
+}
