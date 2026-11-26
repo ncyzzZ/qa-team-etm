@@ -65,6 +65,13 @@ test('keysIn', () => {
   assert.deepEqual(keysIn('[ETM-12] see ETM-7 and XETM-9, ETM-12', etm), ['ETM-12', 'ETM-7']);
 });
 
+test('keysIn: underscore separators match, letters and digits before do not', () => {
+  assert.deepEqual(keysIn('2026-11-20_122105_ETM-8392', etm), ['ETM-8392']);
+  assert.deepEqual(keysIn('draft_ETM-12.md', etm), ['ETM-12']);
+  assert.deepEqual(keysIn('XETM-12 2ETM-3', etm), []);
+  assert.equal(firstKey('ETM-12abc', etm), 'ETM-12');
+});
+
 test('isKey', () => {
   const ab2 = load({ root: root({ x: mk('AB2') }), name: 'x' });
   const qax = load({ root: root({ x: mk('QA_X') }), name: 'x' });

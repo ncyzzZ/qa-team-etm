@@ -161,7 +161,7 @@ function walk(suite, chain) {
       // flaky (failed, then passed on retry): show the failed attempt, its error and its step, not the clean retry
       const firstFail = last.status === 'passed' ? t.results.find((x) => x.status === 'failed' || x.status === 'timedOut') : null;
       const r = firstFail ?? last;
-      const testKey = (spec.title.match(new RegExp(String.raw`\b${K()}-\d+\b(\s+TC-\d+)?`)) ?? [''])[0];
+      const testKey = (spec.title.match(new RegExp(String.raw`(?<![A-Za-z0-9])${K()}-\d+(?!\d)(\s+TC-\d+)?`)) ?? [''])[0];
       const story = cardOf(nextChain, spec.title);
       const expectedFail = t.status === 'expected' && r.status === 'failed';
       let status = t.status === 'skipped' || r.status === 'skipped' ? 'skipped'

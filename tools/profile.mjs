@@ -43,7 +43,7 @@ export function _resetProfileCache() { cached = undefined; }
 
 export function keyRe(p, { anchored = false, global = false } = {}) {
   const k = escapeKey(p.jira.projectKey);
-  return new RegExp(anchored ? `^${k}-\\d+$` : `\\b${k}-\\d+\\b`, global ? 'g' : '');
+  return new RegExp(anchored ? `^${k}-\\d+$` : `(?<![A-Za-z0-9])${k}-\\d+(?!\\d)`, global ? 'g' : '');
 }
 export function isKey(s, p = profile()) { return keyRe(p, { anchored: true }).test(String(s)); }
 export function keysIn(text, p = profile()) { return [...new Set(String(text).match(keyRe(p, { global: true })) || [])]; }
