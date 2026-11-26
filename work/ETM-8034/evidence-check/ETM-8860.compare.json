@@ -1,0 +1,30 @@
+{
+ "id": "ETM-8860",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 27,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Step 6 'selected Gantt bar' has no source (AC, BA answer or docs); only 'click No. = Select Cell' is sourced.",
+  "Step 6: row 3 bar looks like every other bar; a selected bar state cannot be seen. Reword or drop the bar part.",
+  "Steps 6 and 27 are not in the Xray backup I could read (it lists steps 1-26 partially); wording not checked against live Xray.",
+  "Step 27: BAE0FF/08979C confirmed only by eye (light blue, teal); row 6 may also show a selection state after the drag.",
+  "Step 6 picture: 'Work A' is assumed to be row 3 '8034-T1 : Row Colour TM A1'; the steps file should name it."
+ ],
+ "summary": "ขั้น 27 ผ่านจากรูป: PL (Platform 2) ไม่มีสี ส่วน ASSET (Platform 1) ยังพื้นฟ้าตัวอักษรเขียวอมฟ้าหลังลาก ขั้น 6 บอกไม่ได้: ช่อง No. ถูกเลือกจริง แต่แท่ง Gantt ดูไม่ต่างจากแท่งอื่น และ Expected ส่วน 'แท่ง Gantt ถูกเลือก' ไม่มีที่มา",
+ "sourceHash": "660508d44571"
+}

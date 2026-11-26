@@ -1,0 +1,34 @@
+{
+  "id": "ETM-8860",
+  "sourceHash": "660508d44571",
+  "overall": "cannot-tell",
+  "steps": [
+    {
+      "n": 6,
+      "sees": "Full Shutdown Logic page 'QA ETM-8034 Row Colour TM', histogram collapsed, Save disabled. Row 3 '8034-T1 : Row Colour TM A1': the No. cell has a light blue fill (selected cell look) inside the red frame. The row 3 Gantt bar (teal) is in view in a red frame, but it looks the same as the other teal bars (e.g. row 7): no outline, handle or colour change that marks it as selected. The note box covers the descriptions of rows 4-5.",
+      "verdict": "cannot-tell",
+      "pictureOk": true
+    },
+    {
+      "n": 27,
+      "sees": "Full page, Save and Undo now enabled (unsaved change). PL is now row 1, ASSET is row 6 under PL's children. Row 1 PL has the grey parent-row background and dark text, the same as other parent rows (e.g. Mechanical (PM) row 2) and the same as ASSET looked in picture 1: no highlight or text colour. Row 6 ASSET has a light blue background across No. to Location, and teal text ('6', 'ASSET', '63.00', '-'). The Gantt area of row 6 is not coloured. Hex values cannot be measured from the picture.",
+      "verdict": "pass",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "BA answer 7 (ba-answers.md): collapse/expand/move, colour follows the row",
+    "BA answer 6 (ba-answers.md): no inheritance, each row keeps its own colour (Platform 2 has none)",
+    "Xray ETM-8860 step 26 backup (xray-steps-before-palette-2026-11-24.json): Platform 1 keeps BAE0FF and 08979C after the move",
+    "Behaviour table 2026-11-24 (ba-answers.md): Click on No. column = Select Cell (step 6, cell part only)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 6 'selected Gantt bar' has no source (AC, BA answer or docs); only 'click No. = Select Cell' is sourced.",
+    "Step 6: row 3 bar looks like every other bar; a selected bar state cannot be seen. Reword or drop the bar part.",
+    "Steps 6 and 27 are not in the Xray backup I could read (it lists steps 1-26 partially); wording not checked against live Xray.",
+    "Step 27: BAE0FF/08979C confirmed only by eye (light blue, teal); row 6 may also show a selection state after the drag.",
+    "Step 6 picture: 'Work A' is assumed to be row 3 '8034-T1 : Row Colour TM A1'; the steps file should name it."
+  ],
+  "summary": "ขั้น 27 ผ่านจากรูป: PL (Platform 2) ไม่มีสี ส่วน ASSET (Platform 1) ยังพื้นฟ้าตัวอักษรเขียวอมฟ้าหลังลาก ขั้น 6 บอกไม่ได้: ช่อง No. ถูกเลือกจริง แต่แท่ง Gantt ดูไม่ต่างจากแท่งอื่น และ Expected ส่วน 'แท่ง Gantt ถูกเลือก' ไม่มีที่มา"
+}

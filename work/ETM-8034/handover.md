@@ -130,3 +130,14 @@ Spec change for 8859 (steps 22/26) is in ep-etm-fe-qa, not committed.
 - User chat "push PASSED เลย" (steps 1-2 proven by DOM values; blind check cannot-tell on the pictures). Pushed with xray-step-push: Xray shows PASSED, 11 steps, 1 picture each.
 - ETM-8875 now: 18 PASSED, 1 TO DO (ETM-8860, row drag step 20 needs a person on the TM plan).
 - Open follow-ups: Xray step 5 text "Duplicate" -> "Duplicate Work Breakdown"; ask BA whether AC 8.2 expects Duration..Remark to paste (FE blanks them on copy); leftover colours on PP#1 / Work "Maimai" / its first WB.
+
+## 2026-11-26 17:10 - ETM-8860 manual run (user "รันได้" 16:48)
+- Run: `ep-etm-fe-qa/output/runs/2026-11-26_164829_ETM-8034_manual/`. Proposed 27/27 pass. Row drag works by hand-like moves (mouse down on No., 12 small moves, mouse up in lower third of target): steps 20, 24, 26 moved. Cleanup done (Work A back above Work B, 4 rows No Color, saved, reloaded, Save disabled).
+- Blind check: 25/27 pass; cannot-tell on step 6 (no visible selected look on the grid row; only No. cell focus + Gantt bar selected) and step 27 (Platform 2 header row off screen; DOM says F2F8FA default). Pictures 26-27 have the histogram open. Not confirmed, not pushed.
+- Script hint for later: the drag in `dragRowBelow` needs slow small moves from the No. cell.
+
+## 2026-11-26 17:10 - ETM-8860 PASSED in ETM-8875
+- User chat "push PASSED เลย": pushed with xray-step-push, Xray shows PASSED, 27 steps PASSED with 1 picture each. ETM-8875 now 19/19 PASSED.
+- Re-take of pictures for steps 6 and 27 running (read only, `retake-8860/manual-steps-8860-retake.md`, run `2026-11-26_170337_ETM-8034_manual`), from a relayed "Re-take pictures"; replacing them in Xray needs the user's yes in this chat.
+- 17:15 re-take done (nothing saved): new step-6.png / step-27.png in `2026-11-26_170337_ETM-8034_manual`. Blind check: 27 pass (Platform 2 default, Platform 1 BAE0FF/08979C), 6 cannot-tell (No. cell selected is visible; the Gantt bar has no visible selected look; "bar selected" was our wording, not in Xray). Xray 8860 still PASSED with the old pictures; replacement waits for the user's yes.
+- 17:25 user chat "แทนทั้ง 2 รูป": Xray ETM-8875 / 8860 step 6 and step 27 pictures replaced with the re-take (old evidence removed, new added). Read back: run PASSED, 27/27 steps PASSED, steps 6 and 27 hold one new picture each.
