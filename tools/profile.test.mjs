@@ -44,6 +44,10 @@ test('with nothing selected, the only profile folder is the default', () => {
   assert.equal(load({ root: r }).name, 'acme');
 });
 
+test('several profile folders and none selected is a clear error', () => {
+  assert.throws(() => load({ root: root({ etm: mk(), acme: mk('ACME') }) }), /no profile selected: set QA_PROFILE/);
+});
+
 test('.env QA_PROFILE selects profile; env var beats .env', () => {
   const r = root({ etm: mk(), acme: mk('ACME') }, 'QA_PROFILE=acme\n');
   assert.equal(load({ root: r, envFile: path.join(r, '.env') }).name, 'acme');

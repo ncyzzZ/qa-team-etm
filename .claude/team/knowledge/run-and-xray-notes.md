@@ -4,8 +4,8 @@ Only what `TEAM.md` and the skills do not already say. Read by automator, report
 
 ## Machine setup (once)
 
-- VPN on (QA site). `.env` in the Playwright repo holds the page URLs and the login of each role (TA Manager, Job Owner). **Passwords in `.env` must be in quotes.**
-- `../../.secrets/etm-api.env` holds `JIRA_EMAIL`, `JIRA_API_TOKEN`, `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`. Never put them in a committed file, a report, a board text or the chat.
+- VPN on (QA site). `.env` in the Playwright repo holds the page URLs and the login of each role (the profile's `roles`). **Passwords in `.env` must be in quotes.**
+- The local secrets file named in the active project rules holds `JIRA_EMAIL`, `JIRA_API_TOKEN`, `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`. Never put them in a committed file, a report, a board text or the chat.
 - Same plan data for several tests: `--workers 1`.
 - Keep results in the run folder `output/runs/<date_time>_<KEY>` of the Playwright repo, never in `test-results/` (Playwright wipes it each run).
 

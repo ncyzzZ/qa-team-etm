@@ -2,7 +2,7 @@
 // xray-step-push.mjs - put a manual runner run into Xray STEP BY STEP: per step a status and its picture, then the Test status,
 // then read back what Xray shows. Spec: docs/superpowers/specs/2026-11-20-manual-runner-design.md (section 6).
 //
-//   node tools/xray-step-push.mjs <runDir> --exec ETM-<n> [--only ETM-a,ETM-b] [--apply]
+//   node tools/xray-step-push.mjs <runDir> --exec <KEY>-<n> [--only <KEY>-a,<KEY>-b] [--apply]
 //
 // DRY RUN by default (prints the plan, no Xray call). --apply only after the person's yes (state.mjs approve --kind xray-push).
 // Reads <runDir>/verdict-<TEST>.json. A Test is left out (and the reason printed) when: it is skipped (e.g. needs Excel),

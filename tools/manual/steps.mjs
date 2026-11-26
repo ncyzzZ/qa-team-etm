@@ -58,7 +58,7 @@ export function parseManualSteps(md) {
   return tests;
 }
 
-/** Xray step count per Test from .claude/team/work/<KEY>/tests.md (`## ETM-<n> (TC-xxx)` then `1. Action -> Expected`). */
+/** Xray step count per Test from .claude/team/work/<KEY>/tests.md (`## <KEY>-<n> (TC-xxx)` then `1. Action -> Expected`). */
 export function xrayStepCounts(md) {
   const out = {};
   let key = null;
@@ -81,7 +81,8 @@ export function checkManual(tests, xraySteps = {}) {
   const errors = [];
   for (const t of tests) {
     const list = roles();
-    if (list.length && !list.includes(t.role)) errors.push(`${t.key}: unknown role "${t.role}" (use ${list.join(' or ')})`);
+    if (!t.role) errors.push(`${t.key}: no role: write "role: <role>" under the heading, or set roles.list / roles.default in profiles/${profile().name}/profile.json (the runner opens seed.<role>.spec.ts)`);
+    else if (list.length && !list.includes(t.role)) errors.push(`${t.key}: unknown role "${t.role}" (use ${list.join(' or ')})`);
     if (!t.hasTable) { errors.push(`${t.key}: no step table with the header | # | Do | Expected | Picture |`); continue; }
     if (t.declared !== t.steps.length) errors.push(`${t.key}: heading says ${t.declared} vs ${t.steps.length} rows in the table`);
     const x = xraySteps[t.key];

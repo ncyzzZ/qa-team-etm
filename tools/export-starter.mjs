@@ -1,13 +1,15 @@
 // export-starter.mjs - a clean copy of this repo for another team: the tools, agents, skills
 // and board, without any project's cards, pictures, names or rules.
-// Usage: node tools/export-starter.mjs <outDir> [--people <people.local.md>]
+// Usage: node tools/export-starter.mjs <outDir> [--people <people.local.md> | --no-people]
 //   <outDir> must be outside the repo and missing or empty. Copies the git-tracked files that
 //   planExport keeps, writes profiles/example/, .env.example and README.md, then scans the
 //   result (contents and file names) with leakPatterns. Any hit: prints "file:line match",
 //   exits 1 and leaves the folder for inspection.
 // Leak patterns come from every project profile (key, site, project id, repo folders), from
 // profiles/<name>/export-leaks.json (extra terms of that project) and from the names in
-// .claude/team/people.local.md (printed as name#<n>, never written out).
+// .claude/team/people.local.md (printed as name#<n>, never written out; a missing file is refused unless
+// --people <file> or --no-people is given). profiles/<name>/export-renames.json renames tokens (skill names)
+// in the starter's paths and texts; the scan runs on the renamed result.
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -91,6 +93,24 @@ export function projectSkips({ root = ROOT } = {}) {
   return out;
 }
 
+/** {from: to} renames of every project profile's export-renames.json (skill names etc.), applied in the starter only. */
+export function projectRenames({ root = ROOT } = {}) {
+  const out = {};
+  for (const n of projectProfiles(root)) Object.assign(out, readJson(path.join(root, 'profiles', n, 'export-renames.json')) || {});
+  return out;
+}
+const tokenRe = (from) => new RegExp(`(?<![A-Za-z0-9_-])${escapeKey(from)}(?![A-Za-z0-9_-])`, 'g');
+/** Path with each whole segment (or segment part) renamed. */
+export function renamePath(rel, renames) {
+  return rel.split('/').map((seg) => renameText(seg, renames)).join('/');
+}
+/** Text with every whole-token occurrence of a rename key replaced (longest keys first). */
+export function renameText(text, renames) {
+  let out = text;
+  for (const from of Object.keys(renames).sort((a, b) => b.length - a.length)) out = out.replace(tokenRe(from), renames[from]);
+  return out;
+}
+
 /** Leak patterns of every project profile under <root>/profiles (not _template/example) plus people names. */
 export function leakPatterns({ root = ROOT, people } = {}) {
   const out = [];
@@ -108,8 +128,7 @@ export function leakPatterns({ root = ROOT, people } = {}) {
     const extra = readJson(path.join(pdir, n, 'export-leaks.json')) || [];
     for (const e of extra) out.push(typeof e === 'string' ? new RegExp(escapeKey(e), 'i') : new RegExp(e.source, e.flags || ''));
   }
-  const pf = people ?? path.join(root, '.claude/team/people.local.md');
-  if (fs.existsSync(pf)) out.push(...namePatterns(fs.readFileSync(pf, 'utf8')));
+  if (people) out.push(...namePatterns(fs.readFileSync(people, 'utf8'))); // null = names not scanned (--no-people)
   return out;
 }
 
@@ -202,29 +221,57 @@ export function exportStarter(outDir, { root = ROOT, patterns = [] } = {}) {
     return f;
   };
   const first = matcher(patterns);
+  const renames = projectRenames({ root });
   let copied = 0;
   for (const rel of plan.copy) {
     const src = path.join(root, rel);
     if (!fs.existsSync(src) || !fs.statSync(src).isFile()) continue; // deleted in the work tree
-    if (isFixture(rel) && scanFile(root, rel, first).length) { plan.skip.push({ file: rel, why: 'test or eval data that names the project' }); continue; }
-    fs.copyFileSync(src, target(rel));
+    const outRel = renamePath(rel, renames);
+    const buf = fs.readFileSync(src);
+    const data = buf.includes(0) || !Object.keys(renames).length ? buf : Buffer.from(renameText(buf.toString('utf8'), renames));
+    // a fixture is judged as it would ship (after renames): one that still names the project is left out
+    if (isFixture(rel) && (first(outRel) || (!data.includes(0) && data.toString('utf8').split('\n').some((l) => first(l))))) {
+      plan.skip.push({ file: rel, why: 'test or eval data that names the project' }); continue;
+    }
+    const dest = target(outRel);
+    fs.writeFileSync(dest, data);
+    fs.chmodSync(dest, fs.statSync(src).mode & 0o777);
     copied++;
   }
   fs.writeFileSync(target('profiles/example/profile.json'), exampleProfile(root));
   fs.copyFileSync(path.join(root, 'profiles/_template/rules.md'), target('profiles/example/rules.md'));
+  fs.writeFileSync(target('profiles/example/regress-map.json'), '[]\n');
   fs.writeFileSync(target('.env.example'), ENV_EXAMPLE);
   fs.writeFileSync(target('README.md'), README);
   return { copied, skipped: plan.skip };
 }
 
+/** Real path of p, or of its nearest existing parent joined with the rest (p may not exist yet). */
+function realish(p) {
+  let cur = path.resolve(p); const rest = [];
+  while (!fs.existsSync(cur)) { rest.unshift(path.basename(cur)); const up = path.dirname(cur); if (up === cur) break; cur = up; }
+  return path.join(fs.realpathSync(cur), ...rest);
+}
+function isInside(p, root) {
+  const rel = path.relative(fs.realpathSync(root), realish(p));
+  return !rel.startsWith('..') && !path.isAbsolute(rel);
+}
+
 function main(argv) {
   const args = argv.slice(2);
   const pi = args.indexOf('--people');
-  const people = pi >= 0 ? path.resolve(args.splice(pi, 2)[1] || '') : undefined;
-  if (args.length !== 1) { console.error('usage: node tools/export-starter.mjs <outDir> [--people <people.local.md>]'); return 2; }
+  let people = pi >= 0 ? path.resolve(args.splice(pi, 2)[1] || '') : undefined;
+  const ni = args.indexOf('--no-people');
+  if (ni >= 0) { args.splice(ni, 1); people = null; }
+  if (args.length !== 1) { console.error('usage: node tools/export-starter.mjs <outDir> [--people <people.local.md> | --no-people]'); return 2; }
   const outDir = path.resolve(args[0]);
-  const rel = path.relative(ROOT, outDir);
-  if (!rel.startsWith('..') && !path.isAbsolute(rel)) { console.error(`refusing: ${outDir} is inside the repo`); return 2; }
+  if (isInside(outDir, ROOT)) { console.error(`refusing: ${outDir} is inside the repo`); return 2; }
+  if (people === undefined) {
+    const def = path.join(process.env.QA_EXPORT_PEOPLE_ROOT || ROOT, '.claude/team/people.local.md');
+    if (!fs.existsSync(def)) { console.error(`refusing: no ${def}; give --people <people.local.md>, or --no-people to export without the name scan`); return 2; }
+    people = def;
+  } else if (people && !fs.existsSync(people)) { console.error(`refusing: people file ${people} not found`); return 2; }
+  if (people === null) console.error('warning: --no-people: names are not scanned');
   if (fs.existsSync(outDir) && (!fs.statSync(outDir).isDirectory() || fs.readdirSync(outDir).length)) { console.error(`refusing: ${outDir} is not empty`); return 2; }
   const patterns = leakPatterns({ people });
   fs.mkdirSync(outDir, { recursive: true });

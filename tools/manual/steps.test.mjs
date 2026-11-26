@@ -94,3 +94,22 @@ test('xrayStepCounts reads the numbered steps of each ## ETM-n section of tests.
   const md = '# T\n| Key | Case |\n|---|---|\n| ETM-1 | TC-001 |\n\n## ETM-1 (TC-001)\n1. a -> b\n2. c -> d\n\n## ETM-2 (TC-002)\n1. a -> b\n';
   assert.deepEqual(xrayStepCounts(md), { 'ETM-1': 2, 'ETM-2': 1 });
 });
+
+test('a profile without roles: a Test with no role: line is an error that says where to set it', async () => {
+  const fs = await import('node:fs'); const os = await import('node:os'); const path = await import('node:path');
+  const { _resetProfileCache } = await import('../profile.mjs');
+  const r = fs.mkdtempSync(path.join(os.tmpdir(), 'noroles-'));
+  fs.mkdirSync(path.join(r, 'profiles', 'zed'), { recursive: true });
+  fs.writeFileSync(path.join(r, 'profiles', 'zed', 'profile.json'), JSON.stringify({ jira: { site: 'z.atlassian.net', projectKey: 'ZED' }, repos: { pwRepoDir: 'a', feRepoDir: 'b' } }));
+  const old = { root: process.env.QA_PROFILE_ROOT, name: process.env.QA_PROFILE };
+  process.env.QA_PROFILE_ROOT = r; process.env.QA_PROFILE = 'zed'; _resetProfileCache();
+  try {
+    const md = '## ZED-1 - a (1 step)\n\n| # | Do | Expected | Picture |\n|---|---|---|---|\n| 1 | x | y | z |\n\n## ZED-2 - b (1 step)\nrole: admin\n\n| # | Do | Expected | Picture |\n|---|---|---|---|\n| 1 | x | y | z |\n';
+    const errs = checkManual(parseManualSteps(md));
+    assert.equal(errs.length, 1);
+    assert.match(errs[0], /^ZED-1: no role: .*profiles\/zed\/profile\.json/);
+  } finally {
+    for (const [k, v] of [['QA_PROFILE_ROOT', old.root], ['QA_PROFILE', old.name]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+    _resetProfileCache();
+  }
+});

@@ -6,6 +6,8 @@
   },
   "repos": { "pwRepoDir": "acme-fe-qa", "feRepoDir": "acme-fe", "feBranch": "develop" },
   "roles": { "list": ["admin", "viewer"], "default": "admin" },
-  "ui": { "libraryTokenRe": "^$" },
+  "ui": { "libraryTokenRe": "^$", "noTestIds": false },
+  "regress": { "featureDir": "" },
+  "heal": { "serialTags": [] },
   "docs": { "rules": "rules.md", "uiMap": null, "templates": null }
 }

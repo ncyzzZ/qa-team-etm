@@ -76,6 +76,6 @@ condition matrices.
 
 Read each Test's steps and sort into Yes / Partial / No. Show one table: Test key | Playwright? | Why | Steps left for manual, plus a Security section (checks from `playwright-script-rules.md` that fit the Story, one row each: what, role/endpoint, Yes / needs info). Wait for the user's OK.
 
-- **Yes:** web UI actions and checks (text, format, enabled/disabled, CSS colour), a Gantt or grid via its library API (e.g. Bryntum), DB via `queryDb`, two users via a second context, roles via the role fixtures (names in the project's script notes, active project rules "Knowledge").
+- **Yes:** web UI actions and checks (text, format, enabled/disabled, CSS colour), a chart or grid via its library API (e.g. a Bryntum store), DB via `queryDb`, two users via a second context, roles via the role fixtures (names in the project's script notes, active project rules "Knowledge").
 - **Partial:** scriptable, but some steps need a person's eyes: the script captures evidence and the user checks by looking.
 - **No (manual):** native browser behaviour (Back, leave-page prompt), controls that kept timing out (e.g. the Filter Panel date range picker), anything outside the web app under test (email, other apps), data that cannot be set up safely in QA, roles with no login in `.env`.

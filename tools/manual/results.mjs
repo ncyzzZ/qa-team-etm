@@ -136,7 +136,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       fs.writeFileSync(f, JSON.stringify(applyDecisions(JSON.parse(fs.readFileSync(f, 'utf8')), answers), null, 1) + '\n');
     }
     const verdicts = readVerdicts(runDir);
-    if (!verdicts.length) throw new Error(`no verdict-ETM-*.json in ${runDir}`);
+    if (!verdicts.length) throw new Error(`no verdict-${profile().jira.projectKey}-*.json in ${runDir}`);
     fs.writeFileSync(path.join(runDir, 'results.json'), JSON.stringify(toResults(verdicts, path.resolve(runDir)), null, 1) + '\n');
     for (const v of verdicts) {
       const st = testStatus(v), p = (v.steps || []).filter((s) => s.verdict === 'pass').length;

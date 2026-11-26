@@ -18,7 +18,7 @@ The user's whole message is one or more Jira Story links/keys. That runs the cyc
 
 ## Settings
 
-Settings (`JIRA_SITE`, `PROJECT_KEY`, `BOARD_ID`, `PW_REPO`) are in `CLAUDE.md`. `ME_ID` / `ME_NAME`: call `atlassianUserInfo` once per session; `ME_ID` is "self" below. If a value is missing, ask once. Read the workflow doc `docs/etm-qa-workflow.md` fresh once per task (the user edits it); if unreachable, stop and say so.
+Settings (`JIRA_SITE`, `PROJECT_KEY`, `BOARD_ID`, `PW_REPO`) are in `CLAUDE.md`. `ME_ID` / `ME_NAME`: call `atlassianUserInfo` once per session; `ME_ID` is "self" below. If a value is missing, ask once. Read the workflow doc named in the active project rules (`.claude/active-profile.md`, "Settings") fresh once per task (the user edits it); if unreachable, stop and say so.
 
 ## Tool rules
 

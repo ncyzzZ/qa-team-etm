@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { cardKeys, mapPath, isShared, isListable, tier, commands } from './core.mjs';
 
-const MAP = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'regress-map.json'), 'utf8'));
+const MAP = JSON.parse(fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'profiles', 'etm', 'regress-map.json'), 'utf8'));
 const F = 'src/app/features/shutdown-event-list/';
 const spec = (file, folder, { keys = [], tokens = [], owner = null } = {}) => ({ file, folder, keys, tokens: new Set(tokens), owner });
 const merge = (branch, files) => ({ commit: `c-${branch}`, branch, keys: cardKeys(branch), files: files.map(([p, lines = []]) => ({ path: p, lines })) });

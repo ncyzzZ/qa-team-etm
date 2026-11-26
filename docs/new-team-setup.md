@@ -26,8 +26,10 @@ node tools/setup.mjs            # checks the whole setup; fix what it reports
 This writes `profiles/<name>/profile.json` from `profiles/_template/` and selects it in `.env`.
 Then fill in by hand in `profile.json`: `jira.fields` (custom field ids for environment, epic, sprint),
 `roles` (the login roles your Playwright repo has seeds for, and the default one),
-`ui.libraryTokenRe` (class prefixes of your UI library, for self-healing). `profiles/example/` is only a
-placeholder; delete it once your profile works.
+`ui.libraryTokenRe` (class prefixes of your UI library, for self-healing), `ui.noTestIds` (warn on
+`data-testid` when your app has none), `heal.serialTags` (test tags on shared data that must not retry),
+`regress.featureDir` and `regress-map.json` (FE folder -> spec folders for `tools/regress.mjs`),
+`board.title`. `profiles/example/` is only a placeholder; delete it once your profile works.
 
 ## 2. Write rules.md
 

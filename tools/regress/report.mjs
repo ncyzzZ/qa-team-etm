@@ -4,9 +4,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tier, commands } from './core.mjs';
-import { profile } from '../profile.mjs';
+import { profile, ROOT } from '../profile.mjs';
 
-const MAP_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'regress-map.json');
+/** FE path prefix -> spec folders: <profile dir>/regress-map.json; missing = empty map. */
+const mapFile = () => path.join(profile().dir, 'regress-map.json');
 const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
 const lastFile = (pwRepo) => path.join(pwRepo, 'output', 'regression', 'last.json');
 const outDir = (teamRoot) => path.join(teamRoot, 'work', 'REGRESSION');
@@ -46,9 +47,9 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
     }
     L.push('');
   }
-  if (notMapped.length) L.push('## Not mapped (add them to tools/regress-map.json)', '', ...notMapped.map((f) => `- \`${f}\``), '');
+  if (notMapped.length) L.push(`## Not mapped (add them to profiles/${profile().name}/regress-map.json)`, '', ...notMapped.map((f) => `- \`${f}\``), '');
   if (wide.length) L.push('## Wide changes: consider the full regression', '', ...wide.map((w) => `- ${w.merge}: \`${w.file}\` is used by ${w.folders.length} pages`), '');
-  L.push('## Run commands', '', 'Run under the standing run approval (check each with tools/run-policy.mjs; ask only when it says ask), from the qa-team-etm folder. One run-card per card (its data is reset once before it). A spec appears once, under the card that owns its tests.', '', '```', ...cmds, '```', '');
+  L.push('## Run commands', '', `Run under the standing run approval (check each with tools/run-policy.mjs; ask only when it says ask), from the ${path.basename(ROOT)} folder. One run-card per card (its data is reset once before it). A spec appears once, under the card that owns its tests.`, '', '```', ...cmds, '```', '');
   return L.join('\n');
 }
 
@@ -83,7 +84,7 @@ export async function main(args, d) {
   let groups = d.merges(d.feRepo, since, to);
   const card = opt('--card');
   if (card) groups = groups.filter((g) => g.keys.includes(card));
-  const map = readJson(MAP_FILE) || [];
+  const map = readJson(mapFile()) || [];
   const { rows, notMapped, wide } = tier({ specs: d.specIndex(d.pwRepo, d.teamRoot), merges: groups, map, importers: (p) => d.importers(d.feRepo, p, to) });
   const cmds = commands(rows, { pwRepo: d.pwRepo });
   const range = { since, to, toRef };

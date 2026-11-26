@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { planExport, leakScan, namePatterns, leakPatterns, projectSkips } from './export-starter.mjs';
+import { planExport, leakScan, namePatterns, leakPatterns, projectSkips, projectRenames, renamePath, renameText } from './export-starter.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const tmpDir = () => fs.mkdtempSync(path.join(os.tmpdir(), 'starter-'));
@@ -97,13 +97,42 @@ test('namePatterns: the template example line is not a name', () => {
 });
 
 test('CLI: refuses an out folder inside the repo and a non-empty one', () => {
-  const inside = spawnSync(process.execPath, ['tools/export-starter.mjs', path.join(ROOT, 'tmp-starter-x')], { cwd: ROOT, encoding: 'utf8' });
+  const inside = spawnSync(process.execPath, ['tools/export-starter.mjs', path.join(ROOT, 'tmp-starter-x'), '--no-people'], { cwd: ROOT, encoding: 'utf8' });
   assert.notEqual(inside.status, 0);
   assert.match(inside.stderr, /inside the repo/);
   assert.ok(!fs.existsSync(path.join(ROOT, 'tmp-starter-x')));
   const d = tmpDir(); write(d, 'keep.txt', 'x');
-  const full = spawnSync(process.execPath, ['tools/export-starter.mjs', d], { cwd: ROOT, encoding: 'utf8' });
+  const full = spawnSync(process.execPath, ['tools/export-starter.mjs', d, '--no-people'], { cwd: ROOT, encoding: 'utf8' });
   assert.notEqual(full.status, 0);
   assert.match(full.stderr, /not empty/);
   assert.deepEqual(fs.readdirSync(d), ['keep.txt']);
+});
+
+test('renames: whole tokens in paths and text, from each project export-renames.json', () => {
+  const r = tmpDir();
+  write(r, 'profiles/zed/profile.json', JSON.stringify({ jira: { site: 'z.atlassian.net', projectKey: 'ZED' }, repos: { pwRepoDir: 'a', feRepoDir: 'b' } }));
+  write(r, 'profiles/zed/export-renames.json', JSON.stringify({ 'zed-fullqa': 'qa-fullqa', 'zed_del.py': 'del.py' }));
+  const ren = projectRenames({ root: r });
+  assert.equal(renamePath('.claude/skills/zed-fullqa/zed_del.py', ren), '.claude/skills/qa-fullqa/del.py');
+  assert.equal(renamePath('.claude/skills/zed-fullqa-old/x.md', ren), '.claude/skills/zed-fullqa-old/x.md');
+  assert.equal(renameText('use `zed-fullqa` and anthropic-skills:zed-fullqa, not zed-fullqa2 or my-zed-fullqa; run zed_del.py', ren),
+    'use `qa-fullqa` and anthropic-skills:qa-fullqa, not zed-fullqa2 or my-zed-fullqa; run del.py');
+});
+
+test('CLI: no people file and no --people / --no-people is refused', () => {
+  const fakeRoot = tmpDir();
+  const d = path.join(tmpDir(), 'out');
+  const res = spawnSync(process.execPath, ['tools/export-starter.mjs', d], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, QA_EXPORT_PEOPLE_ROOT: fakeRoot } });
+  assert.equal(res.status, 2);
+  assert.match(res.stderr, /people/);
+  assert.ok(!fs.existsSync(d));
+});
+
+test('CLI: an out folder reached through a symlink into the repo is refused', () => {
+  const link = path.join(tmpDir(), 'repo-link');
+  fs.symlinkSync(ROOT, link);
+  const res = spawnSync(process.execPath, ['tools/export-starter.mjs', path.join(link, 'tmp-starter-y'), '--no-people'], { cwd: ROOT, encoding: 'utf8' });
+  assert.equal(res.status, 2);
+  assert.match(res.stderr, /inside the repo/);
+  assert.ok(!fs.existsSync(path.join(ROOT, 'tmp-starter-y')));
 });

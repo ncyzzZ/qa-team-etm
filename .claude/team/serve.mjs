@@ -5,6 +5,14 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { phaseOf } from '../../tools/state/core.mjs';
+import { profile } from '../../tools/profile.mjs';
+
+/** Board heading: profile board.title, else "QA team (<KEY>)"; plain text (HTML-escaped). */
+function boardTitle() {
+  let t = 'QA team';
+  try { const p = profile(); t = p.board?.title || `QA team (${p.jira.projectKey})`; } catch {}
+  return t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+}
 const ROOT_REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
@@ -190,7 +198,7 @@ const server = http.createServer((req, res) => {
     res.end(JSON.stringify(reduce(new URL(req.url, 'http://x').searchParams.get('job'))));
   } else {
     res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
-    res.end(fs.readFileSync(path.join(dir, 'board.html'), 'utf8').replace('<script>', `<script>window.BOARD_TOKEN=${JSON.stringify(TOKEN)};</script>\n<script>`));
+    res.end(fs.readFileSync(path.join(dir, 'board.html'), 'utf8').replace('{{BOARD_TITLE}}', boardTitle()).replace('<script>', `<script>window.BOARD_TOKEN=${JSON.stringify(TOKEN)};</script>\n<script>`));
   }
 });
 server.on('error', () => process.exit(0));

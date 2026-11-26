@@ -1,6 +1,7 @@
 // run-plan.mjs - small pure helpers for tools/run-card.mjs (self-healing additions).
 import fs from 'node:fs';
 import path from 'node:path';
+import { profile } from '../profile.mjs';
 
 const VALUE_FLAGS = new Set(['-g', '--grep', '--grep-invert', '--project', '-c', '--config', '--workers', '-j', '--reporter', '--output', '--timeout', '--repeat-each', '--retries', '--shard', '--max-failures']);
 
@@ -17,14 +18,19 @@ export function specFilesFrom(args, pwRepo) {
   return [...new Set(out)];
 }
 
-/** Adds --retries=1 unless the user set retries, or the run touches @dailyreport (shared data, restored by a separate spec). */
-export function retriesFor(args, pwRepo) {
+/**
+ * Adds --retries=1 unless the user set retries, or the run touches a serial tag (profile heal.serialTags: tests on
+ * shared data restored by a separate spec), which gets --retries=0.
+ */
+export function retriesFor(args, pwRepo, tags = profile().heal?.serialTags || []) {
   if (args.some((a) => a === '--retries' || a.startsWith('--retries='))) return [...args];
-  // only a plain list of existing spec files is known not to reach @dailyreport; a folder or "everything" may
+  if (!tags.length) return [...args, '--retries=1'];
+  const tagRe = new RegExp(tags.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'));
+  // only a plain list of existing spec files is known not to reach a serial tag; a folder or "everything" may
   const positional = args.filter((a, i) => !a.startsWith('-') && !VALUE_FLAGS.has(args[i - 1]));
   if (!positional.length || specFilesFrom(positional, pwRepo).length !== positional.length) return [...args, '--retries=0'];
-  const grep = args.some((a, i) => (/^(-g|--grep)$/.test(args[i - 1] || '') || /^--grep=/.test(a)) && /@dailyreport/.test(a));
-  const inFiles = specFilesFrom(args, pwRepo).some((f) => { try { return /@dailyreport/.test(fs.readFileSync(path.join(pwRepo, f), 'utf8')); } catch { return false; } });
+  const grep = args.some((a, i) => (/^(-g|--grep)$/.test(args[i - 1] || '') || /^--grep=/.test(a)) && tagRe.test(a));
+  const inFiles = specFilesFrom(args, pwRepo).some((f) => { try { return tagRe.test(fs.readFileSync(path.join(pwRepo, f), 'utf8')); } catch { return false; } });
   return [...args, grep || inFiles ? '--retries=0' : '--retries=1'];
 }
 

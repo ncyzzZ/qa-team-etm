@@ -18,7 +18,7 @@ authenticate 401: Authentication failed. Invalid client credentials!
 
 ## วิธีแก้
 
-**1. ดึงโค้ดล่าสุด** (รันในโฟลเดอร์ `qa-team-etm`)
+**1. ดึงโค้ดล่าสุด** (รันในโฟลเดอร์ของ repo นี้)
 
 ```bash
 git pull origin main

@@ -26,6 +26,7 @@ Rules that hold only for ETM (EP-Turnaround Management). They reach Claude throu
 ETM-only knowledge kept out of the shared files in `.claude/team/knowledge/` (read each with its shared file):
 
 - `profiles/etm/knowledge/lessons-learned.md`: ETM lessons from real defects (L-1, L-2, L-4 to L-8). Designer and reviewer go through them for every ETM Story, with `.claude/team/knowledge/lessons-learned.md`; new ETM-only lessons go there.
+- `profiles/etm/knowledge/defect-exams.md`: which ETM exam card is behind each "defect exam" example in `.claude/team/knowledge/design-techniques.md`.
 - `profiles/etm/knowledge/playwright-script-rules.md`: ETM script notes (spec layout example, role fixtures `turnaroundManagerPages` / `jobOwnerPages`, locators, known STMS/Bryntum quirks). The automation engineer reads them with `.claude/team/knowledge/playwright-script-rules.md`.
 
 ## Account skills
@@ -37,4 +38,8 @@ ETM-only knowledge kept out of the shared files in `.claude/team/knowledge/` (re
 Jira site, key, id, board, repo folders, UI map, templates and Jira field ids come from `profile.json` (printed above this file in `.claude/active-profile.md`); only what `profile.json` does not hold is here.
 
 - Workflow doc: `docs/etm-qa-workflow.md`.
+- Local secrets file (not in git): `../../.secrets/etm-api.env` (`JIRA_EMAIL`, `JIRA_API_TOKEN`, `XRAY_CLIENT_ID`, `XRAY_CLIENT_SECRET`); the delete skill loads it as `.secrets/etm-api.env`.
+- Login roles in the Playwright repo `.env`: TA Manager (`turnaroundManager`) and Job Owner (`jobOwner`).
+- Card data seed kinds (`needs` in `scripts/seed/cards/<KEY>.data.cjs`): `shutdownLogic`, `dailyReport`, `manpowerMobPlan`, `equipmentMobPlan`.
+- Regression map (FE page folder -> spec folders for `tools/regress.mjs`): `profiles/etm/regress-map.json`.
 - Xray Test Repository Bin folder (default folder of `etm-xray-delete-test-executions` Mode 2): `/Manual Test/Bin`, folder id `69a8ed78018e9874f5130640`.

@@ -26,7 +26,7 @@ Windows: `%APPDATA%\Claude\claude_desktop_config.json`
   "mcpServers": {
     "xray": {
       "command": "node",
-      "args": ["/Users/np/mcp/xray-mcp/index.mjs"],
+      "args": ["/path/to/xray-toolkit/index.mjs"],
       "env": {
         "XRAY_CLIENT_ID": "your-client-id",
         "XRAY_CLIENT_SECRET": "your-client-secret"

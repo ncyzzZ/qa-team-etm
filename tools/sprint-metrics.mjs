@@ -6,7 +6,7 @@
 // Reads <work>/SPRINT<N>/jira.json (saved by the lead from JQL) and <work>/<KEY>/findings.json (one per card).
 // Writes one self-contained HTML report (default <work>/SPRINT<latest>/metrics.html) and prints a short summary.
 // Found in QA = issue type Defect; escaped to UAT/PROD = Bug. "Stopped before code" = ac-changed + dev-fixed.
-import { isKey } from './profile.mjs';
+import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -192,7 +192,7 @@ function html(rows, marker, unassigned, quality = [], value = null) {
   const kinds = count(rows.flatMap((r) => Object.entries(r.kinds).flatMap(([k, n]) => Array(n).fill(k))));
   const kindTxt = Object.entries(kinds).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join(' · ') || '-';
   return `<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ETM QA Sprint Report</title><style>
+<title>${profile().jira.projectKey} QA Sprint Report</title><style>
 :root{--bg:#fff;--fg:#1f2328;--mut:#656d76;--line:#0b6bcb;--grid:#e5e7eb;--mark:#c2410c;--card:#f6f8fa;--hi:#fff7ed}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1117;--fg:#e6edf3;--mut:#9198a1;--line:#4c9aff;--grid:#30363d;--mark:#fb923c;--card:#161b22;--hi:#2a1d10}}
 :root[data-theme="dark"]{--bg:#0d1117;--fg:#e6edf3;--mut:#9198a1;--line:#4c9aff;--grid:#30363d;--mark:#fb923c;--card:#161b22;--hi:#2a1d10}
@@ -209,7 +209,7 @@ th:first-child,td:first-child{text-align:left}tr.first td{background:var(--hi)}.
 :root:not([data-lang="en"]) .en,:root[data-lang="en"] .th{display:none}
 .lang{position:fixed;top:12px;right:16px;display:flex;gap:4px}.lang button{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--grid);border-radius:6px;background:var(--card);color:var(--fg);cursor:pointer}.lang button[aria-pressed="true"]{border-color:var(--line);color:var(--line);font-weight:600}
 </style></head><body><div class="lang"><button type="button" data-set="th">TH</button><button type="button" data-set="en">EN</button></div><main>
-<h1>${tx(`ETM QA: defect ต่อ sprint และปัญหาที่กันได้ก่อนเขียนโค้ด`, `ETM QA: defects per sprint and problems stopped before code`)}</h1>
+<h1>${tx(`${profile().jira.projectKey} QA: defect ต่อ sprint และปัญหาที่กันได้ก่อนเขียนโค้ด`, `${profile().jira.projectKey} QA: defects per sprint and problems stopped before code`)}</h1>
 <p class="sub">Sprint ${rows[0]?.sprint ?? '-'} ${tx('ถึง', 'to')} ${last.sprint ?? '-'} · ${tx(`ทีม AI อ่านการ์ดก่อน dev เริ่มตั้งแต่`, `AI team reads cards before dev from`)} Sprint ${marker} · ${tx(`สร้างเมื่อ`, `generated`)} ${new Date().toISOString().slice(0, 10)}</p>
 <div class="kpis">
 <div class="kpi"><b>${fmt(last.defectsPerStory, 2)}</b><span>${tx(`Defect (QA) ต่อ Story`, `Defects (QA) per Story`)} · Sprint ${last.sprint ?? '-'}</span></div>
@@ -239,9 +239,9 @@ ${rows.some((r) => r.active) ? `<li>${tx(`<b>*</b> = sprint ที่ยัง�
   function set(l) {
     root.setAttribute('data-lang', l); root.lang = l;
     btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-set') === l)); });
-    try { localStorage.setItem('etm-report-lang', l); } catch (e) {}
+    try { localStorage.setItem('${profile().jira.projectKey.toLowerCase()}-report-lang', l); } catch (e) {}
   }
-  var saved = 'th'; try { saved = localStorage.getItem('etm-report-lang') || 'th'; } catch (e) {}
+  var saved = 'th'; try { saved = localStorage.getItem('${profile().jira.projectKey.toLowerCase()}-report-lang') || 'th'; } catch (e) {}
   btns.forEach(function (b) { b.addEventListener('click', function () { set(b.getAttribute('data-set')); }); });
   set(saved);
 })();

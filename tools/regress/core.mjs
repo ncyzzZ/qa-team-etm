@@ -8,7 +8,6 @@
 
 import { profile, escapeKey } from '../profile.mjs';
 
-const FEATURE = 'src/app/features/shutdown-event-list/';
 const RANK = { Must: 3, Should: 2, Warn: 1 };
 const COMMON = 5;   // a token used by more specs than this is too common to point at one spec
 const BIG = 20;     // a merge with more changed app files than this is a big merge
@@ -26,7 +25,8 @@ export function cardKeys(branch) {
   return [...new Set(out)];
 }
 
-const full = (prefix) => (prefix.startsWith('src/') ? prefix : FEATURE + prefix);
+/** Map prefixes are relative to the profile's regress.featureDir unless they start with src/. */
+const full = (prefix) => (prefix.startsWith('src/') ? prefix : (profile().regress?.featureDir || '') + prefix);
 const under = (p, prefix) => p === prefix || p.startsWith(`${prefix.replace(/\/$/, '')}/`);
 
 /** Spec folders of an FE repo path (longest prefix wins), or null when no prefix maps it. */

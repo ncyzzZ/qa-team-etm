@@ -1,5 +1,6 @@
 // profile.mjs - the active project profile (profiles/<name>/profile.json).
-// Name order: name argument, env QA_PROFILE, QA_PROFILE= in .env, else the only profile folder (not _template), else 'etm'.
+// Name order: name argument, env QA_PROFILE, QA_PROFILE= in .env, else the only profile folder (not _template);
+// several folders and none selected is an error.
 // Root (folder that contains profiles/): env QA_PROFILE_ROOT, else the repo root.
 import fs from 'node:fs';
 import path from 'node:path';
@@ -28,7 +29,8 @@ function onlyProfile(root) {
 
 export function loadProfile({ root = process.env.QA_PROFILE_ROOT || ROOT, envFile, name } = {}) {
   envFile = envFile ?? path.join(ROOT, '.env');
-  const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || onlyProfile(root) || 'etm';
+  const pname = name || process.env.QA_PROFILE || envFileValue(envFile, 'QA_PROFILE') || onlyProfile(root);
+  if (!pname) throw new Error('no profile selected: set QA_PROFILE=<name> in .env (node tools/setup.mjs --new-profile <name> does it), there is not exactly one folder under profiles/');
   if (!/^[a-z0-9][a-z0-9_-]*$/i.test(pname)) throw new Error('profile name "' + pname + '" is not allowed');
   const dir = path.join(root, 'profiles', pname);
   const file = path.join(dir, 'profile.json');

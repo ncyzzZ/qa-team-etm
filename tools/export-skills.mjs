@@ -13,10 +13,10 @@ import { profile, fieldLines } from './profile.mjs';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 /** The repo-only description start ("Repo version ... prefer it over the account skill ...") becomes "Synced from ... on <date>." */
-export function accountDescription(md, date) {
+export function accountDescription(md, date, repo = path.basename(ROOT)) {
   return md.replace(
     /^(description:\s*"?)Repo version \(project skill, no prefix; always prefer it over the account skill `anthropic-skills:(?:&lt;|<)same name(?:&gt;|>)`\)\.\s*/m,
-    `$1Synced from the qa-team-etm repo on ${date}. `,
+    `$1Synced from the ${repo} repo on ${date}. `,
   );
 }
 

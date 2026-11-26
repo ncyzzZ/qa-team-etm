@@ -204,7 +204,7 @@ function falsePass(name, text) {
 // A test body that saves, deletes, imports or changes state on QA (UI button names or DB writes). A heuristic: helpers can hide
 // a write, so the automator still tags by what the test does (agents/automation-engineer.md step 4c).
 const WRITE_RE = /(?:name:\s*(?:['"`]|\/\^?)|getByText\(\s*['"`])(?:[Ss]ave|[Dd]elete|[Rr]emove|[Ii]mport|[Ss]ubmit|[Uu]pdate [Pp]rogress|[Cc]onfirm|[Ff]reeze|[Uu]nfreeze|[Aa]ctivate|[Ss]et [Aa]ctive|[Ee]xtension)\b[^;\n]{0,40}?\)\s*\.(?:first\(\)\.|last\(\)\.)?(?:click|dblclick)\(|\bqueryDb\([^)]*\b(?:INSERT|UPDATE|DELETE)\b|\bawait\s+(?:\w+\.)?(?:save|delete|remove|create|import|activate|freeze|unfreeze|submit)(?!\w*(?:Screenshot|Picture|Evidence|Shot))[A-Z]\w*\(/;
-/** Card keys a spec belongs to: every ETM key named in the spec or in the local files it imports (helpers call cardId('ETM-n')). */
+/** Card keys a spec belongs to: every <KEY> key named in the spec or in the local files it imports (helpers call cardId('<KEY>-n')). */
 function cardsOf(specFile, text) {
   const keys = new Set(keysIn(text));
   for (const m of text.matchAll(/from\s+['"](\.{1,2}\/[^'"]+)['"]/g)) {
@@ -290,7 +290,7 @@ function checkSpec() {
     hits(/\bwaitForTimeout\(/g, 'waitForTimeout is not allowed, wait for a condition instead');
     hits(/\bpage\.pause\(/g, 'page.pause() left in');
     hits(/\b(password|passwd|secret|token|api[_-]?key)\s*[:=]\s*(['"`])(?!\$\{)[^'"`\s]{4,}\2/gi, 'looks like a hard-coded credential (use .env)');
-    hits(/data-testid/g, 'the ETM app has no data-testid: use data-id, data-column, roles, text', warn);
+    if (profile().ui?.noTestIds) hits(/data-testid/g, `the ${profile().jira.projectKey} app has no data-testid: use data-id, data-column, roles, text`, warn);
     falsePass(name, text);
     liveCheck(f, name, text);
     const nExpect = (text.match(/\bexpect(?:\.soft)?\(/g) || []).length;

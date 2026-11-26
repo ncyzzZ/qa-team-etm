@@ -1,4 +1,4 @@
-// run-card.mjs - run Playwright for ONE ETM card and build its evidence report straight away.
+// run-card.mjs - run Playwright for ONE card and build its evidence report straight away.
 // Each run gets its own result folder and its own report file, so two or more cards can run at
 // the same time without wiping each other's pictures or overwriting each other's report.
 //

@@ -1,6 +1,6 @@
 // baseline.mjs - per page unit, the FE repo commit of the last run where every test using that page passed.
 // File: <PW_REPO>/output/heal/fe-baseline.json  { "units": { "<unit>": "<commit>" }, "updated": "<ISO date>" }
-// A page unit = the first folder (or file) under pages/: pages/shutdownLogicPage/** -> shutdownLogicPage.
+// A page unit = the first folder (or file) under pages/: pages/mainGridPage/** -> mainGridPage.
 import fs from 'node:fs';
 import path from 'node:path';
 

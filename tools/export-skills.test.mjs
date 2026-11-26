@@ -7,13 +7,13 @@ import { accountDescription, exportSkills } from './export-skills.mjs';
 
 test('accountDescription: the "Repo version ... prefer it over the account skill" line becomes a synced-on note', () => {
   const md = "---\nname: x\ndescription: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:&lt;same name&gt;`). Use when ...\n---\nbody\n";
-  const out = accountDescription(md, '2026-11-24');
-  assert.match(out, /^description: Synced from the qa-team-etm repo on 2026-11-24\. Use when \.\.\.$/m);
+  const out = accountDescription(md, '2026-11-24', 'qa-team-x');
+  assert.match(out, /^description: Synced from the qa-team-x repo on 2026-11-24\. Use when \.\.\.$/m);
   assert.match(out, /body/);
   const quoted = '---\nname: q\ndescription: "Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use q"\n---\n';
-  assert.match(accountDescription(quoted, '2026-11-24'), /description: "Synced from the qa-team-etm repo on 2026-11-24\. Use q"/);
+  assert.match(accountDescription(quoted, '2026-11-24', 'qa-team-x'), /description: "Synced from the qa-team-x repo on 2026-11-24\. Use q"/);
   const plain = "---\nname: y\ndescription: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Do y\n---\n";
-  assert.match(accountDescription(plain, '2026-11-24'), /description: Synced from the qa-team-etm repo on 2026-11-24\. Do y/);
+  assert.match(accountDescription(plain, '2026-11-24', 'qa-team-x'), /description: Synced from the qa-team-x repo on 2026-11-24\. Do y/);
 });
 
 test('exportSkills: one zip per skill folder with every file of the skill, in a fresh out folder', () => {
@@ -26,7 +26,7 @@ test('exportSkills: one zip per skill folder with every file of the skill, in a 
   const made = exportSkills({ root, out, date: '2026-11-24' });
   assert.deepEqual(made.map((m) => path.basename(m)).sort(), ['a-skill.zip', 'b-skill.zip']);
   assert.ok(fs.statSync(path.join(out, 'a-skill.zip')).size > 0);
-  assert.match(fs.readFileSync(path.join(out, 'a-skill', 'SKILL.md'), 'utf8'), /Synced from the qa-team-etm repo on 2026-11-24\. A/);
+  assert.match(fs.readFileSync(path.join(out, 'a-skill', 'SKILL.md'), 'utf8'), /Synced from the [^ ]+ repo on 2026-11-24\. A/);
   assert.ok(fs.existsSync(path.join(out, 'a-skill', 'helper.py')));
 });
 
