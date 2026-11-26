@@ -61,3 +61,9 @@ Fact (BA answer file given by the user, 2026-11-18; Dev still to confirm items m
 ## Round 7 — BA answer 2026-11-25 (user typed in the lead chat, answering as BA)
 - Q12 (invalid typed/pasted date, ETM-8851, AC 1.2) = **(b)**: the picker puts back the previous valid value. Not a defect. This REPLACES Q11 ("clears that part and disables Save"). AC 1.2 / S1 wording and the ETM-8851 Xray expected result should say "previous value is put back".
 - Q12 second part (Start puts the value back on the next click, End already on Tab): not answered. QA treats both as acceptable and only checks the value after leaving the field.
+
+## Round 8 (2026-11-26) - QA lead decision (user, in the "รีเทส defect บอร์ด dev" session, relayed by the lead session)
+- Q14 / F-10 (ETM-8846, Excel export of a Plan range > 1095 days): **by design**. Excel allows only 16,384 columns, so the Shutdown Logic Excel export has a maximum range (BE `GANTT_EXPORT_DATE_RANGE_TOO_LARGE`, 1095 days). "ระบบถูกต้องแล้ว ฉันลบ defect ออกแล้ว กลับไปรันเคส tc ได้เลย". Defect ETM-10092 was deleted by the user. Q14 removed from questions-for-BA.md. ETM-8846 must use a range within the limit.
+- Q13 (ETM-8838 step 8, Day0 in the Daily Report PDF), user in the main chat 2026-11-26: **(b)** Day0 must be exportable: Export should be enabled on Day0 even when that day has no tasks. Today Export is disabled on 14 Feb (Day0) of Plan "QA ETM-8042 8836" -> defect candidate (re-prove with UI-made data, then ask).
+- Q14 confirmed again by the user: "yes", the 1095-day Excel limit is intended. The generic "Server Error" text for a longer range is kept as a NOTE (no message was specified), not a defect.
+- ETM-8846 width (user 26 Nov, chat with screenshot): app minimum is 1366 x 768; the 600 px check is out of scope (verdict tc). Spec now uses 1366 x 768.

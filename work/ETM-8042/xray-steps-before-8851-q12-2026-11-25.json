@@ -1,0 +1,5 @@
+{"test":"ETM-8851","issueId":"2300327","why":"BA Q12=(b) 2026-11-25, user approved rewrite (lead chat 'ได้ทุกข้อ', relayed by lead session)","steps":{
+"3":{"id":"3bec7a0d-2e61-489f-b3c0-e6b271dad587","result":"The pasted text is not accepted: after the focus leaves the field, that part (Start) is empty and `Save` is disabled."},
+"4":{"id":"3c026d3c-439e-4681-b6e1-27d0d2845d4e","result":"The pasted text is not accepted: after the focus leaves the field, that part (Start) is empty and `Save` is disabled."},
+"7":{"id":"ff020d51-be17-46c4-95ef-c7b1cdec20ff","result":"The pasted text is not accepted: after the focus leaves the field, that part (End) is empty and `Save` is disabled."},
+"8":{"id":"cbb0ad1f-0290-47e4-8607-0f70b0948250","result":"The pasted text is not accepted: after the focus leaves the field, that part (End) is empty and `Save` is disabled."}}}

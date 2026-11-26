@@ -1,0 +1,18 @@
+{ "id": "defect-draft-8851-paste-end-earlier", "sourceHash": "cba05d44ef3a", "overall": "not-proven",
+  "steps": [
+    { "n": 1, "sees": "QA S26 Ramp > Planning, Create Plan modal open. Plan Name 'Plan Scenario Paste' (19/50). Range picker closed, shows Start 15 Feb 2026 09:00 -> End 25 Feb 2026 18:00. Annotation box covers the Description field. Save blue. Full screen.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same modal. Start input is EMPTY (placeholder 'Ramp Down Date'), End shows 14 Feb 2026 09:00. Picker popup still open on Feb 2026 with 14 highlighted, time column 09/00, OK button grey. Range not committed. No error message. Annotation banner covers page header.", "verdict": "cannot-tell", "pictureOk": true }
+  ],
+  "expectedSources": ["BA answer Q5 (ba-answers.md: no error, Ramp Up >= Ramp Down; user said Ramp Up = Ramp Down)", "BA suggestion S1 answer (paste in scope, Ramp Up >= Ramp Down still applies)", "AC 1.2 (per brief, not opened)"],
+  "uiReachable": "yes",
+  "problems": [
+    "Picture 2 does not show End earlier than Start kept: Start is empty, so no End<Start pair exists on screen.",
+    "Picker is still open and not confirmed; the final committed range after Enter/close is not shown.",
+    "Second explanation: picker clears Start when pasted End is earlier, forcing a new Start; that would satisfy Ramp Up >= Ramp Down.",
+    "Possible different issue: Start cleared instead of previous value put back (BA Q12); needs its own check, not this defect.",
+    "Save state with an empty Start not readable (button hidden behind popup); S1 says Save disabled while a side is empty.",
+    "Exact expected adjusted value is unsourced (Q5 open with Dev); 'End not earlier than Start' is the only sourced part.",
+    "Picture 2 carries a 'Step 8 FAILED' banner from the first agent; ignored as a result statement.",
+    "Brief steps list 4 steps but pictures are labelled Step 7 and Step 8; mapping to ETM-8851 steps should be stated."
+  ],
+  "summary": "ภาพที่ 2 ไม่ได้แสดงว่า End เก่ากว่า Start ถูกเก็บไว้: ช่อง Start ว่าง (ถูกล้าง) และ picker ยังเปิดอยู่ ยังไม่ยืนยันค่า จึงพิสูจน์ defect นี้ไม่ได้ อาจเป็นพฤติกรรมปกติของ picker ที่ให้เลือก Start ใหม่ ควรถ่ายภาพหลังปิด picker และดูสถานะปุ่ม Save" }

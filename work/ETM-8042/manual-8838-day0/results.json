@@ -1,0 +1,106 @@
+{
+ "config": {
+  "source": "manual-agent"
+ },
+ "suites": [
+  {
+   "title": "Manual run (ETM-8042)",
+   "file": "manual-runner",
+   "line": 0,
+   "column": 0,
+   "specs": [
+    {
+     "title": "ETM-8838 - Export button on Day0 and on a later frozen day",
+     "ok": false,
+     "tags": [],
+     "file": "manual-runner",
+     "line": 0,
+     "column": 0,
+     "tests": [
+      {
+       "projectName": "manual-runner",
+       "expectedStatus": "passed",
+       "annotations": [
+        {
+         "type": "awaiting-confirmation",
+         "description": "proposed by the browser agent, not yet confirmed by a person"
+        }
+       ],
+       "status": "unexpected",
+       "results": [
+        {
+         "workerIndex": 0,
+         "status": "failed",
+         "duration": 0,
+         "retry": 0,
+         "startTime": "1970-01-01T00:00:00.000Z",
+         "steps": [
+          {
+           "title": "1. Open the Daily Report on 14 Feb 2026 (?date=2026-02-14), previous arrow disabled, read date and Freeze button",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "2. Look at Export button and Gantt on 14 Feb 2026",
+           "duration": 0,
+           "manualVerdict": "fail",
+           "error": {
+            "message": "Export button is DISABLED on 14 Feb 2026 (button disabled=true, snapshot [disabled]). Gantt has no task rows (only the header row, 0 task bars). Expected enabled, so Day0 is not exportable."
+           }
+          },
+          {
+           "title": "3. Press next-day arrow once (15 Feb 2026) and look at Export",
+           "duration": 0,
+           "manualVerdict": "pass"
+          }
+         ],
+         "attachments": [
+          {
+           "name": "Step 1: evidence/ETM-8838/step-1.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-day0/evidence/ETM-8838/step-1.png"
+          },
+          {
+           "name": "Step 2: evidence/ETM-8838/step-2.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-day0/evidence/ETM-8838/step-2.png"
+          },
+          {
+           "name": "Step 3: evidence/ETM-8838/step-3.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-day0/evidence/ETM-8838/step-3.png"
+          }
+         ],
+         "annotations": [
+          {
+           "type": "awaiting-confirmation",
+           "description": "proposed by the browser agent, not yet confirmed by a person"
+          }
+         ],
+         "errors": [
+          {
+           "message": "2. Export button is DISABLED on 14 Feb 2026 (button disabled=true, snapshot [disabled]). Gantt has no task rows (only the header row, 0 task bars). Expected enabled, so Day0 is not exportable."
+          }
+         ],
+         "error": {
+          "message": "2. Export button is DISABLED on 14 Feb 2026 (button disabled=true, snapshot [disabled]). Gantt has no task rows (only the header row, 0 task bars). Expected enabled, so Day0 is not exportable."
+         }
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "suites": []
+  }
+ ],
+ "errors": [],
+ "stats": {
+  "expected": 0,
+  "unexpected": 1,
+  "skipped": 0,
+  "flaky": 0,
+  "duration": 0,
+  "startTime": "1970-01-01T00:00:00.000Z"
+ }
+}

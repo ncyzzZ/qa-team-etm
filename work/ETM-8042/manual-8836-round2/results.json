@@ -1,0 +1,98 @@
+{
+ "config": {
+  "source": "manual-agent"
+ },
+ "suites": [
+  {
+   "title": "Manual run (ETM-8042)",
+   "file": "manual-runner",
+   "line": 0,
+   "column": 0,
+   "specs": [
+    {
+     "title": "ETM-8836 - Shutdown Logic Start Date and Ramp lines of Plan QA ETM-8042 8836",
+     "ok": true,
+     "tags": [],
+     "file": "manual-runner",
+     "line": 0,
+     "column": 0,
+     "tests": [
+      {
+       "projectName": "manual-runner",
+       "expectedStatus": "skipped",
+       "annotations": [
+        {
+         "type": "needs-manual",
+         "description": "step 2 needs a person: Tooltip reads 'Ramp Down: 15 Feb 2026' (date only, no time). At day level the line is at the left edge of day column 15; at hour level (initial state) the line sat at the left edge of the 09:00 column under header Sun 15/02. Date matches; the time 09:00 is not shown as text, only by position. | step 3 needs a person: Tooltip reads 'Ramp Up: 25 Feb 2026' (date only, no time). Day column 25 spans x=1027-1127, line at x=1102, i.e. 3/4 of the day = 18:00 by position. Date matches; time not shown as text."
+        }
+       ],
+       "status": "skipped",
+       "results": [
+        {
+         "workerIndex": 0,
+         "status": "skipped",
+         "duration": 0,
+         "retry": 0,
+         "startTime": "1970-01-01T00:00:00.000Z",
+         "steps": [
+          {
+           "title": "1. Open Logic page, collapse histogram, expand Scheduled group, read Start Date of earliest row",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "2. Gantt day level, hover Ramp Down line",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Tooltip reads 'Ramp Down: 15 Feb 2026' (date only, no time). At day level the line is at the left edge of day column 15; at hour level (initial state) the line sat at the left edge of the 09:00 column under header Sun 15/02. Date matches; the time 09:00 is not shown as text, only by position."
+          },
+          {
+           "title": "3. Scroll Gantt to 25 Feb, hover Ramp Up line",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Tooltip reads 'Ramp Up: 25 Feb 2026' (date only, no time). Day column 25 spans x=1027-1127, line at x=1102, i.e. 3/4 of the day = 18:00 by position. Date matches; time not shown as text."
+          }
+         ],
+         "attachments": [
+          {
+           "name": "Step 1: evidence/ETM-8836/step-1.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8836-round2/evidence/ETM-8836/step-1.png"
+          },
+          {
+           "name": "Step 2: evidence/ETM-8836/step-2.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8836-round2/evidence/ETM-8836/step-2.png"
+          },
+          {
+           "name": "Step 3: evidence/ETM-8836/step-3.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8836-round2/evidence/ETM-8836/step-3.png"
+          }
+         ],
+         "annotations": [
+          {
+           "type": "needs-manual",
+           "description": "step 2 needs a person: Tooltip reads 'Ramp Down: 15 Feb 2026' (date only, no time). At day level the line is at the left edge of day column 15; at hour level (initial state) the line sat at the left edge of the 09:00 column under header Sun 15/02. Date matches; the time 09:00 is not shown as text, only by position. | step 3 needs a person: Tooltip reads 'Ramp Up: 25 Feb 2026' (date only, no time). Day column 25 spans x=1027-1127, line at x=1102, i.e. 3/4 of the day = 18:00 by position. Date matches; time not shown as text."
+          }
+         ],
+         "errors": []
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "suites": []
+  }
+ ],
+ "errors": [],
+ "stats": {
+  "expected": 0,
+  "unexpected": 0,
+  "skipped": 1,
+  "flaky": 0,
+  "duration": 0,
+  "startTime": "1970-01-01T00:00:00.000Z"
+ }
+}

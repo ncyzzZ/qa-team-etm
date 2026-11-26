@@ -1,0 +1,17 @@
+{
+ "id": "defect-draft-8838-day0-export",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Expected rests on the QA lead's chat decision, not a BA answer or AC; brief calls it 'BA Q13' but Q13 is not in questions-for-BA.md.",
+  "ba-answers.md has another Q13 (badge date/time, line 20); the duplicate number may confuse the developer.",
+  "Pictures prove only the disabled button; 'PDF of Day0 can be exported' cannot be shown until the button works.",
+  "Picture 1 does not show the Freeze state change; Unfreeze label implies frozen, consistent with step 2.",
+  "Dev may answer 'no tasks on Day0, by design'; get BA confirmation before logging to avoid rejection."
+ ],
+ "summary": "ภาพ 1 แสดงว่าวันที่ 14 Feb 2026 (Day0, freeze แล้ว) ปุ่ม Export ถูก disable และไม่มีงาน ส่วนภาพ 2 วันที่ 15 Feb ปุ่ม Export ใช้ได้ จึงพิสูจน์ได้ว่าต่างจาก Expected แต่ Expected มาจากการตัดสินของ QA lead ในแชท (Q13=b) ไม่ใช่ BA/AC ควรให้ BA ยืนยันก่อน log",
+ "sourceHash": "0647be7447c3"
+}

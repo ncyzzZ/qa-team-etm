@@ -1,0 +1,19 @@
+{ "id": "defect-draft-8838-day0-export", "sourceHash": "0647be7447c3", "overall": "defect-proven",
+  "steps": [
+    { "n": 1, "sees": "Full screen, Daily Report: QA ETM-8042 8836 (breadcrumb Shutdown Event List / QA S26 Ramp). Date 14 Feb 2026, previous-day arrow greyed, cut-off 22:00. Header: Export greyed (disabled), Unfreeze enabled, Save greyed. Grid has no rows. Gantt highlights 14; Ramp Down marker starts on 15.", "verdict": "fail", "pictureOk": true },
+    { "n": 2, "sees": "Same report, date 15 Feb 2026, both arrows active. Export enabled, Unfreeze enabled, Save greyed. Six rows: ASSET, Mechanical (PM), 8042281772 and 8042467943 with child tasks, Job Owner QA Auto 8042, bars 0% from 15 Feb.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "QA lead (user) decision Q13 = (b), main chat 2026-11-26, recorded in work/ETM-8042/ba-answers.md line 67",
+    "BA answer Q2 (ba-answers.md line 41): Ramp Down before 18:00 -> First Execution Date Ramp Down - 1 is Day0 of the Daily Report PDF"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Expected rests on the QA lead's chat decision, not a BA answer or AC; brief calls it 'BA Q13' but Q13 is not in questions-for-BA.md.",
+    "ba-answers.md has another Q13 (badge date/time, line 20); the duplicate number may confuse the developer.",
+    "Pictures prove only the disabled button; 'PDF of Day0 can be exported' cannot be shown until the button works.",
+    "Picture 1 does not show the Freeze state change; Unfreeze label implies frozen, consistent with step 2.",
+    "Dev may answer 'no tasks on Day0, by design'; get BA confirmation before logging to avoid rejection."
+  ],
+  "summary": "ภาพ 1 แสดงว่าวันที่ 14 Feb 2026 (Day0, freeze แล้ว) ปุ่ม Export ถูก disable และไม่มีงาน ส่วนภาพ 2 วันที่ 15 Feb ปุ่ม Export ใช้ได้ จึงพิสูจน์ได้ว่าต่างจาก Expected แต่ Expected มาจากการตัดสินของ QA lead ในแชท (Q13=b) ไม่ใช่ BA/AC ควรให้ BA ยืนยันก่อน log"
+}

@@ -1,0 +1,20 @@
+{
+  "ETM-8840": {
+    "verdict": "tc",
+    "source": "chat",
+    "evidence": "user chat 2026-11-25: 1=tc",
+    "at": "2026-11-25T12:30:19.703Z"
+  },
+  "ETM-8851": {
+    "verdict": "script",
+    "source": "chat",
+    "evidence": "evidence-check not-proven; re-run 222541 shows End put back after leaving the picker; 222809 passed",
+    "at": "2026-11-25T15:28:56.574Z"
+  },
+  "ETM-8846": {
+    "verdict": "tc",
+    "source": "chat",
+    "evidence": "user chat 26 Nov: แอปรองรับ minimum เท่านี้ (1366x768)",
+    "at": "2026-11-26T03:15:58.840Z"
+  }
+}

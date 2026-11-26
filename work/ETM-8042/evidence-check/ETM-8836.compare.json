@@ -1,0 +1,37 @@
+{
+ "id": "ETM-8836",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "cannot-tell",
+ "checkerOverall": "pass",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "needs-human",
+   "checker": "pass",
+   "match": false
+  },
+  {
+   "n": 3,
+   "first": "needs-human",
+   "checker": "pass",
+   "match": false
+  }
+ ],
+ "warnings": [
+  "Times in steps 2-3 come from line position only; tooltips show date without time. About 4 px per hour at day level.",
+  "Step 1 shows rows 1-7 only; any other top-level group below is not on screen. ASSET summary row supports the result.",
+  "Plan QA ETM-8042 8836 Ramp Down/Up values are not shown in any picture; the expected 09:00/18:00 assume the precondition dates.",
+  "Exact AC 8.1 wording not found in repo (no Story text or analyst.md); Expected cannot be quoted word for word.",
+  "Step 2 caption says line is at the left edge of day 15; gridlines put it near 09:00. Caption wording is misleading.",
+  "ac-strength.json (read for the AC source) mentions an earlier failed run of 8836; ignored for this check."
+ ],
+ "summary": "ภาพทั้ง 3 รูปตรงกับ Expected: Start Date แถวที่เห็นเป็น 15 Feb 2026 09:00 ไม่มี 08 Feb, เส้น Ramp Down อยู่ราว 09:00 ของ 15 Feb และเส้น Ramp Up อยู่ราว 18:00 ของ 25 Feb แต่เวลาอ่านจากตำแหน่งเส้นเท่านั้นเพราะ tooltip แสดงแค่วันที่ และในภาพไม่เห็นค่า Ramp Down/Up ที่ตั้งไว้ใน Plan",
+ "sourceHash": "db968317ea54"
+}

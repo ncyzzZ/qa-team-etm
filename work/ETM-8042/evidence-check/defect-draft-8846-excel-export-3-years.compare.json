@@ -1,0 +1,18 @@
+{
+ "id": "defect-draft-8846-excel-export-3-years",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "API 400 body (1095-day limit) appears only in an annotation, not on screen; attach the network/HAR evidence for the developer.",
+  "BA question 14 (is a 1095-day export limit intended?) is unanswered; the limit may be by design, then only the generic message is the defect.",
+  "Picture 2 does not show the Export dialog or Excel choice; the toast is linked to the export only by the annotation.",
+  "BA Q6 'no upper limit' was about the date range input; it does not state the export explicitly. Xray step is the stronger source.",
+  "Brief cites 'ETM-8846 step 4'; in the Xray backup the export is step 5 and the date read is step 6. Check numbering.",
+  "Plan Name 'Plan Scenario Long Name Plan Scenario Long Name 12' is 50 chars, within the field limit; data is UI-made."
+ ],
+ "summary": "ภาพที่ 2 แสดง toast 'Server Error' หลังกด Export ในหน้า Shutdown Logic ของ Plan ช่วง 3 ปี และไม่มีไฟล์ Excel ซึ่งขัดกับ Xray ETM-8846 ที่คาดว่าดาวน์โหลดไฟล์ได้ จึงถือว่าพิสูจน์ defect ได้ แต่ข้อความ API 1095 วันอยู่แค่ใน annotation และ BA ยังไม่ตอบ Q14 ว่าขีดจำกัดนี้ตั้งใจหรือไม่",
+ "sourceHash": "e534476cb5fd"
+}

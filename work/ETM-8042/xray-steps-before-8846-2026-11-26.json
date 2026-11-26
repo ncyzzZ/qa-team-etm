@@ -1,0 +1,7 @@
+{"test":"ETM-8846","issueId":"2300322","summary":"[FE][BE][MT] Verify the very long range `15 Feb 2026 08:00 - 15 Feb 2029 20:15` on the badge, in the Daily Report and in the Excel export, and the badge and a long Plan Name on a narrow card",
+"steps":{"1":{"action":"Create a Plan named `Plan Scenario Long Name Plan Scenario Long Name 12` (50 characters) with `15 Feb 2026 08:00 - 15 Feb 2029 20:15` and read the badge.","result":"The badge shows `Ramp Down/Up Date: 15 Feb 2026 08:00 - 15 Feb 2029 20:15`."},
+"6":{"result":"They show `15 Feb 2026` and `15 Feb 2029`."},
+"7":{"action":"Set the browser window width to 600 px and look at the card header."},
+"8":{"result":"The Plan Name is cut with an ellipsis (`…`)."},
+"9":{"result":"The full name `Plan Scenario Long Name Plan Scenario Long Name 12` is shown."}},
+"why":"user 26 Nov 2026: 1095-day Excel export limit by design; app minimum 1366 x 768"}

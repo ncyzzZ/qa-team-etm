@@ -1,0 +1,87 @@
+{
+ "config": {
+  "source": "manual-agent"
+ },
+ "suites": [
+  {
+   "title": "Manual run (ETM-8042)",
+   "file": "manual-runner",
+   "line": 0,
+   "column": 0,
+   "specs": [
+    {
+     "title": "ETM-8836 - Ramp Down and Ramp Up lines on the Logic of Plan \"QA ETM-8042 8836\"",
+     "ok": true,
+     "tags": [],
+     "file": "manual-runner",
+     "line": 0,
+     "column": 0,
+     "tests": [
+      {
+       "projectName": "manual-runner",
+       "expectedStatus": "skipped",
+       "annotations": [
+        {
+         "type": "needs-manual",
+         "description": "step 1 needs a person: Not 08 Feb: the work rows all read Feb 15 and the first day header is Sun 15/02. But the time axis begins at Sat 14/02 22:00 (ticks 22:00, 23:00, 00:00 ... then Sun 15/02), so the very first axis column is 14 Feb, 2 hours before 15 Feb. No 'Start Date' field on the page. Person to decide if this lead-in counts as Start Date 15 Feb."
+        }
+       ],
+       "status": "skipped",
+       "results": [
+        {
+         "workerIndex": 0,
+         "status": "skipped",
+         "duration": 0,
+         "retry": 0,
+         "startTime": "1970-01-01T00:00:00.000Z",
+         "steps": [
+          {
+           "title": "1. Open the Shutdown Logic page, collapse histogram, read Gantt start",
+           "duration": 0,
+           "manualVerdict": "needs-human",
+           "why": "Not 08 Feb: the work rows all read Feb 15 and the first day header is Sun 15/02. But the time axis begins at Sat 14/02 22:00 (ticks 22:00, 23:00, 00:00 ... then Sun 15/02), so the very first axis column is 14 Feb, 2 hours before 15 Feb. No 'Start Date' field on the page. Person to decide if this lead-in counts as Start Date 15 Feb."
+          },
+          {
+           "title": "2. Zoom out the Gantt (Ctrl+wheel) and read both lines",
+           "duration": 0,
+           "manualVerdict": "pass"
+          }
+         ],
+         "attachments": [
+          {
+           "name": "Step 1: evidence/ETM-8836/step-1.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8836-lines-recheck/evidence/ETM-8836/step-1.png"
+          },
+          {
+           "name": "Step 2: evidence/ETM-8836/step-2.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8836-lines-recheck/evidence/ETM-8836/step-2.png"
+          }
+         ],
+         "annotations": [
+          {
+           "type": "needs-manual",
+           "description": "step 1 needs a person: Not 08 Feb: the work rows all read Feb 15 and the first day header is Sun 15/02. But the time axis begins at Sat 14/02 22:00 (ticks 22:00, 23:00, 00:00 ... then Sun 15/02), so the very first axis column is 14 Feb, 2 hours before 15 Feb. No 'Start Date' field on the page. Person to decide if this lead-in counts as Start Date 15 Feb."
+          }
+         ],
+         "errors": []
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "suites": []
+  }
+ ],
+ "errors": [],
+ "stats": {
+  "expected": 0,
+  "unexpected": 0,
+  "skipped": 1,
+  "flaky": 0,
+  "duration": 0,
+  "startTime": "1970-01-01T00:00:00.000Z"
+ }
+}

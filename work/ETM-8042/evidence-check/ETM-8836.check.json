@@ -1,0 +1,22 @@
+{ "id": "ETM-8836", "sourceHash": "db968317ea54", "overall": "pass",
+  "steps": [
+    { "n": 1, "sees": "Shutdown Logic: QA ETM-8042 8836 (event QA S26 Ramp), histogram not visible, Scheduled group expanded (Duration, Start Date, End Date). Rows 1-7 visible: ASSET, Mechanical (PM) and 3 work orders with tasks; every Start Date reads 15 Feb 2026, 09:00. Top-level ASSET summary row is 15 Feb 2026, 09:00. Gantt at hour level, header 15/02 starting at 09:00 with a Ramp Down label over the 09:00 column. No 08 Feb anywhere on screen. Rows below 7 are not visible.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same page, Gantt zoomed to day level (header Sun 08/02, days 14, 15, 16). Tooltip 'Ramp Down: 15 Feb 2026' (date only, no time) above the Ramp Down label. Vertical line at about x=1061; day 15 column spans about x=1022-1122 (gridlines), so the line sits about 39% into the day, about 09:00. Bars all start on day 15, none on day 14.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Gantt scrolled to days 24, 25, 26 (header Sun 22/0..). Tooltip 'Ramp Up: 25 Feb 2026' (date only). Vertical line at about x=1102; day 25 column spans about x=1027-1127, so the line sits 3/4 into the day, about 18:00. No bars in this range.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "AC 8.1 (Shutdown Logic lines and Start Date follow the Plan Ramp Down/Up; rule label from ac-strength.json, Story text not in repo)",
+    "xray-step-updates.md precondition: Plan Ramp Down/Up 15 Feb 2026 09:00 - 25 Feb 2026 18:00, event Planned Date 08 Feb 2026 08:00 - 22 Feb 2026 08:00",
+    "BA answer 2026-11-17 Q4/Q7 (Ramp Down/Up carry date and time)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Times in steps 2-3 come from line position only; tooltips show date without time. About 4 px per hour at day level.",
+    "Step 1 shows rows 1-7 only; any other top-level group below is not on screen. ASSET summary row supports the result.",
+    "Plan QA ETM-8042 8836 Ramp Down/Up values are not shown in any picture; the expected 09:00/18:00 assume the precondition dates.",
+    "Exact AC 8.1 wording not found in repo (no Story text or analyst.md); Expected cannot be quoted word for word.",
+    "Step 2 caption says line is at the left edge of day 15; gridlines put it near 09:00. Caption wording is misleading.",
+    "ac-strength.json (read for the AC source) mentions an earlier failed run of 8836; ignored for this check."
+  ],
+  "summary": "ภาพทั้ง 3 รูปตรงกับ Expected: Start Date แถวที่เห็นเป็น 15 Feb 2026 09:00 ไม่มี 08 Feb, เส้น Ramp Down อยู่ราว 09:00 ของ 15 Feb และเส้น Ramp Up อยู่ราว 18:00 ของ 25 Feb แต่เวลาอ่านจากตำแหน่งเส้นเท่านั้นเพราะ tooltip แสดงแค่วันที่ และในภาพไม่เห็นค่า Ramp Down/Up ที่ตั้งไว้ใน Plan"
+}

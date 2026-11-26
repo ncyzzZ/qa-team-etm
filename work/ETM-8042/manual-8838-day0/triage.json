@@ -1,0 +1,11 @@
+[
+  {
+    "key": "ETM-8838",
+    "title": "ETM-8838 - Export button on Day0 and on a later frozen day",
+    "file": "manual-runner",
+    "cause": "unknown",
+    "locator": null,
+    "pageRef": null,
+    "firstLine": "2. Export button is DISABLED on 14 Feb 2026 (button disabled=true, snapshot [disabled]). Gantt has no task rows (only the header row, 0 task bars). Expected enabled, so Day0 is not exportable."
+  }
+]
