@@ -23,6 +23,7 @@ const SKIP_PREFIX = [
   ['docs/superpowers/', 'design notes of this repo'],
   ['dist/', 'built skill zips'],
   ['.superpowers/', 'working notes of this repo'],
+  ['docs/provenance/', 'authorship records stay with the author'],
 ];
 const SKIP_EXACT = new Map([
   ['.claude/team/knowledge/ai-misses.jsonl', 'project log'],
