@@ -510,5 +510,17 @@
   "outcome_date": null,
   "note": "BA round 1 Q3: the blue frame marks the colour in use. Build (stms-fe develop, _shutdown-gantt-row-color.scss) frames a swatch only on hover / focus / active; no current-colour marking. ETM-8856 s12-13 and ETM-8859 s14 fail. User checked by hand 2026-11-24 19:43 (3 screenshots: frame only under the mouse): \"ใช่ละ มันไม่กรอบให้ ตอนที่มีสีแล้ว\" -> real app bug. Defect ETM-9219 logged 2026-11-24 (user: \"log defect ได้เลย\").",
   "later_defect": "ETM-9219"
+ },
+ {
+  "id": "F-38",
+  "q": "BA round 6 Q1: Duplicate Plan - is the Platform row highlight of the copy separate from the original? (ETM-8867 s8: original Platform lost FFCCC7 after No Color + Save in the copy, 2 runs, not yet proven with clean pictures)",
+  "ac": "ETM-2696 / DEC-055",
+  "kind": "unclear",
+  "impact": "medium",
+  "raised": "2026-11-25",
+  "story_status": "Deployed to QA",
+  "outcome": "open",
+  "outcome_date": null,
+  "note": "draft defect kept: work/ETM-8034/defect-draft-dup-plan-platform-colour.md (not logged, evidence check not-proven: picture 5 taken after script cleanup)"
  }
 ]

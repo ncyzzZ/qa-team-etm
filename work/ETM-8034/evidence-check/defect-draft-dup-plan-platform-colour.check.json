@@ -1,0 +1,52 @@
+{
+  "id": "defect-draft-dup-plan-platform-colour",
+  "sourceHash": "ec929cbad48e",
+  "overall": "not-proven",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "Shutdown Logic: S26 Row Colour (original), label 'Step 0 AFTER - colours saved', Save disabled. Row 37 'PP' has a pink highlight; row 39 '44443 : Maimai' has blue text; row 40 'QA test breakdown 1 for ETM-7106' has a light green highlight and purple text. The histogram is open (Mechanic row only) and the picture is the full page with a large blank area below.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 2,
+      "sees": "Shutdown Logic: QA Colour Copy, label 'Step 5 the copy has the same colours', Save disabled. Row 37 PP pink, row 39 blue text, row 40 green with purple text, the same as picture 1. The Manpower Resource histogram is open with 15 resources.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 3,
+      "sees": "QA Colour Copy, label 'Step 6 AFTER - copy Platform default', Save enabled (blue). Row 37 PP is selected and shows the light blue selection colour, so its own highlight cannot be read. The label box covers rows 38-39. Row 40 is still green with purple text.",
+      "verdict": "cannot-tell",
+      "pictureOk": true
+    },
+    {
+      "n": 4,
+      "sees": "QA Colour Copy, label 'Step 7 AFTER - Save Success', Save disabled. Row 37 PP and row 38 Mechanical (PM) are grey (default group colour, no pink). Row 39 still has blue text, row 40 still green with purple text. No success toast is visible.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 5,
+      "sees": "Shutdown Logic: S26 Row Colour (original), viewport only (1280x720), no label, Save disabled, histogram not shown. Row 37 PP is grey, no pink. Row 39 '44443 : Maimai' is dark grey/black text, no longer blue. Row 40 has no green highlight and black text (only the Description cell is light blue, as if selected). So all three colours of the original are gone, not only the Platform one.",
+      "verdict": "fail",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "Xray ETM-8867 step 8 (work/ETM-8034/xray-steps-before-palette-2026-11-24.json: 'The original Platform row still has FFCCC7')",
+    "BA answer R3-3 / DEC-055 (ba-answers.md line 35): Duplicate (ETM-2696) copies Highlight and Text Color"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Picture 5: the original lost ALL colours (Work blue text, Work Breakdown green/purple too), while the copy kept them. Draft says only Platform.",
+    "The copy kept Work and WB colours, so 'copy edit leaks into original' does not explain picture 5; a reset or other tester change is possible.",
+    "No picture of the original between Duplicate and step 6; cannot show the change happened at the copy's Save.",
+    "Picture 3: the Platform row is selected, so its No Color state is hidden by the selection colour.",
+    "Picture 5 has no step label and shows no row is checked as 'Platform'; which row is Platform is assumed (row 37 PP).",
+    "BA R3-3 says Duplicate copies colours; it does not state explicitly that the original stays independent. Only Xray step 8 states it.",
+    "Pictures 1-4 show the histogram open, against the team rule to collapse it first; does not change the colours."
+  ],
+  "summary": "รูปที่ 5 แสดงว่า Plan ต้นฉบับเสียสีจริง แต่เสียทั้ง 3 แถว (Platform, Work, Work Breakdown) ขณะที่ Plan copy ยังเก็บสี Work/WB ไว้ จึงยังพิสูจน์ไม่ได้ว่าเกิดจากการแก้ใน Plan copy ตามที่ draft บอก อาจมีสาเหตุอื่น เช่นข้อมูลถูก reset ควร re-prove โดยถ่ายต้นฉบับก่อนและหลัง Save ใน copy"
+}

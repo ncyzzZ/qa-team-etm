@@ -1,0 +1,19 @@
+{
+ "id": "defect-draft-dup-plan-platform-colour",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "Picture 5: the original lost ALL colours (Work blue text, Work Breakdown green/purple too), while the copy kept them. Draft says only Platform.",
+  "The copy kept Work and WB colours, so 'copy edit leaks into original' does not explain picture 5; a reset or other tester change is possible.",
+  "No picture of the original between Duplicate and step 6; cannot show the change happened at the copy's Save.",
+  "Picture 3: the Platform row is selected, so its No Color state is hidden by the selection colour.",
+  "Picture 5 has no step label and shows no row is checked as 'Platform'; which row is Platform is assumed (row 37 PP).",
+  "BA R3-3 says Duplicate copies colours; it does not state explicitly that the original stays independent. Only Xray step 8 states it.",
+  "Pictures 1-4 show the histogram open, against the team rule to collapse it first; does not change the colours."
+ ],
+ "summary": "รูปที่ 5 แสดงว่า Plan ต้นฉบับเสียสีจริง แต่เสียทั้ง 3 แถว (Platform, Work, Work Breakdown) ขณะที่ Plan copy ยังเก็บสี Work/WB ไว้ จึงยังพิสูจน์ไม่ได้ว่าเกิดจากการแก้ใน Plan copy ตามที่ draft บอก อาจมีสาเหตุอื่น เช่นข้อมูลถูก reset ควร re-prove โดยถ่ายต้นฉบับก่อนและหลัง Save ใน copy",
+ "sourceHash": "ec929cbad48e"
+}

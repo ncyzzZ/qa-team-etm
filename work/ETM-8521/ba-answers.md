@@ -35,3 +35,11 @@
 - R3-4 "14b": dropping a cyclic Predecessor silently is correct. ETM-8763 steps 2-5 change: the cell shows "-", no cycle in the dependencies, Save stays enabled, no message.
 - R3-5.1: no rule given ("ไปหาเองสิ"). QA finds the constraint itself (FE source, read only); see triage-2026-11-24.md.
 - R3-5.2 "ถูก": one conflicting Start undoes the whole block (pop-up "Unable to Apply Scheduled Time"). ETM-8736 Expected Result changes.
+
+## 2026-11-25 evening (round 5, typed by the user in chat as BA)
+- R4-1 "a": Work row Manpower = peak concurrent demand is correct (not a plain sum). AC 1.3 wording to be fixed by BA. ETM-8749 step 3 = peak; no defect.
+- R2-8: "ก็น่าจะ 150 ลองใส่เกิน ดู ถ้ามันไม่ได้แปลว่าตัดที่ 150": the Description limit is probably 150; paste more than 150 and if the extra is not kept, the cut is at 150.
+- R2-7 "b": no saved ETM-2615 results; remove the compare-with-previous steps (ETM-8738 steps 5, 8-10; ETM-8762 step 6) and judge on the current build only.
+
+## QA lead decision 2026-11-26 (chat, ETM-10058)
+- Paste of non-adjacent copied cells: the layout is kept (BA R3-1 "a") and the **skipped positions are not pasted over: they keep showing their old values**. Not blank. The earlier "skipped cells = blank" (25 Nov evening, AI miss M-14) was our own reading, not a BA or AC statement. ETM-8737 step 7 and the spec follow this.
