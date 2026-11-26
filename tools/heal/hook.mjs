@@ -26,7 +26,7 @@ try {
     const text = [
       'Self-healing: a Playwright run left locator failures with heal proposals. Start the heal loop now, without waiting to be asked (TEAM.md Phase 7):',
       ...lines,
-      'No question (TEAM.md Phase 7). First, for each needs-live row: call playwright-healer, save its answer as <run>/healer-<id>.md, run node tools/heal/auto-heal.mjs live <run> <id> <run>/healer-<id>.md (guard passed -> ready, else manual). Then once: node tools/auto-next.mjs <KEY> <run> --apply-heals, re-run only the healed tests, then auto-next <KEY> <new run> --check-heals <run> (a heal that still fails is reverted). Log with heal-log.mjs add. Manual rows: tell the user the reason.',
+      'TEAM.md Phase 7. First, for each needs-live row (no question): call playwright-healer, save its answer as <run>/healer-<id>.md, run node tools/heal/auto-heal.mjs live <run> <id> <run>/healer-<id>.md. Then once: node tools/auto-next.mjs <KEY> <run> --apply-heals (applies stms-fe heals only). Live heals go in the ONE verdicts.mjs table question; on the user\'s Apply only: auto-heal.mjs live-ok <run> <ids>, then auto-next <KEY> <run> --apply-heals --heals-only. Re-run only healed tests, then auto-next <KEY> <new run> --check-heals <run> (a heal that still fails is reverted). Log with heal-log.mjs add. Manual rows: tell the user the reason.',
     ].join('\n');
     for (const o of open) { o.data.notified = true; fs.writeFileSync(o.f, JSON.stringify(o.data, null, 2)); }
     console.log(JSON.stringify({ hookSpecificOutput: { hookEventName: event, additionalContext: text } }));

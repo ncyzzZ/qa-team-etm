@@ -93,7 +93,7 @@ test('skip marks open proposals skipped; non-locator rows are ignored', () => {
 });
 
 // Live healer answers (user, chat 2026-11-26: "อยากให้มันแก้เอง"): needs-live -> ready when the healer's one-line diff passes the guard.
-import { fromLive } from './auto-heal.mjs';
+import { fromLive, liveOk } from './auto-heal.mjs';
 const BRYNTUM = "  bar = () => this.page.locator('.b-gantt-task-old');";
 const liveSetup = () => { const s = setup(BRYNTUM, [row({ locator: "locator('.b-gantt-task-old')" })]); propose(s.run, { pwRepo: s.pw, feRepo: s.fe }); return s; };
 const answer = (newLine, extra = '') => `test: ETM-1   page: pages/plan.ts:2   source: live
@@ -112,11 +112,14 @@ diff:
 ${extra}\`\`\`
 `;
 
-test('live: a guarded one-line heal becomes ready and auto-next can apply it', async () => {
+test('live: a guarded one-line heal becomes ready but is applied only after the user\'s Apply (live-ok)', async () => {
   const { pw, run } = liveSetup();
   assert.equal(JSON.parse(fs.readFileSync(path.join(run, 'heal-proposals.json'))).proposals[0].status, 'needs-live');
   const p = fromLive(run, 1, answer("  bar = () => this.page.locator('.b-gantt-task');"), { pwRepo: pw });
-  assert.equal(p.status, 'ready'); assert.equal(p.source, 'live'); assert.equal(p.page, 'pages/plan.ts:2');
+  assert.equal(p.status, 'ready'); assert.equal(p.source, 'live'); assert.equal(p.approved, false); assert.equal(p.page, 'pages/plan.ts:2');
+  assert.equal(apply(run, 'all', { pwRepo: pw }).length, 0);                       // "ไม่อยากให้เสี่ยง": no Apply, no change
+  assert.match(fs.readFileSync(path.join(pw, 'pages', 'plan.ts'), 'utf8'), /b-gantt-task-old/);
+  assert.equal(liveOk(run, '1').length, 1);
   assert.equal(apply(run, '1', { pwRepo: pw }).length, 1);
   assert.match(fs.readFileSync(path.join(pw, 'pages', 'plan.ts'), 'utf8'), /'\.b-gantt-task'\)/);
 });
