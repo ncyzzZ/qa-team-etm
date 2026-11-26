@@ -1,0 +1,17 @@
+{
+ "id": "defect-draft-search-dash",
+ "kind": "defect",
+ "result": "agree-with-warnings",
+ "firstOverall": "defect",
+ "checkerOverall": "defect-proven",
+ "steps": [],
+ "warnings": [
+  "Expected rests on a QA-written Xray step; BA answer is only 'search like other columns', original BA text not saved.",
+  "Not shown whether other columns' Blank '-' option is also unsearchable; if so, dev may call it consistent behaviour.",
+  "Plan A and Plan C pictures look the same; cannot tell from screen whether W11 is empty and W13 is typed '-'.",
+  "BA Q2 (is exactly '-' Blank) has no recorded answer; Plan C case depends on that assumption.",
+  "Pictures show search only; ticking '-' after search (step 15) is not shown, nor is it needed for the claim."
+ ],
+ "summary": "รูปทั้ง 4 ยืนยันว่าตัวเลือก '-' มีอยู่ในรายการ แต่พอพิมพ์ '-' ในช่อง Search ของตัวกรอง Remark กลับขึ้นว่า 'No matches.' ทั้ง Plan A และ Plan C ถือว่าพิสูจน์ defect ได้ แต่ Expected อิงจาก Xray ETM-8656 step 14 ที่ QA เขียนเอง กับคำตอบ BA แบบกว้างๆ ว่า 'ค้นหาแบบเดียวกับคอลัมน์อื่น' ควรเช็กว่าคอลัมน์อ",
+ "sourceHash": "6266bbf434eb"
+}

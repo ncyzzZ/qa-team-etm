@@ -1,35 +1,45 @@
 {
   "id": "defect-draft-search-dash",
-  "sourceHash": "4ca89179efb4",
-  "overall": "not-proven",
+  "sourceHash": "6266bbf434eb",
+  "overall": "defect-proven",
   "steps": [
     {
       "n": 1,
-      "sees": "Full-screen Worklist 'QA-AUTO ETM-8391 set 20261125-1458' (Initial), Total Results 21. Remark filter is open with an empty Search box. The option list shows Select All, '-', '-', 'Test', '-', '- a', all ticked; nothing else is visible (no scrollbar shown, so 'Note 1', '--' and the rest are either scrolled away or cut). A caption says 'ETM-8656 - Step 3: Clear the search box'. In the grid, Remark of W11 = '-', W12 = empty cell, W13 = '-', W14 = '--', W15 = '- a', W21 = '-', W22 = '-'.",
-      "verdict": "cannot-tell",
+      "sees": "Full screen. Worklist 'QA-AUTO ETM-8391 a 20261125-1543' (Initial), event NN TEST QA. Rows 8391A-W01 Remark 'Test', 8391A-W05 'Note 1', 8391A-W11 '-'. Total Results 3. Remark filter panel open, Search box empty; options Select All, '-', 'Note 1', 'Test', all ticked.",
+      "verdict": "pass",
       "pictureOk": true
     },
     {
       "n": 2,
-      "sees": "Same Worklist, full viewport, Total Results 21. Remark filter open with '-' typed in Search. Listed: Select All, '-', '-', '- a', '--', all ticked. Four options under Select All; no option is labelled Blank, and the two '-' options look the same.",
-      "verdict": "cannot-tell",
+      "sees": "Same Plan A worklist, same 3 rows, Total Results 3. Remark filter panel open with '-' typed in its Search box; panel shows 'No matches.' and no options, only Reset and Apply buttons.",
+      "verdict": "fail",
+      "pictureOk": true
+    },
+    {
+      "n": 3,
+      "sees": "Full screen. Worklist 'QA-AUTO ETM-8391 c 20261125-1543' (Initial). Rows 8391C-W01 'Test', 8391C-W05 'Note 1', 8391C-W13 '-'. Total Results 3. Remark filter open, Search empty; options Select All, '-', 'Note 1', 'Test', all ticked.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 4,
+      "sees": "Same Plan C worklist, Total Results 3. Remark filter Search box contains '-'; panel shows 'No matches.' and no options, only Reset and Apply.",
+      "verdict": "fail",
       "pictureOk": true
     }
   ],
   "expectedSources": [
-    "Xray ETM-8656 step 14 (work/ETM-8391/xray-steps-before.json): options '-', '--', '- a', '- ' and ' - ' are listed",
-    "Xray ETM-8656 step 15: ticking only '-' shows W11, W12 and W13"
+    "Xray ETM-8656 step 14 (type '-' in Remark filter search: '-' and other hyphen options are listed)",
+    "Xray ETM-8656 step 15 (tick only '-' shows the Blank works)",
+    "BA answer DEC-040 2026-11-17 (ba-answers.md): Search box behaves like the other columns"
   ],
-  "uiReachable": "no",
+  "uiReachable": "yes",
   "problems": [
-    "Pic 2 shows 4 options where step 14 expects 5; which one is missing (Blank, '- ' or ' - ') cannot be seen: all three render as '-'.",
-    "Draft's claim 'the Blank option is not listed' is not proven: two '-' options are listed after the search.",
-    "W21 '- ' and W22 ' - ' have leading/trailing spaces; team rule treats these as not UI-reachable unless BA confirms the screen keeps them.",
-    "W12 Remark shows an empty cell while W11 (said to be empty) shows '-': W12 may hold a spaces-only value; data list in the brief omits W12.",
-    "Expected comes only from QA's own Xray step; BA Q2 (is '- ', ' - ' Blank?) has no recorded answer in ba-answers.md.",
-    "BA rule recorded is only 'search behaves like the other columns'; no picture shows a reference column searching '-' against a Blank option.",
-    "Pic 1 is captioned ETM-8656 step 3, not the defect step 2, and its option list is cut, so 'Blank first' is not shown.",
-    "Possible second explanation: options with the same trimmed text are merged, not the Blank dropped. Re-prove with only empty and '-' data."
+    "Expected rests on a QA-written Xray step; BA answer is only 'search like other columns', original BA text not saved.",
+    "Not shown whether other columns' Blank '-' option is also unsearchable; if so, dev may call it consistent behaviour.",
+    "Plan A and Plan C pictures look the same; cannot tell from screen whether W11 is empty and W13 is typed '-'.",
+    "BA Q2 (is exactly '-' Blank) has no recorded answer; Plan C case depends on that assumption.",
+    "Pictures show search only; ticking '-' after search (step 15) is not shown, nor is it needed for the claim."
   ],
-  "summary": "ยังพิสูจน์ไม่ได้: หลังพิมพ์ '-' รูปแสดง 4 ตัวเลือก ('-', '-', '- a', '--') จากที่ Xray คาด 5 ตัว แต่ดูไม่ออกว่าตัวที่หายคือ Blank หรือค่า '- '/' - ' (ซึ่งมีช่องว่างหน้า/หลัง อาจกรอกจากหน้าจอไม่ได้) ควรพิสูจน์ใหม่ด้วยข้อมูลแค่ Remark ว่างกับ '-'"
+  "summary": "รูปทั้ง 4 ยืนยันว่าตัวเลือก '-' มีอยู่ในรายการ แต่พอพิมพ์ '-' ในช่อง Search ของตัวกรอง Remark กลับขึ้นว่า 'No matches.' ทั้ง Plan A และ Plan C ถือว่าพิสูจน์ defect ได้ แต่ Expected อิงจาก Xray ETM-8656 step 14 ที่ QA เขียนเอง กับคำตอบ BA แบบกว้างๆ ว่า 'ค้นหาแบบเดียวกับคอลัมน์อื่น' ควรเช็กว่าคอลัมน์อื่นค้นหา '-' เจอไหม"
 }

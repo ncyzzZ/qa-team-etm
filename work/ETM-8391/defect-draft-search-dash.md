@@ -1,22 +1,26 @@
-# [ETM-8391] Remark filter: searching "-" does not list the Blank option "-"
+# [ETM-8391] Remark filter: searching "-" does not find the Blank option "-" (No matches.)
 
-**Environment:** QA (https://stms-qa.apps.pttep.com), role Turnaround Manager, Worklist of a Plan on event NN TEST QA. Found 25 Nov 2026 by Playwright ETM-8656 step 14 (runs 2026-11-25 14:00 and 14:55) and checked by hand on the live page.
+**Environment:** QA (https://stms-qa.apps.pttep.com), role Turnaround Manager, Worklists of two Plans on event NN TEST QA. Found 25 Nov 2026 by Playwright ETM-8656 step 14, re-proved by hand on 25 Nov with data that can be entered on the screen.
 
-In the Worklist, the Remark column filter shows works with an empty Remark as the Blank option `-` (first under Select All). When `-` is typed into the Search box of that filter, the Blank option `-` is not listed, so it cannot be found or ticked through the search. Other options that contain a hyphen are listed.
+In the Worklist, the Remark column filter shows works with a Blank Remark as the option `-`. Typing `-` in the Search box of that filter finds nothing ("No matches."), although `-` is in the option list. This happens both when the Remark is empty and when the Remark is exactly `-` typed by the user.
 
-Data (made through the screen): works with Remark empty (W11), `-` (W13), `--` (W14), `- a` (W15), `- ` (W21), ` - ` (W22).
+Data (both can be entered on the screen):
+- Plan A: W01 Remark `Test`, W05 Remark `Note 1`, W11 Remark empty.
+- Plan C: W01 Remark `Test`, W05 Remark `Note 1`, W13 Remark `-`.
 
 ### Step to Reproduce
-1. Log in as Turnaround Manager and open the Worklist of the Plan.
-2. Open the filter on the Remark column. The list shows `-` (Blank) first under Select All.
+1. Log in as Turnaround Manager and open the Worklist of Plan A (or Plan C).
+2. Open the filter on the Remark column. The options are `-`, `Note 1`, `Test`.
 3. Type `-` in the Search box of the filter.
 
 ### Actual Result
-Only `--`, `- a`, `- ` and ` - ` are listed. The Blank option `-` is not in the list.
+The filter shows "No matches." The option `-` is not found, in Plan A (empty Remark) and in Plan C (Remark `-`).
 
 Pictures:
-- work/ETM-8391/defect5-pics/1-before-full-list-has-dash.png (full list, Blank `-` shown first)
-- work/ETM-8391/defect5-pics/2-search-dash-no-blank-option.png (after typing `-`: no Blank option)
+- work/ETM-8391/defect5-pics/plan-a-1-options-before-search.png (Plan A, options `-`, `Note 1`, `Test`)
+- work/ETM-8391/defect5-pics/plan-a-2-after-typing-dash.png (Plan A, after typing `-`: No matches.)
+- work/ETM-8391/defect5-pics/plan-c-1-options-before-search.png (Plan C, options `-`, `Note 1`, `Test`)
+- work/ETM-8391/defect5-pics/plan-c-2-after-typing-dash.png (Plan C, after typing `-`: No matches.)
 
 ### Expected Result
-The Blank option `-` is listed together with `--`, `- a`, `- ` and ` - ` (Xray ETM-8656 step 14), so the user can tick only `-` from the search (step 15).
+The option `-` is listed after typing `-`, so the user can tick it from the search (Xray ETM-8656 steps 14 and 15: typing `-` lists the hyphen options including `-`; tick only `-` shows only the Blank works).

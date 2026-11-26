@@ -1,13 +1,13 @@
-# Dev brief - [ETM-8391] Remark filter: searching "-" does not list the Blank option "-"
+# Dev brief ETM-10065 - [ETM-8391] Remark filter: typing "-" in the filter search finds nothing (No matches.)
 
 ## 1. What is wrong
-In the Worklist Remark column filter, works with a Blank Remark (empty) are grouped under the option `-`. Typing `-` in the filter's Search box lists the other hyphen values (`--`, `- a`, `- `, ` - `) but not the Blank option `-`. The Blank option cannot be found through the search.
+In the Worklist Remark column filter, works with a Blank Remark (empty, or exactly `-`) are grouped under the option `-`. Typing `-` in the filter's Search box shows "No matches." (with other hyphen values present, e.g. `--`, `- a`, those are listed but `-` is not). The Blank option cannot be found through the search.
 
 ## 2. Where
 - Page: Worklist of a Plan (`/shutdown-event-list/events/<event>/planning/<plan>/worklist/<worklist>`), Remark column filter (AG Grid set filter with the Search box "Search filter values").
 - Environment: QA (https://stms-qa.apps.pttep.com), 25 Nov 2026.
 - Role: Turnaround Manager.
-- Data: works with Remark empty, `-`, `--`, `- a`, `- `, ` - ` (all can be entered on the screen).
+- Data (entered on the screen): Plan A W01 `Test`, W05 `Note 1`, W11 empty; Plan C W01 `Test`, W05 `Note 1`, W13 `-`.
 
 ## 3. Steps to reproduce
 1. Open the Worklist of the Plan.
@@ -17,8 +17,8 @@ In the Worklist Remark column filter, works with a Blank Remark (empty) are grou
 ## 4. Actual vs Expected
 | | Result |
 |---|---|
-| Actual | Only `--`, `- a`, `- `, ` - ` are listed. No Blank option `-`. |
-| Expected | `-` (Blank) is listed too, with `--`, `- a`, `- `, ` - `, and can be ticked alone from the search. |
+| Actual | "No matches." in Plan A (empty Remark) and Plan C (Remark `-`). |
+| Expected | `-` (Blank) is listed, with any other hyphen values, and can be ticked alone from the search. |
 
 ## 5. Rule source
 - Story ETM-8391: Blank Remarks (empty, spaces only, exactly `-`) are shown as one option `-`.

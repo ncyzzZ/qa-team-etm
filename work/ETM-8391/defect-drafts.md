@@ -146,7 +146,7 @@ Xray: no Test step covers this flow. Link to ETM-8662 (reload with Blank) as the
 
 ---
 
-## Defect 5 - Searching "-" in the Remark filter does not list the Blank option "-"
+## Defect 5 - LOGGED ETM-10065 (25 Nov 2026) - Searching "-" in the Remark filter does not find the Blank option "-"
 
 Found: Playwright ETM-8656 step 14 (runs 2026-11-25 14:00 and 14:55), confirmed by hand on the live page 25 Nov; the user agreed it is wrong (chat 25 Nov).
 Data (made through the UI, reachable): a worklist with works whose Remark is empty (W11), `-` (W13), `--` (W14), `- a` (W15), `- ` (W21), ` - ` (W22).
@@ -160,7 +160,7 @@ Expected: the options that contain `-` are listed, including the Blank option `-
 Actual: only `--`, `- a`, `- `, ` - ` are listed; the Blank option `-` is missing, so it cannot be found or ticked through the search (step 15 "tick only -" cannot be done this way).
 Likely cause (for the dev brief): the search matches the stored value (empty) instead of the shown label `-`.
 Evidence: output/runs/2026-11-25_145518_ETM-8391 (ETM-8656 step 14 picture).
-Status: draft, not logged. Logging needs the user's yes.
+Status: LOGGED as ETM-10065 (user "Log ได้เลย", blind check defect-proven after re-proof on Plans A/C with screen-made data). Sub-task ETM-10066. Xray ETM-8874 / ETM-8656 step 14 FAILED + linked.
 
 ## Not drafted (still unclear, may be script)
 

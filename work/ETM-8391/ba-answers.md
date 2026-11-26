@@ -35,3 +35,11 @@ Answer (by design, not a bug):
 - Ticking another column filter (e.g. Job Owner) does **not** change the Remark options: they stay all values of the worklist.
 - DEC-040 "options come from all works" holds except while a search text is active.
 Changes: Xray ETM-8658 step 8 reworded; spec step 8 expects only the Remark of W05.
+
+## Excel-mode column filter - QA LEAD DECISION (26 Nov 2026, answer A, by design)
+Source: the user (QA lead), main chat 26 Nov 2026, relayed by the lead session; question `questions-for-BA-8656-search-select.md`. Code: stms-fe 6fba9abf (`excelMode: 'mac'`, `applyMiniFilterWhileTyping: false`), c6ac6044 (search ignores case).
+- Typing a search ticks the options found; Apply while the search text is there filters to them.
+- Clearing the search before Apply drops the ticks made during the search (by design).
+- Apply is disabled while nothing is ticked (replaces the 24 Nov Q6 answer "nothing ticked = no works").
+- Search ignores letter case.
+Changes: spec 8656 steps 6-7 rewritten; 8649 / 8655 compare "Apply disabled" with the Job Description filter. Xray rewording: `xray-reword-excel-mode.md` (needs the user's yes).
