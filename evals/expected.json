@@ -32,5 +32,7 @@
   {"name": "manual steps: a good steps file matches Xray", "args": ["manual", "ETM-0001", "--root", "evals/manual/manual-good"], "errors": 0, "contains": "2 Test(s)"},
   {"name": "manual steps: heading count differs from the table", "args": ["manual", "ETM-0001", "--root", "evals/manual/manual-count"], "errors": 1, "contains": "ETM-0002: heading says 4 vs 3"},
   {"name": "manual steps: table rows differ from the Xray steps", "args": ["manual", "ETM-0001", "--root", "evals/manual/manual-xray-mismatch"], "errors": 1, "contains": "ETM-0003: Xray has 2 step(s), the table has 1"},
-  {"name": "manual steps: a file with no Test section is an error", "args": ["manual", "ETM-0001", "--root", "evals/manual/manual-no-section"], "errors": 1, "contains": "manual-steps-old.md: no"}
+  {"name": "manual steps: a file with no Test section is an error", "args": ["manual", "ETM-0001", "--root", "evals/manual/manual-no-section"], "errors": 1, "contains": "manual-steps-old.md: no"},
+  {"name": "strength: manualWhy must be ui:/job:/email:/user:; under the 100% target warns (manual AC not counted)", "args": ["strength", "evals/strength-tiers/ac-strength.json"], "errors": 1, "contains": "coverage 50% strong of 2 automatable AC (target 100%): weak AC-2"},
+  {"name": "strength: a High (tier regression) AC whose test title has no @high warns", "args": ["strength", "evals/strength-tiers/ac-strength.json", "--pw", "evals/strength-tiers/pw"], "errors": 1, "contains": "ETM-2 has no @high in its title"}
 ]

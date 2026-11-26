@@ -462,8 +462,19 @@ function selftest() {
 
 // ---------------------------------------------------------------- strength (work/<KEY>/ac-strength.json)
 // Written by the test-reviewer in script-review mode (Phase 5, after G6): does each AC have a running test that asserts it?
-// Shape: {"card":"<KEY>-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["<KEY>-2"],"rating":"strong|weak|blocked|none","why":"..."}]}
+// Shape: {"card":"<KEY>-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["<KEY>-2"],"rating":"strong|weak|blocked|none","why":"...",
+//   "tier":"regression|card|manual" (optional, default card), "manualWhy":"..." (tier manual only)}]}
 const RATINGS = ['strong', 'weak', 'blocked', 'none'];
+const TIERS = ['regression', 'card', 'manual'];   // regression: core flow, every FE build; card: this Story; manual: not E2E (manualWhy)
+export const STRONG_TARGET = 100;   // team standard 2026-11-26: every non-manual AC strong
+const MANUAL_WHY = /^(ui|job|email|user):\s*\S/;   // eye judgement, job run, email, the user's ruling
+/** Spec titles that carry @high, per Xray key (PW_REPO tests/). */
+function highTagged(pwRepo) {
+  const out = new Map();
+  const walk = (d) => { for (const e of fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }) : []) { const f = path.join(d, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules') walk(f); } else if (/\.spec\.ts$/.test(e.name)) for (const m of fs.readFileSync(f, 'utf8').matchAll(/\btest(?:\.\w+)?\(\s*(['"`])((?:ETM-\d+)[^'"`]*)\1/g)) { const k = m[2].match(/^ETM-\d+/)[0]; out.set(k, (out.get(k) || false) || /@high\b/.test(m[2])); } } };
+  walk(path.join(pwRepo, 'tests'));
+  return out;
+}
 function checkStrength() {
   const key = pos[0];
   if (!key) { console.error('Usage: qa-check strength <KEY | path/to/ac-strength.json>'); process.exit(2); }
@@ -482,6 +493,8 @@ function checkStrength() {
     if (!RATINGS.includes(a.rating)) err(`${id}: rating must be one of ${RATINGS.join(', ')}`); else n[a.rating]++;
     if (!a.why || String(a.why).length < 5) err(`${id}: why is missing`);
     if (a.rating !== 'none' && !(a.tests || []).length) err(`${id}: a ${a.rating} rating needs the Xray test keys`);
+    if (a.tier != null && !TIERS.includes(a.tier)) err(`${id}: tier must be one of ${TIERS.join(', ')}`);
+    if (a.tier === 'manual' && !MANUAL_WHY.test(a.manualWhy || '')) err(`${id}: tier manual needs "manualWhy" starting ui: / job: / email: / user: (TEAM.md "How much E2E")`);
   }
   // every AC of analyst.md must be rated (when the analyst file lists AC-n ids)
   const analyst = read(path.join(WORK(j.card || key), 'analyst.md')) || '';
@@ -501,7 +514,23 @@ function checkStrength() {
     else if (runs && ts.length && !bad.length && a.rating !== 'none') warn(`${id}: rated ${a.rating} but all its tests passed in the last run: re-rate it`);
   }
   if (!runs) warn('no run yet (run-results.json missing): 0 AC proven; strong is only a reading of the code');
-  finish('strength', ` | AC proven ${proven}/${total} | strong on paper ${n.strong}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}`);
+  // Coverage target (user, chat 2026-11-26: "ทำเลย", TEAM.md "How much E2E"): of the AC that can be automated
+  // (tier is not manual), at least STRONG_TARGET % strong. Below it: warn with the AC to fix (weak first: they can pass unchecked).
+  const auto = (j.ac || []).filter((a) => a.tier !== 'manual');
+  const target = Number(arg('--target') || STRONG_TARGET);
+  const strongAuto = auto.filter((a) => a.rating === 'strong').length;
+  const pct = auto.length ? Math.round((100 * strongAuto) / auto.length) : 100;
+  if (auto.length && pct < target) {
+    const list = (r) => auto.filter((a) => a.rating === r).map((a) => a.id).join(', ');
+    warn(`coverage ${pct}% strong of ${auto.length} automatable AC (target ${target}%): ${['weak', 'blocked', 'none'].filter((r) => list(r)).map((r) => `${r} ${list(r)}`).join('; ')}. Fix weak first (can pass without checking); manual only for ui: / job: / email: / user:`);
+  }
+  const reg = (j.ac || []).filter((a) => a.tier === 'regression');
+  if (reg.length) {
+    let tags = null; try { const pw = arg('--pw') || resolveRepos().pwRepo; if (fs.existsSync(path.join(pw, 'tests'))) tags = highTagged(pw); } catch { /* no PW_REPO */ }
+    if (tags) for (const a of reg) for (const k of a.tests || []) if (tags.has(k) && !tags.get(k)) warn(`${a.id} is High (tier regression) but ${k} has no @high in its title: add " @high" at the end of the test title`);
+  }
+  if (reg.some((a) => a.rating !== 'strong')) warn(`tier regression AC not strong: ${reg.filter((a) => a.rating !== 'strong').map((a) => a.id).join(', ')}: a regression test must assert the rule`);
+  finish('strength', ` | AC proven ${proven}/${total} | strong ${pct}% of ${auto.length} automatable (target ${target}%) | strong on paper ${n.strong}, weak ${n.weak}, blocked ${n.blocked}, none ${n.none}${reg.length ? ` | regression ${reg.length}` : ''}`);
 }
 
 // ---------------------------------------------------------------- stats (metrics.jsonl)

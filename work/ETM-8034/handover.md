@@ -108,3 +108,25 @@ Spec change for 8859 (steps 22/26) is in ep-etm-fe-qa, not committed.
 - Xray stays FAILED until the BA answers.
 - 12:55 round 7 answered (user in main chat, relayed): Q1=a, Q2=yes, Q3=no. Recorded in ba-answers.md; verdict file: steps 4, 6 pass (decidedBy user), steps 14-15 removed. Xray backup `xray-steps-before-8868-round7-2026-11-26.json`. Xray step edits / step removal / PASSED push wait for the user's yes in this chat.
 - 13:05 user "ทำได้" (chat): Xray ETM-8868 step 4 and 6 expected results changed, steps 14-15 removed (backup `xray-steps-before-8868-round7-2026-11-26.json`); test run in ETM-8875 reset to the new steps; pushed PASSED, 13 steps PASSED with 1 picture each (read back). ETM-8875 now 17 PASSED, 2 TO DO (8860, 8861). Test summary still says "dependency red border" (not changed).
+
+## Update 26 Nov 13:30 - ETM-8861 probe (user "รันได้", nothing saved)
+- Row copy as in Xray (double-click No., Ctrl+C / Ctrl+V): clipboard empty, nothing pasted (FE known defect D4, no Jira defect yet).
+- Cell-range copy (Description..Remark): paste works, target keeps B5F5EC and default text: colour is not copied. Details `probe-8861-20261126/result.md`.
+- Waiting for the user: log a defect for row copy, or change steps 1-2 to a cell-range copy.
+
+## 2026-11-26 13:35 - ETM-8861 copy method changed, paste fails in the script
+- User chose "เปลี่ยนวิธี copy" on the board (13:14). Xray steps 1-2 changed to a cell-range copy (Description, Shift+click Remark, Ctrl+C; click target Description, Ctrl+V). Old text backed up in `xray-steps-before-8861-copy-2026-11-26.json`.
+- Spec `verifyShutdownLogicRowColour.spec.ts` ETM-8861 steps 1-2 changed to match (not committed yet).
+- Runs 13:15 and 13:20 (forced once after waiting for the target selection): step 1 passes (clipboard has the copied cells), step 2 fails: Ctrl+V throws `TypeError: Cannot read properties of undefined (reading 'rowIndex') at setFromStringData` and the target Description stays unchanged. The 13:05 probe with the same moves pasted fine, so the paste is not stable.
+- rerun-guard limit reached: no more script runs today. Next: manual run of 8861 (manual-runner) or a defect for the paste error, user to choose.
+
+## 2026-11-26 13:45 - ETM-8861 manual run (user "รันได้" 13:27)
+- Run: `ep-etm-fe-qa/output/runs/2026-11-26_132716_ETM-8034_manual/` (verdict-ETM-8861.json, step pictures, report). Proposed 11/11 pass; cleanup done (duplicated row deleted, source No Color, saved).
+- Step 2 pasted at the first try with Cmd+V (on Mac Ctrl+C leaves the clipboard empty; Cmd works). No console error.
+- Blind check: steps 3-11 pass; steps 1-2 cannot-tell (Description scrolled off / cut in the pictures; proof only in DOM values). Not confirmed, not pushed.
+- Notes: menu text is "Duplicate Work Breakdown" (Xray step 5 says "Duplicate"); leftover colours on Platform PP#1, Work "Maimai" and its first WB (not from this run); row 64 Mechanic[2] -> [4] between pictures 4 and 5 (not touched by us).
+
+## 2026-11-26 13:55 - ETM-8861 PASSED in ETM-8875
+- User chat "push PASSED เลย" (steps 1-2 proven by DOM values; blind check cannot-tell on the pictures). Pushed with xray-step-push: Xray shows PASSED, 11 steps, 1 picture each.
+- ETM-8875 now: 18 PASSED, 1 TO DO (ETM-8860, row drag step 20 needs a person on the TM plan).
+- Open follow-ups: Xray step 5 text "Duplicate" -> "Duplicate Work Breakdown"; ask BA whether AC 8.2 expects Duration..Remark to paste (FE blanks them on copy); leftover colours on PP#1 / Work "Maimai" / its first WB.

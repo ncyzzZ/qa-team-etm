@@ -1,0 +1,53 @@
+{
+ "id": "ETM-8784",
+ "kind": "manual",
+ "result": "agree-with-warnings",
+ "firstOverall": "cannot-tell",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "needs-human",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "UI reachability of the data not shown",
+  "step 2: picture blank, cut or not full screen",
+  "Step 2 not done as written: file read by script, not opened in Excel; no-repair-message check missing.",
+  "Pictures 2-4 are script renderings, not Excel screenshots; a manual step asked for Excel by eye.",
+  "Step 1: download itself not shown on screen; file name only in the added note and script headers.",
+  "File name pattern <event>_<plan>_Worklist_<date> has no AC or BA source found; Q19 answer text not recorded.",
+  "Expected R/S/T values come from QA's own seeded data design, not a BA-confirmed export format.",
+  "Step 5: screen collapses spaces, so 'Main  Deck' two spaces cannot be confirmed in the cell.",
+  "UI reach unclear: per Q33 'HELIPAD' may convert to Master 'Helipad' when typed; how BATEST8049A was seeded is not stated.",
+  "'Zone A, B' is one value with an inner comma; in the cell it looks like two values."
+ ],
+ "summary": "ไฟล์ export มีค่า R/S/T ตรงตามที่คาด (อ่านด้วย script) และลำดับในเซลล์ Deck ตรงกับไฟล์ แต่ยังไม่ได้เปิดไฟล์ใน Excel เพื่อดูว่าไม่มีข้อความ repair (step 2) จึงสรุปผ่านทั้งเคสไม่ได้ และที่มาของ Expected Result ส่วนใหญ่มาจากเอกสารออกแบบของ QA เอง",
+ "sourceHash": "25072b337bd8"
+}

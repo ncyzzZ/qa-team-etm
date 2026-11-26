@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // What the lead does by itself after a run, without asking (user, chat 2026-11-24: item 2 of "1 2 4 ทำได้เลย").
 //
-//   node tools/auto-next.mjs <KEY> <run folder> [--apply-heals]
+//   node tools/auto-next.mjs <KEY> <run folder> [--apply-heals] [--heals-only]   (--heals-only: after live-ok, applies the approved live heals only)
 //       sorts the run's failures (triage.json, heal-proposals.json):
 //       RERUN  env / flaky failures, once per test per day (work/<KEY>/auto-actions.json stops loops)
 //       HEAL   `ready` heals (the FE repo answered, guard passed): with --apply-heals they are applied now and re-run
@@ -41,7 +41,8 @@ export function sort(key, runDir, { root = ROOT } = {}) {
       else { out.rerun.push(r.key); if (spec) out.specs.add(spec); }
     } else if (r.cause === 'locator') {
       const p = heals.find((h) => h.test === r.key);
-      if (p?.status === 'ready') { out.heal.push(p); if (spec) out.specs.add(spec); }
+      if (p?.status === 'ready' && p.source === 'live' && !p.approved) out.ask.push({ ...r, why: `live heal ${p.old} -> ${p.new}: needs the user's Apply (auto-heal.mjs live-ok)` });
+      else if (p?.status === 'ready') { out.heal.push(p); if (spec) out.specs.add(spec); }
       else if (p?.status === 'needs-live') out.live.push(p);
       else out.ask.push({ ...r, why: p ? `heal ${p.status}: ${p.reason ?? ''}` : 'locator failure without a heal proposal' });
     } else out.ask.push({ ...r, why: r.cause });
@@ -88,11 +89,12 @@ if (isMain) {
     process.exit(0);
   }
   const plan = sort(key, dir);
+  if (rest.includes('--heals-only')) { plan.rerun = []; plan.ask = []; plan.live = []; }   // second call after the user's Apply of live heals: env re-runs were counted already
   const applied = act(key, dir, plan, { applyNow: rest.includes('--apply-heals') });
   const again = [...plan.rerun, ...applied.map((p) => p.test)];
   console.log(`[auto-next] ${key}: rerun ${plan.rerun.length} (env/flaky) | heal ready ${plan.heal.length}${applied.length ? `, applied ${applied.length}` : ''} | live ${plan.live.length} | ask ${plan.ask.length}`);
   if (again.length) console.log(`RERUN: node tools/run-card.mjs ${key} ${plan.specs.join(' ')} -g "${again.join('|')}"`);
   if (applied.length) console.log(`THEN: node tools/auto-next.mjs ${key} <new run folder> --check-heals ${dir}`);
-  if (plan.live.length) console.log(`LIVE: call playwright-healer for ${plan.live.map((p) => `#${p.id} ${p.test}`).join(', ')}`);
+  if (plan.live.length) console.log(`LIVE: ${plan.live.map((p) => `#${p.id} ${p.test}`).join(', ')} still needs-live: the healer step comes BEFORE auto-next (TEAM.md Phase 7): playwright-healer, save as ${dir}/healer-<id>.md, node tools/heal/auto-heal.mjs live ${dir} <id> ${dir}/healer-<id>.md; a live heal is applied only after the user's Apply (auto-heal.mjs live-ok, then --apply-heals --heals-only)`);
   if (plan.ask.length) console.log(`ASK: node tools/verdicts.mjs table ${key} ${dir}   (${plan.ask.map((a) => `${a.key} ${a.why}`).join('; ')})`);
 }

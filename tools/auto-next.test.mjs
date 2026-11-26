@@ -56,3 +56,19 @@ test('heal applied, then reverted when the re-run fails, kept when it passes', (
     assert.ok(fs.readFileSync(path.join(pw, 'pages', 'p.ts'), 'utf8').includes(expectLine));
   }
 });
+
+test('a live heal without the user\'s Apply is never applied by auto-next; after live-ok it is', () => {
+  const { root, pw, run } = fixture();
+  const f = path.join(run, 'heal-proposals.json');
+  const d = JSON.parse(fs.readFileSync(f, 'utf8'));
+  Object.assign(d.proposals[1], { status: 'ready', source: 'live', approved: false, page: 'pages/p.ts:2', oldLine: "const x = page.locator('.old');", newLine: "const x = page.locator('.live');", old: '.old', new: '.live' });
+  d.proposals[0].status = 'skipped';
+  fs.writeFileSync(f, JSON.stringify(d));
+  const p = sort('ETM-9', run, { root });
+  assert.equal(p.heal.length, 0);
+  assert.ok(p.ask.some((a) => a.key === 'ETM-4' && /needs the user's Apply/.test(a.why)));
+  assert.equal(act('ETM-9', run, p, { applyNow: true, root, pwRepo: pw }).length, 0);
+  d.proposals[1].approved = true; fs.writeFileSync(f, JSON.stringify(d));
+  assert.equal(act('ETM-9', run, sort('ETM-9', run, { root }), { applyNow: true, root, pwRepo: pw }).length, 1);
+  assert.match(fs.readFileSync(path.join(pw, 'pages', 'p.ts'), 'utf8'), /'\.live'/);
+});

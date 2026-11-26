@@ -13,3 +13,12 @@ Rows 3-4 are already decided (open defects) and are listed only so the table is 
 ## Update 25 Nov 2026 20:15 (after the user's answer "1=tc 2=app")
 - Row 1 (ETM-8781) = tc: script rewritten to the new wording (`xray-fix-8781-tc008-select-all.md`), PASSED in run 2026-11-25_201353. The Xray step change still needs the user's yes (Jira write).
 - Row 2 (ETM-8783): the "app" suggestion was WRONG. Read-only probe (run 2026-11-25_201250, Plan Case): ticking only `main deck` with no search text sends `main deck` and shows only WK-6b-K (correct). The helper `onlyTick` typed the value in the filter search box, and in the evening build typing there changes the ticks. Helper fixed (no typing); ETM-8783 PASSED in run 2026-11-25_201353. Proposed new verdict: script (needs the user's ok). No defect.
+
+## Decide 26 Nov 2026 14:20 (manual runner run 2026-11-26_133539, Plan "QA ETM-8049 Logic")
+| # | Test | Seen | AI suggests | Why |
+|---|---|---|---|---|
+| 1 | ETM-8787 step 5 | Shutdown Logic Deck input (Gantt cell and Breakdown Setting modal) accepts all 31 characters while typing; on Enter the modal tag is cut to 30, the Gantt cell adds no tag; nothing over 30 is saved. Create Work input stops at 30 (maxlength). | tc (or app) | The limit holds for what is saved. If the BA wants the same block while typing as in Create Work (AC "31st not accepted"), it is app. |
+| 2 | ETM-8789 step 6 | Gantt rows alternate Work / BD1 and Deck is editable on BD1 only, so a 4-line paste into a range also hits the read-only Work rows: lines 2 and 4 lost. Not saved. | tc | Reword: paste into each BD1 Deck cell (one value each), Save, then read the Worklist; re-run steps 6-9. |
+| 3 | ETM-8791 steps 11-14 row B | Only one Import page (ETM-6843): no ETM-1008/1106 template, no `Next`; Download Template = SharePoint Access Denied. Row A passed (error R7/R8, Import disabled, nothing made). Button is `Import`, not `Confirm`. | N/A + tc | Row B no longer exists in the app; Xray wording `Confirm` -> `Import`. |
+| 4 | Pictures | 8787 steps 3, 5-8, 10-11 and 8791 steps 7, 14 cannot be proven by the pictures (toast gone, values cut with "...", no Work No / Y column, empty paste field). | re-take | Re-run those steps for pictures only (same card-owned data writes, reset before). |
+Answer (user, chat 26 Nov 2026): "1=tc 2=tc 3=na 4=retake". Steps file reworded (8787 s5, 8789 s6, 8791 row B N/A + `Import`); Xray wording change waits for its own yes at push time.

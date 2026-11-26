@@ -63,3 +63,8 @@ Spec change (25 Nov 2026): `verifyWorklistWorkingLocationEntry.spec.ts` assert m
 | ETM-8776 (TC-003) row (a) | User accepts N/A but asked for another way; NOT marked N/A yet. | Read-only DB check 26 Nov: all 13 users' layouts on QA were rewritten by the release migration on 20 Nov 2026 06:50 (Deck/X/Y added hidden after Department); every user has Department in the default place. No pre-release layout with Department moved exists, and the UI saves only the new format. |
 | Q35 / ETM-8779 (TC-006) steps 5-6 | QA lead decision 26 Nov 2026 (main chat): the tooltip shows only when the cell text is cut off. | X/Y text that fits its cell shows no tooltip: correct, not a defect. Steps 5-6 are reworded (draft `xray-fix-8779-tc006-tooltip.md`); the Xray write needs the user's yes. |
 | ETM-8776 (TC-003) row (a) | User decision 26 Nov 2026 (main chat): "8776 a = N/A". No DB seed. | Reason: the release migration of 20 Nov 2026 rewrote every saved layout on QA, so no layout saved before the release is left, and the screen saves only the new format. Row (b) is the proof of TC-003. |
+
+## 26 Nov 2026 (user, chat): "1=tc 2=tc 3=na 4=retake", then "Pass, BA question, push"
+- 8787 step 5: the saved Deck value is cut to 30 on Enter; the input may show 31 while typing (Xray step reworded). The Gantt cell editor makes no tag for free text: asked as Q36, 8787 passed through Edit by Modal and paste.
+- 8789 step 6: paste one value per Breakdown row Deck cell (Gantt rows alternate Work / Breakdown); Xray step reworded.
+- 8791 row B (template of ETM-1008 / ETM-1106 with `Next`): N/A, the app has only the ETM-6843 Import Work page. Step 13 button is `Import` (Xray reworded).

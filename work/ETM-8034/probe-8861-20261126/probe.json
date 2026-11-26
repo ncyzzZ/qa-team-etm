@@ -1,0 +1,89 @@
+{
+ "src": {
+  "sequenceNumber": "33",
+  "name": "44443 : Maimai",
+  "durationHours": "Sept\n13\n409.00",
+  "predecessors": "-",
+  "equipmentNumber": "-",
+  "manpowerResources": "CONCOR[14]\nCrane Opt[13]\nECM[15]\n+4",
+  "remark": "-"
+ },
+ "dstBefore": {
+  "sequenceNumber": "68",
+  "name": "TC7125-risnw : QA test work 1 for ETM-7125",
+  "durationHours": "Sept\n13\n12.00",
+  "predecessors": "-",
+  "equipmentNumber": "-",
+  "manpowerResources": "Electrical[1]\nMechanic[2]",
+  "remark": "-"
+ },
+ "selA": {
+  "cells": [
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:name",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:durationHours",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:predecessors",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:equipmentNumber",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:manpowerResources",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:remark",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:_timeAxis3"
+  ],
+  "rows": [
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0"
+  ]
+ },
+ "clipA": "",
+ "selAdst": {
+  "cells": [
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:name",
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:durationHours",
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:predecessors",
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:equipmentNumber",
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:manpowerResources",
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:remark",
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:_timeAxis3"
+  ],
+  "rows": [
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1"
+  ]
+ },
+ "dstAfterA": {
+  "sequenceNumber": "68",
+  "name": "TC7125-risnw : QA test work 1 for ETM-7125",
+  "durationHours": "Sept\n13\n12.00",
+  "predecessors": "-",
+  "equipmentNumber": "-",
+  "manpowerResources": "Electrical[1]\nMechanic[2]",
+  "remark": "-"
+ },
+ "selB": {
+  "cells": [
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:name",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:durationHours",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:predecessors",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:equipmentNumber",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:manpowerResources",
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0:remark"
+  ],
+  "rows": [
+   "platform:PP#1/wh:MECH_PM#0/work:36f49f10-ed5f-4975-b08a-4b914f94189c#0"
+  ]
+ },
+ "clipB": "Maimai\t \t \t \t \t ",
+ "selBdst": {
+  "cells": [
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1:name"
+  ],
+  "rows": [
+   "platform:PP#1/wh:MECH_PM#0/work:a0eeea13-9bc5-4def-bba0-29ad7081fa22#1"
+  ]
+ },
+ "dstAfterB": {
+  "sequenceNumber": "68",
+  "name": "TC7125-risnw : Maimai",
+  "durationHours": "Sept\n13\n12.00",
+  "predecessors": "-",
+  "equipmentNumber": "-",
+  "manpowerResources": "Electrical[1]\nMechanic[2]",
+  "remark": "-"
+ }
+}

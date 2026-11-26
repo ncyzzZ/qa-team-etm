@@ -1,0 +1,35 @@
+{ "id": "ETM-8861", "sourceHash": "93846a844972", "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Shutdown Logic S26 Row Colour, table scrolled right to Manpower Resource and Remark. Row 64 yellow with darker selection shading over the visible cells (Electrical[1], Mechanic[2]; Remark '-'). Row 67 teal (Electrical[1], Mechanic[4]). Description column is scrolled out of view. Nothing on screen shows the copy happened.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 2, "sees": "Scrolled back to Description. Row 64 yellow, orange text 'TC7125-risnw : QA test work 1 for ETM-7125', 12.00. Red frame on row 67 (teal): 'TC7127A-rj74y : QA test work 1 for ETM-71...' (cut off), 12.00, Predecessor '-', Location '-'. Remark not visible. The visible prefix is still the target's own code.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 3, "sees": "Row 67 light teal background, dark default text in all visible columns; row 64 still yellow with orange text.", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Row 64 light yellow background with orange-brown text (No., Description, 12.00, '-'). Row 67 still teal. Hex values are not printed on screen; the colours match the named ones by eye.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "After reload: row 64 has no colour now. Rows 65 and 66 are both 'QA test breakdown 1 for ETM-7125', 12.00, light green with purple text. Row 67 'QA test breakdown 2 for ETM-7125', 8.00, white. Gantt bar of row 64 now reads Electrical[1], Mechanic[4].", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "Row 66 (new) light green background, purple text in No., Description, Duration, Predecessor and Location. Columns right of Equipment are not in view.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "Row 65 (source) light green background with purple text, same as row 66.", "verdict": "pass", "pictureOk": true },
+    { "n": 8, "sees": "Row 67 'QA test breakdown 2 for ETM-7125' white background, dark text; only its Description cell has a light blue cell-selection tint.", "verdict": "pass", "pictureOk": true },
+    { "n": 9, "sees": "Row 66 now white background (Description cell light blue selection tint), text still purple. Row 65 still light green with purple text.", "verdict": "pass", "pictureOk": true },
+    { "n": 10, "sees": "Toast 'Save Success - Save Shutdown Logic Successfully.' bottom right; Save button greyed. Row 65 green/purple, row 66 white/purple. The confirm dialog itself is not shown.", "verdict": "pass", "pictureOk": true },
+    { "n": 11, "sees": "After reload (Save greyed, undo disabled): row 65 light green with purple text; row 66 white background with purple text; row 67 white default.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "AC 8.2 (Copy & Paste copies only cell values, target keeps its own colours) - steps 1-4",
+    "BA answer R3-3 DEC-055 2026-11-24 (Copy & Paste text only; Duplicate copies Highlight and Text Color)",
+    "AC 8.1 (Duplicate of Work Breakdown copies Highlight and Text Color) - steps 5-7",
+    "AC 6 / ba-answers Q6 (no inheritance, each row its own colour) - step 8",
+    "ba-answers Q18 (No Color = empty) - step 9",
+    "AC 5 (colours saved on Save and kept) - steps 10-11",
+    "Xray ETM-8861 steps 1-2 backup xray-steps-before-8861-copy-2026-11-26.json (old row-copy wording)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 2 Expected 'Duration..Remark unchanged' has no source; AC 8.2 says copied cell values are pasted, so this may contradict it.",
+    "Step 1 picture does not show Description column or any copy result; clipboard content is not proven.",
+    "Step 2 target Description is cut off ('...ETM-71...'); cannot see if pasted text landed; Remark not in view.",
+    "Copy method (cell range Shift+click) differs from DEC-055 (double-click No. + Ctrl+C); Xray steps 1-2 must be updated to match.",
+    "Between pic-4 and pic-5 row 64 bar changed Mechanic[2] to Mechanic[4] after a reload without Save; check for other testers or saved paste.",
+    "Hex values (B5F5EC, FFE58F, D9F7BE, 722ED1) cannot be read from pictures; colours only match by eye.",
+    "Step 6 'all columns': columns right of Equipment not shown in the picture."
+  ],
+  "summary": "ส่วน Duplicate (ขั้น 5-11) รูปแสดงตรงตามที่คาดไว้ทั้งหมด ส่วน Copy/Paste (ขั้น 1-2) ยังพิสูจน์จากรูปไม่ได้ เพราะไม่เห็นข้อความที่วางลงในแถวปลายทาง และผลที่คาดไว้ว่า Duration..Remark ไม่เปลี่ยนก็ยังไม่มีที่มา จึงสรุปว่ายังบอกไม่ได้ (cannot-tell)"
+}

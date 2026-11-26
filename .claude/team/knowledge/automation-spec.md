@@ -3,6 +3,10 @@
 Use in Step 7. Every case gets a decision: **Automate** or **Manual only**,
 with a one-line reason.
 
+## How much (TEAM.md "How much E2E")
+
+Team standard: automate almost everything; manual only for `ui:` (a person judges by eye), `job:` (a scheduled job run), `email:` (an email is sent) or `user:` (the user's ruling). Target: every non-manual AC has a `strong` test. Tiers per AC: `regression` = **High** (`@high` at the end of the test title, run by `npm run test:fe:high`, the FE pipeline set): core flow create / save / edit / delete, a calculation or rule the user acts on, TM / JO access, data kept after save / import / paste / undo; about 1-3 per Story. `card`: every other AC, run in the full run; many values = one data-table test. Prefer Yes over Partial: a step a person checks on a picture becomes an assertion whenever the screen gives text, a number, a state or a colour.
+
 ## When to automate
 
 Mark **Automate** when most of these are true:
@@ -16,18 +20,18 @@ Mark **Automate** when most of these are true:
 
 ## When to keep Manual only
 
-Mark **Manual only** when any of these is true:
+Mark **Manual only** only for one of these (team standard, 26 Nov):
 
-- A person must judge it (looks right, easy to understand, feels slow).
-- It needs real data that cannot be prepared or reset safely.
-- It runs once or very rarely.
-- The screen or rule is still changing.
-- It depends on outside systems the test cannot control.
-- Two real people or devices must act at the same time and the setup is too
-  costly to build.
+- `ui:` a person must judge it by eye (looks right, easy to understand, feels slow).
+- `job:` it needs a scheduled or background job run.
+- `email:` it checks an email that is sent.
+- `user:` the user ruled it manual (write the date).
+
+Data that is hard to prepare, a rule that may still change, or two users at once are not reasons for manual:
+the card makes its own data, and two users run as two browser contexts.
 
 Write the reason in simple words, for example: "Automate - runs every release,
-result is always the same" or "Manual only - needs a person to judge if the
+result is always the same" or "Manual only - ui: a person judges if the
 message is easy to understand".
 
 ## Automation spec for each Automate case

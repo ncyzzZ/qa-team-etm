@@ -1,0 +1,86 @@
+{
+ "id": "ETM-8861",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 9,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 10,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 11,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Step 2 Expected 'Duration..Remark unchanged' has no source; AC 8.2 says copied cell values are pasted, so this may contradict it.",
+  "Step 1 picture does not show Description column or any copy result; clipboard content is not proven.",
+  "Step 2 target Description is cut off ('...ETM-71...'); cannot see if pasted text landed; Remark not in view.",
+  "Copy method (cell range Shift+click) differs from DEC-055 (double-click No. + Ctrl+C); Xray steps 1-2 must be updated to match.",
+  "Between pic-4 and pic-5 row 64 bar changed Mechanic[2] to Mechanic[4] after a reload without Save; check for other testers or saved paste.",
+  "Hex values (B5F5EC, FFE58F, D9F7BE, 722ED1) cannot be read from pictures; colours only match by eye.",
+  "Step 6 'all columns': columns right of Equipment not shown in the picture."
+ ],
+ "summary": "ส่วน Duplicate (ขั้น 5-11) รูปแสดงตรงตามที่คาดไว้ทั้งหมด ส่วน Copy/Paste (ขั้น 1-2) ยังพิสูจน์จากรูปไม่ได้ เพราะไม่เห็นข้อความที่วางลงในแถวปลายทาง และผลที่คาดไว้ว่า Duration..Remark ไม่เปลี่ยนก็ยังไม่มีที่มา จึงสรุปว่ายังบอกไม่ได้ (cannot-tell)",
+ "sourceHash": "93846a844972"
+}

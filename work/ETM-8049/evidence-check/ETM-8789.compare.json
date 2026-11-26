@@ -1,0 +1,72 @@
+{
+ "id": "ETM-8789",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 9,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Step 2 picture shows only the success toast while the table loads; four works are proven only by picture 3 (8 rows = 4 works x 2).",
+  "Step 5 clipboard content is shown only in the script caption; picture 6 shows the pasted values, which indirectly proves it.",
+  "No Xray step backup for ETM-8789 found; expected results checked against AC 6.1/6.2 and BA answers only.",
+  "Did not confirm AC 6.1 lists Shutdown Logic paste as an entry point; only Excel import and Edit Work Breakdown seen quoted.",
+  "Step 6 'no new work' rests on last row number 16 in pictures 5 and 6; full Gantt row count not visible."
+ ],
+ "summary": "ภาพยืนยันผลหลักครบ: Import Excel เก็บ Quay Wall/QUAY WALL/quay wall ตามที่พิมพ์ และ main deck เป็น Main Deck, การ paste ใน Shutdown Logic และ Save ให้ผลเดียวกันบน Worklist. ตัดสินเป็น cannot-tell เพราะภาพ step 2 (ตารางยังโหลด) และ step 5 (clipboard) พิสูจน์ด้วยตัวเองไม่ได้ แต่ภาพ 3 และ 6 ยืนยันแทนได",
+ "sourceHash": "3d86612ed550"
+}
