@@ -4,7 +4,7 @@
 // Reads every work/*/run-results.json (written by run-card.mjs) and keeps the newest result per Test key.
 // Used by the Xray MCP server (xray_import_results) and xray-toolkit/xray-import.mjs before any status push.
 //
-//   node tools/push-guard.mjs ETM-8679=PASSED ETM-8680=FAILED     check a planned push; exit 1 when one is blocked
+//   node tools/push-guard.mjs <KEY>-8679=PASSED <KEY>-8680=FAILED     check a planned push; exit 1 when one is blocked
 import { isKey, profile } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OK_FOR_PASS = new Set(['passed', 'flaky']);
 
-/** Newest run result per Test key over all cards: { 'ETM-1': { status, why, run, t, card } }. */
+/** Newest run result per Test key over all cards: { '<KEY>-1': { status, why, run, t, card } }. */
 export function latestResults(root = process.env.PUSH_GUARD_ROOT || ROOT) {
   const work = path.join(root, 'work');
   const best = {};

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// preflight.mjs - before a run: which locators in pages/ did the latest stms-fe changes probably break?
+// preflight.mjs - before a run: which locators in pages/ did the latest FE repo changes probably break?
 //   node tools/heal/preflight.mjs                       all page units
-//   node tools/heal/preflight.mjs --card ETM-1234 <spec>...   only the pages those specs use
-// Brings stms-fe up to date the safe way (fe-git.mjs: pull --ff-only on clean develop, else fetch), diffs each
+//   node tools/heal/preflight.mjs --card <KEY>-1234 <spec>...   only the pages those specs use
+// Brings the FE repo up to date the safe way (fe-git.mjs: pull --ff-only on clean develop, else fetch), diffs each
 // page unit's baseline commit against origin/develop, and lists tokens our pages use that the diff removed.
 // The QA environment may run an older commit, so every row is "probably broken", never "broken".
 import fs from 'node:fs';

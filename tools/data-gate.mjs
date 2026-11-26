@@ -9,7 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
-const STALE_MIN = 120; // same as ep-etm-fe-qa scripts/seed/card/lock.cjs
+const STALE_MIN = 120; // same as the Playwright repo's scripts/seed/card/lock.cjs
 const lockFile = (pwRepo, key) => path.join(pwRepo, 'output', 'seed', `${key}.lock`);
 const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
 

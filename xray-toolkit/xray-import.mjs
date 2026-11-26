@@ -18,8 +18,8 @@ import path from 'node:path';
 const XRAY_BASE      = 'https://xray.cloud.getxray.app/api/v2';
 const TC_KEY_PREFIX  = `${profile().jira.projectKey}-`;
 const EXECUTION_KEY  = `${TC_KEY_PREFIX}8201`;   // the Test Execution issue key
-const EVIDENCE_DIR   = path.resolve('evidence');   // folder holding "ETM-5994 TC-0xx - ..." subfolders
-const TC_KEY_OFFSET  = 6033;                       // TC-002 -> ETM-6035  (6033 + 2)
+const EVIDENCE_DIR   = path.resolve('evidence');   // folder holding "<KEY>-5994 TC-0xx - ..." subfolders
+const TC_KEY_OFFSET  = 6033;                       // TC-002 -> <KEY>-6035  (6033 + 2)
 const DEFAULT_STATUS = 'PASSED';                   // PASSED | FAILED | TODO | EXECUTING
 const MAX_EVIDENCE_PER_TEST = 0;                   // 0 = all screenshots; e.g. 3 = only first 3
 const DRY_RUN        = process.argv.includes('--dry-run');

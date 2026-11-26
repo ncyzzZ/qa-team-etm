@@ -18,7 +18,7 @@ export function hasCreate(pwRepo, key) {
   try { return /^\s*create:\s*true\s*,?\s*$/m.test(fs.readFileSync(dataFile(pwRepo, key), 'utf8')); } catch { return false; }
 }
 
-/** Nothing made by an earlier run is left (same rule as ep-etm-fe-qa scripts/seed/card/ledger.cjs isEmpty). */
+/** Nothing made by an earlier run is left (same rule as the Playwright repo's scripts/seed/card/ledger.cjs isEmpty). */
 export function ledgerEmpty(pwRepo, key) {
   try {
     const l = JSON.parse(fs.readFileSync(ledgerFile(pwRepo, key), 'utf8'));

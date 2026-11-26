@@ -8,12 +8,12 @@ import { profile } from '../profile.mjs';
 export const GENERIC_TOKENS = new Set([
   'active', 'disabled', 'btn', 'button', 'row', 'cell', 'icon', 'title', 'container', 'content', 'header', 'label',
   'text', 'selected', 'hidden', 'show', 'open', 'item', 'input', 'form', 'modal', 'body', 'footer', 'wrapper',
-  // ARIA role values: the UI library (ng-zorro) sets them at runtime, they are not in stms-fe source
+  // ARIA role values: the UI library (ng-zorro) sets them at runtime, they are not in the FE source
   'dialog', 'alert', 'alertdialog', 'tooltip', 'menu', 'menuitem', 'listbox', 'option', 'tab', 'tablist', 'tabpanel',
   'status', 'grid', 'gridcell', 'columnheader', 'combobox', 'checkbox', 'radio', 'switch', 'toast', 'close', 'navigation',
 ]);
 
-/** Classes/tags from a UI library, not from stms-fe templates; the pattern is the profile's ui.libraryTokenRe (ETM: Bryntum b-, AG Grid ag-, ng-zorro ant-/nz-, Quill ql-). */
+/** Classes/tags from a UI library, not from the FE templates; the pattern is the profile's ui.libraryTokenRe (e.g. Bryntum b-, AG Grid ag-, ng-zorro ant-/nz-, Quill ql-). */
 let libRe = null; // memoised per profile source string
 export const isLibraryToken = (value) => {
   const src = profile().ui?.libraryTokenRe || '$^';

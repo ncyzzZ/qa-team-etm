@@ -7,7 +7,7 @@
 //
 // File: .claude/team/work/<KEY>/figma-spec.json, pictures in .claude/team/work/<KEY>/figma/<frame id>.png
 // {
-//   "key": "ETM-1234", "fileKey": "abc", "taken": "2026-11-24", "source": "figma-mcp" | "user-export",
+//   "key": "<KEY>-1234", "fileKey": "abc", "taken": "2026-11-24", "source": "figma-mcp" | "user-export",
 //   "frames": [{ "id": "F1", "nodeId": "1:2", "name": "Remark filter open", "state": "normal", "image": "figma/F1.png",
 //     "elements": [{ "id": "E1", "what": "Apply button", "text": "Apply", "sample": false,
 //                    "css": { "background-color": "#1677FF", "font-size": "14px" } }] }]

@@ -4,7 +4,7 @@
 // an agent; every agent reads only its own rules at start (`show <id>`). A line here is never an approval.
 //
 //   node tools/ai-miss.mjs add --agent <id|all> --kind <kind> --wrong "<what the AI did>" --right "<what is correct>"
-//                              --rule "<what to do from now on>" [--card ETM-1234] [--caught "<how the user saw it>"]
+//                              --rule "<what to do from now on>" [--card <KEY>-1234] [--caught "<how the user saw it>"]
 //   node tools/ai-miss.mjs show <agent-id>     active rules for that agent (plus "all"), one line each
 //   node tools/ai-miss.mjs list [--all]        every active miss, readable (with --all also retired ones)
 //   node tools/ai-miss.mjs stats               count per agent and kind

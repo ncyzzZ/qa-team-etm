@@ -5,6 +5,7 @@
     "fields": {"foundInEnvironment": {"id": "customfield_15852", "options": {"DEV": "16335", "QA": "16336", "UAT": "16337", "PROD": "16338"}}, "epic": {"id": "customfield_10014"}, "sprint": {"id": "customfield_10020"}}
   },
   "repos": { "pwRepoDir": "ep-etm-fe-qa", "feRepoDir": "stms-fe", "feBranch": "develop" },
+  "roles": { "list": ["turnaroundManager", "jobOwner"], "default": "turnaroundManager" },
   "ui": { "libraryTokenRe": "^(b|ag|ant|nz|ql)-" },
   "export": { "skip": [".claude/skills/etm-simop-rules/", "docs/etm-"] },
   "docs": { "rules": "rules.md", "uiMap": "docs/UI_Map_ETM.md", "templates": "docs/ETM_Templates" }

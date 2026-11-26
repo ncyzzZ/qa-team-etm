@@ -5,9 +5,9 @@
 //
 //   | Test | Action | Fact | Source | Module |
 //   |---|---|---|---|---|
-//   | ETM-8653 | filter | Unticking the last option empties the table | docs/modules/shutdown-logic.md | |
-//   | ETM-8654 | search | Table search runs only on Enter | live 2026-11-25 | shutdown-logic.md |
-//   | ETM-8655 | paste | (not checked: VPN off) | Assumption - not checked live | |
+//   | <KEY>-8653 | filter | Unticking the last option empties the table | docs/modules/main-grid.md | |
+//   | <KEY>-8654 | search | Table search runs only on Enter | live 2026-11-25 | main-grid.md |
+//   | <KEY>-8655 | paste | (not checked: VPN off) | Assumption - not checked live | |
 //
 // Source: a docs/modules/<file>.md that exists, `live <YYYY-MM-DD>` (checked on QA, read only), or `Assumption ...` (a warning,
 // and the first suspect when that test fails). Action holds one of the kinds below.

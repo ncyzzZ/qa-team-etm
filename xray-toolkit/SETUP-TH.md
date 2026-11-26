@@ -196,10 +196,10 @@ Get-Content "$env:APPDATA\Claude\logs\mcp-server-xray.log" -Tail 40
 เช็ค xray_auth_check ให้หน่อย
 ```
 ```
-อ่าน test execution ETM-6081 ให้ดูหน่อย
+อ่าน test execution <KEY>-6081 ให้ดูหน่อย
 ```
 ```
-ดึง step ของ ETM-6035 มาให้ดู
+ดึง step ของ <KEY>-6035 มาให้ดู
 ```
 
 ผ่านทั้งสามข้อ = ติดตั้งเสร็จ

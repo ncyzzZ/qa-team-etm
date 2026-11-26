@@ -47,7 +47,7 @@ export function allPassed(results) {
 
 const FILTER = /^(-g|--grep|--grep-invert|--last-failed|--only-changed|--shard|--max-failures|-x)(=|$)/;
 
-/** Move the stms-fe baseline only after a clean exit of an unfiltered run where everything that ran passed. */
+/** Move the FE repo baseline only after a clean exit of an unfiltered run where everything that ran passed. */
 export function canAdvanceBaseline(args, exitCode, results) {
   return exitCode === 0 && !args.some((a) => FILTER.test(a)) && allPassed(results);
 }

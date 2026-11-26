@@ -2,13 +2,13 @@
 // setup.mjs - one-time local setup and health check, the same on Windows and Mac. Zero dependencies.
 //
 //   node tools/setup.mjs                          show the current setup (changes nothing)
-//   node tools/setup.mjs <folder of ep-etm-fe-qa>  check that folder, then save it as PW_REPO in the git-ignored .env
+//   node tools/setup.mjs <Playwright repo folder>  check that folder, then save it as PW_REPO in the git-ignored .env
 //   node tools/setup.mjs --sync-profile           write .claude/active-profile.md (project rules CLAUDE.md imports) from profiles/<name>/
 //   node tools/setup.mjs --new-profile <name> --key <KEY> --site <host> --project-id <n> --board <n> --pw-repo-dir <dir> --fe-repo-dir <dir> [--fe-branch <b>]
 //                                                 make profiles/<name>/ from the template, select it in .env, then run the check
 //
-// Windows example:  node tools/setup.mjs "D:\mac\DocforAi\PTTEP_Auto\ep-etm-fe-qa"
-// Mac example:      node tools/setup.mjs ~/Documents/PTTEP_Auto/ep-etm-fe-qa
+// Windows example:  node tools/setup.mjs "D:\work\my-fe-qa"
+// Mac example:      node tools/setup.mjs ~/Documents/work/my-fe-qa
 // Secrets are never printed: only "set" or "missing".
 import fs from 'node:fs';
 import os from 'node:os';
@@ -103,7 +103,7 @@ need(major >= 18, `Node ${process.versions.node}`, `Node ${process.versions.node
 need(fs.existsSync(repo), 'Playwright repo folder exists', `PW_REPO folder not found: run  node tools/setup.mjs <folder of ${profile().repos.pwRepoDir}>`);
 need(fs.existsSync(path.join(repo, 'node_modules', '@playwright', 'test', 'cli.js')), 'Playwright is installed there', 'run "npm install" inside the Playwright repo');
 if (fs.existsSync(repo)) info(`Playwright repo has its own .env (logins): ${fs.existsSync(path.join(repo, '.env')) ? 'yes' : 'NO, create it before running tests'}`);
-{ // FE repo (stms-fe), used read-only by tools/heal/ (self-healing). A warning, not a hard fail.
+{ // FE repo (FE_REPO), used read-only by tools/heal/ (self-healing). A warning, not a hard fail.
   const feDir = profile().repos.feRepoDir;
   const R2 = resolveRepos();
   const fe = R2.sources.fe.startsWith('default') ? path.resolve(repo, '..', feDir) : R2.feRepo; // repo may be the folder just given as an argument

@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 // rerun-guard.mjs - do not run a test again when nothing that can change its result has changed (user, chat 2026-11-26: "ลดรันซ้ำ",
 // "บล็อก ยกเว้น --force"). Runs 24-26 Nov: 1,243 test runs; 270 failed again with the same error and nothing changed,
-// 177 re-ran a test that had already passed, 72 tests ran 7+ times (ETM-8655: 23).
+// 177 re-ran a test that had already passed, 72 tests ran 7+ times (one test: 23).
 //
 // run-card calls plan() before any data step. Per selected test:
 //   drop  "same result": its last run passed / was skipped / failed with error X, and since that run nothing changed:
-//         not the spec or a file it imports, not the card data file, not stms-fe origin/develop.
+//         not the spec or a file it imports, not the card data file, not the FE repo's origin/develop.
 //   drop  "N failed rounds today": failed in 3 runs today (first run + 2 fixes, TEAM.md fix rounds): offer it as manual.
 //   keep  everything else, and always a failure whose cause was env or flaky (auto-next re-runs those once a day).
 // The lead overrides with `run-card ... --force-rerun "<why>"`; each override goes to work/<KEY>/rerun-log.jsonl.
@@ -88,8 +88,8 @@ export function inputsOf(specAbs, pwRepo, card) {
 export const newestMtime = (files) => Math.max(0, ...files.map((f) => { try { return fs.statSync(f).mtimeMs; } catch { return 0; } }));
 
 /**
- * Decision for one test. @param h history newest first; @param changedAt ms of the newest change to its inputs (files or stms-fe);
- * @param now ms; @param c { hash: the test's hash now, specAt: mtime of the spec, otherAt: newest of the other inputs and stms-fe }.
+ * Decision for one test. @param h history newest first; @param changedAt ms of the newest change to its inputs (files or the FE repo);
+ * @param now ms; @param c { hash: the test's hash now, specAt: mtime of the spec, otherAt: newest of the other inputs and the FE repo }.
  * When the last run saved the test's hash, an edit of the spec counts only if this test's hash changed. Returns { keep, why }.
  */
 export function decide(h, changedAt, now = Date.now(), c = null) {
@@ -109,7 +109,7 @@ export function decide(h, changedAt, now = Date.now(), c = null) {
 
 /**
  * The whole plan for one run-card call.
- * @param o { key, pwRepo, specs: [relative spec paths], grep, now, feChangedAt: ms of the newest stms-fe origin/develop commit or 0 }
+ * @param o { key, pwRepo, specs: [relative spec paths], grep, now, feChangedAt: ms of the newest FE repo origin/develop commit or 0 }
  * @returns { mapped, keep:[key], drop:[{key, why}], keepWhy:{key: why}, hashes:{key: hash}, grep: new -g or null }
  */
 export function plan({ key, pwRepo, specs, grep, now = Date.now(), feChangedAt = 0 }) {
@@ -134,7 +134,7 @@ export function plan({ key, pwRepo, specs, grep, now = Date.now(), feChangedAt =
   return { mapped, keep, drop, keepWhy, hashes, grep: drop.length && keep.length ? keep.map((k) => `${k}\\b`).join('|') : null };
 }
 
-/** ms of the newest commit on stms-fe origin/develop (read only, fe-git allow-list); 0 when it cannot be read. */
+/** ms of the newest commit on the FE repo's origin/develop (read only, fe-git allow-list); 0 when it cannot be read. */
 export async function feChangedAt() {
   try {
     const { resolveRepos } = await import('./heal/config.mjs');

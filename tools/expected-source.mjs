@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 // expected-source.mjs - an Expected Result that decides a defect or a retest must quote its source word for word (gate G-exp).
-// AI misses M-14 / M-16 (ETM-8521): "skipped cells = blank" came from our own summary in story.md and from the wording of
-// OUR question to the BA, not from the AC or the BA's answer; ETM-10058 was reopened as Retest Failed on it. M-15: a manual
+// AI misses M-14 / M-16 (one card): "skipped cells = blank" came from our own summary in story.md and from the wording of
+// OUR question to the BA, not from the AC or the BA's answer; a defect was reopened as Retest Failed on it. M-15: a manual
 // step said "unchanged" for a value the AC says is recalculated.
 //
 // In a defect draft (or a retest note), under "### Expected Result":
 //   Source:
-//   > ETM-2615 AC 1.2: "Ctrl+click selects cells that are not next to each other"
+//   > <KEY>-2615 AC 1.2: "Ctrl+click selects cells that are not next to each other"
 //   > BA 2026-11-25 R3-1: "a"          (a quote must be at least 3 words, or name a BA option with its text in the source)
 //   > QA lead 2026-11-26: "skipped cells keep their old values"
 // Each quote must be found word for word (case, spaces, punctuation ignored) in a SOURCE file:

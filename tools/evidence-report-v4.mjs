@@ -2,8 +2,8 @@
 // For every test (pass or fail): which Jira card, each step, the picture taken at that step,
 // and - when it failed - which step broke and why. Pictures are embedded in the file.
 //
-//   node evidence-report.mjs --input <results.json> [<results2.json> ...]  (several runs -> ONE report; a test run twice keeps the last one) --out <folder> --manifest <tc-manifest.json> --title "..." --story ETM-1234 [--review <review.json>]
-//   review.json: {"ETM-8339": {"steps": {"10": {"verdict": "script|defect|tc-update|ba-pending|accepted", "note": "..."}}}}  (accepted = not counted as a fail)
+//   node evidence-report.mjs --input <results.json> [<results2.json> ...]  (several runs -> ONE report; a test run twice keeps the last one) --out <folder> --manifest <tc-manifest.json> --title "..." --story <KEY>-1234 [--review <review.json>]
+//   review.json: {"<KEY>-8339": {"steps": {"10": {"verdict": "script|defect|tc-update|ba-pending|accepted", "note": "..."}}}}  (accepted = not counted as a fail)
 import { isKey, profile, escapeKey, keysIn, firstKey, browseUrl } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';

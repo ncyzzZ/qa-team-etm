@@ -32,10 +32,10 @@
 
 | ตัวแปร | ค่าตอนนี้ | หมายถึง |
 |---|---|---|
-| `EXECUTION_KEY` | `ETM-6081` | Test Execution ที่จะลงผล |
+| `EXECUTION_KEY` | `<KEY>-6081` | Test Execution ที่จะลงผล |
 | `EVIDENCE_DIR` | `./evidence` | โฟลเดอร์รูป |
-| `TC_KEY_PREFIX` | `ETM-` | prefix ของ project |
-| `TC_KEY_OFFSET` | `6033` | ตัวเลขที่บวกกับเลข TC → TC-002 = ETM-6035 |
+| `TC_KEY_PREFIX` | `<KEY>-` | prefix ของ project |
+| `TC_KEY_OFFSET` | `6033` | ตัวเลขที่บวกกับเลข TC → TC-002 = <KEY>-6035 |
 
 > `TC_KEY_OFFSET` ใช้ได้เฉพาะกรณีที่ test case ถูกสร้างเรียงกันติดกันเป็นชุดเดียว
 > ถ้าเลข Jira ไม่เรียง ต้องเปลี่ยนไปทำ mapping แบบตารางแทน

@@ -1,4 +1,4 @@
-// git.mjs - read-only stms-fe history for regress.mjs, through tools/heal/fe-git.mjs (allow-listed, no writes).
+// git.mjs - read-only FE repo history for regress.mjs, through tools/heal/fe-git.mjs (allow-listed, no writes).
 import path from 'node:path';
 import { git as feGit } from '../heal/fe-git.mjs';
 import { APP_FILES } from '../heal/source-lookup.mjs';
@@ -56,7 +56,7 @@ export function merges(feRepo, since, to, { git = feGit } = {}) {
   return out;
 }
 
-/** tsconfig "paths" of stms-fe at <to> (e.g. @shared/* -> src/app/shared/*). */
+/** tsconfig "paths" of the FE repo at <to> (e.g. @shared/* -> src/app/shared/*). */
 function aliases(feRepo, to, git) {
   try {
     const raw = git(feRepo, ['show', `${to}:tsconfig.json`]).replace(/\/\*[\s\S]*?\*\/|^\s*\/\/.*$/gm, '');

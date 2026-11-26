@@ -83,6 +83,7 @@ export function renderActiveProfile(p) {
     `- \`<KEY>\` in CLAUDE.md, TEAM.md, agents and skills means ${j.projectKey}; \`<KEY>-1234\` is a card of this project. Jira links: https://${j.site}/browse/<card>.`,
     `- Playwright repo folder: \`${r.pwRepoDir}\` (PW_REPO). FE repo folder: \`${r.feRepoDir}\` (FE_REPO), branch \`${r.feBranch || 'develop'}\`.`,
     `- UI map: ${d.uiMap ? `\`${d.uiMap}\`` : '(none)'}. Templates: ${d.templates ? `\`${d.templates}/\`` : '(none)'}.`,
+    ...(p.roles?.list?.length ? [`- Login roles (\`role:\` in manual steps, \`seed.<role>.spec.ts\`): ${p.roles.list.map((x) => `\`${x}\``).join(', ')}; default \`${p.roles.default || p.roles.list[0]}\`.`] : []),
     ...fieldLines(j.fields),
     `- Full profile: \`node tools/profile.mjs show\`.`,
   ].join('\n');

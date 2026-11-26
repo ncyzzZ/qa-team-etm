@@ -23,7 +23,7 @@ export function defectChange(rows) {
   });
 }
 
-/** Rows of the lead's assessment table: `| ETM-1234 title | ... | ~TC | ~Hours | ... |` (TC and Hours = 5th and 6th cells). */
+/** Rows of the lead's assessment table: `| <KEY>-1234 title | ... | ~TC | ~Hours | ... |` (TC and Hours = 5th and 6th cells). */
 export function parseAssessment(md) {
   const out = [];
   for (const line of String(md).split('\n')) {

@@ -2,12 +2,12 @@
 // Each run gets its own result folder and its own report file, so two or more cards can run at
 // the same time without wiping each other's pictures or overwriting each other's report.
 //
-//   node tools/run-card.mjs ETM-7879 etm7879/verifyMobPlanNoColumn.spec -g "ETM-8086|ETM-8087"
-//   node tools/run-card.mjs ETM-7879 <spec> -g "<filter>" --workers=2        (extra flags go to Playwright)
-//   node tools/run-card.mjs ETM-7879 <spec> --force-rerun "<why>"            (run tests the rerun guard drops; logged)
-//   node tools/run-card.mjs ETM-7879 --build-only output/runs/2026-11-17_111500_ETM-7879   (report from a saved folder)
+//   node tools/run-card.mjs <KEY>-7879 <folder>/verifyNoColumn.spec -g "<KEY>-8086|<KEY>-8087"
+//   node tools/run-card.mjs <KEY>-7879 <spec> -g "<filter>" --workers=2        (extra flags go to Playwright)
+//   node tools/run-card.mjs <KEY>-7879 <spec> --force-rerun "<why>"            (run tests the rerun guard drops; logged)
+//   node tools/run-card.mjs <KEY>-7879 --build-only output/runs/2026-11-17_111500_<KEY>-7879   (report from a saved folder)
 //
-// Env: PW_REPO = folder of the Playwright repo ep-etm-fe-qa (or PW_REPO=... in the git-ignored .env at the repo root; default: the folder `ep-etm-fe-qa` next to this repo)
+// Env: PW_REPO = folder of the Playwright repo (profile repos.pwRepoDir; or PW_REPO=... in the git-ignored .env at the repo root; default: that folder next to this repo)
 // Optional: <os tmp>/tc-manifest-<KEY>.json  (same shape as the skill's tc-manifest.json)
 import { spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -28,7 +28,7 @@ import { recordRunResults, sourceOf, rowsFromResults } from './run-results.mjs';
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 const GEN = path.join(HERE, 'evidence-report-v4.mjs');
-// PW_REPO: environment variable, else `PW_REPO=...` in the git-ignored `.env` at the repo root, else ../ep-etm-fe-qa
+// PW_REPO: environment variable, else `PW_REPO=...` in the git-ignored `.env` at the repo root, else ../<repos.pwRepoDir of the profile>
 const { pwRepo: REPO } = resolveRepos();
 const PROFILE = profile();
 
@@ -212,7 +212,7 @@ const child = spawn(process.execPath, pwArgs, {
   env: { ...process.env, PLAYWRIGHT_JSON_OUTPUT_NAME: path.join(resultsDirName, 'results.json') },
 });
 locked.attach(child);
-// Self-healing: sort failures by cause; after an all-green run move the stms-fe baseline of the pages it used.
+// Self-healing: sort failures by cause; after an all-green run move the FE repo baseline of the pages it used.
 function healAfterRun(dir, exitCode) {
   if (!fs.existsSync(path.join(dir, 'results.json'))) return;
   try {

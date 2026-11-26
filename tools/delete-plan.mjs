@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // delete-plan.mjs - one delete question per card (user, chat 2026-11-26: "รวมคำถาม delete").
-// ETM-8049 asked 7 separate delete questions in 2 days (leftover works in its Scratch plan, one or two at a time).
+// One card asked 7 separate delete questions in 2 days (leftover works in its Scratch plan, one or two at a time).
 // Now every delete the card needs goes into a queue; the user answers ONE question that lists them all.
 //
 //   node tools/delete-plan.mjs add <KEY> "<what>" --where "<place>" [--ids a,b] [--permanent] [--shared] [--blocks]

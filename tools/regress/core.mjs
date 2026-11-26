@@ -1,4 +1,4 @@
-// core.mjs - pure rules of regress.mjs: which Playwright specs to re-run for a set of stms-fe merges.
+// core.mjs - pure rules of regress.mjs: which Playwright specs to re-run for a set of FE repo merges.
 // Design: docs/superpowers/specs/2026-11-20-fe-diff-regression-design.md
 //
 // Spec  = { file, folder, keys: string[], tokens: Set<string>, owner: string|null }
@@ -29,7 +29,7 @@ export function cardKeys(branch) {
 const full = (prefix) => (prefix.startsWith('src/') ? prefix : FEATURE + prefix);
 const under = (p, prefix) => p === prefix || p.startsWith(`${prefix.replace(/\/$/, '')}/`);
 
-/** Spec folders of an stms-fe path (longest prefix wins), or null when no prefix maps it. */
+/** Spec folders of an FE repo path (longest prefix wins), or null when no prefix maps it. */
 export function mapPath(map, fePath) {
   let best = null;
   for (const e of map) {

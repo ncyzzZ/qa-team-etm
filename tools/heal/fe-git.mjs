@@ -1,5 +1,5 @@
-// fe-git.mjs - the ONLY way tools/heal/ talks to git in stms-fe (the developers' front-end repo).
-// User rule: never edit anything in stms-fe. Allowed: bring code down (pull --ff-only on a clean develop,
+// fe-git.mjs - the ONLY way tools/heal/ talks to git in the FE repo (the developers' front-end repo).
+// User rule: never edit anything in the FE repo. Allowed: bring code down (pull --ff-only on a clean develop,
 // else fetch) and read. Every command is checked against an exact allow-list before git runs, the repo's
 // own hooks / fsmonitor / pagers / external diff programs are switched off, and git never prompts.
 import fs from 'node:fs';
@@ -101,7 +101,7 @@ function newest(feRepo, branch) {
 const why = (e) => (e.stderr || e.message).trim().split('\n').filter(Boolean).pop()?.slice(0, 160) || 'unknown error';
 
 /**
- * Bring the latest stms-fe code down without editing anything.
+ * Bring the latest FE repo code down without editing anything.
  * @returns {{ mode: 'pull'|'fetch'|'offline', reason: string, newest: { commit: string, date: string }|null }}
  */
 export function updateFe(feRepo, { branch: feBranch = defaultBranch() } = {}) {

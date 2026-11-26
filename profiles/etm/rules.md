@@ -21,6 +21,17 @@ Rules that hold only for ETM (EP-Turnaround Management). They reach Claude throu
 - **Daily Report on a given day** (manual runner, `manual-runner` step 4). The page opens on the report's own day (the first day not frozen yet), not the day the step needs. Go straight to a day with the query `?date=YYYY-MM-DD` on the page URL: `/shutdown-event-list/events/<eventId>/planning/<planId>/daily-report/<dailyReportId>?date=2026-06-04` (keep the other query params; stms-fe `EXECUTION_DATE_QUERY_PARAM`, ETM-5277, the same link the exported PDF's "Link to STMS" uses). The page honours it only for a day you could reach with the arrows: from the event start minus 1 day up to the report's own day (the first unfrozen day). Any other day is silently dropped from the URL and the page shows its own day. So always read the date in the header after loading; if it is not the day asked for, the day is out of reach (a day after the first unfrozen day needs every earlier day frozen) or QA does not have ETM-5277 yet: then use the `<` / `>` arrows next to the date (`>` moves only off a frozen day, both are disabled while the table loads: wait for it after each click) and read the header again. A day you cannot reach = every step `needs-human` with that reason; never freeze a day to get there unless the Test says so and writes are approved.
 - **Daily Report Export** (`manual-runner` step 7): the Daily Report Export gives a **zip of per-day PDFs**: unzip it with `pdf-shot.mjs --unzip` and pick the day the step asks for.
 
+## Knowledge
+
+ETM-only knowledge kept out of the shared files in `.claude/team/knowledge/` (read each with its shared file):
+
+- `profiles/etm/knowledge/lessons-learned.md`: ETM lessons from real defects (L-1, L-2, L-4 to L-8). Designer and reviewer go through them for every ETM Story, with `.claude/team/knowledge/lessons-learned.md`; new ETM-only lessons go there.
+- `profiles/etm/knowledge/playwright-script-rules.md`: ETM script notes (spec layout example, role fixtures `turnaroundManagerPages` / `jobOwnerPages`, locators, known STMS/Bryntum quirks). The automation engineer reads them with `.claude/team/knowledge/playwright-script-rules.md`.
+
+## Account skills
+
+- The older account copies never to invoke in this repo (CLAUDE.md 3b) include the ETM-only one: `anthropic-skills:etm-simop-rules`, besides `anthropic-skills:<name>` of every project skill.
+
 ## Settings
 
 Jira site, key, id, board, repo folders, UI map, templates and Jira field ids come from `profile.json` (printed above this file in `.claude/active-profile.md`); only what `profile.json` does not hold is here.

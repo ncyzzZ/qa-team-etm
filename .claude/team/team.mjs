@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 // Status board commands. Usage:
-//   node .claude/team/team.mjs start ETM-1234
+//   node .claude/team/team.mjs start <KEY>-1234
 //   node .claude/team/team.mjs set <agent> <working|waiting|done|blocked|idle> "text" [--pct 0-100]
 //   node .claude/team/team.mjs ask "question for the user"
 //   node .claude/team/team.mjs ask --approve --options "ใช่ push|แก้ก่อน|ยังก่อน" "needs the user's yes (board or chat)"
-//   node .claude/team/team.mjs ask --approve --gate defect --propose "log ETM-x" --why "..." --if-wrong "..." --undo no --evidence pic.jpg --check work/K/evidence-check/ID.compare.json "question"
+//   node .claude/team/team.mjs ask --approve --gate defect --propose "log <KEY>-x" --why "..." --if-wrong "..." --undo no --evidence pic.jpg --check work/K/evidence-check/ID.compare.json "question"
 //        (decision card; --gate defect|confirm|push makes it mandatory, defect/confirm need a fresh evidence check)
 //   node .claude/team/team.mjs ask --later "a question that can wait"   (queued, not shown; urgent asks also pop a macOS notification)
 //   node .claude/team/team.mjs inbox [--send]   (list the queued questions; --send asks them all as ONE question)
 //   node .claude/team/team.mjs wait [--timeout <seconds>]   (waits for the answer given ON THE BOARD to the open question; prints ANSWER: <text>;
 //        no time limit by default: run it once in the background right after `ask`)
 //   node .claude/team/team.mjs answers   (board answers nobody has read yet and questions still open, all jobs; silent when none; used by the UserPromptSubmit hook)
-//   node .claude/team/team.mjs answered --job ETM-1234 "the user's chat answer"   (the user answered in the chat: closes the question on the board)
+//   node .claude/team/team.mjs answered --job <KEY>-1234 "the user's chat answer"   (the user answered in the chat: closes the question on the board)
 //   node .claude/team/team.mjs clear
 //   node .claude/team/team.mjs log "text"
 //   node .claude/team/team.mjs link "Evidence report" <path or https url> --kind report   (shows in the board's LINKS panel)
-//   node .claude/team/team.mjs close --job ETM-1234     (remove a finished job's tab)
+//   node .claude/team/team.mjs close --job <KEY>-1234     (remove a finished job's tab)
 //   node .claude/team/team.mjs open | stop | status
-// Several cards at once: add --job ETM-1234 to start/set/ask/clear/log so each card has its own tab.
+// Several cards at once: add --job <KEY>-1234 to start/set/ask/clear/log so each card has its own tab.
 import fs from 'node:fs';
 import { profile, escapeKey, syncActiveProfile } from '../../tools/profile.mjs';
 import path from 'node:path';
@@ -255,7 +255,7 @@ if (cmd === 'start') {
   if (!target || !label) { console.error('Usage: link "<label>" <url or file path> [--kind report|tc|defect|other]'); process.exit(1); }
   add({ type: 'link', label, kind, target: /^https?:\/\//i.test(target) ? target : path.resolve(target) });
 } else if (cmd === 'close') {
-  add({ type: 'close' });   // remove a finished job's tab: close --job ETM-1234
+  add({ type: 'close' });   // remove a finished job's tab: close --job <KEY>-1234
 } else if (cmd === 'open') {
   await ensureServer(false);
   openBrowser(URL_BASE);

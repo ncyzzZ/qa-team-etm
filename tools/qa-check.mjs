@@ -263,7 +263,7 @@ function checkSpec() {
     marks.forEach((t, i) => {
       nTests++;
       const body = text.slice(t.at, i + 1 < marks.length ? marks[i + 1].at : text.length);
-      // Security tests (rules file): title `[ETM-1234][Security] ...`, no Xray Test, so the key comes from the bracket
+      // Security tests (rules file): title `[<KEY>-1234][Security] ...`, no Xray Test, so the key comes from the bracket
       const K = escapeKey(profile().jira.projectKey);
       const secKey = (t.title.match(new RegExp(String.raw`^\[(${K}-\d+)\]\[Security\]`)) || [])[1];
       const skipped = /^test\.(skip|fixme)\(/.test(t.whole);
@@ -462,7 +462,7 @@ function selftest() {
 
 // ---------------------------------------------------------------- strength (work/<KEY>/ac-strength.json)
 // Written by the test-reviewer in script-review mode (Phase 5, after G6): does each AC have a running test that asserts it?
-// Shape: {"card":"ETM-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["ETM-2"],"rating":"strong|weak|blocked|none","why":"..."}]}
+// Shape: {"card":"<KEY>-1","date":"YYYY-MM-DD","verdict":"ready|partly|not-ready","ac":[{"id":"AC-1","rule":"...","tests":["<KEY>-2"],"rating":"strong|weak|blocked|none","why":"..."}]}
 const RATINGS = ['strong', 'weak', 'blocked', 'none'];
 function checkStrength() {
   const key = pos[0];

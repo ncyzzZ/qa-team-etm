@@ -55,9 +55,9 @@ read the steps, run them in the browser, then write the results back.
 
 ## 5. Example prompts in Claude Desktop
 
-> เช็ค evidence ที่ `/Users/np/Downloads/DocforAi/PTTEP_Auto/ep-etm-fe-qa/evidence` หน่อย ใช้ prefix ETM- offset 6033
+> เช็ค evidence ที่ `/Users/me/work/my-fe-qa/evidence` หน่อย ใช้ prefix <KEY>- offset 6033
 
-> ผ่านหมดทุกข้อ ใส่ผล PASSED เข้า test execution ETM-6081 พร้อมแนบ evidence ให้ด้วย
+> ผ่านหมดทุกข้อ ใส่ผล PASSED เข้า test execution <KEY>-6081 พร้อมแนบ evidence ให้ด้วย
 
 ## Notes
 

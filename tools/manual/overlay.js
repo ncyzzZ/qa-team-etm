@@ -1,8 +1,8 @@
-// overlay.js - the picture of one manual step, same look as ep-etm-fe-qa utils/xrayEvidence.ts: a red frame around the
+// overlay.js - the picture of one manual step, same look as the Playwright repo's utils/xrayEvidence.ts: a red frame around the
 // checked element(s), a caption box ("<TEST> - Step <n>", What we did, What should be seen), a full-page PNG, then the
 // overlay is removed. The manual runner passes the printed code to the playwright-test MCP code tool (browser_run_code_unsafe).
 //
-//   node tools/manual/overlay.js --test ETM-8692 --n 4 --did "..." --see "..." [--sel "<selector>" ...] --out <run>/evidence/ETM-8692/step-4.png [--failed]
+//   node tools/manual/overlay.js --test <KEY>-8692 --n 4 --did "..." --see "..." [--sel "<selector>" ...] --out <run>/evidence/<KEY>-8692/step-4.png [--failed]
 //
 // --sel takes any Playwright selector: CSS, text=..., or aria-ref=<ref> from the MCP snapshot. Prints the code; the code
 // returns { framed, out } (framed 0 = nothing was framed: say so in the step's reason).
@@ -87,7 +87,7 @@ if (require.main === module) {
   const a = process.argv.slice(2), opt = (n) => (a.includes(n) ? a[a.indexOf(n) + 1] : undefined);
   const selectors = a.flatMap((x, i) => (x === '--sel' ? [a[i + 1]] : []));
   if (!opt('--test') || !opt('--n') || !opt('--out')) {
-    console.error('usage: node tools/manual/overlay.js --test ETM-1 --n 2 --did "..." --see "..." [--sel "<selector>" ...] --out <png> [--failed]');
+    console.error('usage: node tools/manual/overlay.js --test <KEY>-1 --n 2 --did "..." --see "..." [--sel "<selector>" ...] --out <png> [--failed]');
     process.exit(2);
   }
   process.stdout.write(overlayCode({ test: opt('--test'), n: opt('--n'), did: opt('--did'), see: opt('--see'), selectors, out: opt('--out'), failed: a.includes('--failed') }) + '\n');

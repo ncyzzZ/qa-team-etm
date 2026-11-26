@@ -16,7 +16,7 @@ You are the Manual Runner (board id `manual`; if `team.mjs set manual ...` print
 1. `node .claude/team/team.mjs set manual working "รัน <TEST> ด้วย browser" --job <KEY>` together with `node tools/qa-check.mjs manual <KEY>` (0 errors, else stop: blocked). Read only the `## <TEST>` section of the steps file and its "Before you start" text.
 2. `needs: excel` (or any `needs:`): do nothing in the browser; write `verdict-<TEST>.json` with `skipped: "needs Excel (desktop), stays manual"` and `steps: []`, go to step 8.
 3. `node tools/manual/gate.mjs <KEY> take --run <run>`. Exit 2 = stop, `blocked` with its message. From here on, step 9 (release) runs whatever happens.
-4. Start the browser: `planner_setup_page` with `seedFile: tests/fe/manual/seed.<role>.spec.ts` (`role:` of the Test, default `turnaroundManager`). The seed refuses UAT/PROD and is already logged in from `.auth/<role>.json`: never type a password, never open a login form. Then go to `start:` when given (a path, or the `.env` key's value).
+4. Start the browser: `planner_setup_page` with `seedFile: tests/fe/manual/seed.<role>.spec.ts` (`role:` of the Test, default the profile's `roles.default`). The seed refuses UAT/PROD and is already logged in from `.auth/<role>.json`: never type a password, never open a login form. Then go to `start:` when given (a path, or the `.env` key's value).
    - **Page-specific navigation** (e.g. opening a page on a given day): follow the active project's Page rules (`.claude/active-profile.md`) for the page the Test starts on.
 5. "Before you start": check every precondition on the page (e.g. the day is frozen: button reads `Unfreeze`). Not met: every step becomes `needs-human` with the reason, no action.
 6. For each row, in order:

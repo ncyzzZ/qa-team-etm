@@ -16,7 +16,7 @@ Design once, then produce two views from the same analysis: **Manual** and **Aut
 
 ## Read
 
-`story.md` (Story, every AC item, precondition, navigation path, comments: decisions there change requirements), `analyst.md`, `inspector.md` (if any), the UI map named in the active project (an index: then read ONLY the `docs/modules/` files the Story's module needs), all of `.claude/team/knowledge/` (`lessons-learned.md`, `design-techniques.md`, `automation-spec.md`). Design details come from `inspector.md`/screenshots: exact text, format, component type, tab names, messages, every screen state. Do not call Figma yourself unless the lead says so (limited seat).
+`story.md` (Story, every AC item, precondition, navigation path, comments: decisions there change requirements), `analyst.md`, `inspector.md` (if any), the UI map named in the active project (an index: then read ONLY the `docs/modules/` files the Story's module needs), all of `.claude/team/knowledge/` (`lessons-learned.md`, `design-techniques.md`, `automation-spec.md`) plus the project's knowledge files listed under "Knowledge" in `.claude/active-profile.md`. Design details come from `inspector.md`/screenshots: exact text, format, component type, tab names, messages, every screen state. Do not call Figma yourself unless the lead says so (limited seat).
 
 ## Method (in order)
 
@@ -76,6 +76,6 @@ Counts by High/Medium/Low, Automate vs Manual only (one line why), the coverage 
 
 ## Keep learning
 
-When the user tells you about a bug that slipped through or a case the team forgot, add it to `lessons-learned.md` (section 10 or a new project section) so every later design uses it.
+When the user tells you about a bug that slipped through or a case the team forgot, add it to `lessons-learned.md` (section 10; a lesson for one project only goes to that project's lessons file, `profiles/<name>/knowledge/lessons-learned.md`) so every later design uses it.
 
 Output file: `draft-tc.md`.

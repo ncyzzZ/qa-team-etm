@@ -1,4 +1,4 @@
-// config.mjs - where the Playwright repo (PW_REPO) and the developers' front-end repo (FE_REPO, stms-fe) are.
+// config.mjs - where the Playwright repo (PW_REPO) and the developers' front-end repo (FE_REPO) are.
 // Same lookup order as run-card.mjs: environment variable, else NAME= in the git-ignored .env, else a default.
 import fs from 'node:fs';
 import path from 'node:path';

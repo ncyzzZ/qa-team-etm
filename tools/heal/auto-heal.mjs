@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // auto-heal.mjs - runs by itself after every run-card run (and the hook reminds the lead): for each `locator`
-// failure in triage.json, look the locator up in stms-fe, write a ready diff when the source answers, check it
+// failure in triage.json, look the locator up in the FE repo, write a ready diff when the source answers, check it
 // with the heal guard, and list what still needs the live healer or a person. Nothing is applied here without
 // the user's Apply.
 //   node tools/heal/auto-heal.mjs propose <run folder>            writes heal-proposals.json / .md (+ heal-<n>.diff)

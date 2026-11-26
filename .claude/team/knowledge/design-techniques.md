@@ -42,7 +42,7 @@ When an action can make the page "changed" (enables Save or Update, or shows an
 - Save (or Update) is disabled when a page, drawer or panel opens, and stays
   disabled until a value really changes, unless the Story says otherwise. A
   case never expects Save enabled right after opening, and never only "writes
-  the Save state down": it states disabled (defect exam ETM-6886, 2026-11-25:
+  the Save state down": it states disabled (defect exam, 2026-11-25:
   Edit Data opened with Save enabled; the draft expected it).
 
 ## Leaving and coming back
@@ -116,14 +116,14 @@ question.
 - Someone else changes or deletes the object while it is open (second tab or
   user): the next Save, Export or edit shows the proper message. Do it for the
   object and for each parent it belongs to (a graph, its plan, its event; a
-  row, its table's page): each gives its own message (defect exam ETM-6806,
+  row, its table's page): each gives its own message (defect exam,
   2026-11-25: only the graph was deleted in the case; the bug was the plan).
 - Strange input in EVERY free-text field the Story adds or shows (names,
   codes and numbers such as WIN#, not only Remark): special characters
   (\ / : * ? " < > | & # % '), leading and trailing spaces, a very long
   value, Thai and emoji, a value that looks like HTML. Check the field, the
   saved value after reload, and every place it is shown or exported. One
-  field tested does not prove the others (defect exam ETM-7860, 2026-11-25:
+  field tested does not prove the others (defect exam, 2026-11-25:
   special characters were tried in Remark and Department only, the bug was in
   WIN#). Use only values the screen lets the user type.
 
@@ -148,18 +148,18 @@ rule of the Story:
   report or an export): after each change of that value, open EVERY screen
   that shows it and check the exact text there, not only the screen where it
   was changed. A rule tested on one screen does not prove the others (defect
-  exam ETM-8370, 2026-11-25: the Status was right on the list but wrong on
+  exam, 2026-11-25: the Status was right on the list but wrong on
   Edit Plan, and no case opened Edit Plan to read it).
 - A column or field with a fixed list of values (Yes/No, a status, a type, a
   priority) that is shown somewhere else (an export, a report, a detail page):
   set it to each value of the list, or at least to every non-default value,
   then read it in every place it is shown. A row that is empty or left at the
-  default does not prove the mapping (defect exam ETM-6890, 2026-11-25: Hot
+  default does not prove the mapping (defect exam, 2026-11-25: Hot
   Bed was read only on an empty row; the export wrote `N` instead of `No`).
 - A case that checks an error or validation message for one cell or field
   also says that no other message is shown for that cell (the number of
   messages, or "only this message"). "The message is shown" passes when two
-  or three messages pile up on the same cell (defect exam ETM-7450 / ETM-7456,
+  or three messages pile up on the same cell (defect exams,
   2026-11-25: a blank mandatory cell and text in a number field each got
   extra messages).
 - An export, a PDF, a report or a second screen built from a source screen:
@@ -167,11 +167,10 @@ rule of the Story:
   empty) in the same order as the source shows them, with data large enough
   to cross any page or batch size (several pages of a PDF, thousands of
   rows in a file). Checking one row, or the hierarchy only, passes when rows
-  are missing, empty or re-ordered (defect exams ETM-7272 / ETM-7352 /
-  ETM-7281, 2026-11-25: Work order differed from the page; a PDF page had no
+  are missing, empty or re-ordered (defect exams, 2026-11-25: Work order differed from the page; a PDF page had no
   task rows; dropdowns stopped after row 3,000).
 - A control or behaviour shared by several pages (the selected cell of an
   editable table, a date picker, a filter panel, a toolbar button): put the
   same action on each page in one case and check it looks and acts the same
-  on each (defect exam ETM-7294, 2026-11-25: the selected-cell style differed
+  on each (defect exam, 2026-11-25: the selected-cell style differed
   on four pages).

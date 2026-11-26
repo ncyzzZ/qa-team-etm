@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// source-lookup.mjs - for one broken locator token, look in stms-fe (read only, through fe-git.mjs):
+// source-lookup.mjs - for one broken locator token, look in the FE repo (read only, through fe-git.mjs):
 //   is it still in the code at <ref>? if not, which commit removed it, and what replaced it on the same line?
 //   node tools/heal/source-lookup.mjs "<selector or text>" [--kind class|id|attr|text|role-name|placeholder|label|tag] [--ref origin/develop]
 import path from 'node:path';
@@ -10,10 +10,10 @@ import { resolveRepos } from './config.mjs';
 import { profile } from '../profile.mjs';
 
 const TEXTISH = new Set(['text', 'role-name', 'label']);
-/** stms-fe files that make up the running app (pathspecs). .spec.ts files are dropped after the grep. */
+/** FE repo files that make up the running app (pathspecs). .spec.ts files are dropped after the grep. */
 export const APP_FILES = [':(glob)src/**/*.html', ':(glob)src/**/*.ts', ':(glob)src/**/*.scss'];
 
-/** Tokens of one kind found in one line of stms-fe source (.html or .ts). */
+/** Tokens of one kind found in one line of FE repo source (.html or .ts). */
 export function feTokens(line, kind) {
   const out = new Set();
   const add = (v) => { v = (v || '').trim(); if (v) out.add(v); };
@@ -41,7 +41,7 @@ export function feTokens(line, kind) {
 
 const esc = (v) => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 /**
- * Does this stms-fe line (html, ts or scss) use the token? Wider than feTokens: a class or tag anywhere as a whole
+ * Does this FE repo line (html, ts or scss) use the token? Wider than feTokens: a class or tag anywhere as a whole
  * word (scss rules, ...ClassName attributes, selector: in a decorator), a text alone on its line.
  */
 export function mentionsToken(line, kind, value) {

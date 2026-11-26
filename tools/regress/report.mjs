@@ -53,7 +53,7 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
 }
 
 /**
- * node tools/regress.mjs [--since <commit> | --since-days <n>] [--to <ref>] [--card ETM-1234] [--no-update]
+ * node tools/regress.mjs [--since <commit> | --since-days <n>] [--to <ref>] [--card <KEY>-1234] [--no-update]
  * node tools/regress.mjs mark [<commit>]
  */
 export async function main(args, d) {

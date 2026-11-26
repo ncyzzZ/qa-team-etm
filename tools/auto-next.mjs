@@ -4,7 +4,7 @@
 //   node tools/auto-next.mjs <KEY> <run folder> [--apply-heals]
 //       sorts the run's failures (triage.json, heal-proposals.json):
 //       RERUN  env / flaky failures, once per test per day (work/<KEY>/auto-actions.json stops loops)
-//       HEAL   `ready` heals (stms-fe answered, guard passed): with --apply-heals they are applied now and re-run
+//       HEAL   `ready` heals (the FE repo answered, guard passed): with --apply-heals they are applied now and re-run
 //       LIVE   `needs-live` heals: the lead calls playwright-healer (TEAM.md Phase 7)
 //       ASK    everything else: one table from tools/verdicts.mjs
 //       prints the run-card command for RERUN + HEAL (a re-run: run-policy says auto, reason C)

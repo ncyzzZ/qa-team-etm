@@ -1,4 +1,4 @@
-# Run, report and Xray notes (from the ETM-7902 run, Nov 2026)
+# Run, report and Xray notes (from a real card run, Nov 2026)
 
 Only what `TEAM.md` and the skills do not already say. Read by automator, reporter and logger.
 
@@ -39,7 +39,7 @@ Dry-run first, upload only the TCs that passed, then open the Test Execution and
 ## Report: spec notes and review verdicts (generator v4.5)
 
 - Annotations from the table above show on each test as "หมายเหตุจากสคริปต์".
-- Per-step verdicts: write `output/runs/<run folder>/review-<KEY>.json` (in the Playwright repo) (`{"ETM-8339": {"steps": {"10": {"verdict": "script", "note": "..."}}}}`). `tools/run-card.mjs` passes it to the generator when the file exists; by hand use `--review <file>`.
+- Per-step verdicts: write `output/runs/<run folder>/review-<KEY>.json` (in the Playwright repo) (`{"<KEY>-8339": {"steps": {"10": {"verdict": "script", "note": "..."}}}}`). `tools/run-card.mjs` passes it to the generator when the file exists; by hand use `--review <file>`.
 - `verdict`: `accepted` (not counted as a fail, shown yellow, test badge "PASS (ยอมรับ)") / `defect` / `tc-update` / `script` / `ba-pending`.
 - Only the user decides a verdict (TEAM.md Phase 7). Rebuild with `node tools/run-card.mjs <KEY> --build-only <folder>`.
 - The run-card line "N pass / M fail" counts the raw Playwright result, so an accepted test still counts as a fail there; the HTML report counts it as pass.

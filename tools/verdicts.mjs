@@ -3,9 +3,9 @@
 // (user, chat 2026-11-24: "อนุญาต 1-3", item 3). The suggestion is never the verdict: only the user's answer is.
 //
 //   node tools/verdicts.mjs table  <KEY> [<run folder>] [--no-build]   write work/<KEY>/verdict-table.md from the run's triage.json,
-//                                                          with what stms-fe merged since each test last passed (tools/build-change.mjs)
+//                                                          with what the FE repo merged since each test last passed (tools/build-change.mjs)
 //                                                          (default: newest output/runs/*_<KEY> in PW_REPO) and print it
-//   node tools/verdicts.mjs record <KEY> ETM-1=script ETM-2=app[:ETM-9229] ... --source chat|board --evidence "<reply>"
+//   node tools/verdicts.mjs record <KEY> <KEY>-1=script <KEY>-2=app[:<KEY>-9229] ... --source chat|board --evidence "<reply>"
 //                                                          save the user's answers to work/<KEY>/verdicts.json
 // Verdicts: script (script bug), tc (test wording wrong), app (real app bug; logging the defect still needs its own yes),
 // env (environment / VPN / login), flaky (passes on a re-run).
@@ -36,7 +36,7 @@ export function suggest(row, findings = []) {
 }
 
 /**
- * @param annotate optional (key, runDir, rowsWithSuggestion) => rows: tools/build-change.mjs adds `since` (what stms-fe merged
+ * @param annotate optional (key, runDir, rowsWithSuggestion) => rows: tools/build-change.mjs adds `since` (what the FE repo merged
  *   since the test last passed or failed differently) and may turn the suggestion into `app?` for a build change.
  */
 export async function table(key, runDir, root = ROOT, annotate = null) {

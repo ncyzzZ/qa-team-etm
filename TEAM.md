@@ -54,7 +54,7 @@ At the end the lead sends ONE closing summary in Thai: card, number of cases, Xr
 
 ## Sources of truth (never work from memory; if one is missing, say so)
 
-- Skills (project skills in `.claude/skills/`): `etm-nn-fullqa` (Jira/Xray rules, + workflow doc `docs/etm-qa-workflow.md`), `etm-evidence-report` (report code and run wrapper), `log-defect-jira-etm` (every defect, bug, retest), `etm-simop-rules` (project-only page rules; load it only for the Stories the active project's Page rules name), `resolve-tested-by` (Phase 8 closeout), and on request only: `etm-xray-delete-test-executions` (permanent delete, never pre-approved), `test-field-limit` (character limit of a field, drives the browser)
+- Skills (project skills in `.claude/skills/`): `etm-nn-fullqa` (Jira/Xray rules, + workflow doc `docs/etm-qa-workflow.md`), `etm-evidence-report` (report code and run wrapper), `log-defect-jira-etm` (every defect, bug, retest), a project-only skill when the active project's Page rules name one (load it only for the Stories they name), `resolve-tested-by` (Phase 8 closeout), and on request only: `etm-xray-delete-test-executions` (permanent delete, never pre-approved), `test-field-limit` (character limit of a field, drives the browser)
 - the UI map named in the active project (index of the verified UI facts; the facts are in `docs/modules/`, read only the files the Story's module needs), the templates folder named in the active project, the active project's rules (`.claude/active-profile.md`), `.claude/team/knowledge/*` (incl. `playwright-script-rules.md`, `run-and-xray-notes.md`: machine setup, annotations, Xray 429), the project `CLAUDE.md`
 - Skills may mention tools from another app (`device_bash`, `SendUserFile`). In Claude Code use Bash, Read, Write and tell the user if a step cannot be done.
 
@@ -222,7 +222,7 @@ See `.claude/team/agent-protocol.md` (designer, reviewer and the lead when it re
 
 ## Lessons
 
-`.claude/team/knowledge/lessons-learned.md`: 9 base categories plus lessons added in section 10. Designer and reviewer (or the lead) go through all of them for every Story. When the user tells a new bug story or a case the team forgot, add it there with the card key and date, and if a check could have caught it add a fixture to `evals/` (and its line to `evals/expected.json`) so it is caught next time. Remove a lesson that turns out to be wrong.
+`.claude/team/knowledge/lessons-learned.md`: 9 base categories plus lessons added in section 10, and the active project's own lessons file (listed under "Knowledge" in its rules). Designer and reviewer (or the lead) go through all of them for every Story. When the user tells a new bug story or a case the team forgot, add it there with the card key and date, and if a check could have caught it add a fixture to `evals/` (and its line to `evals/expected.json`) so it is caught next time. Remove a lesson that turns out to be wrong.
 
 ## AI misses (when the user catches an agent being wrong)
 

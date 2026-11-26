@@ -1,7 +1,7 @@
 // steps.mjs - the manual steps file (work/<KEY>/manual-steps-*.md) the manual runner works from.
 // Shape (spec docs/superpowers/specs/2026-11-20-manual-runner-design.md, section 2):
-//   ## ETM-<n> - <title> (<N> steps)
-//   role: jobOwner            (optional, default turnaroundManager)
+//   ## <KEY>-<n> - <title> (<N> steps)
+//   role: <role>              (optional; roles and the default role come from the profile's `roles`)
 //   writes data: yes          (optional)
 //   needs: excel              (optional, the agent skips the Test)
 //   start: <URL path or .env key> (optional)
@@ -9,7 +9,9 @@
 
 import { profile, escapeKey } from '../profile.mjs';
 
-export const ROLES = ['turnaroundManager', 'jobOwner'];
+/** Login roles of the active project (profile.json `roles.list`, default `roles.default`, else the first). */
+export const roles = () => profile().roles?.list || [];
+export const defaultRole = () => profile().roles?.default || roles()[0] || '';
 const headRe = () => new RegExp(String.raw`^##\s+(${escapeKey(profile().jira.projectKey)}-\d+)\s+-\s+(.*?)\s*\((\d+)\s+steps?\)\s*$`, 'i');
 const TABLE_HEAD = /^\|\s*#\s*\|\s*Do\s*\|\s*Expected\s*\|\s*Picture\s*\|\s*$/i;
 
@@ -18,17 +20,17 @@ const cells = (line) => line.trim().replace(/^\|/, '').replace(/\|$/, '').split(
 /**
  * @typedef {{ n: number, do: string, expected: string, picture: string }} ManualStep
  * @typedef {{ key: string, title: string, role: string, writesData: boolean, needs: string[], start: string|null, declared: number, hasTable: boolean, steps: ManualStep[] }} ManualTest
- * `role` is the raw value of the file (checkManual flags one that is not in ROLES).
+ * `role` is the raw value of the file (checkManual flags one that is not in the profile's roles).
  * @param {string} md
  * @returns {ManualTest[]}
  */
 export function parseManualSteps(md) {
-  const tests = [], HEAD = headRe();
+  const tests = [], HEAD = headRe(), ROLE = defaultRole();
   let cur = null, state = 'none'; // none | options | table | done
   for (const line of md.replace(/\r\n/g, '\n').split('\n')) {
     const h = line.match(HEAD);
     if (h) {
-      cur = { key: h[1].toUpperCase(), title: h[2], role: 'turnaroundManager', writesData: false, needs: [], start: null, declared: Number(h[3]), hasTable: false, steps: [] };
+      cur = { key: h[1].toUpperCase(), title: h[2], role: ROLE, writesData: false, needs: [], start: null, declared: Number(h[3]), hasTable: false, steps: [] };
       tests.push(cur); state = 'options'; continue;
     }
     if (/^#{1,2}\s/.test(line)) { cur = null; state = 'none'; continue; }
@@ -78,7 +80,8 @@ export function xrayStepCounts(md) {
 export function checkManual(tests, xraySteps = {}) {
   const errors = [];
   for (const t of tests) {
-    if (!ROLES.includes(t.role)) errors.push(`${t.key}: unknown role "${t.role}" (use ${ROLES.join(' or ')})`);
+    const list = roles();
+    if (list.length && !list.includes(t.role)) errors.push(`${t.key}: unknown role "${t.role}" (use ${list.join(' or ')})`);
     if (!t.hasTable) { errors.push(`${t.key}: no step table with the header | # | Do | Expected | Picture |`); continue; }
     if (t.declared !== t.steps.length) errors.push(`${t.key}: heading says ${t.declared} vs ${t.steps.length} rows in the table`);
     const x = xraySteps[t.key];

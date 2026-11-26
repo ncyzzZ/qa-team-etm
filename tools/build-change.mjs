@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // build-change.mjs - "it passed before, then dev merged something": put that fact next to each failure in the verdict table.
-// ETM-8034 (25 Nov): 5 tests broke at the same step after stms-fe 075acc98; the table said "script, heal first" for all 5 and
-// the lead found the build change by hand. Read only: reads run folders in PW_REPO and git history of stms-fe (fe-git allow-list).
+// Why: on one card 5 tests broke at the same step after one FE merge; the table said "script, heal first" for all 5 and
+// the lead found the build change by hand. Read only: reads run folders in PW_REPO and git history of the FE repo (fe-git allow-list).
 //
 //   node tools/build-change.mjs <KEY> [<run folder>]     print what changed since each failing test last passed
 //
@@ -47,7 +47,7 @@ export function lastPassBefore(runsDir, card, testKey, failRun, nowError = '') {
  * Adds `since` to each triage row: { lastPass, merges: [{commit, branch, keys}] , note }.
  * @param rows triage rows [{key,...}]
  * @param o.lastPass (testKey, nowError) => {run,end,how}|null
- * @param o.feMerges (sinceIso, untilIso) => [{commit, branch, keys}]  (throws when stms-fe cannot be read)
+ * @param o.feMerges (sinceIso, untilIso) => [{commit, branch, keys}]  (throws when the FE repo cannot be read)
  * @param o.failStart ISO start of the failing run
  * @param o.scriptChanged (spec file from triage, sinceIso) => true when the spec was edited after that time (commit or uncommitted)
  */
@@ -71,7 +71,7 @@ const short = (m) => `${m.commit.slice(0, 8)} ${String(m.branch).slice(0, 60)}`;
 
 /**
  * Overrides the cause-based suggestion with `app?` when the failure looks like a build change:
- * the test passed (or failed differently) before, stms-fe changed since, no ready heal, and either 2+ tests broke the same
+ * the test passed (or failed differently) before, the FE repo changed since, no ready heal, and either 2+ tests broke the same
  * way or a merge since names this card. When the spec itself changed since and no merge names the card, nothing is upgraded. Returns rows with suggest/why (and buildChange: true) updated.
  */
 export function buildSuggest(rows, { card, readyHeals = new Set() } = {}) {
