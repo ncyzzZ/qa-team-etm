@@ -1,0 +1,15 @@
+{ "id": "ETM-8657", "sourceHash": "8bbfc956f02e", "overall": "pass",
+  "steps": [
+    { "n": 1, "sees": "Worklist QA-AUTO ETM-8391 set 20261126-1118 (Initial), Total Results 21. Filter panel open under the Job Description column: search box 'Search', Select All ticked, W01-W05 ticked (blue checkboxes), Reset and Apply buttons. Full screen.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same worklist, table scrolled right to Remark column. Filter panel open under Remark: search box 'Search', Select All ticked, options '-', '-', 'Test', '-', '- a' all ticked, Reset and Apply buttons. Panel fully on screen.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Same screen as picture 2 (Remark panel open). Compared by eye with picture 1: same search box with magnifier, same blue checkbox style, same row spacing, same font, same Reset/Apply buttons and same panel frame. Pixel sizes in the caption cannot be checked from the picture.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": ["Xray ETM-8657 steps 1-3 (xray-steps-before.json)", "ba-answers.md: Remark filter follows the other checkbox columns (ETM-434 AC 5, BR-WL-007)"],
+  "uiReachable": "yes",
+  "problems": [
+    "Remark list shows '-' three times; likely '- ' / ' - ' values with spaces, which the UI may not create (team rule).",
+    "Look comparison is visual only; caption pixel sizes (206x252, 14px font) are not provable from the pictures.",
+    "No Story AC text states 'same look' directly; source is the BA answer plus Xray step."
+  ],
+  "summary": "ภาพแสดงแผง filter ของ Job Description และ Remark มีส่วนประกอบและหน้าตาเหมือนกัน (ช่อง Search, Select All, checkbox, ปุ่ม Reset/Apply) ผล pass; แต่ข้อมูล Remark มี '-' ซ้ำ 3 ค่า ซึ่งอาจเป็นค่ามีช่องว่างที่สร้างจากหน้าจอไม่ได้"
+}

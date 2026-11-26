@@ -52,3 +52,18 @@ Push plan (`push-plan.md`): 10 PASSED + 8656 FAILED. ETM-8897 / ETM-8902 in the 
 - ETM-8656 pushed PASSED in ETM-8874 with 15 step pictures (`xray-evidence-20261126/ETM-8656`).
 - ETM-10065: a "Retest: Passed" comment (with picture, [QA] Retest ETM-10088, status Ready for UAT) was already there from 25 Nov 21:30. Added a second comment (26 Nov) with steps 14-15 and two pictures, dev mentioned.
 - Xray ETM-8874 now: 10 PASSED, 1 FAILED (8650), 5 TO DO. Left: 8650/8651/8654/8657/8663 person check (partial-confirm.md, user said "ยังก่อน"), 8648 N/A question. Script fixes in ep-etm-fe-qa still not committed.
+
+## 26 Nov 11:10 - picture check of the partial tests (lead read the pictures)
+- 8650: step 13 hover shows the full Long remark; step 16 no tooltip on Note 1. Matches Xray.
+- 8651: the Create Work form DOES have a Remark field (General Information, 0/500); the script looked in the Work Details grid. Fixed (textarea/input placeholder "Remark"); run 2026-11-26 8651 now **passed (proven)**. Earlier note "form has no Remark field" was wrong.
+- 8654: step 6 picture does not show the hover box (only the cell); the script read the hover text = full 200 characters. Look not proven by the picture.
+- 8657: Job Description and Remark panels look the same (search, Select All, checkboxes, Reset/Apply). Matches.
+- 8663: step 8-9 pictures were taken from the first tab (all works). Script fixed to take them from the new tab; re-run 11:04: step 9 shows only W05 (Somchai Test) and every Remark option ticked. Matches Xray; still partial because the pre-release state is rebuilt.
+- 26 Nov 11:20: user "push ได้เลย" for 8650/8651/8657/8663. Pushed **ETM-8651 PASSED** (11 pictures). push-guard refused 8650, 8657, 8663 (latest result skipped/partial: team rule "skipped is never PASSED"). Way to PASSED: manual runner (read-only) for 8650, 8657, 8663 (and 8654), the person confirms, then xray-step-push.
+- Xray ETM-8874 now: 11 PASSED, 1 FAILED (8650), 4 TO DO (8648, 8654, 8657, 8663).
+- 26 Nov 11:40: manual runner (read only) on 8657 (3/3), 8654 (7/7), 8650 (15/16), 8663 (8/9, after new card data with W05 owner Somchai Test). Blind checks: 8657 pass, 8654 step 3 cannot tell, 8650 six steps cannot tell. One question: `manual-confirm-2026-11-26.md`.
+
+## Done 26 Nov 11:55 - user "ยืนยันตามนี้"
+- Manual results confirmed (8650 step 3, 8654 step 3, 8663 step 1 decided pass by the user; 8657 confirmed as proposed). Pushed with pictures per step: 8650, 8654, 8657 (xray-step-push); 8663 via import (step 1 has no picture: cannot be done on this build).
+- **Xray ETM-8874: 15 PASSED, 1 TO DO.** ETM-8648 stays TO DO: not applicable (QA has only TM and JO, no login without View Worklist; user answer "na").
+- Card data of 11:33 is kept (`--keep-data`); the next run-card of ETM-8391 deletes it. Script fixes of 26 Nov (8651 Remark box, 8663 new-tab pictures) are not committed.

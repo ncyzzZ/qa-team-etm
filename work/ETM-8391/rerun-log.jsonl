@@ -1,0 +1,1 @@
+{"t":"2026-11-26T04:32:26.272Z","forced":["ETM-8663"],"why":"make card data with W05 Job Owner Somchai Test for the manual runner (user: ทำ data test ใหม่)","args":"tests/fe/e2e/worklist/verifyWorklistRemarkFilter.spec.ts -g ETM-8663 --reporter=line"}

@@ -1,0 +1,21 @@
+{ "id": "ETM-8654", "sourceHash": "10f5f871f235", "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Worklist 'QA-AUTO ETM-8391 many 20261126-1118' (Initial), full screen. Remark filter panel open under the Remark header: Search box, then Select All, 'Long remark abcdefgh...', Remark 001 to Remark 004, all ticked; panel ends there. Table behind starts at 8391M-M001 to M007; Total Results 61.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same page. Filter panel list now shows Remark 011 (cut at top) to Remark 017 (cut at bottom), all ticked. Table behind still starts at 8391M-M001 to M007, header and breadcrumb in the same place; Total Results 61.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Filter list shows Remark 055 to Remark 060, all ticked; Remark 060 is the last option, the panel's buttons are just visible under it. Red underline is under Remark 059, not 060. Only the end state is shown (060 ticked); the tick/untick action itself is not visible.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 4, "sees": "Filter panel closed. Table shows Mechanical (PM) group, 8391M-M001 to M007 with Remark 001 to 007, same as before; Total Results 61. Remark filter icon not highlighted.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Table scrolled to the bottom: rows 8391M-M055 to M060, last row 8391M-W17 (W17). W17 Remark cell shows 'Long remark abcdefghij abcdefghij abcdefghij...' cut with an ellipsis. Total Results 61.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "Mouse on W17 Remark cell; a hover box above it shows 'Long remark' followed by 17 groups of 'abcdefghij' and a final ' a' over six lines, no ellipsis. Counted length is 200 characters. Cell itself still shows the ellipsis.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "No hover box, filter panel closed, Remark header has a focus outline (filter was used). Rows M055 to M060 and W17 same as picture 5; W17 Remark cell still ends with an ellipsis; Total Results 61.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": ["Xray ETM-8654 steps 1-7 (xray-steps-before.json)", "docs/modules/core-navigation-worklist.md Remark (0/200)"],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 3: one end-state picture cannot prove Remark 060 checkbox was toggled; need a picture with it unticked or a log.",
+    "Step 3 red underline marks Remark 059, not Remark 060; the highlight is in the wrong place.",
+    "Expected results come only from Xray steps; no AC or BA answer found locally for scroll, ellipsis or hover box (BA Q7 on tooltip has no answer).",
+    "Step 7 'nothing changed' is judged by comparing visible rows and total with picture 5 only.",
+    "Brief step 2 and 4 Expected Results add 'table' and '61 works' beyond the Xray text; harmless but not in the source."
+  ],
+  "summary": "ภาพยืนยันขั้น 1, 2, 4-7 ได้ (scroll ในแผง, ellipsis, hover ครบ 200 ตัวอักษร) แต่ขั้น 3 ภาพเดียวพิสูจน์ไม่ได้ว่ากด tick/untick Remark 060 ได้จริง และเส้นแดงชี้ผิดแถว (059) จึงสรุปเป็น cannot-tell"
+}

@@ -1,0 +1,60 @@
+{
+ "id": "ETM-8654",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Step 3: one end-state picture cannot prove Remark 060 checkbox was toggled; need a picture with it unticked or a log.",
+  "Step 3 red underline marks Remark 059, not Remark 060; the highlight is in the wrong place.",
+  "Expected results come only from Xray steps; no AC or BA answer found locally for scroll, ellipsis or hover box (BA Q7 on tooltip has no answer).",
+  "Step 7 'nothing changed' is judged by comparing visible rows and total with picture 5 only.",
+  "Brief step 2 and 4 Expected Results add 'table' and '61 works' beyond the Xray text; harmless but not in the source."
+ ],
+ "summary": "ภาพยืนยันขั้น 1, 2, 4-7 ได้ (scroll ในแผง, ellipsis, hover ครบ 200 ตัวอักษร) แต่ขั้น 3 ภาพเดียวพิสูจน์ไม่ได้ว่ากด tick/untick Remark 060 ได้จริง และเส้นแดงชี้ผิดแถว (059) จึงสรุปเป็น cannot-tell",
+ "sourceHash": "10f5f871f235"
+}

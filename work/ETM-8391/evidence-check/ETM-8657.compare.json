@@ -1,0 +1,34 @@
+{
+ "id": "ETM-8657",
+ "kind": "manual",
+ "result": "agree-with-warnings",
+ "firstOverall": "pass",
+ "checkerOverall": "pass",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Remark list shows '-' three times; likely '- ' / ' - ' values with spaces, which the UI may not create (team rule).",
+  "Look comparison is visual only; caption pixel sizes (206x252, 14px font) are not provable from the pictures.",
+  "No Story AC text states 'same look' directly; source is the BA answer plus Xray step."
+ ],
+ "summary": "ภาพแสดงแผง filter ของ Job Description และ Remark มีส่วนประกอบและหน้าตาเหมือนกัน (ช่อง Search, Select All, checkbox, ปุ่ม Reset/Apply) ผล pass; แต่ข้อมูล Remark มี '-' ซ้ำ 3 ค่า ซึ่งอาจเป็นค่ามีช่องว่างที่สร้างจากหน้าจอไม่ได้",
+ "sourceHash": "8bbfc956f02e"
+}

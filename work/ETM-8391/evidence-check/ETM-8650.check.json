@@ -1,0 +1,38 @@
+{
+  "id": "ETM-8650",
+  "sourceHash": "b1910ffdf0bd",
+  "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "Worklist QA-AUTO ETM-8391 set 20261126-1118 (Initial), Total Results 21. Remark filter panel is open: Search box, Select All, then rows '-', '-', 'Test', '-', '- a', all ticked, Reset and Apply buttons.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same open panel; the row directly under Select All reads '-' (red frame).", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "The row after the first '-' also reads '-' on screen (red frame); the next row reads 'Test'. Any leading or trailing spaces cannot be seen.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 4, "sees": "Picture shows a scrolled part: Check valve (wrench emoji), Long remark abcdefgh..., Note 1, Note 2, Note 10, test. No '-' here. Pictures 1 and 11 show three rows that read '-' on screen (rows 1, 2 and 4 after Select All).", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 5, "sees": "End of list: Note 10, test, Test, Test, Valve A, B, then Thai option last. No '-' at the end. '#Urgent' and a digit value are not visible in this or any picture; '(Hold)' is seen only in picture 11.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 6, "sees": "Panel back at the top; first row under Select All reads '-' (red frame).", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "Rows Note 1, Note 2, Note 10 in this order, framed, followed by 'test'.", "verdict": "pass", "pictureOk": true },
+    { "n": 8, "sees": "Top of list only: '-', '-', 'Test', '-', '- a'. Other pictures add '--', '(Hold)', then English group and Thai last. '#Urgent' and the digit value '100% ...' never appear in any picture; whitespace in values cannot be seen.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 9, "sees": "English group: Check valve (wrench), Long remark abcdefgh..., Note 1, Note 2, Note 10, test; picture 5 continues test, Test, Test, Valve A, B. 'test' is before 'Test'. The two 'Test' rows look identical (trailing space not visible).", "verdict": "pass", "pictureOk": true },
+    { "n": 10, "sees": "Last rows: Note 10, test, Test, Test, Valve A, B (framed), then the Thai option as the last row.", "verdict": "pass", "pictureOk": true },
+    { "n": 11, "sees": "Rows '-', 'Test', '-', '- a', '--', '(Hold)' framed; they sit before the English group. The digit value is not in any picture, so 'before the digit value' is not shown. Nothing is above the first '-'.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 12, "sees": "Row 'Long remark abcdefgh...' on one line with an ellipsis, inside the panel width (red frame).", "verdict": "pass", "pictureOk": true },
+    { "n": 13, "sees": "A hover box opens left of the panel with 4 visible lines: 'Long remark abcdefghij abcdefghij ...'. Its lower part is covered by the step note box, so the end of the text is not visible.", "verdict": "cannot-tell", "pictureOk": false },
+    { "n": 14, "sees": "Panel open, 'Long remark abcdefgh...' row framed; no hover box on screen.", "verdict": "pass", "pictureOk": true },
+    { "n": 15, "sees": "Row 'Note 1' at the top of the visible list, full text, no ellipsis (red frame).", "verdict": "pass", "pictureOk": true },
+    { "n": 16, "sees": "Row 'Note 1' framed; no tooltip or hover box anywhere on screen (the area where the step 13 box appeared is empty).", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "Xray ETM-8650 steps 1-16 (work/ETM-8391/xray-steps-before.json)",
+    "BA answer DEC-040 2026-11-17 sort: symbols < digits < English (lowercase first) < Thai, Item 9 < Item 10 (ba-answers.md)"
+  ],
+  "uiReachable": "no",
+  "problems": [
+    "Data needs leading/trailing spaces (' Test', ' - ', '- ', 'Test '); team rule says such Remarks are not UI-reachable. Confirm with BA.",
+    "Three rows read '-' on screen; the picture cannot show if they are '-', ' - ', '- '. A user cannot tell them apart.",
+    "Step 3 'next is not -' conflicts on screen with Xray step 8, which expects ' - ' right after '-'.",
+    "'-' first and tooltip rules (questions-for-BA Q2, Q7) have no recorded BA answer; only Xray is the source.",
+    "'#Urgent' and digit value '100% ...' are not in any picture; steps 5, 8, 11 are unproven.",
+    "Step 13 hover box is half covered by the step note; full 200 characters not shown.",
+    "ba-answers.md names a defect for ETM-8650; I read it while checking sources and ignored it."
+  ],
+  "summary": "ภาพยืนยันได้หลายขั้น (ลำดับ Note, test ก่อน Test, ภาษาไทยอยู่ท้าย, ellipsis, ไม่มี tooltip ที่ Note 1) แต่บนจอมีแถวที่อ่านว่า '-' สามแถว แยกช่องว่างไม่ได้, ไม่มีภาพ #Urgent และค่าตัวเลข, และ hover ขั้น 13 ถูกบัง จึงตัดสินไม่ได้ อีกทั้งข้อมูลที่มีช่องว่างหน้า/หลังอาจสร้างจากหน้าจอไม่ได้ตามกฎทีม"
+}
