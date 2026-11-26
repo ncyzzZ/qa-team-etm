@@ -122,3 +122,18 @@
 ## 2026-11-26 round 5 Q2 closed
 - QA lead decision: export = whole Worklist, filters ignored, correct, no defect. Recorded in ba-answers.md; questions-for-BA-round5.md marks Q2 (and the whole round) closed.
 - Xray ETM-8755 step 1 already matched this wording (read back 2026-11-26); no Xray write, 8755 stays PASSED.
+
+## 2026-11-26: 8765 PASSED
+- The user confirmed the hand-download step in chat ("ยืนยัน 8765 PASSED push ได้").
+- Xray ETM-8774 / ETM-8765: all 7 steps are PASSED and the run is PASSED, with a comment saying the download was done by hand and confirmed.
+- ETM-8774 now: 18 PASSED, 1 FAILED (8767, waiting on ETM-10051).
+
+## 2026-11-26: 8767 split and PASSED
+- Dev turns ETM-10051 (Delete leaves breakdowns) into an improvement user story. User chose to split it out ("แยก step 9 ไป story ใหม่", "ทำเลย").
+- Xray ETM-8767 steps 9 and 13: action "Read W-8394-Z2/Z3.", expected "Work Status Deleted" only, with a note pointing to the story from ETM-10051. Spec: expectBreakdownGone removed for Z2/Z3, step titles "Read Z2/Z3" (PW_REPO, not committed). Plan: work/ETM-8394/split-8767-step9.md.
+- Run 2026-11-26_112533: 1/1 passed. User "ผ่านแล้วตั้ง PASSED ได้เลย": ETM-8774 8767 all 13 steps PASSED, run PASSED, comment; ETM-10051 link kept on step 9 for history.
+- ETM-8774: 19/19 PASSED.
+- Open: when the improvement story has a key, write its TC from the old steps 9/13 (breakdown gone after Delete, TM and JO).
+- 2026-11-26: [QA] Execute ETM-8565 -> Done (user "ปิด QA subtask ของ 8394 ได้เลย"). [QA] Create ETM-8564 was already Done. Not done: resolve-tested-by, Test Execution ETM-8774 Done, Story to Ready for UAT (each needs its own yes).
+- 2026-11-26 closeout (user "ทำต่อเลย"): 19 Tests Resolved (Done) -> Closed, assignee already the user (JQL count 19). Test Execution ETM-8774 Open -> In Progress -> Done. Story ETM-8394 -> Ready for UAT. BE subtasks ETM-8602/8604 still In Progress (not QA, not touched).
+- Note: Story AC 7 still says "a Work Breakdown is removed permanently"; that part now belongs to the improvement story from ETM-10051 (no key yet).
