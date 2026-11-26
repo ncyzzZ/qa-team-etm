@@ -47,6 +47,26 @@ export function rulesBlock(p) {
   return text ? `\n## Project rules (synced from profiles/${p.name}/${name})\n\n${text}\n` : '';
 }
 
+/** Helpers of the exported copy run outside the repo (no profile to read): their `_DEFAULT_SITE = None` and
+ * `_DEFAULT_KEY = None` lines get the active profile's Jira site and project key. Env JIRA_SITE + PROJECT_KEY still win. */
+export function bakeDefaults(text, p) {
+  return text
+    .replace(/^_DEFAULT_SITE = None$/m, `_DEFAULT_SITE = ${JSON.stringify(p.jira.site)}`)
+    .replace(/^_DEFAULT_KEY = None$/m, `_DEFAULT_KEY = ${JSON.stringify(p.jira.projectKey)}`);
+}
+
+function bakeHelpers(dir, p) {
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const f = path.join(dir, e.name);
+    if (e.isDirectory()) bakeHelpers(f, p);
+    else if (e.name.endsWith('.py')) {
+      const t = fs.readFileSync(f, 'utf8');
+      const b = bakeDefaults(t, p);
+      if (b !== t) fs.writeFileSync(f, b);
+    }
+  }
+}
+
 /** @returns {string[]} the zip files written */
 export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'account-skills'), date = new Date().toISOString().slice(0, 10), p = profile() } = {}) {
   const src = path.join(root, '.claude', 'skills');
@@ -60,6 +80,7 @@ export function exportSkills({ root = ROOT, out = path.join(root, 'dist', 'accou
     const md = path.join(out, n, 'SKILL.md');
     const text = accountDescription(fs.readFileSync(md, 'utf8'), date);
     fs.writeFileSync(md, (text.endsWith('\n') ? text : text + '\n') + settingsBlock(p) + rulesBlock(p));
+    bakeHelpers(path.join(out, n), p);
     zip(out, n);
     made.push(path.join(out, `${n}.zip`));
   }

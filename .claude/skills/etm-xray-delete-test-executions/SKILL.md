@@ -32,6 +32,7 @@ XRAY_CLIENT_SECRET=...
 2. The helper is `etm_xray_del.py` in this skill's folder (needs Python 3; the command is `python3` on Mac, `python` on Windows). Run it from the repo root; if the secrets are in a file, load it without printing it (the file may have CRLF line ends, strip `\r`):
    `set -a; . <(tr -d '\r' < path/to/<project>-api.env); set +a; python .claude/skills/etm-xray-delete-test-executions/etm_xray_del.py <cmd> ...`
    Never `cat` or echo the file.
+   **Which Jira site and project.** Env `JIRA_SITE` + `PROJECT_KEY` (set both or neither) override everything. Without them: inside the repo the helper reads the active profile (`node tools/profile.mjs show`); the account copy (exported by `tools/export-skills.mjs`, used outside the repo) has the profile's site and key written in as defaults. `delete` prints `SITE ... PROJECT ...` first.
 3. First run `whoami`: it must print `Jira OK` and `Xray OK`. Jira 401: check JIRA_EMAIL is the Jira login email (Rovo `atlassianUserInfo` shows it) and the token is not expired; tell the user which line to fix.
 
 ## 1. Pick the mode
@@ -53,7 +54,7 @@ XRAY_CLIENT_SECRET=...
 3. **Delete** (batches of up to 100 keys per call):
    - Mode 1: `delete KEY1 KEY2 ...` (default = Test Execution only)
    - Mode 2: `delete --types "Test" KEY1 KEY2 ...`
-   The helper re-checks each issue's type, deletes with `deleteSubtasks=true`, and prints DELETED / SKIP / FAILED.
+   The helper first refuses the whole call (prints `REFUSED <key>`, exit 2, nothing deleted) when any key is not `<KEY>-<number>` of the active project; then it re-checks each issue's type, deletes with `deleteSubtasks=true`, and prints DELETED / SKIP / FAILED.
 4. **Re-check**: rerun `check` on the original key list: expect 0 of the allowed type left. Mode 2: rerun `folder`, expect `TOTAL 0`.
 5. DELETE 403: the account lacks "Delete work items" permission; report, do not retry.
 6. Browser fallback (API unavailable): `https://<Jira site>/jira/software/c/projects/<KEY>/list?jql=<encoded JQL>`, select-all checkbox, bulk action Delete, confirm; or `/issues/?jql=<encoded JQL>`, then ... > Bulk change all > select all > Delete > untick send mail > Next > Confirm, wait for 100%.

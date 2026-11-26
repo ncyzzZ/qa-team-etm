@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Bulk delete helper for the active profile's Jira project. Secrets come from env, never printed.
 Env: JIRA_EMAIL, JIRA_API_TOKEN, XRAY_CLIENT_ID, XRAY_CLIENT_SECRET
-Site and project key: env JIRA_SITE and PROJECT_KEY (both or neither), else `node tools/profile.mjs show` of this repo.
+Site and project key: env JIRA_SITE and PROJECT_KEY (both or neither) win; else the defaults written into an exported copy
+(tools/export-skills.mjs, the account skill outside the repo); else `node tools/profile.mjs show` of this repo.
+delete refuses (exit 2, nothing deleted) when any key is not <PROJECT_KEY>-<number>.
   whoami                                          -> checks Jira + Xray credentials
   folder  <folder path e.g. "/Manual Test/Bin">   -> prints keys in that Xray folder (no sub-folders)
   tree                                            -> prints the Xray folder tree of the project (find a path)
@@ -9,8 +11,11 @@ Site and project key: env JIRA_SITE and PROJECT_KEY (both or neither), else `nod
   delete  [--types "Test Execution,Test"] <KEY> ... -> DELETE each issue whose type is allowed
                                                      (default: Test Execution only), prints result
 """
-import base64, json, os, ssl, subprocess, sys, urllib.request, urllib.error
+import base64, json, os, re, ssl, subprocess, sys, urllib.request, urllib.error
 
+# Filled in by tools/export-skills.mjs in the exported copy (the repo copy reads the active profile).
+_DEFAULT_SITE = None
+_DEFAULT_KEY = None
 _PROFILE = None
 
 
@@ -22,6 +27,8 @@ def profile():
     site, key = os.environ.get("JIRA_SITE"), os.environ.get("PROJECT_KEY")
     if bool(site) != bool(key):
         sys.exit("set both JIRA_SITE and PROJECT_KEY, or neither (then the repo's active profile is used)")
+    if not (site and key) and _DEFAULT_SITE and _DEFAULT_KEY:
+        site, key = _DEFAULT_SITE, _DEFAULT_KEY
     if not (site and key):
         root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
         try:
@@ -34,6 +41,15 @@ def profile():
     site = site if site.startswith("http") else "https://" + site
     _PROFILE = (site.rstrip("/"), key)
     return _PROFILE
+
+
+def key_ok(key, project):
+    """True only for <project>-<number>, e.g. ACME-12 (never another project's key, a JQL or a range)."""
+    return bool(re.fullmatch(re.escape(project) + r"-\d+", str(key)))
+
+
+def bad_keys(keys, project):
+    return [k for k in keys if not key_ok(k, project)]
 
 
 XRAY = "https://xray.cloud.getxray.app/api/v2"
@@ -93,8 +109,24 @@ def search(jql):
             return out
 
 
+def delete_args(args):
+    """(allowed types, keys) of the delete command."""
+    allowed = {"Test Execution"}
+    if args and args[0] == "--types":
+        allowed = {t.strip() for t in args[1].split(",")}; args = args[2:]
+    return allowed, args
+
+
 def main():
     cmd, args = sys.argv[1], sys.argv[2:]
+    if cmd == "delete":  # key check before any Jira call: a key of another project is never deleted
+        project = profile()[1]
+        bad = bad_keys(delete_args(args)[1], project)
+        for k in bad:
+            print(f"REFUSED {k} (not a {project}-<number> key)")
+        if bad:
+            print(f"nothing deleted: {len(bad)} key(s) outside project {project}", file=sys.stderr)
+            sys.exit(2)
     code, me = jira("GET", "/rest/api/3/myself")
     if code != 200:
         sys.exit(f"Jira auth failed ({code}) - check JIRA_EMAIL / JIRA_API_TOKEN")
@@ -124,13 +156,13 @@ def main():
             f = i["fields"]
             print(f"{i['key']}|{f['issuetype']['name']}|{f['status']['name']}|{f['summary']}")
     elif cmd == "delete":
-        allowed = {"Test Execution"}
-        if args and args[0] == "--types":
-            allowed = {t.strip() for t in args[1].split(",")}; args = args[2:]
+        allowed, args = delete_args(args)
         site, project = profile()
         print(f"SITE {site} PROJECT {project}")  # shown before anything is deleted
         ok = fail = 0
         for key in args:
+            if not key_ok(key, project):  # checked above too; never reach DELETE with another project's key
+                print(f"REFUSED {key}"); fail += 1; continue
             code, r = jira("GET", f"/rest/api/3/issue/{key}?fields=issuetype")
             if code != 200 or r["fields"]["issuetype"]["name"] not in allowed:
                 print(f"SKIP {key} (type not allowed or not found: {code})"); fail += 1; continue
