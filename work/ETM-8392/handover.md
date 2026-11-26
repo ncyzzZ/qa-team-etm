@@ -74,3 +74,9 @@ Still noted, not logged: the 11 Jun Ramp Down badge covers the "Jun 2026" header
 
 ## 26 Nov 2026 - Ramp Down badge over "Jun 2026" header
 User (QA lead, chat 26 Nov 2026): "ปิดเรื่องนี้". Not a defect, not logged, no BA question. Seen in the 11 Jun Snap C PDF (run 2026-11-25_211800, step-8.png): the badge covers "Jun 20", leaving "26". Closed.
+
+## 26 Nov 2026 - Closeout (user yes "ย้ายการ์ด user story และ ปิดงานได้เลย")
+- 18 "is tested by" Tests: Closed, resolution Done (JQL check 18).
+- Test Execution ETM-8825: Done.
+- [QA] sub-tasks ETM-8560, ETM-8561, ETM-8885 Done (ETM-8885 was In Progress, finished; assignee Dechathon left as is).
+- Story ETM-8392: In Testing -> Ready for UAT. Card closed.
