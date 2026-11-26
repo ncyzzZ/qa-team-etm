@@ -43,3 +43,4 @@ dist/account-skills/*/
 !dist/account-skills/*.zip
 .claude/team/inbox.jsonl
 .claude/team/inbox-sent.jsonl
+.superpowers/
