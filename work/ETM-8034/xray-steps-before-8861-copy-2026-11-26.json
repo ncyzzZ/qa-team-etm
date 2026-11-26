@@ -1,0 +1,3 @@
+{"test":"ETM-8861","issueId":"2300469","savedAt":"2026-11-26","reason":"user chose 'เปลี่ยนวิธี copy' on the board (13:14): steps 1-2 changed from row copy (double-click No.) to a cell-range copy","steps":[
+{"no":1,"id":"8f2feb8e-0c30-45c0-890d-b46860e0ec7d","action":"Double-click the No. cell of the coloured Work row and press Ctrl+C (ETM-2615).","data":"","result":"The cell values are copied."},
+{"no":2,"id":"0ada866a-a415-47fc-9c72-506f986900e0","action":"Double-click the No. cell of the target Work row and press Ctrl+V.","data":"","result":"The pasted data (text) appears in the target."}]}
