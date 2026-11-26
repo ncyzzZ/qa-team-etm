@@ -49,7 +49,7 @@ XRAY_CLIENT_SECRET=...
 ## 3. Verify, confirm, delete
 
 1. **Verify** with `check "(<JQL>) AND project = ETM"` (or Rovo `searchJiraIssuesUsingJql`). Split into allowed type (Mode 1: Test Execution, Mode 2: Test) vs excluded (other types / not found).
-2. **Safety gate**: show count + key - summary list and ask yes/no (`AskUserQuestion`). Skip only if the user's request already says "ยืนยันลบ" / "confirm delete"; the type filter still applies.
+2. **Safety gate**: show count + key - summary list and ask yes/no (`AskUserQuestion`). Inside an ETM card cycle (a stray Test Execution of a card, not a request from the user to delete): do not ask on its own; queue it with `node tools/delete-plan.mjs add <KEY> "stray Test Execution" --where "Jira ETM" --ids <keys> --permanent` and it is asked with the card's other deletes (TEAM.md Standing approvals 6); delete only items `delete-plan.mjs ok` approves. Skip only if the user's request already says "ยืนยันลบ" / "confirm delete"; the type filter still applies.
 3. **Delete** (batches of up to 100 keys per call):
    - Mode 1: `delete KEY1 KEY2 ...` (default = Test Execution only)
    - Mode 2: `delete --types "Test" KEY1 KEY2 ...`
