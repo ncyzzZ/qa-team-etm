@@ -1,0 +1,55 @@
+{
+ "id": "ETM-8779",
+ "kind": "manual",
+ "result": "agree-with-warnings",
+ "firstOverall": "pass",
+ "checkerOverall": "pass",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Steps 5-6 'no tooltip' rests on a QA lead decision (Q35), not a BA answer or AC; AC 2.3 is silent on uncut text.",
+  "Reworded steps 5-6 are only a draft; Xray ETM-8779 still holds old wording until the user approves the Xray write.",
+  "A still picture shows no tooltip at capture time only; it cannot prove none opened during the full 2 s hover.",
+  "Step order differs: step 2 note says width 650 -> 210, so widening (step 4) seems done before step 2.",
+  "Annotation boxes cover parts of the WK-10b-T row in pictures 1-4; not needed for those steps.",
+  "While searching sources I saw a handover.md line stating an earlier run result; I did not use it."
+ ],
+ "summary": "ภาพทั้ง 6 ภาพแสดงผลตรงกับ Expected: Deck ที่ยาวถูกตัดด้วย ... และ hover แสดงข้อความเต็ม, ขยายคอลัมน์แล้ว ... หายไป, X/Y ที่พอดีช่องแสดงเต็มและไม่มี tooltip. ข้อสังเกต: ขั้น 5-6 อิงการตัดสินของ QA lead (Q35) ไม่ใช่ BA/AC และ Xray ยังเป็นข้อความเดิม",
+ "sourceHash": "4846cc5709f2"
+}

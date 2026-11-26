@@ -54,3 +54,12 @@ BA also updated ETM-8049 AC 6.1 in Jira at 14:23.
 | Q34 | "3a": one Create Work / Edit Work Breakdown cell may hold `Dock Area` and `DOCK AREA` together. | TC-015 (ETM-8788) expected result unchanged (`Main Deck, Cellar Deck, Dock Area, DOCK AREA`). The current behaviour (second case variant not added) is a defect of the same kind as ETM-9223. Logging it needs the user's yes on the board; not logged yet. |
 
 Spec change (25 Nov 2026): `verifyWorklistWorkingLocationEntry.spec.ts` assert messages of ETM-8788 step "type DOCK AREA" and ETM-8793 step "type main deck" now cite Q34 / Q33. Expected values not changed.
+
+## User decisions 2026-11-26 (relayed by the lead session from the main chat)
+
+| Item | Decision | What it means |
+|---|---|---|
+| ETM-8777 (TC-004) | Two browser sessions of the same Turnaround Manager may stand in for User A and User B (steps 6-10). | Spec notes changed; step 5 (User B = Job Owner) is read on the Active Plan worklist of the event, read only, because the layout is stored per user (`shutdown_work_column` has no worklist id). Passed in run 2026-11-26_092309. |
+| ETM-8776 (TC-003) row (a) | User accepts N/A but asked for another way; NOT marked N/A yet. | Read-only DB check 26 Nov: all 13 users' layouts on QA were rewritten by the release migration on 20 Nov 2026 06:50 (Deck/X/Y added hidden after Department); every user has Department in the default place. No pre-release layout with Department moved exists, and the UI saves only the new format. |
+| Q35 / ETM-8779 (TC-006) steps 5-6 | QA lead decision 26 Nov 2026 (main chat): the tooltip shows only when the cell text is cut off. | X/Y text that fits its cell shows no tooltip: correct, not a defect. Steps 5-6 are reworded (draft `xray-fix-8779-tc006-tooltip.md`); the Xray write needs the user's yes. |
+| ETM-8776 (TC-003) row (a) | User decision 26 Nov 2026 (main chat): "8776 a = N/A". No DB seed. | Reason: the release migration of 20 Nov 2026 rewrote every saved layout on QA, so no layout saved before the release is left, and the screen saves only the new format. Row (b) is the proof of TC-003. |

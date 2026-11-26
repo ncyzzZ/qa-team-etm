@@ -1,42 +1,19 @@
-{
-  "id": "defect-draft-create-work-case-variant",
-  "sourceHash": "c15168d819d7",
-  "overall": "not-proven",
+{ "id": "defect-draft-create-work-case-variant", "sourceHash": "6adc10507fb6", "overall": "not-proven",
   "steps": [
-    {
-      "n": 1,
-      "sees": "Create Work page, full screen. Work Details row WK-19n-068743, Platform ASSET. Deck cell shows chips 'Main Deck' and 'Cellar Dec...' (cut off); cell is narrow, further chips would be hidden. Deck dropdown open (Weather/Upper/Lower Deck visible), partly covered by a red caption 'ETM-8788 - Step 7: Type Dock Area ... press Enter'. No 'Dock Area' tag visible. Save disabled.",
-      "verdict": "cannot-tell",
-      "pictureOk": false
-    },
-    {
-      "n": 2,
-      "sees": "Create Work page scrolled to General Information; Deck dropdown open listing Weather, Upper, Lower, Cooler, Main Deck (checked), Cellar Deck (checked). The Deck cell itself and its tags are not on screen. No step caption. No DOCK AREA or Dock Area anywhere.",
-      "verdict": "cannot-tell",
-      "pictureOk": false
-    },
-    {
-      "n": 3,
-      "sees": "Create Work page scrolled to Work Breakdown / Work Details. Deck cell focused with chips 'Main Deck' and 'Cellar Deck' and a text cursor; cell is narrow, so more chips may be cut off. Dropdown open with Main Deck and Cellar Deck checked. No 'Dock Area' or 'DOCK AREA' tag visible. No caption saying which step. Save disabled.",
-      "verdict": "cannot-tell",
-      "pictureOk": false
-    }
+    { "n": 1, "sees": "Create Work page, full form. Work row WK-19n-934197, Platform ASSET. Deck cell shows tags 'Main Deck' and 'Cellar Dec...' (cut), red frame on the cell. Deck dropdown open behind a caption box (Weather/Upper/Lower Deck visible). Caption 'ETM-8788 Step 7: Type Dock Area'; its 'should be seen' text only repeats the action. No Dock Area tag visible; cell too narrow to show more tags.", "verdict": "cannot-tell", "pictureOk": false },
+    { "n": 2, "sees": "Create Work, viewport scrolled to Work Breakdown and Work Details. Deck cell shows tags 'Main Deck', 'Cellar Dec...' and typed text ending 'EA'. Dropdown shows one option 'Dock Area' with a check mark. Picture is before Enter; the typed text is mostly hidden.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 3, "sees": "Same Create Work view. Deck dropdown open: Weather, Upper, Lower, Cooler Deck, Main Deck (checked), Cellar Deck (checked); list may scroll. Cell shows tags 'Main Deck', 'Cellar Dec...' only; no Dock Area or DOCK AREA tag visible, but the cell is narrow and may hide extra tags (no '+N' count seen).", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 4, "sees": "Worklist: QA ETM-8049 Scratch (Initial), 128 results, full page. Row WK-19n-934197 (status N) Working Location shows 'Main Deck, Cellar D...' cut off, red frame. Caption Step 11 'Read the Deck cell'. Other WK-19n rows show 'Main Deck, DOCK A...' (cut). Full value of the new work is not readable.", "verdict": "cannot-tell", "pictureOk": false }
   ],
-  "expectedSources": [
-    "BA answer Q34 2026-11-25 (ba-answers.md: one cell may hold Dock Area and DOCK AREA together)",
-    "BA answer Q32 final (ba-answers.md: Create Work and Edit WB accept several Deck values in one cell)",
-    "AC 6.2 (free text saved exactly as entered) - cited by the brief, not re-checked in the Story text",
-    "Xray ETM-8788 step 6 and last step (xray-steps-ETM-8788-before-2026-11-24.json: DOCK AREA tag as typed; cell shows Main Deck, Cellar Deck, Dock Area, DOCK AREA)"
-  ],
+  "expectedSources": ["BA answer Q34 2026-11-25 (ba-answers.md)", "AC 6.2 (as quoted in brief; Story text not re-read)", "BA answer Q32", "Xray ETM-8788 step 'type DOCK AREA' and final cell step (xray-steps-ETM-8788-before-2026-11-24.json)"],
   "uiReachable": "yes",
   "problems": [
-    "No picture shows step 5 (DOCK AREA typed) result; no picture is labelled step 8.",
-    "Even the step 4 'Dock Area' tag is not visible; narrow Deck cell may hide chips, so missing tags are not proven.",
-    "No picture after Save showing the saved Deck cell value.",
-    "pic-2 does not show the Deck cell at all; pic-1 caption covers the dropdown.",
-    "pic-1 caption 'What should be seen' repeats the action, not an expected result.",
-    "Earlier BA row Q32 'Partly' says one Deck per Create Work row; final Q32 answer overrides it - confirm.",
-    "Xray backup is the pre-2026-11-24 version; current step 8 text not checked."
+    "No picture shows the Deck cell after Enter on DOCK AREA; the defect's actual behaviour is not shown.",
+    "Worklist cell of WK-19n-934197 is truncated ('Main Deck, Cellar D...'); open a tooltip/detail or widen the column.",
+    "Pic 3 cell is narrow; missing Dock Area tags may be hidden overflow, not dropped. Dropdown also may be scrolled.",
+    "Pic 1 caption box covers the dropdown; its 'should be seen' text repeats the action, not an expected result.",
+    "Other WK-19n rows show 'Main Deck, DOCK A...': DOCK AREA seems saved there; explain how they differ before logging.",
+    "Pic 2 only hints at case-insensitive matching (Dock Area checked while typing ...EA); not proof of the saved outcome.",
+    "Pictures are from run 153747; no picture of run 164740 (after ETM-9223 fix) is given."
   ],
-  "summary": "ภาพทั้ง 3 ไม่พิสูจน์ defect: ไม่มีภาพหลังพิมพ์ DOCK AREA (step 5/8) หรือหลัง Save และช่อง Deck แคบจนอาจซ่อน tag (แม้แต่ Dock Area ก็มองไม่เห็น) ควรถ่ายใหม่โดยขยายช่องหรือแสดงค่าที่บันทึกแล้ว Expected มีที่มาชัด (BA Q34, Q32, Xray ETM-8788)"
-}
+  "summary": "รูปยังไม่พิสูจน์ defect: ไม่มีรูปที่เห็นช่อง Deck หลังกด Enter ที่ DOCK AREA และค่าใน Worklist ถูกตัด (Main Deck, Cellar D...) อ่านค่าเต็มไม่ได้ ควรถ่ายรูปใหม่ที่เห็นแท็กครบ/ค่าเต็ม และอธิบายแถว WK-19n อื่นที่มี DOCK A ก่อน log" }

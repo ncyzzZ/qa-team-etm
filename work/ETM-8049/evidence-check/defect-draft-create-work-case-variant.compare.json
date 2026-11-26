@@ -7,16 +7,15 @@
  "steps": [],
  "warnings": [
   "step 1: picture blank, cut or not full screen",
-  "step 2: picture blank, cut or not full screen",
-  "step 3: picture blank, cut or not full screen",
-  "No picture shows step 5 (DOCK AREA typed) result; no picture is labelled step 8.",
-  "Even the step 4 'Dock Area' tag is not visible; narrow Deck cell may hide chips, so missing tags are not proven.",
-  "No picture after Save showing the saved Deck cell value.",
-  "pic-2 does not show the Deck cell at all; pic-1 caption covers the dropdown.",
-  "pic-1 caption 'What should be seen' repeats the action, not an expected result.",
-  "Earlier BA row Q32 'Partly' says one Deck per Create Work row; final Q32 answer overrides it - confirm.",
-  "Xray backup is the pre-2026-11-24 version; current step 8 text not checked."
+  "step 4: picture blank, cut or not full screen",
+  "No picture shows the Deck cell after Enter on DOCK AREA; the defect's actual behaviour is not shown.",
+  "Worklist cell of WK-19n-934197 is truncated ('Main Deck, Cellar D...'); open a tooltip/detail or widen the column.",
+  "Pic 3 cell is narrow; missing Dock Area tags may be hidden overflow, not dropped. Dropdown also may be scrolled.",
+  "Pic 1 caption box covers the dropdown; its 'should be seen' text repeats the action, not an expected result.",
+  "Other WK-19n rows show 'Main Deck, DOCK A...': DOCK AREA seems saved there; explain how they differ before logging.",
+  "Pic 2 only hints at case-insensitive matching (Dock Area checked while typing ...EA); not proof of the saved outcome.",
+  "Pictures are from run 153747; no picture of run 164740 (after ETM-9223 fix) is given."
  ],
- "summary": "ภาพทั้ง 3 ไม่พิสูจน์ defect: ไม่มีภาพหลังพิมพ์ DOCK AREA (step 5/8) หรือหลัง Save และช่อง Deck แคบจนอาจซ่อน tag (แม้แต่ Dock Area ก็มองไม่เห็น) ควรถ่ายใหม่โดยขยายช่องหรือแสดงค่าที่บันทึกแล้ว Expected มีที่มาชัด (BA Q34, Q32, Xray ETM-8788)",
- "sourceHash": "c15168d819d7"
+ "summary": "รูปยังไม่พิสูจน์ defect: ไม่มีรูปที่เห็นช่อง Deck หลังกด Enter ที่ DOCK AREA และค่าใน Worklist ถูกตัด (Main Deck, Cellar D...) อ่านค่าเต็มไม่ได้ ควรถ่ายรูปใหม่ที่เห็นแท็กครบ/ค่าเต็ม และอธิบายแถว WK-19n อื่นที่มี DOCK A ก่อน log",
+ "sourceHash": "6adc10507fb6"
 }

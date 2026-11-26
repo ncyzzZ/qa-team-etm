@@ -1,0 +1,14 @@
+{
+  "ETM-8781": {
+    "verdict": "tc",
+    "source": "chat",
+    "evidence": "user chat 25 Nov: 1=tc 2=app",
+    "at": "2026-11-25T12:38:13.926Z"
+  },
+  "ETM-8783": {
+    "verdict": "script",
+    "source": "chat",
+    "evidence": "user chat 25 Nov: ทำทั้ง 3 (8783 app->script)",
+    "at": "2026-11-25T13:16:01.533Z"
+  }
+}

@@ -1,0 +1,25 @@
+{ "id": "ETM-8779", "sourceHash": "4846cc5709f2", "overall": "pass",
+  "steps": [
+    { "n": 1, "sees": "Worklist 'QA ETM-8049 Tip' (Initial), full screen, Deck/X/Y columns shown, 2 rows. WK-10-T Deck cell reads 'Weather Deck, Upper D...' (comma-joined, cut, ends with ...); X = 1, Y = A. Total Results: 2.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same page; Deck header now 'Working Location (De...' slightly wider; WK-10-T Deck cell reads 'Weather Deck, Upper De...', cut at the cell edge with ... . Note says width 650 -> 210 px.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Tooltip open above the WK-10-T Deck cell with 'Weather Deck, Upper Deck, Lower Deck, Cooler Deck, Main Deck, Cellar Deck' (two lines), matching the expected text exactly.", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Deck column widened to about 630 px, header 'Working Location (Deck)' in full; WK-10-T Deck cell shows 'Weather Deck, Upper Deck, Lower Deck, Cooler Deck, Main Deck, Cellar Deck' with no ... .", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Default widths; WK-10b-T row highlighted (hovered). X cell shows '0, 1, 2, 3, 4, 5, 6, 7, 8, 9' fully, no ... ; no grid tooltip visible anywhere. Y shows 'A, B, ... J', Deck 'Main Deck'.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "WK-10b-T row highlighted; Y cell shows 'A, B, C, D, E, F, G, H, I, J' fully, no ... ; no grid tooltip visible. X cell also full.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "Story ETM-8049 AC 2.1 (values joined by comma and space) - steps 1, 3",
+    "Story ETM-8049 AC 2.3 (cut text ends with ellipsis, hover shows full content) - steps 1-4",
+    "QA lead decision Q35 26 Nov 2026 in ba-answers.md (tooltip only when text is cut) - steps 5-6 'no tooltip' part",
+    "work/ETM-8049/xray-fix-8779-tc006-tooltip.md steps 5-6 (reworded draft)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Steps 5-6 'no tooltip' rests on a QA lead decision (Q35), not a BA answer or AC; AC 2.3 is silent on uncut text.",
+    "Reworded steps 5-6 are only a draft; Xray ETM-8779 still holds old wording until the user approves the Xray write.",
+    "A still picture shows no tooltip at capture time only; it cannot prove none opened during the full 2 s hover.",
+    "Step order differs: step 2 note says width 650 -> 210, so widening (step 4) seems done before step 2.",
+    "Annotation boxes cover parts of the WK-10b-T row in pictures 1-4; not needed for those steps.",
+    "While searching sources I saw a handover.md line stating an earlier run result; I did not use it."
+  ],
+  "summary": "ภาพทั้ง 6 ภาพแสดงผลตรงกับ Expected: Deck ที่ยาวถูกตัดด้วย ... และ hover แสดงข้อความเต็ม, ขยายคอลัมน์แล้ว ... หายไป, X/Y ที่พอดีช่องแสดงเต็มและไม่มี tooltip. ข้อสังเกต: ขั้น 5-6 อิงการตัดสินของ QA lead (Q35) ไม่ใช่ BA/AC และ Xray ยังเป็นข้อความเดิม" }

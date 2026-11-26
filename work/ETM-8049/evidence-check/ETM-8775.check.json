@@ -1,0 +1,26 @@
+{ "id": "ETM-8775", "sourceHash": "58dfb5d8fc50", "overall": "pass",
+  "steps": [
+    { "n": 1, "sees": "Worklist 'QA ETM-8049 Cells' (Initial), 7 rows. Customize Column popover open, scrolled; Working Location (Deck), (X), (Y) checkboxes checked (red frames). Duration, Remark checked, Status greyed. Footer Reset and Apply. Table header shows the three Working Location columns after Job Owner, Department after Equipment Number.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same page, popover scrolled to top: Work Number (greyed), Job Description, Equipment Number, Department, Functional Location (unchecked), Platform, Job Owner, Deck, X checked. Footer: 'Reset' (outlined, focus/hover look) on the left, blue 'Apply' button on the right. No red frame drawn on the footer although the caption mentions one.", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "Popover list now: Platform, Job Owner (checked), Department, Working Location (Deck), (X), (Y), Manpower Resource all unchecked, in that order (red frames). No confirmation dialog visible. Toolbar text changed to 'Reset Table Filter'. Table header unchanged (three WL columns still there). Caption box covers the popover footer area.", "verdict": "pass", "pictureOk": true },
+    { "n": 4, "sees": "Table header still shows Working Location (..., (X), (Y) between Job Owner and POB, Department still after Equipment Number. Popover still open: Platform, Job Owner checked; Department, Deck, X, Y, Manpower Resource unchecked; POB checked; Man-hrs. unchecked; Duration checked.", "verdict": "pass", "pictureOk": true },
+    { "n": 5, "sees": "Popover closed. Header: Work Number, Job Description, Equipment Number (wide), Platform, Job Owner, POB, Duration, Remark, Status. No Working Location columns, no Department column. 7 rows, Total Results 7. Caption covers part of the Equipment Number column body only.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "Popover closed. Header: Work Number, Job Description, Equipment Number, Platform, Job Owner, Department, Working Location (..., Working Location (X), Working Location (Y), Manpower Resource, POB, Duration, Remark (cut 'Rer'), Status. Rows show QA Department, deck values, X, Y, Mechanic[2].", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "Xray ETM-8775 steps 1-6 (backup xray-steps-ETM-8775-before-2026-11-24.json)",
+    "Xray ETM-8775 steps 5-6 changed 2026-11-25 (xray-steps-8775-before-2026-11-25.json, reason: user chat 25 Nov 'Department and Manpower Resource are hidden by default')",
+    "BA answer Q30 2026-11-24 (Reset changes the table only after Apply) for step 4",
+    "Story placement Deck/X/Y between Department and Manpower Resource, as quoted in questions-for-BA Q3 (Q3 answered 2026-11-19, text not recorded)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 5/6 expected 'Department and Manpower Resource hidden by default' comes from a user chat 25 Nov, not a recorded BA answer or AC.",
+    "No-confirmation and 'Reset restores order and visibility' rely on Q3, whose BA answer text was not recorded.",
+    "Step 3 picture shows only part of the list; full default order seen only across pictures 3 and 4.",
+    "Brief step 6 action (check Department, Manpower Resource too) differs from Xray step 6 text (check Deck, X, Y only).",
+    "Reset looks like an outlined button in picture 2, not a plain link; wording only, no impact on result.",
+    "Row WK-6-C holds 'main deck' lower case, possibly DB-set; not used by this test."
+  ],
+  "summary": "รูปทั้ง 6 ตรงกับ Expected: กด Reset แล้ว Deck/X/Y ไม่ติ๊กและอยู่หลัง Department ก่อน Manpower Resource, ตารางเปลี่ยนหลัง Apply เท่านั้น และเปิดกลับมาเรียง Department, Deck, X, Y, Manpower Resource ถูกต้อง ข้อควรระวัง: Expected ข้อ 'Department ซ่อนโดย default' มาจากแชทผู้ใช้ ไม่ใช่คำตอบ BA ที่บันทึกไว้"
+}

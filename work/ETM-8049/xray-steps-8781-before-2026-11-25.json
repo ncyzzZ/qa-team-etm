@@ -1,0 +1,6 @@
+{"testKey":"ETM-8781","issueId":"2300235","savedAt":"2026-11-25","stepsChanged":[
+{"no":9,"id":"a656e422-da1a-4d42-b9b9-026f0be82e5f","action":"Click `Select All` in the Job Description filter.","data":null,"result":"Write down which options are checked and which rows are shown as reference A."},
+{"no":10,"id":"e59663a0-e70e-4099-a4e0-f6341fc2ebd4","action":"Click `Select All` again in the Job Description filter.","data":null,"result":"Write down which options are checked and which rows are shown as reference B."},
+{"no":11,"id":"1bca513f-1a10-416d-aac3-cda9d7c0f42f","action":"Type `deck` in the search box of the Deck filter and click `Select All`.","data":null,"result":"The checked options and the shown rows follow the same rule as reference A."},
+{"no":12,"id":"bf4303a6-8403-496c-af4d-b01fc35af020","action":"Click `Select All` again in the Deck filter.","data":null,"result":"The checked options and the shown rows follow the same rule as reference B."}],
+"note":"Steps 1-8 unchanged (full list read 25 Nov 2026 before the change)."}

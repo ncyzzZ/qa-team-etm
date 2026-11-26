@@ -1,0 +1,55 @@
+{
+ "id": "ETM-8775",
+ "kind": "manual",
+ "result": "agree-with-warnings",
+ "firstOverall": "pass",
+ "checkerOverall": "pass",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "Step 5/6 expected 'Department and Manpower Resource hidden by default' comes from a user chat 25 Nov, not a recorded BA answer or AC.",
+  "No-confirmation and 'Reset restores order and visibility' rely on Q3, whose BA answer text was not recorded.",
+  "Step 3 picture shows only part of the list; full default order seen only across pictures 3 and 4.",
+  "Brief step 6 action (check Department, Manpower Resource too) differs from Xray step 6 text (check Deck, X, Y only).",
+  "Reset looks like an outlined button in picture 2, not a plain link; wording only, no impact on result.",
+  "Row WK-6-C holds 'main deck' lower case, possibly DB-set; not used by this test."
+ ],
+ "summary": "รูปทั้ง 6 ตรงกับ Expected: กด Reset แล้ว Deck/X/Y ไม่ติ๊กและอยู่หลัง Department ก่อน Manpower Resource, ตารางเปลี่ยนหลัง Apply เท่านั้น และเปิดกลับมาเรียง Department, Deck, X, Y, Manpower Resource ถูกต้อง ข้อควรระวัง: Expected ข้อ 'Department ซ่อนโดย default' มาจากแชทผู้ใช้ ไม่ใช่คำตอบ BA ที่บันทึกไ",
+ "sourceHash": "58dfb5d8fc50"
+}

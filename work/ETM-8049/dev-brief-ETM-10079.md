@@ -1,55 +1,56 @@
-# Dev brief: (new defect) Create Work Deck cell refuses a case variant
+# Dev brief: ETM-10079 (Create Work Deck cell drops a case variant)
 
-Story: ETM-8049 (Worklist: Working Location columns). Related defect: ETM-9223 (the same rule in Import Excel).
+Story: ETM-8049 (Worklist: Working Location columns). Split out of ETM-9223 (Import Excel part, fixed).
 
 ## 1. What is wrong
 
-In Create Work > Manual Create, the Deck cell's tag input treats two free-text values that differ only by letter case as the same value. Example: after the tag `Dock Area` is in the cell, typing `DOCK AREA` + Enter adds nothing. The suggestion list shows `Dock Area` with a tick (already selected). The BA says one cell may hold both values (Q34 = a, 25 Nov 2026).
+On Create Work > Manual Create, one Working Location (Deck) cell cannot hold two free-text values that differ only by letter case. With `Dock Area` already in the cell, typing `DOCK AREA` + Enter adds nothing, and after Save only `Dock Area` is stored. The Import Excel fix of ETM-9223 does not cover this screen.
 
 ## 2. Where
 
-- Page: Worklist > Create Work > Manual Create, Deck (Working Location) cell of a work row. Edit Work Breakdown uses the same Deck cell editor, so it may have the same problem (not checked separately).
-- URL pattern: `https://stms-qa.apps.pttep.com/shutdown-event-list/events/<eventId>/planning/<planId>/worklist/<worklistId>`, then Create Work.
-- Environment: QA, 24 Nov 2026. Role: Turnaround Manager.
-- Data: event `NN TEST QA`, Plan `QA ETM-8049 Scratch`. No special data is needed; any new work row reproduces it.
+- Page: Worklist > Create Work > Manual Create, Deck cell of the work row.
+- URL pattern: `https://stms-qa.apps.pttep.com/shutdown-event-list/events/<eventId>/planning/<planId>/worklist/<worklistId>`
+- Role: Turnaround Manager.
+- Environment: QA, 25 Nov 2026 (after the ETM-9223 fix was deployed).
+- Test data: event `NN TEST QA`, Plan `QA ETM-8049 Scratch`. `Dock Area` is free text (not in Master Data).
 
 ## 3. Steps to reproduce
 
-1. Open the Worklist, click `Create Work`, then `Manual Create`.
-2. In the Deck cell type `Dock Area` and press Enter: the tag `Dock Area` is added.
-3. Type `DOCK AREA` and press Enter.
+1. Open the Worklist of Plan `QA ETM-8049 Scratch`, click `Create Work` > `Manual Create`.
+2. In the Deck cell type `main deck` + Enter, `Cellar deck` + Enter, `Dock Area` + Enter.
+3. Type `DOCK AREA` + Enter.
+4. Fill in the other required fields, Save, read the Deck cell of the new work.
 
 ## 4. Actual vs Expected
 
-| | Actual | Expected |
+| Step | Actual | Expected |
 |---|---|---|
-| After step 3 | One tag `Dock Area`. The list ticks `Dock Area`, and `DOCK AREA` is dropped. | Two tags: `Dock Area` and `DOCK AREA`, each exactly as typed. |
-| After Save, Worklist Deck cell | `Dock Area` | `Dock Area, DOCK AREA`. Free text is sorted by text comparison, with lower case first. |
-
-Master Data values are different: typing `MAIN DECK` must still become `Main Deck`, and a second `main deck` is a real duplicate of `Main Deck`. Only free text that is not in Master Data keeps each case variant.
+| 3, suggestion list | only `Dock Area`, ticked | `DOCK AREA` can be added as a new value |
+| 3, after Enter | 3 tags: `Main Deck`, `Cellar Deck`, `Dock Area` | 4 tags, the 4th is `DOCK AREA` exactly as typed |
+| 4, saved row | `Main Deck, Cellar Deck, Dock Area` | `Main Deck, Cellar Deck, Dock Area, DOCK AREA` |
 
 ## 5. Rule source
 
-- BA Q34 (25 Nov 2026): answer "a", one cell may hold `Dock Area` and `DOCK AREA` together.
-- BA Q33 (25 Nov 2026): a value that matches Master Data (any case) takes the Master Data spelling; free text stays as typed.
-- ETM-8049 AC 6.2: free text (not Master Data) is saved exactly as entered.
-- BA Q32 (24 Nov 2026): Create Work and Edit Work Breakdown accept several Deck values in one cell.
-- Xray ETM-8788 (TC-015) step 8: "A fourth tag shows `DOCK AREA` exactly as typed, not `Dock Area` and not merged with the tag `Dock Area`." Step 11: the cell shows `Main Deck, Cellar Deck, Dock Area, DOCK AREA`.
+- ETM-8049 AC 6.2: "A value that does not match Master Data is saved exactly as entered. It is not converted to match other works or other Work Breakdowns. Values that differ only by letter case are stored and shown as separate values (AC 2.1, AC 3.6)."
+- BA answer Q34 (25 Nov 2026, "a"): one Create Work / Edit Work Breakdown cell may hold `Dock Area` and `DOCK AREA` together.
+- BA answer Q32 (24 Nov 2026): Create Work and Edit Work Breakdown both accept several Deck values in one cell.
+- BA answer Q27 / DEC-046: import accepts both `Helipad` and `helipad` (same rule, fixed in ETM-9223).
+- Xray ETM-8788 (TC-015) step 8: "A fourth tag shows DOCK AREA exactly as typed".
 
-## 6. Hints for the fix (guess)
+## 6. Hints for the fix (guesses, not checked in code)
 
-These are guesses, not checked in the source:
-- The tag input (select in tags mode) probably compares the typed value with the selected values without regard to case. This is either the option filter or a duplicate check that uses `toLowerCase()`.
-- For values that are not in Master Data, the duplicate check should compare the exact text. The case-insensitive match should stay only for converting Master Data values.
+- Guess: the Deck tag input finds an existing tag or option by comparing text without letter case, so `DOCK AREA` matches `Dock Area` and is treated as already selected. For free text it should compare exactly; only the Master Data match (AC 6.1) should ignore case.
+- Guess: the ETM-9223 fix changed the import validation only; the same compare in the form's tag input may be a separate piece of code.
+- Check Edit Work Breakdown too: it uses the same kind of Deck cell (not tested for this case).
+- We did not read the FE source or the network log for this.
 
 ## 7. How QA will retest
 
-- Run `verifyWorklistWorkingLocationEntry.spec.ts -g "ETM-8788"` (Plan "QA ETM-8049 Scratch"). Steps 8 and 11 must pass.
-- Check by hand in Edit Work Breakdown: a breakdown with `Dock Area` takes `DOCK AREA` as a second tag.
-- Make sure `MAIN DECK` still becomes `Main Deck`.
+- Automated: Xray ETM-8788 (TC-015), step 8 and the saved-row step.
+- Pass: `DOCK AREA` is added as a 4th tag, the saved row shows `Main Deck, Cellar Deck, Dock Area, DOCK AREA`. Control: typing `Dock Area` again (same spelling) still adds nothing. `main deck` still becomes `Main Deck` (Master Data, AC 6.1).
 
 ## 8. Out of scope / do not change
 
-- Master Data conversion (Main Deck, Cellar Deck, ...) stays as it is.
-- Import Excel is ETM-9223.
-- ETM-9225 (an old stored `main deck` is not converted) is a separate defect.
+- Exact duplicates (same spelling) in one cell must still be refused.
+- Master Data values keep converting to the Master Data spelling (AC 6.1, 6.3).
+- Do not change the Import Excel check fixed in ETM-9223.

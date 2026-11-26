@@ -1,0 +1,3 @@
+{"testKey":"ETM-8779","issueId":"2300233","savedAt":"2026-11-26","reason":"Q35 QA lead decision 26 Nov: tooltip only when the text is cut; user chat 26 Nov: ทำทั้ง 3","stepsChanged":[
+{"no":5,"id":"53713167-a8f8-4565-9327-f0e3ea10cefd","action":"Hover over the X cell of `WK-10b`.","data":null,"result":"A tooltip shows `0, 1, 2, 3, 4, 5, 6, 7, 8, 9`."},
+{"no":6,"id":"f407e97c-79d8-4545-a118-68c27d46d075","action":"Hover over the Y cell of `WK-10b`.","data":null,"result":"A tooltip shows `A, B, C, D, E, F, G, H, I, J`."}]}

@@ -1,0 +1,3 @@
+{"testKey":"ETM-8775","issueId":"2300229","savedAt":"2026-11-25","reason":"user chat 25 Nov: แก้แล้วรันซ้ำ (Department and Manpower Resource are hidden by default)","stepsChanged":[
+{"no":5,"id":"939f3d22-d3c4-43c0-ab5b-f17b896771ad","action":"Click `Apply`.","data":null,"result":"The popover closes and the table shows the default layout: the three Working Location columns are hidden and `Department` is back at its default place."},
+{"no":6,"id":"139ed9f1-eb9b-434e-9715-b13b9e290af0","action":"Open the Column Customization menu and check Deck, X and Y again.","data":null,"result":"The three columns appear between `Department` and `Manpower Resource` in the order Deck, X, Y."}]}

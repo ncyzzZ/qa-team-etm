@@ -1,0 +1,18 @@
+{
+ "id": "defect-draft-filter-option-case-match",
+ "kind": "defect",
+ "result": "unsure",
+ "firstOverall": "defect",
+ "checkerOverall": "not-proven",
+ "steps": [],
+ "warnings": [
+  "No picture shows Select All unticked or only Dock Area ticked; pic 5 shows all three ticked.",
+  "With all options ticked, both rows after Apply is correct; second explanation: script click on Select All/Dock Area did not take.",
+  "Case-sensitive matching was BA question Q5; its answer text is not recorded in ba-answers.md.",
+  "Pic 7 is from another plan (QA ETM-8049 Case, main deck) and does not belong to this defect.",
+  "Same TC passed on the afternoon build; a build change is possible but the pictures do not prove it.",
+  "Picture captions say Xray steps 1-3, not the brief's steps 1-6; mapping is unclear for a developer."
+ ],
+ "summary": "ยังพิสูจน์ไม่ได้: ไม่มีภาพที่แสดงว่าติ๊กเฉพาะ Dock Area (ภาพขั้น 5 ยังติ๊กทั้ง Select All, Dock Area, DOCK AREA) ผลหลัง Apply ที่เห็นทั้ง 2 แถวจึงถูกต้องตามสิ่งที่ติ๊กไว้ ควรถ่ายใหม่ให้เห็นสถานะ checkbox ก่อนกด Apply และยืนยันคำตอบ BA ข้อ Q5",
+ "sourceHash": "408d35a0603a"
+}
