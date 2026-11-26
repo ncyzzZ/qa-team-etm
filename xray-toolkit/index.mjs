@@ -88,13 +88,13 @@ const jqlKey = k => `key = "${String(k).replace(/"/g, '')}"`;
 const TOOLS = [
   {
     name: 'xray_scan_evidence',
-    description: 'Scan an evidence folder whose subfolders are named like "ETM-5994 TC-002 - ...". Returns the TC number -> Jira test key mapping and the file count per test, WITHOUT sending anything. Use this to check the mapping before importing.',
+    description: 'Scan an evidence folder whose subfolders are named like "<KEY>-5994 TC-002 - ...". Returns the TC number -> Jira test key mapping and the file count per test, WITHOUT sending anything. Use this to check the mapping before importing.',
     inputSchema: {
       type: 'object',
       properties: {
         evidenceDir: { type: 'string', description: 'Absolute path to the evidence folder' },
         keyPrefix: { type: 'string', description: 'Jira project prefix, e.g. "ETM-"' },
-        keyOffset: { type: 'number', description: 'Number added to the TC number to get the Jira key. TC-002 with offset 6033 -> ETM-6035' },
+        keyOffset: { type: 'number', description: 'Number added to the TC number to get the Jira key. TC-002 with offset 6033 -> <KEY>-6035' },
       },
       required: ['evidenceDir', 'keyPrefix', 'keyOffset'],
     },
@@ -105,14 +105,14 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        executionKey: { type: 'string', description: 'Test Execution issue key, e.g. ETM-6081' },
+        executionKey: { type: 'string', description: 'Test Execution issue key, e.g. <KEY>-6081' },
         tests: {
           type: 'array',
           description: 'Tests to update',
           items: {
             type: 'object',
             properties: {
-              testKey: { type: 'string', description: 'Test issue key, e.g. ETM-6035' },
+              testKey: { type: 'string', description: 'Test issue key, e.g. <KEY>-6035' },
               status: { type: 'string', description: 'PASSED | FAILED | TODO | EXECUTING' },
               comment: { type: 'string' },
               evidenceDir: { type: 'string', description: 'Absolute path to a folder of files to attach as evidence' },
@@ -130,7 +130,7 @@ const TOOLS = [
     description: 'Read a Test Execution from Xray Cloud: every test in it, with its Jira key, summary and current run status. Use this first to see what needs to be executed.',
     inputSchema: {
       type: 'object',
-      properties: { executionKey: { type: 'string', description: 'Test Execution issue key, e.g. ETM-6081' } },
+      properties: { executionKey: { type: 'string', description: 'Test Execution issue key, e.g. <KEY>-6081' } },
       required: ['executionKey'],
     },
   },
@@ -139,7 +139,7 @@ const TOOLS = [
     description: 'Read the manual test steps (action, data, expected result) of one Xray test. Test steps are stored in Xray, not in Jira fields, so this is the only way to get them.',
     inputSchema: {
       type: 'object',
-      properties: { testKey: { type: 'string', description: 'Test issue key, e.g. ETM-6035' } },
+      properties: { testKey: { type: 'string', description: 'Test issue key, e.g. <KEY>-6035' } },
       required: ['testKey'],
     },
   },

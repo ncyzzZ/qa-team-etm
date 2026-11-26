@@ -6,7 +6,8 @@
 //   node tools/build-change.mjs <KEY> [<run folder>]     print what changed since each failing test last passed
 //
 // tools/verdicts.mjs table calls annotate() and buildSuggest() itself; this CLI is for a quick look.
-import { isKey } from './profile.mjs';
+import { isKey, profile } from './profile.mjs';
+
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -60,9 +61,9 @@ export function annotate(rows, { lastPass, feMerges, failStart, scriptChanged = 
     const k = lp.end;
     if (!cache.has(k)) { try { cache.set(k, { merges: feMerges(lp.end, failStart) }); } catch (e) { cache.set(k, { error: e.message.split('\n')[0].slice(0, 120) }); } }
     const c = cache.get(k);
-    if (c.error) return { ...r, since: { lastPass: lp, merges: [], note: `${was}; stms-fe not read (${c.error})` } };
+    if (c.error) return { ...r, since: { lastPass: lp, merges: [], note: `${was}; ${profile().repos.feRepoDir} not read (${c.error})` } };
     const sc = !!lp.end && scriptChanged(r.file, lp.end);
-    return { ...r, since: { lastPass: lp, merges: c.merges, scriptChanged: sc, note: `${was}; ${c.merges.length} stms-fe merge(s) since${sc ? '; the spec changed too' : ''}` } };
+    return { ...r, since: { lastPass: lp, merges: c.merges, scriptChanged: sc, note: `${was}; ${c.merges.length} ${profile().repos.feRepoDir} merge(s) since${sc ? '; the spec changed too' : ''}` } };
   });
 }
 
@@ -87,7 +88,7 @@ export function buildSuggest(rows, { card, readyHeals = new Set() } = {}) {
     if (s.scriptChanged && !named.length) return r; // our own script edit can explain it as well: keep the cause-based suggestion
     const lead = named[0] || s.merges.at(-1);
     const why = [
-      `build change? ${s.lastPass.how ?? 'passed'} in ${s.lastPass.run.slice(0, 17)}, then stms-fe ${short(lead)}${named.length ? ` (names ${card})` : ''}`,
+      `build change? ${s.lastPass.how ?? 'passed'} in ${s.lastPass.run.slice(0, 17)}, then ${profile().repos.feRepoDir} ${short(lead)}${named.length ? ` (names ${card})` : ''}`,
       same.length >= 2 ? `${same.length} tests broke the same way (${same.join(', ')})` : '',
       r.cause === 'locator' ? 'no ready heal' : '',
       'check that merge first, then 1 defect for the group',
@@ -120,9 +121,9 @@ export async function withBuildInfo(card, runDir, rows) {
     const failStart = runTimes(runDir)?.start;
     const haveFe = fs.existsSync(path.join(feRepo, '.git'));
     if (haveFe) { try { git(feRepo, ['fetch', '--quiet', 'origin']); } catch { /* offline: use what is there */ } }
-    const ref = 'origin/develop';
+    const ref = `origin/${profile().repos.feBranch}`;
     const feMerges = (since, until) => {
-      if (!haveFe) throw new Error('stms-fe not found (FE_REPO)');
+      if (!haveFe) throw new Error(`${profile().repos.feRepoDir} not found (FE_REPO)`);
       const a = commitBefore(feRepo, ref, since), b = commitBefore(feRepo, ref, until);
       if (!a || !b || a === b) return [];
       return merges(feRepo, a, b).map(({ commit, branch, keys }) => ({ commit, branch, keys }));

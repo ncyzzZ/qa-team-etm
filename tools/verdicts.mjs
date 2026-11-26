@@ -51,7 +51,7 @@ export async function table(key, runDir, root = ROOT, annotate = null) {
   const md = [
     `# ${key} - failures to decide (run ${path.basename(runDir)})`, '',
     'AI suggestion only. Answer all rows in one reply, e.g. `1=script 2=app 3=tc` (script / tc / app / env / flaky).', '',
-    ...(builds.length ? [`**Build change?** Rows ${builds.join(', ')} behaved differently in an earlier run and stms-fe changed since (Since last pass). Check the named merge on the live page before any script fix; if it is the cause, they are one defect.`, ''] : []),
+    ...(builds.length ? [`**Build change?** Rows ${builds.join(', ')} behaved differently in an earlier run and ${profile().repos.feRepoDir} changed since (Since last pass). Check the named merge on the live page before any script fix; if it is the cause, they are one defect.`, ''] : []),
     `| # | Test | Failed with | Cause | AI suggests | Why |${since ? ' Since last pass |' : ''}`, `|---|---|---|---|---|---|${since ? '---|' : ''}`,
     ...rows.map((r) => `| ${r.n} | ${r.key} | ${(r.firstLine ?? '').replace(/\|/g, '/').slice(0, 90)} | ${r.cause} | ${r.suggest} | ${r.why.replace(/\|/g, '/')} |${since ? ` ${sinceCell(r)} |` : ''}`),
   ].join('\n') + '\n';

@@ -16,6 +16,7 @@ import { extractTokens, isLibraryToken, GENERIC_TOKENS } from './selectors.mjs';
 import { lookup as realLookup } from './source-lookup.mjs';
 import { checkHealDiff } from './guard.mjs';
 import { resolveRepos } from './config.mjs';
+import { profile } from '../profile.mjs';
 
 const FILE = 'heal-proposals.json';
 const esc = (v) => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -57,19 +58,19 @@ export function proposeOne(pwRepo, feRepo, row, { lookup = realLookup } = {}) {
   if (where.reason) return { ...base, status: 'manual', reason: where.reason };
   const at = `${where.file}:${where.line}`;
   const tokens = extractTokens(where.text, where.file).filter((t) => !GENERIC_TOKENS.has(t.value));
-  if (!tokens.length) return { ...base, page: at, status: 'needs-live', reason: 'no plain token to look up in stms-fe (regex, template or generic)' };
-  if (tokens.some((t) => isLibraryToken(t.value))) return { ...base, page: at, status: 'needs-live', reason: 'library class (Bryntum / AG Grid / ng-zorro), not in stms-fe templates' };
+  if (!tokens.length) return { ...base, page: at, status: 'needs-live', reason: `no plain token to look up in ${profile().repos.feRepoDir} (regex, template or generic)` };
+  if (tokens.some((t) => isLibraryToken(t.value))) return { ...base, page: at, status: 'needs-live', reason: `library class (Bryntum / AG Grid / ng-zorro), not in ${profile().repos.feRepoDir} templates` };
   const looked = tokens.map((t) => ({ t, r: lookup(feRepo, t) }));
   const gone = looked.filter((x) => !x.r.present);
-  if (!gone.length) return { ...base, page: at, status: 'needs-live', reason: 'every token is still in stms-fe (maybe timing, state or QA runs an older build)' };
+  if (!gone.length) return { ...base, page: at, status: 'needs-live', reason: `every token is still in ${profile().repos.feRepoDir} (maybe timing, state or QA runs an older build)` };
   const answer = gone.filter((x) => x.r.candidates.length === 1);
-  if (answer.length !== gone.length) return { ...base, page: at, status: 'needs-live', reason: `stms-fe removed ${gone.map((x) => x.t.value).join(', ')} with no single replacement` };
+  if (answer.length !== gone.length) return { ...base, page: at, status: 'needs-live', reason: `${profile().repos.feRepoDir} removed ${gone.map((x) => x.t.value).join(', ')} with no single replacement` };
   let next = where.text;
   for (const { t, r } of answer) next = next.replace(new RegExp(`(?<![\\w-])${esc(t.value)}(?![\\w-])`), r.candidates[0]);
   const diff = [`diff --git a/${where.file} b/${where.file}`, `--- a/${where.file}`, `+++ b/${where.file}`,
     `@@ -${where.line},1 +${where.line},1 @@`, `-${where.text}`, `+${next}`, ''].join('\n');
   const guard = checkHealDiff(diff);
-  const from = answer.map(({ t, r }) => `${t.value} -> ${r.candidates[0]} (stms-fe ${r.removedIn?.commit?.slice(0, 8) ?? '?'})`).join('; ');
+  const from = answer.map(({ t, r }) => `${t.value} -> ${r.candidates[0]} (${profile().repos.feRepoDir} ${r.removedIn?.commit?.slice(0, 8) ?? '?'})`).join('; ');
   if (!guard.ok) return { ...base, page: at, status: 'manual', reason: `heal guard refused: ${guard.errors[0]}`, from };
   return { ...base, page: at, status: 'ready', old: where.text.trim(), new: next.trim(), oldLine: where.text, newLine: next, from, source: 'fe', diff };
 }
@@ -86,7 +87,7 @@ export function propose(runDir, { pwRepo, feRepo, lookup } = {}) {
   const seen = new Set();
   const rows = triage.filter((r) => r.cause === 'locator' && !seen.has(`${r.key}|${r.locator}`) && seen.add(`${r.key}|${r.locator}`));
   const feOk = fs.existsSync(path.join(feRepo, '.git'));
-  const proposals = rows.map((r, i) => ({ id: i + 1, ...(feOk ? proposeOne(pwRepo, feRepo, r, { lookup }) : { test: r.key, title: r.title, locator: r.locator, status: 'needs-live', reason: 'FE_REPO (stms-fe) not found' }) }));
+  const proposals = rows.map((r, i) => ({ id: i + 1, ...(feOk ? proposeOne(pwRepo, feRepo, r, { lookup }) : { test: r.key, title: r.title, locator: r.locator, status: 'needs-live', reason: `FE_REPO (${profile().repos.feRepoDir}) not found` }) }));
   proposals.filter((p) => p.diff).forEach((p) => fs.writeFileSync(path.join(runDir, `heal-${p.id}.diff`), p.diff));
   const data = { run: path.basename(runDir), created: new Date().toISOString(), notified: false, proposals };
   if (proposals.length) write(runDir, data);

@@ -122,7 +122,7 @@ export function resolveFile(key, p, { root = ROOT, pwRepo } = {}) {
   const stored = String(p).trim().replace(/\\/g, '/');
   if (stored.startsWith('pw:')) {
     const rel = stored.slice(3);
-    if (!pwRepo || !fs.existsSync(pwRepo) && !path.isAbsolute(pwRepo)) return { abs: '', allowed: false, stored, why: 'PW_REPO not found (node tools/setup.mjs <folder of ep-etm-fe-qa>)' };
+    if (!pwRepo || !fs.existsSync(pwRepo) && !path.isAbsolute(pwRepo)) return { abs: '', allowed: false, stored, why: `PW_REPO not found (node tools/setup.mjs <folder of ${profile().repos.pwRepoDir}>)` };
     const abs = path.resolve(pwRepo, rel);
     const ok = !path.isAbsolute(rel) && within(pwRepo, abs);
     return { abs, allowed: ok, stored, why: ok ? '' : 'outside the Playwright repo' };

@@ -6,7 +6,6 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { resolveRepos } from './config.mjs';
 import { profile } from '../profile.mjs';
 
 // per subcommand: allowed flags. "=" suffix = prefix match (--format=...), "+" suffix = takes the next arg as its value
@@ -30,7 +29,7 @@ const SAFE_CONFIG = [
 const EXTRA = { diff: ['--no-ext-diff', '--no-textconv'], show: ['--no-ext-diff', '--no-textconv'], log: ['--no-ext-diff', '--no-textconv'], fetch: ['--no-recurse-submodules'], pull: ['--no-recurse-submodules'] };
 
 // The branch that may be pulled: the profile's FE branch (repos.feBranch), unless a caller passes one.
-const defaultBranch = () => resolveRepos().feBranch;
+const defaultBranch = () => profile().repos.feBranch;
 const feName = () => profile().repos.feRepoDir; // for messages only
 
 function flagsOk(sub, rest, branch) {

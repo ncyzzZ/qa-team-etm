@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { tier, commands } from './core.mjs';
+import { profile } from '../profile.mjs';
 
 const MAP_FILE = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'regress-map.json');
 const readJson = (f) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return null; } };
@@ -28,7 +29,7 @@ export function startOf({ pwRepo, feRepo, since, sinceDays, to, now, commitBefor
 
 function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
   const L = [];
-  L.push(`# Regression from stms-fe changes ${range.since.slice(0, 7)}..${range.to.slice(0, 7)}`, '');
+  L.push(`# Regression from ${profile().repos.feRepoDir} changes ${range.since.slice(0, 7)}..${range.to.slice(0, 7)}`, '');
   L.push(`- Range: ${range.since} .. ${range.to} (${range.toRef}); start chosen by: ${how}.`);
   L.push("- QA's deployed commit is unknown: this compares develop, so a change may not be on QA yet.");
   L.push(`- ${groups.length} merge group(s)${groups.some((g) => g.error) ? ` (${groups.filter((g) => g.error).length} NOT checked: diff failed)` : ''}; specs: Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}.`, '');
@@ -73,8 +74,8 @@ export async function main(args, d) {
     return 0;
   }
   if (!d.feRepo || !fs.existsSync(d.pwRepo || '')) { d.log('FE_REPO / PW_REPO not found: run node tools/setup.mjs'); return 2; }
-  if (!args.includes('--no-update')) { const u = d.update(d.feRepo); d.log(`[regress] stms-fe: ${u.mode}${u.reason ? ` (${u.reason})` : ''}`); }
-  const toRef = opt('--to') || 'origin/develop';
+  if (!args.includes('--no-update')) { const u = d.update(d.feRepo); d.log(`[regress] ${profile().repos.feRepoDir}: ${u.mode}${u.reason ? ` (${u.reason})` : ''}`); }
+  const toRef = opt('--to') || `origin/${profile().repos.feBranch}`;
   const to = d.resolve(d.feRepo, toRef);
   const start = startOf({ pwRepo: d.pwRepo, feRepo: d.feRepo, since: opt('--since'), sinceDays: opt('--since-days'), to, now, commitBefore: d.commitBefore, gitDate: d.gitDate });
   if (!start.ref) { d.log(`[regress] no commit of ${toRef} before the start (${start.how})`); return 2; }

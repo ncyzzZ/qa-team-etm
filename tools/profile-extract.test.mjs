@@ -24,7 +24,7 @@ const { isLibraryToken } = await import('./heal/selectors.mjs');
 const { parseAssessment } = await import('./sprint-report.mjs');
 const { record } = await import('./verdicts.mjs');
 const { readVerdicts } = await import('./manual/results.mjs');
-const { rowsFromResults, recordRunResults } = await import('./run-results.mjs');
+const { recordRunResults } = await import('./run-results.mjs');
 const { testsOf } = await import('./rerun-guard.mjs');
 const { scanSpec } = await import('./live-check.mjs');
 

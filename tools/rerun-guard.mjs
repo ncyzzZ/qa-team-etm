@@ -101,10 +101,10 @@ export function decide(h, changedAt, now = Date.now(), c = null) {
   if (failedToday >= FAILED_ROUNDS_LIMIT) return { keep: false, why: `failed in ${failedToday} runs today (limit ${FAILED_ROUNDS_LIMIT}): stop and offer it as manual (TEAM.md fix rounds)` };
   if (c && last.hash && last.end) {
     if (c.hash !== last.hash) return { keep: true, why: 'this test changed since its last run' };
-    if (c.otherAt > last.end) return { keep: true, why: 'an import, the card data or stms-fe changed since its last run' };
+    if (c.otherAt > last.end) return { keep: true, why: `an import, the card data or ${profile().repos.feRepoDir} changed since its last run` };
   } else if (last.end && changedAt > last.end) return { keep: true, why: 'changed since its last run' };
   const was = last.status === 'passed' ? 'passed' : last.status === 'skipped' ? 'was skipped' : `failed with "${last.msg.slice(0, 50)}"`;
-  return { keep: false, why: `same result expected: ${was} in ${last.run.slice(0, 17)} and nothing changed since (spec, its imports, card data, stms-fe)` };
+  return { keep: false, why: `same result expected: ${was} in ${last.run.slice(0, 17)} and nothing changed since (spec, its imports, card data, ${profile().repos.feRepoDir})` };
 }
 
 /**
@@ -142,7 +142,7 @@ export async function feChangedAt() {
     const { feRepo } = resolveRepos();
     if (!fs.existsSync(path.join(feRepo, '.git'))) return 0;
     try { git(feRepo, ['fetch', '--quiet', 'origin']); } catch { /* offline */ }
-    const iso = git(feRepo, ['log', '-1', '--format=%cI', 'origin/develop']);
+    const iso = git(feRepo, ['log', '-1', '--format=%cI', `origin/${profile().repos.feBranch}`]);
     return iso ? new Date(iso).getTime() : 0;
   } catch { return 0; }
 }

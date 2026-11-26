@@ -13,6 +13,7 @@ import { extractTokens, GENERIC_TOKENS, isLibraryToken } from './selectors.mjs';
 import { lookup, mentionsToken, APP_FILES } from './source-lookup.mjs';
 import { readBaseline, advanceBaseline, pagesUsedBy, allUnits, pageUnit } from './baseline.mjs';
 import { resolveRepos } from './config.mjs';
+import { profile } from '../profile.mjs';
 
 function filesOfUnit(pwRepo, unit) {
   const root = path.join(pwRepo, 'pages');
@@ -49,7 +50,7 @@ export function preflight(pwRepo, feRepo, { specs, card } = {}) {
       for (const t of extractTokens(fs.readFileSync(f, 'utf8'), rel)) {
         if (GENERIC_TOKENS.has(t.value.toLowerCase()) || isLibraryToken(t.value)) continue;
         if (!minus.some((l) => l.includes(t.value) && mentionsToken(l, t.kind, t.value))) continue;
-        const r = lookup(feRepo, t, 'origin/develop');
+        const r = lookup(feRepo, t, `origin/${profile().repos.feBranch}`);
         if (r.present || r.library) continue;
         atRisk.push({ page: rel, line: t.line, token: t, candidates: r.candidates, commit: r.removedIn?.commit || null, author: r.removedIn?.author || null });
       }
@@ -59,10 +60,10 @@ export function preflight(pwRepo, feRepo, { specs, card } = {}) {
   const reportFile = path.join(pwRepo, 'output', 'heal', `preflight-${day}.md`);
   const lines = [
     `# Pre-flight ${day}${card ? ` (${card})` : ''}`, '',
-    `stms-fe: ${fe.mode} (${fe.reason}); newest origin/develop ${fe.newest ? `${fe.newest.commit.slice(0, 8)} ${fe.newest.date}` : 'unknown'}`,
+    `${profile().repos.feRepoDir}: ${fe.mode} (${fe.reason}); newest origin/${profile().repos.feBranch} ${fe.newest ? `${fe.newest.commit.slice(0, 8)} ${fe.newest.date}` : 'unknown'}`,
     `Checked page units: ${units.join(', ') || 'none'}`,
     noBaseline.length ? `No baseline yet (recorded now, checked from the next pre-flight): ${noBaseline.join(', ')}` : '',
-    '', atRisk.length ? '| Page | Old token | Proposed | FE commit | Author | Status |' : 'No locator looks broken by the stms-fe changes.',
+    '', atRisk.length ? '| Page | Old token | Proposed | FE commit | Author | Status |' : `No locator looks broken by the ${profile().repos.feRepoDir} changes.`,
     ...(atRisk.length ? ['|---|---|---|---|---|---|'] : []),
     ...atRisk.map((x) => `| ${x.page}:${x.line} | ${x.token.kind}:${x.token.value} | ${x.candidates.join(', ') || 'needs live check'} | ${x.commit?.slice(0, 8) ?? '-'} | ${x.author ?? '-'} | probably broken |`),
   ].filter((l) => l !== null);
@@ -76,10 +77,10 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const card = args.includes('--card') ? args[args.indexOf('--card') + 1] : undefined;
   const specs = args.filter((a, i) => !a.startsWith('--') && args[i - 1] !== '--card').map((s) => (s.startsWith('tests/') ? s : path.join('tests', 'fe', s.endsWith('.ts') ? s : `${s}.ts`)));
   const { pwRepo, feRepo } = resolveRepos();
-  if (!fs.existsSync(path.join(feRepo, '.git'))) { console.log(`[preflight] stms-fe not found at ${feRepo}: skipped (set FE_REPO in .env)`); process.exit(0); }
+  if (!fs.existsSync(path.join(feRepo, '.git'))) { console.log(`[preflight] ${profile().repos.feRepoDir} not found at ${feRepo}: skipped (set FE_REPO in .env)`); process.exit(0); }
   const r = preflight(pwRepo, feRepo, { specs, card });
-  console.log(`[preflight] stms-fe ${r.fe.mode}: ${r.fe.reason}`);
-  if (r.fe.newest) console.log(`[preflight] newest origin/develop ${r.fe.newest.commit.slice(0, 8)} ${r.fe.newest.date}`);
+  console.log(`[preflight] ${profile().repos.feRepoDir} ${r.fe.mode}: ${r.fe.reason}`);
+  if (r.fe.newest) console.log(`[preflight] newest origin/${profile().repos.feBranch} ${r.fe.newest.commit.slice(0, 8)} ${r.fe.newest.date}`);
   if (r.noBaseline.length) console.log(`[preflight] no baseline yet (recorded now): ${r.noBaseline.join(', ')}`);
   for (const x of r.atRisk) console.log(`  probably broken  ${x.page}:${x.line}  ${x.token.kind}:${x.token.value}  ->  ${x.candidates.join(', ') || 'needs live check'}  (${x.commit?.slice(0, 8)} ${x.author})`);
   console.log(`[preflight] ${r.atRisk.length} locator(s) probably broken. Report: ${r.reportFile}`);

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { git as realGit } from './fe-git.mjs';
 import { isLibraryToken, extractTokens } from './selectors.mjs';
 import { resolveRepos } from './config.mjs';
+import { profile } from '../profile.mjs';
 
 const TEXTISH = new Set(['text', 'role-name', 'label']);
 /** stms-fe files that make up the running app (pathspecs). .spec.ts files are dropped after the grep. */
@@ -72,7 +73,7 @@ function changeBlocks(diff) {
  * @param {{ kind: string, value: string }} token
  * @returns {{ present: boolean, library: boolean, removedIn: { commit: string, author: string, date: string, file: string }|null, candidates: string[] }}
  */
-export function lookup(feRepo, token, ref = 'origin/develop', { git = realGit } = {}) {
+export function lookup(feRepo, token, ref = `origin/${profile().repos.feBranch}`, { git = realGit } = {}) {
   const { kind, value } = token;
   if ((kind === 'class' || kind === 'tag') && isLibraryToken(value)) return NONE({ library: true });
   // 1) still present at ref?
@@ -107,11 +108,11 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const args = process.argv.slice(2);
   const opt = (n, d) => (args.includes(n) ? args[args.indexOf(n) + 1] : d);
   const sel = args[0];
-  if (!sel) { console.error('Usage: node tools/heal/source-lookup.mjs "<selector or text>" [--kind class] [--ref origin/develop]'); process.exit(2); }
+  if (!sel) { console.error('Usage: node tools/heal/source-lookup.mjs "<selector or text>" [--kind class] [--ref origin/<branch>]'); process.exit(2); }
   const { feRepo } = resolveRepos();
   const kindArg = opt('--kind', null);
   // a full Playwright locator ("locator('.x')", "getByText('Save')") is parsed into tokens; a bare value needs --kind
   const toks = kindArg ? [{ kind: kindArg, value: sel }] : extractTokens(/locator\(|getBy/.test(sel) ? sel : `locator('${sel}')`, 'cli');
-  const out = toks.map((t) => ({ token: `${t.kind}:${t.value}`, ...lookup(feRepo, t, opt('--ref', 'origin/develop')) }));
+  const out = toks.map((t) => ({ token: `${t.kind}:${t.value}`, ...lookup(feRepo, t, opt('--ref', `origin/${profile().repos.feBranch}`)) }));
   console.log(JSON.stringify(out, null, 2));
 }

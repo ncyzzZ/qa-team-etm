@@ -1,17 +1,17 @@
 // agent-eval.mjs - score what the agents WROTE against a known answer key. No AI judge, no Jira, no Xray, no app run.
 //   node tools/agent-eval.mjs <KEY>              score .claude/team/work/<KEY>/ against evals/agents/<KEY>.key.json
 //   node tools/agent-eval.mjs <KEY> --role analyst,designer
-//   node tools/agent-eval.mjs selftest           check the scorer itself on evals/agents/ETM-0000.key.json (fixtures)
+//   node tools/agent-eval.mjs selftest           check the scorer itself on evals/agents/selftest.key.json (fixtures)
 // Roles scored: analyst (recall of must_find, invented facts), designer (must_cover, min_cases, qa-check draft errors),
 //               reviewer (verdict + planted defects caught), automator (qa-check spec errors, TC ids mapped).
 import fs from 'node:fs'; import path from 'node:path'; import { spawnSync } from 'node:child_process'; import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const [arg0, ...rest] = process.argv.slice(2);
 if (!arg0) { console.error('Usage: node tools/agent-eval.mjs <KEY|selftest> [--role a,b]'); process.exit(2); }
-const key = arg0 === 'selftest' ? 'ETM-0000' : arg0;
+const key = arg0;
 const roleArg = rest.includes('--role') ? rest[rest.indexOf('--role') + 1].split(',') : null;
 const keyFile = path.join(ROOT, 'evals', 'agents', `${key}.key.json`);
-if (!fs.existsSync(keyFile)) { console.error(`No answer key: ${keyFile}\nCopy evals/agents/ETM-0000.key.json and fill in what you know is true for the card.`); process.exit(2); }
+if (!fs.existsSync(keyFile)) { console.error(`No answer key: ${keyFile}\nCopy evals/agents/selftest.key.json and fill in what you know is true for the card.`); process.exit(2); }
 const K = JSON.parse(fs.readFileSync(keyFile, 'utf8'));
 const dir = path.join(ROOT, K.dir || `.claude/team/work/${key}`);
 const read = f => { const p = path.join(dir, f); return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null; };
