@@ -67,3 +67,8 @@ Push plan (`push-plan.md`): 10 PASSED + 8656 FAILED. ETM-8897 / ETM-8902 in the 
 - Manual results confirmed (8650 step 3, 8654 step 3, 8663 step 1 decided pass by the user; 8657 confirmed as proposed). Pushed with pictures per step: 8650, 8654, 8657 (xray-step-push); 8663 via import (step 1 has no picture: cannot be done on this build).
 - **Xray ETM-8874: 15 PASSED, 1 TO DO.** ETM-8648 stays TO DO: not applicable (QA has only TM and JO, no login without View Worklist; user answer "na").
 - Card data of 11:33 is kept (`--keep-data`); the next run-card of ETM-8391 deletes it. Script fixes of 26 Nov (8651 Remark box, 8663 new-tab pictures) are not committed.
+
+## Closeout 26 Nov 2026 (user: "ปิดงานได้เลย")
+- 16 linked Tests ETM-8648..8663: Resolved -> Closed, resolution Done, assignee QA (JQL count 16/16). ETM-8648 closed as not applicable (no user without View Worklist on QA).
+- Test Execution ETM-8874 -> Done. [QA] Execute Test Case ETM-8576 -> Done (no worklog added). Story ETM-8391 -> Ready for UAT.
+- Not touched: dev sub-tasks ETM-8553/8554/8555 (In Progress), defects ETM-8896/8897/8898/8902/10065 (Ready for UAT).
