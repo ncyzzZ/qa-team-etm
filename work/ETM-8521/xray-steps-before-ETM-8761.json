@@ -1,0 +1,6 @@
+{"ETM-8761":{"issueId":"2300065","backup":"2026-11-25 before deleting steps 1-4 (user chat: ลบ)","steps":[
+{"no":1,"id":"05d8d414-f8fc-4959-986d-822fa478439a","action":"Record POB and Man-hrs of an Lv4 row.","result":"The values are written down."},
+{"no":2,"id":"3c42721f-1af5-4bf3-912d-3cefb1945463","action":"Paste the block with the focus on the POB cell.","result":"The paste finishes."},
+{"no":3,"id":"ec542f5a-8748-43ac-88a9-621546d5d0d1","action":"Check POB and Man-hrs.","result":"They keep the recorded values (skipped)."},
+{"no":4,"id":"5be0d4b9-933e-4252-b025-e3d2ebb07f71","action":"Check the Description cell if it is inside the pasted range.","result":"It shows `Gauge test` (editable cell proceeds)."},
+{"no":5,"id":"76ec31d8-6e8b-4661-91d0-7779efa0c280","action":"Click the Duration cell of a Lv3 Work row and paste the value `99`.","result":"Assumption Q5: the Duration, Start and End of the Work row are calculated from its Lv4 rows, so the cell keeps its recorded value; repeat on a Lv2 Work Header row and a Lv1 Platform row with the same result. Note the real outcome and confirm with BA."}]}}

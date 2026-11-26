@@ -1,8 +1,15 @@
 {
   "ETM-8737": {
     "verdict": "app",
-    "source": "board",
-    "evidence": "ANSWER: log + assign jif",
-    "at": "2026-11-25T08:13:57.502Z"
+    "defect": "ETM-10058",
+    "source": "chat",
+    "evidence": "chat 25 Nov: 1=app 2=app push=yes",
+    "at": "2026-11-25T13:01:40.497Z"
+  },
+  "ETM-8749": {
+    "verdict": "app",
+    "source": "chat",
+    "evidence": "chat 25 Nov: 1=app 2=app push=yes",
+    "at": "2026-11-25T13:01:40.497Z"
   }
 }

@@ -1,8 +1,8 @@
 {
  "id": "ETM-8738",
  "kind": "manual",
- "result": "agree-with-warnings",
- "firstOverall": "cannot-tell",
+ "result": "unsure",
+ "firstOverall": "fail",
  "checkerOverall": "cannot-tell",
  "steps": [
   {
@@ -31,69 +31,40 @@
   },
   {
    "n": 5,
-   "first": "needs-human",
-   "checker": "cannot-tell",
-   "match": false
-  },
-  {
-   "n": 6,
    "first": "pass",
    "checker": "pass",
    "match": true
   },
   {
+   "n": 6,
+   "first": "fail",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
    "n": 7,
-   "first": "pass",
+   "first": "needs-human",
    "checker": "cannot-tell",
    "match": false
   },
   {
    "n": 8,
-   "first": "needs-human",
-   "checker": "cannot-tell",
-   "match": false
-  },
-  {
-   "n": 9,
-   "first": "needs-human",
-   "checker": "cannot-tell",
-   "match": false
-  },
-  {
-   "n": 10,
-   "first": "needs-human",
-   "checker": "cannot-tell",
-   "match": false
-  },
-  {
-   "n": 11,
-   "first": "needs-human",
-   "checker": "cannot-tell",
-   "match": false
-  },
-  {
-   "n": 12,
-   "first": "needs-human",
+   "first": "pass",
    "checker": "cannot-tell",
    "match": false
   }
  ],
  "warnings": [
-  "step 2: picture blank, cut or not full screen",
-  "step 5: picture blank, cut or not full screen",
   "step 7: picture blank, cut or not full screen",
-  "step 8: picture blank, cut or not full screen",
-  "step 9: picture blank, cut or not full screen",
-  "step 10: picture blank, cut or not full screen",
-  "step 11: picture blank, cut or not full screen",
-  "Core AC 2 comparison (steps 5, 8-10) has no evidence: no previous build, no saved ETM-2615 results; AC 2 unproven.",
-  "Step 7: only rows 4-8 visible; the 50-row claim rests on a store read, not on pictures.",
-  "Paste wrote Description into Work Header rows (e.g. 'PLCPP2 FSD 5000 0091 : Large paste 2'); BA question R3-3 still open.",
-  "Step 12 expects 'first 50 Lv4 rows' but range covered 25 Lv4 + 25 parent rows; wording does not match step 7.",
-  "Step 4: 20.6 s with a 7.8 s stall is only in the note text; no before time to compare.",
-  "Note boxes cover rows 2-7 in several pictures, hiding part of the pasted range.",
-  "Step 2 picture cannot show the clipboard; navigator.clipboard.writeText is a script action, not a user step."
+  "Step 6 callout contradicts itself: says Work Duration changed on 24 of 25 rows, red Result says 'Duration unchanged'.",
+  "Expected 'Duration unchanged' is ambiguous: Work Durations changed by roll-up (8.00 to 4.00, 1.00 to 5.50), not by paste. Reword to 'stays computed'.",
+  "Step 7 picture shows only a loading spinner: no Confirm modal, no Save Success toast. Save outcome not proven by picture.",
+  "Step 2 clipboard content cannot be seen on screen; only the callout text claims it.",
+  "Steps 6 and 8 pictures show only a few of the 50 rows; full comparison rests on the tool text, not the pictures.",
+  "First Ctrl+V did nothing, Cmd+V worked (Mac). Developer steps should say Cmd+V on Mac, or check Ctrl+V handling.",
+  "Test title says 'equals old behaviour' but BA R2-7: no old build; title should be updated.",
+  "Save wrote to 'New Plan 20,000 Work' (Export 5000). Confirm it is card-owned, not a plan other testers use."
  ],
- "summary": "ภาพยืนยันได้ว่าวางข้อมูลได้ ไม่มี error และ reload แล้วค่ากลับเหมือนเดิม (เห็นแค่แถว 1-8) แต่ส่วนหลักของ AC 2 (เทียบกับ build เก่า) ไม่มีหลักฐานเลย จึงสรุปได้แค่ cannot-tell และยังมีคำถาม BA R3-3 เรื่อง Description ที่ถูกวางลงแถว Work Header ค้างอยู่",
- "sourceHash": "fced114e8b01"
+ "summary": "ภาพยืนยันได้ว่าวางข้อมูล 'Large paste n' / 4.00 ลงแถว Lv4 และค่ายังอยู่หลัง reload (เท่าที่มองเห็น) แต่ขั้น 7 ภาพมีแค่ spinner ไม่เห็น toast Save Success และขั้น 6 ข้อความในภาพขัดกันเอง (Duration ของแถว Work เปลี่ยนจาก roll-up แต่สรุปว่า unchanged) จึงตัดสินว่า cannot-tell ควรแก้ Expected เป็น 'Dura",
+ "sourceHash": "e118aa96fc91"
 }
