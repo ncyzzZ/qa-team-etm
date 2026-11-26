@@ -471,7 +471,8 @@ const MANUAL_WHY = /^(ui|job|email|user):\s*\S/;   // eye judgement, job run, em
 /** Spec titles that carry @high, per Xray key (PW_REPO tests/). */
 function highTagged(pwRepo) {
   const out = new Map();
-  const walk = (d) => { for (const e of fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }) : []) { const f = path.join(d, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules') walk(f); } else if (/\.spec\.ts$/.test(e.name)) for (const m of fs.readFileSync(f, 'utf8').matchAll(/\btest(?:\.\w+)?\(\s*(['"`])((?:ETM-\d+)[^'"`]*)\1/g)) { const k = m[2].match(/^ETM-\d+/)[0]; out.set(k, (out.get(k) || false) || /@high\b/.test(m[2])); } } };
+  const titleRe = new RegExp(`\\btest(?:\\.\\w+)?\\(\\s*(['"\`])((?:${escapeKey(profile().jira.projectKey)}-\\d+)[^'"\`]*)\\1`, 'g');
+  const walk = (d) => { for (const e of fs.existsSync(d) ? fs.readdirSync(d, { withFileTypes: true }) : []) { const f = path.join(d, e.name); if (e.isDirectory()) { if (e.name !== 'node_modules') walk(f); } else if (/\.spec\.ts$/.test(e.name)) for (const m of fs.readFileSync(f, 'utf8').matchAll(titleRe)) { const k = firstKey(m[2]); if (k) out.set(k, (out.get(k) || false) || /@high\b/.test(m[2])); } } };
   walk(path.join(pwRepo, 'tests'));
   return out;
 }

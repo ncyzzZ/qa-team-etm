@@ -5,6 +5,7 @@ Rules that hold only for ETM (EP-Turnaround Management). They reach Claude throu
 ## Roles
 
 - **Only two roles on QA: TM and JO.** TM (Turnaround Manager) can do everything and has "View All Daily Report Item"; JO (Job Owner) is view only, has "View Active Daily Report Item", and cannot open a plan that is not Active. There is no third account: do not ask for one. Only one Plan per event can be Active; turning one on sets the old one Inactive and affects other testers, so ask first.
+- **High role access (TEAM.md "How much E2E", tier `regression` / `@high`):** TM can, JO cannot (JO sees only Active plans). An `@high` test title looks like `ETM-1234 - ... @high`.
 
 ## Data rules
 
@@ -42,4 +43,5 @@ Jira site, key, id, board, repo folders, UI map, templates and Jira field ids co
 - Login roles in the Playwright repo `.env`: TA Manager (`turnaroundManager`) and Job Owner (`jobOwner`).
 - Card data seed kinds (`needs` in `scripts/seed/cards/<KEY>.data.cjs`): `shutdownLogic`, `dailyReport`, `manpowerMobPlan`, `equipmentMobPlan`.
 - Regression map (FE page folder -> spec folders for `tools/regress.mjs`): `profiles/etm/regress-map.json`.
+- FE repo: `stms-fe` (profile `repos.feRepoDir`), branch `develop`; "FE repo" / "FE build" in TEAM.md and the heal hook mean it. Live heals from the FE source are `source: fe`.
 - Xray Test Repository Bin folder (default folder of `etm-xray-delete-test-executions` Mode 2): `/Manual Test/Bin`, folder id `69a8ed78018e9874f5130640`.

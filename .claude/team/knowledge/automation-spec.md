@@ -5,7 +5,7 @@ with a one-line reason.
 
 ## How much (TEAM.md "How much E2E")
 
-Team standard: automate almost everything; manual only for `ui:` (a person judges by eye), `job:` (a scheduled job run), `email:` (an email is sent) or `user:` (the user's ruling). Target: every non-manual AC has a `strong` test. Tiers per AC: `regression` = **High** (`@high` at the end of the test title, run by `npm run test:fe:high`, the FE pipeline set): core flow create / save / edit / delete, a calculation or rule the user acts on, TM / JO access, data kept after save / import / paste / undo; about 1-3 per Story. `card`: every other AC, run in the full run; many values = one data-table test. Prefer Yes over Partial: a step a person checks on a picture becomes an assertion whenever the screen gives text, a number, a state or a colour.
+Team standard: automate almost everything; manual only for `ui:` (a person judges by eye), `job:` (a scheduled job run), `email:` (an email is sent) or `user:` (the user's ruling). Target: every non-manual AC has a `strong` test. Tiers per AC: `regression` = **High** (`@high` at the end of the test title, run by `npm run test:fe:high`, the FE pipeline set): core flow create / save / edit / delete, a calculation or rule the user acts on, role access (roles in the project rules), data kept after save / import / paste / undo; about 1-3 per Story. `card`: every other AC, run in the full run; many values = one data-table test. Prefer Yes over Partial: a step a person checks on a picture becomes an assertion whenever the screen gives text, a number, a state or a colour.
 
 ## When to automate
 
