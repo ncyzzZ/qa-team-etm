@@ -31,7 +31,7 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
   L.push(`# Regression from stms-fe changes ${range.since.slice(0, 7)}..${range.to.slice(0, 7)}`, '');
   L.push(`- Range: ${range.since} .. ${range.to} (${range.toRef}); start chosen by: ${how}.`);
   L.push("- QA's deployed commit is unknown: this compares develop, so a change may not be on QA yet.");
-  L.push(`- ${groups.length} merge group(s)${groups.some((g) => g.error) ? ` (${groups.filter((g) => g.error).length} NOT checked: diff failed)` : ''}; specs: Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}.`, '');
+  L.push(`- ${groups.length} merge group(s)${groups.some((g) => g.error) ? ` (${groups.filter((g) => g.error).length} NOT checked: diff failed)` : ''}; specs: Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}, @high base ${rows.filter((r) => r.tier === 'High').length}.`, '');
   for (const g of groups) {
     L.push(`## ${g.keys.length ? g.keys.join(', ') : 'no card'}: ${g.branch} (${g.commit.slice(0, 7)})`, '');
     if (g.error) { L.push(`**Not checked: ${g.error}.** Look at this merge by hand or run again.`, ''); continue; }
@@ -45,6 +45,10 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
     }
     L.push('');
   }
+  const base = rows.filter((r) => r.high?.length);
+  L.push('## @high regression base (every run)', '');
+  if (!base.length) L.push('No test has `@high` yet: tag the High AC tests of each card when it is next tested (TEAM.md "How much E2E").', '');
+  else { L.push('| Spec | @high tests | Runs |', '|---|---|---|'); for (const r of base) L.push(`| ${r.file} | ${r.high.join(', ')} | ${r.tier === 'High' ? 'only @high' : `whole spec (${r.tier})`} |`); L.push(''); }
   if (notMapped.length) L.push('## Not mapped (add them to tools/regress-map.json)', '', ...notMapped.map((f) => `- \`${f}\``), '');
   if (wide.length) L.push('## Wide changes: consider the full regression', '', ...wide.map((w) => `- ${w.merge}: \`${w.file}\` is used by ${w.folders.length} pages`), '');
   L.push('## Run commands', '', 'Run under the standing run approval (check each with tools/run-policy.mjs; ask only when it says ask), from the qa-team-etm folder. One run-card per card (its data is reset once before it). A spec appears once, under the card that owns its tests.', '', '```', ...cmds, '```', '');
@@ -52,7 +56,7 @@ function markdown({ range, how, groups, rows, notMapped, wide, cmds }) {
 }
 
 /**
- * node tools/regress.mjs [--since <commit> | --since-days <n>] [--to <ref>] [--card ETM-1234] [--no-update]
+ * node tools/regress.mjs [--since <commit> | --since-days <n>] [--to <ref>] [--card ETM-1234] [--no-update] [--no-high]
  * node tools/regress.mjs mark [<commit>]
  */
 export async function main(args, d) {
@@ -83,14 +87,14 @@ export async function main(args, d) {
   const card = opt('--card');
   if (card) groups = groups.filter((g) => g.keys.includes(card));
   const map = readJson(MAP_FILE) || [];
-  const { rows, notMapped, wide } = tier({ specs: d.specIndex(d.pwRepo, d.teamRoot), merges: groups, map, importers: (p) => d.importers(d.feRepo, p, to) });
+  const { rows, notMapped, wide } = tier({ specs: d.specIndex(d.pwRepo, d.teamRoot), merges: groups, map, importers: (p) => d.importers(d.feRepo, p, to), high: !card && !args.includes('--no-high') });
   const cmds = commands(rows, { pwRepo: d.pwRepo });
   const range = { since, to, toRef };
   const base = path.join(outDir(d.teamRoot), `${ymd(now())}_${since.slice(0, 7)}..${to.slice(0, 7)}`);
   fs.mkdirSync(outDir(d.teamRoot), { recursive: true });
   fs.writeFileSync(`${base}.md`, markdown({ range, how: start.how, groups: groups.map((g) => ({ ...g, files: g.files.map((f) => f.path) })), rows, notMapped, wide, cmds }));
   fs.writeFileSync(`${base}.json`, JSON.stringify({ range, how: start.how, groups: groups.map((g) => ({ commit: g.commit, branch: g.branch, keys: g.keys, files: g.files.map((f) => f.path), error: g.error })), rows, notMapped, wide, commands: cmds }, null, 1));
-  d.log(`[regress] ${groups.length} merge group(s), Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}, not mapped ${notMapped.length}, wide ${wide.length}`);
+  d.log(`[regress] ${groups.length} merge group(s), Must ${rows.filter((r) => r.tier === 'Must').length}, Should ${rows.filter((r) => r.tier === 'Should').length}, Warn ${rows.filter((r) => r.tier === 'Warn').length}, @high base ${rows.filter((r) => r.tier === 'High').length}, not mapped ${notMapped.length}, wide ${wide.length}`);
   d.log(`[regress] report: ${base}.md`);
   return 0;
 }

@@ -51,3 +51,12 @@ test('hook mode prints additionalContext JSON and never fails on bad input', () 
   const bad = spawnSync(process.execPath, [cli], { input: 'not json', encoding: 'utf8' });
   assert.equal(bad.status, 0); assert.equal(bad.stdout, '');
 });
+
+test('maintenance of the team tools gives no cue; a run-card command on the page still does', async () => {
+  const { isMaintenance } = await import('./cue-recall.mjs');
+  assert.equal(isMaintenance({ path: 'tools/regress/core.mjs', text: 'export sort worklist' }), true);
+  assert.equal(isMaintenance({ path: '', text: "python3 - <<'EOF'\np='tools/x.mjs' shutdown logic paste\nEOF" }), true);
+  assert.equal(isMaintenance({ path: '', text: 'node tools/run-card.mjs ETM-1 tests/fe/e2e/shutdownLogic/a.spec.ts' }), false);
+  assert.equal(decide(pages, { path: '', text: "cat >> tools/a.mjs <<'EOF' shutdown logic paste EOF" }).give.length, 0);
+  assert.ok(decide(pages, { path: '', text: 'node tools/run-card.mjs ETM-1 tests/fe/e2e/shutdownLogic/a.spec.ts -g paste' }).give.length >= 1);
+});

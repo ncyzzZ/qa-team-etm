@@ -67,7 +67,7 @@ function storyTests(teamRoot) {
   return out;
 }
 
-/** @returns {{ file, folder, keys: string[], tokens: Set<string>, owner: string|null }[]} */
+/** @returns {{ file, folder, keys: string[], tokens: Set<string>, owner: string|null, high: string[] }[]} (high: test keys with @high in the title) */
 export function specIndex(pwRepo, teamRoot) {
   const stories = storyTests(teamRoot);
   const e2e = path.join(pwRepo, 'tests', 'fe', 'e2e');
@@ -77,6 +77,7 @@ export function specIndex(pwRepo, teamRoot) {
     if (!isListable(file)) continue;
     const src = fs.readFileSync(abs, 'utf8');
     const keys = [...new Set([...src.matchAll(/test(?:\.\w+)?\(\s*['"`][^'"`]*?(ETM-\d+)/g)].map((m) => m[1]))];
+    const high = [...new Set([...src.matchAll(/test(?:\.\w+)?\(\s*['"`]([^'"`]*)['"`]/g)].filter((m) => /@high\b/.test(m[1])).map((m) => (m[1].match(/ETM-\d+/) || [m[1]])[0]))];
     const files = [...localFiles(abs)];
     for (const u of pagesUsedBy(pwRepo, [file])) files.push(...unitFiles(pwRepo, u));
     const tokens = new Set();
@@ -87,7 +88,7 @@ export function specIndex(pwRepo, teamRoot) {
     }
     let owner = null;
     for (const [story, tests] of stories) if (keys.some((k) => tests.has(k))) { owner = story; break; }
-    out.push({ file, folder: file.split('/')[3], keys, tokens, owner });
+    out.push({ file, folder: file.split('/')[3], keys, tokens, owner, high });
   }
   return out.sort((a, b) => a.file.localeCompare(b.file));
 }

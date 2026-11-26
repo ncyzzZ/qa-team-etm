@@ -143,3 +143,16 @@ test('tier: reasons and tier are kept per merge group (ETM-1 does not get the re
 test('isListable: *.manual.spec.ts specs are not run unattended', () => {
   assert.equal(isListable('tests/fe/e2e/shutdownLogic/verifyX.manual.spec.ts'), false);
 });
+
+test('tier: the @high base is in every run; a merge-ranked spec keeps its tier; commands run only @high for base specs', () => {
+  const s1 = { ...spec('tests/fe/e2e/a.spec.ts', 'worklist', { owner: 'ETM-1' }), high: ['ETM-2'] };
+  const s2 = { ...spec('tests/fe/e2e/b.spec.ts', 'dailyReport', { owner: 'ETM-1' }), high: ['ETM-3'] };
+  const r = run([s1, s2], [merge('fix/x', [[`${F}pages/worklist/a.ts`]])]);
+  const by = Object.fromEntries(r.rows.map((x) => [x.file, x]));
+  assert.equal(by['tests/fe/e2e/a.spec.ts'].tier, 'Should');                  // touched by the merge: whole spec
+  assert.equal(by['tests/fe/e2e/b.spec.ts'].tier, 'High');                    // untouched: @high base
+  const c = commands(r.rows);
+  assert.ok(c.some((x) => x === 'node tools/run-card.mjs ETM-1 tests/fe/e2e/a.spec.ts'));
+  assert.ok(c.some((x) => x === 'node tools/run-card.mjs ETM-1 tests/fe/e2e/b.spec.ts -g "@high"'));
+  assert.equal(tier({ specs: [s2], merges: [], map: MAP, importers: () => [], high: false }).rows.length, 0);   // --card / --no-high
+});

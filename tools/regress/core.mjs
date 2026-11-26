@@ -7,7 +7,7 @@
 //           byGroup: { [merge commit]: { tier, reasons: string[] } } }  (tier and reasons of one merge group)
 
 const FEATURE = 'src/app/features/shutdown-event-list/';
-const RANK = { Must: 3, Should: 2, Warn: 1 };
+const RANK = { Must: 3, Should: 2, Warn: 1, High: 0 };   // High: the @high regression base, run every time (below every merge tier)
 const COMMON = 5;   // a token used by more specs than this is too common to point at one spec
 const BIG = 20;     // a merge with more changed app files than this is a big merge
 const WIDE = 5;     // a shared change used by more page folders than this is a wide change
@@ -58,13 +58,13 @@ const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 export const hasToken = (line, t) => new RegExp(`(?<![A-Za-z0-9_-])${esc(t)}(?![A-Za-z0-9_-])`).test(line);
 
 /** Rank the specs for the merges. Each spec once, in its highest tier, with every reason. */
-export function tier({ specs, merges, map, importers }) {
+export function tier({ specs, merges, map, importers, high = true }) {
   const rows = new Map();
   const notMapped = new Set();
   const wide = [];
   let group = null; // commit of the merge being ranked
   const add = (s, t, reason) => {
-    const r = rows.get(s.file) || { file: s.file, tier: t, reasons: [], owner: s.owner, byGroup: {} };
+    const r = rows.get(s.file) || { file: s.file, tier: t, reasons: [], owner: s.owner, byGroup: {}, high: s.high || [] };
     if (RANK[t] > RANK[r.tier]) r.tier = t;
     if (!r.reasons.includes(reason)) r.reasons.push(reason);
     const g = r.byGroup[group] || (r.byGroup[group] = { tier: t, reasons: [] });
@@ -109,6 +109,12 @@ export function tier({ specs, merges, map, importers }) {
       else add(s, 'Must', what);
     }
   }
+  // The @high regression base (TEAM.md "How much E2E"; user, chat 2026-11-26: "@high is the regression we will add"):
+  // every spec with @high tests is in every regression run; a spec a merge already ranked keeps its tier and runs in full.
+  if (high) {
+    group = '@high';
+    for (const s of specs) if (s.high?.length) add(s, 'High', `@high regression base: ${s.high.join(', ')}`);
+  }
   const out = [...rows.values()].sort((a, b) => RANK[b.tier] - RANK[a.tier] || a.file.localeCompare(b.file));
   return { rows: out, notMapped: [...notMapped].sort(), wide };
 }
@@ -120,9 +126,15 @@ const byTier = (a, b) => RANK[b.tier] - RANK[a.tier] || a.file.localeCompare(b.f
  */
 export function commands(rows, { pwRepo = '<PW_REPO>' } = {}) {
   const out = [];
-  const owners = [...new Set(rows.filter((r) => r.owner).map((r) => r.owner))].sort();
-  for (const o of owners) out.push(`node tools/run-card.mjs ${o} ${rows.filter((r) => r.owner === o).sort(byTier).map((r) => r.file).join(' ')}`);
-  const none = rows.filter((r) => !r.owner).sort(byTier).map((r) => r.file);
+  const full = rows.filter((r) => r.tier !== 'High'), base = rows.filter((r) => r.tier === 'High');
+  const owners = [...new Set(full.filter((r) => r.owner).map((r) => r.owner))].sort();
+  for (const o of owners) out.push(`node tools/run-card.mjs ${o} ${full.filter((r) => r.owner === o).sort(byTier).map((r) => r.file).join(' ')}`);
+  const none = full.filter((r) => !r.owner).sort(byTier).map((r) => r.file);
   if (none.length) out.push(`cd "${pwRepo}" && npx playwright test ${none.join(' ')} --workers=1 --reporter=line   # results not recorded per card`);
+  // @high base: only the @high tests of specs no merge touched
+  const bOwners = [...new Set(base.filter((r) => r.owner).map((r) => r.owner))].sort();
+  for (const o of bOwners) out.push(`node tools/run-card.mjs ${o} ${base.filter((r) => r.owner === o).map((r) => r.file).join(' ')} -g "@high"`);
+  const bNone = base.filter((r) => !r.owner).map((r) => r.file);
+  if (bNone.length) out.push(`cd "${pwRepo}" && npx playwright test ${bNone.join(' ')} --grep "@high" --workers=1 --reporter=line   # @high base, results not recorded per card`);
   return out;
 }

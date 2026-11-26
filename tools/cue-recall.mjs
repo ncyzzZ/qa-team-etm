@@ -62,12 +62,23 @@ export function eventText(e) {
 }
 
 /**
+ * Maintenance of the team's own tools is not QA work on the page: no cue for edits under this repo's tools/, .claude/ or
+ * docs/, nor for shell edits (heredoc, sed -i, cat >>) of tools/ files. A plain run-card / playwright command still counts.
+ */
+export function isMaintenance({ path: p, text }, root = ROOT) {
+  const rel = p ? path.relative(root, path.resolve(p)) : '';
+  if (rel && !rel.startsWith('..') && /^(tools|\.claude|docs|evals)[\\/]/.test(rel)) return true;
+  return /(python3? - <<|cat >>?|sed -i|<<'?EOF)/.test(text) && /\btools\/|\.claude\//.test(text);   // a shell edit of our files, even if it mentions run-card
+}
+
+/**
  * Pure decision. @param state {pages:{[page]:t}, blocks:{[page/id]:t}} last give times; @returns {give:[{page,id,text}], state}
  * The page rules come when the page cue matches; action blocks only when the page is active (cue now, or given in the last 3 h).
  */
 export function decide(pages, { path: p, text }, state = { pages: {}, blocks: {} }, now = Date.now()) {
   const give = [];
   const st = { pages: { ...state.pages }, blocks: { ...state.blocks } };
+  if (isMaintenance({ path: p, text })) return { give, state: st };
   const all = `${p}\n${text}`;
   for (const pg of pages) {
     const hit = pg.pageRe.test(all);
