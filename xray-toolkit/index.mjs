@@ -93,7 +93,7 @@ const TOOLS = [
       type: 'object',
       properties: {
         evidenceDir: { type: 'string', description: 'Absolute path to the evidence folder' },
-        keyPrefix: { type: 'string', description: 'Jira project prefix, e.g. "ETM-"' },
+        keyPrefix: { type: 'string', description: 'Jira project prefix, e.g. "<KEY>-"' },
         keyOffset: { type: 'number', description: 'Number added to the TC number to get the Jira key. TC-002 with offset 6033 -> <KEY>-6035' },
       },
       required: ['evidenceDir', 'keyPrefix', 'keyOffset'],

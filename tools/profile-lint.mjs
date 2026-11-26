@@ -9,7 +9,7 @@ import { ROOT, profile, escapeKey } from './profile.mjs';
 function patterns(p) {
   const k = escapeKey(p.jira.projectKey);
   const list = [
-    new RegExp(`(?<![A-Za-z0-9])${k}-(?:\\d|\\\\d)`),
+    new RegExp(`(?<![A-Za-z0-9])${k}-(?:\\d|\\\\d|\\(|\\$\\{|['\"\x60])`),
     new RegExp(`'${k}'`),
     new RegExp(`"${k}"`),
     new RegExp(escapeKey(p.jira.site)),

@@ -33,6 +33,14 @@ test('another profile: its own values are the hits', () => {
   assert.equal(findHardcoded([f], q).length, 1);
 });
 
+test('key prefixes in regex groups, templates and quoted prefixes are hits', () => {
+  assert.equal(hits('const r = /ETM-(\\d+)/g;\n').length, 1);
+  assert.equal(hits('const k = `ETM-${m[1]}`;\n').length, 1);
+  assert.equal(hits("const a = 'ETM-';\n").length, 1);
+  assert.equal(hits('const b = "ETM-";\n').length, 1);
+  assert.equal(hits('const c = `ETM-`;\n').length, 1);
+});
+
 test('the real repo is clean (CLI, ETM profile, repos forced missing)', () => {
   const none = path.join(tmp, 'nonexistent');
   const env = { ...process.env, PW_REPO: none, FE_REPO: none };

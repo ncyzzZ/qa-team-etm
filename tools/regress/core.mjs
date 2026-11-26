@@ -6,18 +6,22 @@
 // Row   = { file, tier: 'Must'|'Should'|'Warn', reasons: string[], owner: string|null,
 //           byGroup: { [merge commit]: { tier, reasons: string[] } } }  (tier and reasons of one merge group)
 
+import { profile, escapeKey } from '../profile.mjs';
+
 const FEATURE = 'src/app/features/shutdown-event-list/';
 const RANK = { Must: 3, Should: 2, Warn: 1 };
 const COMMON = 5;   // a token used by more specs than this is too common to point at one spec
 const BIG = 20;     // a merge with more changed app files than this is a big merge
 const WIDE = 5;     // a shared change used by more page folders than this is a wide change
 
-/** Card keys in a branch name; a bare number after a key keeps its prefix (ETM-8666,8664 / ETM-8671-8672). */
+/** Card keys in a branch name; a bare number after a key keeps its prefix (KEY-8666,8664 / KEY-8671-8672). */
 export function cardKeys(branch) {
   const out = [];
-  for (const m of String(branch).matchAll(/ETM-(\d+)((?:[,\-_+/]\d{3,})*)/g)) {
-    out.push(`ETM-${m[1]}`);
-    for (const n of m[2].match(/\d{3,}/g) || []) out.push(`ETM-${n}`);
+  const pk = profile().jira.projectKey;
+  const re = new RegExp(`(?<![A-Za-z0-9])${escapeKey(pk)}-(\\d+)((?:[,\\-_+/]\\d{3,})*)`, 'g');
+  for (const m of String(branch).matchAll(re)) {
+    out.push(`${pk}-${m[1]}`);
+    for (const n of m[2].match(/\d{3,}/g) || []) out.push(`${pk}-${n}`);
   }
   return [...new Set(out)];
 }

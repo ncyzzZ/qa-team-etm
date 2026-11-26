@@ -74,3 +74,9 @@ test('title keys: run results, rerun guard, live check', () => {
   assert.deepEqual(testsOf(spec).map((t) => t.key), ['AB2-5']);
   assert.deepEqual(scanSpec(spec).map((t) => t.key), ['AB2-5', '']);
 });
+
+test('regress/core cardKeys follows the profile key', async () => {
+  const { cardKeys } = await import('./regress/core.mjs');
+  assert.deepEqual(cardKeys('feature/AB2-8666,8664-fix'), ['AB2-8666', 'AB2-8664']);
+  assert.deepEqual(cardKeys('feature/ETM-8666'), []);
+});
