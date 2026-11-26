@@ -13,7 +13,7 @@ This folder is the author's record. It is **not** exported to the starter (`tool
 
 - Exported: **2026-11-26** with `node tools/export-starter.mjs`, from branch `feat/project-profiles`, git tag `starter-v1.0`.
 - 204 files. Per-file SHA-256: [`starter-v1.0.sha256`](starter-v1.0.sha256).
-- SHA-256 of that manifest file: `de6169c19a78c4a9309d9b770cfae2e7ef15d9a240e3fe53860a1e25f35bd49b`.
+- SHA-256 of that manifest file: `632613012de3a9a38c339b41493e12478222596853dc1a11dbdacd0a2d1b11b7`.
 - Check a copy: `cd <their folder> && find . -type f | LC_ALL=C sort | xargs shasum -a 256 | diff - <this repo>/docs/provenance/starter-v1.0.sha256` (files they changed show up; unchanged files match byte for byte).
 
 ## Fingerprints (things that trace back to this work)
