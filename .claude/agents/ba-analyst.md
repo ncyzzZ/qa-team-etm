@@ -1,6 +1,6 @@
 ---
 name: ba-analyst
-description: BA Analyst for the ETM QA team. Use first on every ETM Story, to read the Story, its acceptance criteria and QA subtasks and list what is unclear. Read-only.
+description: BA Analyst for the QA team. Use first on every Story, to read the Story, its acceptance criteria and QA subtasks and list what is unclear. Read-only.
 model: sonnet
 ---
 

@@ -1,20 +1,20 @@
 ---
 name: "etm-evidence-report"
-description: "Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use after any Playwright run of the ETM (STMS) tests, pass or fail, to build the HTML evidence report (step pictures, card links, failure reasons, spec notes, review verdicts, TC totals) without changing the repo."
+description: "Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Use after any Playwright run of the active project's tests, pass or fail, to build the HTML evidence report (step pictures, card links, failure reasons, spec notes, review verdicts, TC totals) without changing the repo."
 ---
 
-# ETM Playwright evidence report (generator v5.3)
+# Playwright evidence report (generator v5.3)
 
 The report code lives in this repo's `tools/` folder: `evidence-report-v4.mjs` (the generator) and `run-card.mjs` (the run wrapper). Nothing is added to or committed in the Playwright repo `PW_REPO`. Runs go through `tools/run-card.mjs`, which builds the report itself. Everything runs from the repo root; reports go to `Evidence/_reports/` (not committed).
 
-`PW_REPO` is the folder of the Playwright repo `ep-etm-fe-qa` (env variable; default `../ep-etm-fe-qa` next to this repo). Use the normal Bash, Read and Write tools; if a step cannot be done in this app, tell the user.
+`PW_REPO` is the folder of the Playwright repo named in the active profile (`node tools/profile.mjs show`, `repos.pwRepoDir`; env variable; default `../<that folder>` next to this repo). `<KEY>` below is the active profile's project key. Use the normal Bash, Read and Write tools; if a step cannot be done in this app, tell the user.
 
 ## 2. Tell the user how to run the tests
 
-The user runs the tests on their own machine (VPN on). This app cannot open the STMS web app (VPN). Never give a bare `npx playwright test`. From the repo root:
+The user runs the tests on their own machine (VPN on). This app cannot open the web app under test (VPN). Never give a bare `npx playwright test`. From the repo root:
 
 ```
-node tools/run-card.mjs <KEY> <spec> -g "ETM-xxxx|ETM-yyyy"
+node tools/run-card.mjs <KEY> <spec> -g "<KEY>-xxxx|<KEY>-yyyy"
 ```
 
 - Each run gets its own result folder (`output/runs/<date_time>_<KEY>` in `PW_REPO`) and its own report (`output/runs/<date_time>_<KEY>/evidence-report-<KEY>-<time>.html`, plus `latest-<KEY>.html` and `latest.html`). The report is built when the run ends, failed tests are printed, and the link goes to the status board.
@@ -25,14 +25,14 @@ node tools/run-card.mjs <KEY> <spec> -g "ETM-xxxx|ETM-yyyy"
 
 ## 3. Build the TC list of each Story (so totals and manual cases show)
 
-Optional. Without it the report counts only the Tests that ran. For every Story key in the run (the key in brackets in the describe title, e.g. `(ETM-6868)`):
+Optional. Without it the report counts only the Tests that ran. For every Story key in the run (the key in brackets in the describe title, e.g. `(<KEY>-6868)`):
 
 1. Read its Tests from Xray: `xray_graphql` with `getTests(jql: "issue in linkedIssues(\"<STORY>\",\"is tested by\")", limit: 100) { total results { jira(fields: ["key","summary"]) steps { action data result } } }`.
-2. A Test counts as automated when its key starts a test title in the repo specs: `grep -rhoE "test\('ETM-[0-9]+ - " <PW_REPO>/tests`. Every other Test is manual.
+2. A Test counts as automated when its key starts a test title in the repo specs: `grep -rhoE "test\('<KEY>-[0-9]+ - " <PW_REPO>/tests`. Every other Test is manual.
 3. Write `<os tmp folder>/tc-manifest-<KEY>.json` (run-card reads exactly this name), summaries short and without the `[FE][MT]` prefix. For manual Tests put the real reason in `reason` (ask the user when not obvious), otherwise `ยังไม่มีสคริปต์ - ต้องเทสเอง`:
 
 ```
-{"stories": {"ETM-6868": [{"key": "ETM-7028", "summary": "...", "automated": true, "steps": [{"action": "...", "data": "...", "result": "..."}]}, {"key": "ETM-7030", "summary": "...", "automated": false, "reason": "..."}]}}
+{"stories": {"<KEY>-6868": [{"key": "<KEY>-7028", "summary": "...", "automated": true, "steps": [{"action": "...", "data": "...", "result": "..."}]}, {"key": "<KEY>-7030", "summary": "...", "automated": false, "reason": "..."}]}}
 ```
 
 `steps` (from the same query) fill the "Step (Action)", "Test Data" (only shown when some step has data) and "Expected Result" columns; without them the report shows the `test.step` titles and no expected result. If Xray is not reachable, skip the manifest.
@@ -62,7 +62,7 @@ Then tell the user in 2-3 lines: the report file name (and that it is on the boa
 For each failed step the user decides: script bug, wrong test wording, or real app bug. Never decide alone. Record it in `output/runs/<run folder>/review-<KEY>.json` (in the Playwright repo) (run-card passes it when the file exists):
 
 ```
-{"ETM-8339": {"steps": {"10": {"verdict": "script", "note": "..."}, "11": {"verdict": "defect", "note": "defect ETM-8501"}}}}
+{"<KEY>-8339": {"steps": {"10": {"verdict": "script", "note": "..."}, "11": {"verdict": "defect", "note": "defect <KEY>-8501"}}}}
 ```
 
 `verdict`: `accepted` (not counted as a fail, step yellow, test badge "PASS (ยอมรับ)") / `defect` / `tc-update` / `script` / `ba-pending`. Rebuild after editing. Note: the run-card terminal line "N pass / M fail" counts raw Playwright results, so an accepted test still counts as a fail there.

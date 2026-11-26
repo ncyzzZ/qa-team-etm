@@ -1,16 +1,39 @@
 #!/usr/bin/env python3
-"""ETM bulk delete helper. Secrets come from env, never printed.
+"""Bulk delete helper for the active profile's Jira project. Secrets come from env, never printed.
 Env: JIRA_EMAIL, JIRA_API_TOKEN, XRAY_CLIENT_ID, XRAY_CLIENT_SECRET
+Site and project key: env JIRA_SITE and PROJECT_KEY, else `node tools/profile.mjs show` of this repo.
   whoami                                          -> checks Jira + Xray credentials
   folder  <folder path e.g. "/Manual Test/Bin">   -> prints keys in that Xray folder (no sub-folders)
-  tree                                            -> prints the Xray folder tree of ETM (find a path)
+  tree                                            -> prints the Xray folder tree of the project (find a path)
   check   <JQL>                                   -> prints key|type|status|summary for each match
   delete  [--types "Test Execution,Test"] <KEY> ... -> DELETE each issue whose type is allowed
                                                      (default: Test Execution only), prints result
 """
-import base64, json, os, ssl, sys, urllib.request, urllib.error
+import base64, json, os, ssl, subprocess, sys, urllib.request, urllib.error
 
-SITE = "https://pttep.atlassian.net"
+_PROFILE = None
+
+
+def profile():
+    """(site url, project key) from env JIRA_SITE / PROJECT_KEY, else the repo's active profile."""
+    global _PROFILE
+    if _PROFILE:
+        return _PROFILE
+    site, key = os.environ.get("JIRA_SITE"), os.environ.get("PROJECT_KEY")
+    if not (site and key):
+        root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+        try:
+            out = subprocess.run(["node", os.path.join(root, "tools", "profile.mjs"), "show"],
+                                 capture_output=True, text=True, timeout=30)
+            j = json.loads(out.stdout)["jira"]
+            site, key = site or j["site"], key or j["projectKey"]
+        except Exception as e:
+            sys.exit(f"project profile not read ({e}): run inside the QA repo, or set JIRA_SITE and PROJECT_KEY")
+    site = site if site.startswith("http") else "https://" + site
+    _PROFILE = (site.rstrip("/"), key)
+    return _PROFILE
+
+
 XRAY = "https://xray.cloud.getxray.app/api/v2"
 CA = os.environ.get("SSL_CERT_FILE") or os.environ.get("REQUESTS_CA_BUNDLE")
 CTX = ssl.create_default_context(cafile=CA) if CA and os.path.exists(CA) else ssl.create_default_context()
@@ -31,7 +54,7 @@ def req(method, url, body=None, headers=None):
 
 def jira(method, path, body=None):
     tok = base64.b64encode(f"{os.environ['JIRA_EMAIL']}:{os.environ['JIRA_API_TOKEN']}".encode()).decode()
-    return req(method, SITE + path, body, {"Authorization": "Basic " + tok, "Accept": "application/json"})
+    return req(method, profile()[0] + path, body, {"Authorization": "Basic " + tok, "Accept": "application/json"})
 
 
 def xray_gql(query, variables):
@@ -47,7 +70,7 @@ def xray_gql(query, variables):
 
 
 def project_id():
-    code, p = jira("GET", "/rest/api/3/project/ETM")
+    code, p = jira("GET", "/rest/api/3/project/" + profile()[1])
     if code != 200:
         sys.exit(f"Jira auth/project lookup failed ({code})")
     return p["id"]

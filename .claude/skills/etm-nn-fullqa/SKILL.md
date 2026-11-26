@@ -1,9 +1,11 @@
 ---
 name: etm-nn-fullqa
-description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Jira and Xray rules for the ETM QA cycle. Use when the user's message is just an ETM Story link or key (e.g. ETM-1234 or the Jira URL), and whenever Tests, Test Plans, Test Executions or [QA] subtasks are created or closed.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Jira and Xray rules for the QA cycle of the active project. Use when the user's message is just a Story link or key of the active project (e.g. <KEY>-1234 or the Jira URL), and whenever Tests, Test Plans, Test Executions or [QA] subtasks are created or closed.
 ---
 
-# ETM Jira / Xray rules (full QA cycle)
+# Jira / Xray rules (full QA cycle)
+
+Jira site, project key, project id and board: the active profile (`node tools/profile.mjs show`, also `.claude/active-profile.md`). `<KEY>` below is its project key.
 
 The cycle itself (who does what, checkpoints, board, agents) is in `TEAM.md`; the lead follows it. This skill holds only the Jira/Xray specifics the cycle needs. Script rules are in `.claude/team/knowledge/playwright-script-rules.md`, test case wording in `TEAM.md`.
 
@@ -30,15 +32,15 @@ An "AC 0 User Review Updates" block overrides older AC. The two `[QA]` subtasks 
 
 ## 2. Xray push (only after the user's explicit go-ahead; first batch on a new project is a pilot, say so)
 
-Create Tests with GraphQL `createTest` (needs `jira.fields.project: {key: "ETM"}`; max 25 operations per GraphQL document). File each Test into the Test Repository folder `Manual Test / Sprint {N} / {STORY-KEY}` (check `getFolder`, create with `createFolder(projectId, path)`, file with `addTestsToFolder`).
-- **Link direction**: `createIssueLink(inwardIssue: <Test key>, outwardIssue: <Story key>, type: "Test")`. The reverse leaves Test Coverage UNCOVERED (happened on ETM-6380 and ETM-6395).
+Create Tests with GraphQL `createTest` (needs `jira.fields.project: {key: "<KEY>"}`; max 25 operations per GraphQL document). File each Test into the Test Repository folder `Manual Test / Sprint {N} / {STORY-KEY}` (check `getFolder`, create with `createFolder(projectId, path)`, file with `addTestsToFolder`).
+- **Link direction**: `createIssueLink(inwardIssue: <Test key>, outwardIssue: <Story key>, type: "Test")`. The reverse leaves Test Coverage UNCOVERED (happened on <KEY>-6380 and <KEY>-6395).
 - **Check right after**: JQL `issue in linkedIssues("<STORY>","is tested by")` must return exactly the number of Tests created. Fix before reporting done. Remove wrong-direction links through Jira MCP where possible; Chrome `DELETE /rest/api/3/issueLink/<id>` only if the user asks.
 
 ## 3. Sprint Test Plan and Test Execution (same flow, not deferred)
 
 One Test Plan per sprint named exactly `Test Plan for Sprint {N}` (search JQL first, never duplicate); add every Test with `addTestsToTestPlan`; per-story folder in the plan (`createFolder(testPlanId, path: "/{STORY-KEY}")`, `addTestsToFolder(testPlanId, ...)`). Create `Test Execution for {STORY-KEY}`, link with `addTestExecutionsToTestPlan`, load Tests with `addTestsToTestExecution`. Every Test Execution has Test Environment `QA` (`testEnvironments: ["QA"]` on create, or `addTestEnvironmentsToTestExecution`; verify with `getTestExecution(issueId) { testEnvironments }`).
 
-## 4. Fill the `[QA] Create Test Case Manual Test` description (mandatory closing step of the push; missed once on ETM-6524/ETM-6380; verify every time)
+## 4. Fill the `[QA] Create Test Case Manual Test` description (mandatory closing step of the push; missed once on <KEY>-6524/<KEY>-6380; verify every time)
 
 Markdown: header naming the Story and what was pushed (Test key range, link); **Where everything lives** table (Test Repository folder | Sprint Test Plan | Test Execution); **Definition of Done** checklist reflecting what was truly done (never claim a review that did not happen); **Test case summary** table (Test key | Type POS/NEG | What it checks | What it proves), one row per test; **Next step** line pointing to the Test Execution, ready once the Story is on QA.
 
@@ -68,9 +70,9 @@ Run skill `resolve-tested-by` on the Story, transition the Test Execution itself
 
 ## 11. Correct a Test, then retest
 
-Whenever live behaviour contradicts a Test's wording and the user confirms the real rule (e.g. ETM-6559/6560/6563), or the user points at a Test and says the expected result is wrong, apply ALL of it, not just the Jira/Xray edit:
+Whenever live behaviour contradicts a Test's wording and the user confirms the real rule (e.g. <KEY>-6559/6560/6563), or the user points at a Test and says the expected result is wrong, apply ALL of it, not just the Jira/Xray edit:
 1. Verify actual behaviour first with Playwright (Chrome only if asked), reproducing the exact condition.
-2. Fetch ids: `getTests(jql: "key = ETM-XXXX", limit: 1) { results { issueId steps { id action data result } } }`.
+2. Fetch ids: `getTests(jql: "key = <KEY>-XXXX", limit: 1) { results { issueId steps { id action data result } } }`.
 3. Fix the step with `updateTestStep(stepId, step) { warnings }` (expect `{warnings: []}`).
 4. Fix the Jira Summary via `editJiraIssue`.
 5. Fix the Description with `contentFormat: "markdown"` in the standard shape plus a short "(corrected DD Mon YYYY - what and why.)" note.
@@ -79,7 +81,7 @@ Whenever live behaviour contradicts a Test's wording and the user confirms the r
 8. `xray_import_results(executionKey, tests:[{testKey, status:"PASSED", comment:"<what was corrected and why>", evidenceDir:"<evidence folder path>"}])`.
 9. Verify with `getTestRunById(id) { status{name} evidence{id filename size} }`.
 10. If old invalid evidence remains, `removeEvidenceFromTestRun(id, evidenceIds)`.
-11. Report in one short message in the user's language (Thai for the usual user): new status, fresh evidence attached, old evidence cleared (e.g. "รีเทส ETM-XXXX เสร็จแล้วค่ะ ผล PASSED พร้อม evidence ใหม่ ... เคลียร์รูปเก่า(ถ้ามี)ออกจาก Xray Test Run แล้ว"). Here Claude delivers the new evidence, the user does not attach it.
+11. Report in one short message in the user's language (Thai for the usual user): new status, fresh evidence attached, old evidence cleared (e.g. "รีเทส <KEY>-XXXX เสร็จแล้วค่ะ ผล PASSED พร้อม evidence ใหม่ ... เคลียร์รูปเก่า(ถ้ามี)ออกจาก Xray Test Run แล้ว"). Here Claude delivers the new evidence, the user does not attach it.
 
 ## Standing rules
 

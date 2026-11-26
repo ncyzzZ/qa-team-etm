@@ -1,11 +1,11 @@
 ---
 name: etm-xray-delete-test-executions
-description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Bulk-delete PTTEP ETM Jira/Xray cards. Test Executions from a JQL/key list, or the Tests in an Xray Test Repository folder (e.g. Manual Test/Bin). Use for ลบ test execution / ลบการ์ด / ลบ Bin requests.
+description: Repo version (project skill, no prefix; always prefer it over the account skill `anthropic-skills:<same name>`). Bulk-delete Jira/Xray cards of the active profile's project. Test Executions from a JQL/key list, or the Tests in an Xray Test Repository folder (e.g. Manual Test/Bin). Use for ลบ test execution / ลบการ์ด / ลบ Bin requests.
 ---
 
-# ETM - Bulk delete Xray cards (API first)
+# Bulk delete Xray cards (API first)
 
-Site https://pttep.atlassian.net, project ETM (project id 14436). **Deletion is permanent.** It is outside the normal QA cycle: only when the user asks for it, and always through the safety gate in section 3 (a yes in the chat, never pre-approved by a card trigger).
+Jira site, project key (`<KEY>` below) and project id: the active profile (`node tools/profile.mjs show`). **Deletion is permanent.** It is outside the normal QA cycle: only when the user asks for it, and always through the safety gate in section 3 (a yes in the chat, never pre-approved by a card trigger).
 
 Tools used:
 - **Atlassian Rovo MCP**: read/verify (`searchJiraIssuesUsingJql`). It has no delete tool.
@@ -36,8 +36,8 @@ XRAY_CLIENT_SECRET=...
 
 ## 1. Pick the mode
 
-- **Mode 1 - JQL / keys**: the message has a JQL (e.g. `key in (ETM-7075, ...)`) or a list of ETM keys: normalise to `key in (...)`.
-- **Mode 2 - Xray folder**: the message mentions Bin / Test Repository / a folder, or pastes a test-repository URL. Default folder path = `/Manual Test/Bin` (URL: `https://pttep.atlassian.net/projects/ETM?selectedItem=com.atlassian.plugins.atlassian-connect-plugin:com.xpandit.plugins.xray__testing-board#!page=test-repository&selectedFolder=69a8ed78018e9874f5130640`).
+- **Mode 1 - JQL / keys**: the message has a JQL (e.g. `key in (<KEY>-7075, ...)`) or a list of `<KEY>` keys: normalise to `key in (...)`.
+- **Mode 2 - Xray folder**: the message mentions Bin / Test Repository / a folder, or pastes a test-repository URL. Default folder path = `/Manual Test/Bin` (URL: `https://<Jira site>/projects/<KEY>?selectedItem=com.atlassian.plugins.atlassian-connect-plugin:com.xpandit.plugins.xray__testing-board#!page=test-repository&selectedFolder=<Bin folder id>`; the Bin folder id is in the active profile's Settings).
 
 ## 2. Mode 2 - collect keys from the folder
 
@@ -48,15 +48,15 @@ XRAY_CLIENT_SECRET=...
 
 ## 3. Verify, confirm, delete
 
-1. **Verify** with `check "(<JQL>) AND project = ETM"` (or Rovo `searchJiraIssuesUsingJql`). Split into allowed type (Mode 1: Test Execution, Mode 2: Test) vs excluded (other types / not found).
-2. **Safety gate**: show count + key - summary list and ask yes/no (`AskUserQuestion`). Inside an ETM card cycle (a stray Test Execution of a card, not a request from the user to delete): do not ask on its own; queue it with `node tools/delete-plan.mjs add <KEY> "stray Test Execution" --where "Jira ETM" --ids <keys> --permanent` and it is asked with the card's other deletes (TEAM.md Standing approvals 6); delete only items `delete-plan.mjs ok` approves. Skip only if the user's request already says "ยืนยันลบ" / "confirm delete"; the type filter still applies.
+1. **Verify** with `check "(<JQL>) AND project = <KEY>"` (or Rovo `searchJiraIssuesUsingJql`). Split into allowed type (Mode 1: Test Execution, Mode 2: Test) vs excluded (other types / not found).
+2. **Safety gate**: show count + key - summary list and ask yes/no (`AskUserQuestion`). Inside a card cycle (a stray Test Execution of a card, not a request from the user to delete): do not ask on its own; queue it with `node tools/delete-plan.mjs add <KEY> "stray Test Execution" --where "Jira <KEY>" --ids <keys> --permanent` and it is asked with the card's other deletes (TEAM.md Standing approvals 6); delete only items `delete-plan.mjs ok` approves. Skip only if the user's request already says "ยืนยันลบ" / "confirm delete"; the type filter still applies.
 3. **Delete** (batches of up to 100 keys per call):
    - Mode 1: `delete KEY1 KEY2 ...` (default = Test Execution only)
    - Mode 2: `delete --types "Test" KEY1 KEY2 ...`
    The helper re-checks each issue's type, deletes with `deleteSubtasks=true`, and prints DELETED / SKIP / FAILED.
 4. **Re-check**: rerun `check` on the original key list: expect 0 of the allowed type left. Mode 2: rerun `folder`, expect `TOTAL 0`.
 5. DELETE 403: the account lacks "Delete work items" permission; report, do not retry.
-6. Browser fallback (API unavailable): `https://pttep.atlassian.net/jira/software/c/projects/ETM/list?jql=<encoded JQL>`, select-all checkbox, bulk action Delete, confirm; or `/issues/?jql=<encoded JQL>`, then ... > Bulk change all > select all > Delete > untick send mail > Next > Confirm, wait for 100%.
+6. Browser fallback (API unavailable): `https://<Jira site>/jira/software/c/projects/<KEY>/list?jql=<encoded JQL>`, select-all checkbox, bulk action Delete, confirm; or `/issues/?jql=<encoded JQL>`, then ... > Bulk change all > select all > Delete > untick send mail > Next > Confirm, wait for 100%.
 
 ## 4. Report (short, Thai)
 

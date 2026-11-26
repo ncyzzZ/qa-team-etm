@@ -1,6 +1,7 @@
 # Agent protocol and wording rules
 
 Read by every subagent INSTEAD of `TEAM.md` (the lead's playbook, about 3x longer). Read only this file and your own agent file.
+The project's own facts (Jira site and key, repo folders, UI map, templates, roles, page and data rules) are in `.claude/active-profile.md` (generated from `profiles/<name>/rules.md`); `<KEY>` in agent and skill files means its project key. Missing file: `node tools/setup.mjs --sync-profile`.
 
 ## Agent protocol (every agent follows this; agent files do not repeat it)
 

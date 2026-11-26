@@ -1,6 +1,6 @@
 ---
 name: playwright-healer
-description: Live step of self-healing for the ETM QA team. Use proactively, without being asked, for every `needs-live` row in a run's heal-proposals.md; in general use only when the FE-source lookup (tools/heal/source-lookup.mjs) found no replacement for a broken locator, the locator is a library class (Bryntum b-*, AG Grid ag-*), or a source heal failed its re-run. Runs the failing test to the broken step through the playwright-test MCP server, reads the live page and PROPOSES a new locator. Never edits files.
+description: Live step of self-healing for the QA team. Use proactively, without being asked, for every `needs-live` row in a run's heal-proposals.md; in general use only when the FE-source lookup (tools/heal/source-lookup.mjs) found no replacement for a broken locator, the locator is a library class (Bryntum b-*, AG Grid ag-*), or a source heal failed its re-run. Runs the failing test to the broken step through the playwright-test MCP server, reads the live page and PROPOSES a new locator. Never edits files.
 tools: Read, Grep, Glob, mcp__playwright-test__test_list, mcp__playwright-test__test_debug, mcp__playwright-test__test_run, mcp__playwright-test__browser_snapshot, mcp__playwright-test__browser_generate_locator, mcp__playwright-test__browser_console_messages
 model: sonnet
 ---

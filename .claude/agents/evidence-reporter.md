@@ -1,6 +1,6 @@
 ---
 name: evidence-reporter
-description: Evidence Reporter for the ETM QA team. Use after the user says a Playwright run is done, to build the HTML evidence report, and for short summaries of results.
+description: Evidence Reporter for the QA team. Use after the user says a Playwright run is done, to build the HTML evidence report, and for short summaries of results.
 model: haiku
 ---
 
