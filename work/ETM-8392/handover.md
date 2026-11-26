@@ -71,3 +71,6 @@ Done from another chat (run `2026-11-25_211800_ETM-8392_manual`): ETM-8690 8/8 p
 Lead re-check (pdfjs text layer of that run's 11 Jun PDF): page 2 has full "Ramp Up" at x=1133.4, w=35.7 (ends 1169.1, page 1191.1); "Ramp Down" x=1010.8. 14 Jun PDF: only "Ramp Up", no "Down" fragment.
 **Xray ETM-8825: 18/18 PASSED.** ETM-10054 and ETM-10055 both Ready for UAT. Nothing left on this card in Test Plan ETM-8636.
 Still noted, not logged: the 11 Jun Ramp Down badge covers the "Jun 2026" header (shows "26").
+
+## 26 Nov 2026 - Ramp Down badge over "Jun 2026" header
+User (QA lead, chat 26 Nov 2026): "ปิดเรื่องนี้". Not a defect, not logged, no BA question. Seen in the 11 Jun Snap C PDF (run 2026-11-25_211800, step-8.png): the badge covers "Jun 20", leaving "26". Closed.
