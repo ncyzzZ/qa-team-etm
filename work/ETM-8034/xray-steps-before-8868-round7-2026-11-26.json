@@ -1,0 +1,5 @@
+{"test":"ETM-8868","issueId":"2300476","saved":"2026-11-26","steps":[
+{"n":4,"id":"603ee7c2-4d41-4744-aecb-658f7b881ed3","action":"Look at the red cell.","result":"The red colour is still visible on the cell, shown with the highlight colour, and the cell is still recognised as red."},
+{"n":6,"id":"3405f586-07bf-4abf-acd9-29e8b7dcc25f","action":"Look at the red cell.","result":"The red colour is still visible on the cell."},
+{"n":14,"id":"44ee5bd6-d82e-4de5-83db-81efdc032b6d","action":"Make a dependency conflict on the row.","result":"The row gets the red border line."},
+{"n":15,"id":"7e8a17b2-8aba-403b-b681-25a983a22fbf","action":"Look at the row.","result":"The red border line is still visible on the highlighted row, and the highlight `FFFB8F` is still visible."}]}

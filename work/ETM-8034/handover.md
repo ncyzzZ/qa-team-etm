@@ -101,3 +101,10 @@ Spec change for 8859 (steps 22/26) is in ep-etm-fe-qa, not committed.
 - Proposed pass 1-3, 5-8: highlight FFFB8F stays as the cell background; hover / selected / focus add a see-through blue layer (rgba 24,144,255 at 0.14 / 0.08); disabled cell keeps b-readonly-cell, its grey layer and grey text over BAE0FF; after No Color + reload it equals step 5.
 - Step 4: row is FFFB8F again, but the clicked Description cell keeps the cell focus (8% blue layer). Normal grid cell focus, not checked on a row without colour. Waiting for the user: pass with note, or ask BA.
 - 12:15 user "push PASSED" (chat): 8869 step 4 accepted as pass (cell focus layer is normal). Verdicts recorded with `results.mjs --decide` (confirmedBy user), pushed with `xray-step-push.mjs --apply`: Xray shows PASSED, 8 steps PASSED with 1 picture each. ETM-8875 now 16 PASSED, 1 FAILED (8868), 2 TO DO (8860, 8861).
+
+## Update 26 Nov 12:40 - ETM-8868 (from run manual-run-8868-20261125b)
+- Pass by measurement: 1-3, 5, 7-13. FE commit 075acc98 (design "Layer 2"): the error red FFCCC7 replaces the highlight on invalid cells.
+- Open, BA round 7 (`questions-for-BA-round7.en.md`): Q1 step 6 red cell = red swatch FFCCC7, cannot be told apart; Q2 step 4 wording "shown with the highlight colour" vs plain red; Q3 steps 14-15 dependency red border: the app blocks conflicts with a modal, no row border style found in FE.
+- Xray stays FAILED until the BA answers.
+- 12:55 round 7 answered (user in main chat, relayed): Q1=a, Q2=yes, Q3=no. Recorded in ba-answers.md; verdict file: steps 4, 6 pass (decidedBy user), steps 14-15 removed. Xray backup `xray-steps-before-8868-round7-2026-11-26.json`. Xray step edits / step removal / PASSED push wait for the user's yes in this chat.
+- 13:05 user "ทำได้" (chat): Xray ETM-8868 step 4 and 6 expected results changed, steps 14-15 removed (backup `xray-steps-before-8868-round7-2026-11-26.json`); test run in ETM-8875 reset to the new steps; pushed PASSED, 13 steps PASSED with 1 picture each (read back). ETM-8875 now 17 PASSED, 2 TO DO (8860, 8861). Test summary still says "dependency red border" (not changed).

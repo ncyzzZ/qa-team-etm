@@ -59,3 +59,8 @@
 ## QA lead decisions (user, main chat 2026-11-26, relayed by the lead session)
 - **Round 5 Q1 (Xray ETM-8862 step 8):** no toast is expected after Save in the Work Details modal. Step 8 becomes "the modal closes and the row shows the new values".
 - **Round 6 Q1 (Xray ETM-8867 step 8):** answer a) the colours of a duplicated plan are fully separate from the original. Checked by hand by the user: plan "เทสสีหลัง dup" (duplicate of "Wide Plan B - NN", event NN TEST QA) got Aug01 red and row 11 yellow; the original "Wide Plan B - NN" kept Aug01 green and 08-Maimai02 pink. Our earlier automated finding (original Platform lost FFCCC7) is not reproduced by hand: no defect; re-run 8867 for clean evidence.
+
+## QA lead decisions, round 7 (user, main chat 2026-11-26: "Q1=a Q2=ได้ Q3=ไม่มี") - Xray ETM-8868
+- Q1 = a: the red error cell keeps `#FFCCC7`, the same colour as the red row highlight; accepted as designed. Step 6 becomes "The red cell keeps `#FFCCC7` (the same colour as the row highlight)."
+- Q2 = yes: step 4 becomes "The red cell stays `#FFCCC7` and is clearly red among the highlighted cells."
+- Q3 = no: no state gives a Gantt table row a red dependency border (the app blocks conflicts with "Unable to Apply Dependency"). Steps 14-15 are removed from ETM-8868.

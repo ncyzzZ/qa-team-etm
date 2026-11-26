@@ -32,10 +32,12 @@
   {
    "n": 4,
    "do": "Look at the red cell",
-   "expected": "The red colour is still visible on the cell, shown with the highlight colour, and the cell is still recognised as red",
-   "verdict": "needs-human",
+   "expected": "The red cell stays FFCCC7 and is clearly red among the highlighted cells",
+   "verdict": "pass",
    "why": "Red cell is clearly red (255,204,199) among yellow cells, so still recognised as red. But it is not shown WITH the highlight colour: it is plain red, no mix with FFFB8F (earlier build: orange mix). Person decides if this meets \"shown with the highlight colour\". Looked at the picture.",
-   "picture": "evidence/ETM-8868/step-4.png"
+   "picture": "evidence/ETM-8868/step-4.png",
+   "decidedBy": "user",
+   "answer": "BA round 7 Q2: red stays FFCCC7, clearly red"
   },
   {
    "n": 5,
@@ -48,10 +50,12 @@
   {
    "n": 6,
    "do": "Look at the red cell",
-   "expected": "The red colour is still visible on the cell",
-   "verdict": "needs-human",
+   "expected": "The red cell keeps FFCCC7 (the same colour as the row highlight)",
+   "verdict": "pass",
    "why": "Red cell rgb(255,204,199) is the same colour as the highlighted row (255,204,199): red cell cannot be told apart from the rest of the row (picture step-6). Red is \"visible\" only as it equals the highlight; likely fails the intent. Person decides.",
-   "picture": "evidence/ETM-8868/step-6.png"
+   "picture": "evidence/ETM-8868/step-6.png",
+   "decidedBy": "user",
+   "answer": "BA round 7 Q1=a: red cell = red highlight FFCCC7, accepted"
   },
   {
    "n": 7,
@@ -108,23 +112,8 @@
    "verdict": "pass",
    "why": "6 cells measured rgb(255,251,143)=FFFB8F; red cell stays rgb(255,204,199).",
    "picture": "evidence/ETM-8868/step-13.png"
-  },
-  {
-   "n": 14,
-   "do": "Make a dependency conflict on the row (no Dev steps yet: if there is no clear way on screen, stop here and mark `needs-human`)",
-   "expected": "The row gets the red border line",
-   "verdict": "needs-human",
-   "why": "No clear on-screen way to make a dependency conflict is given in the Test (no Dev steps); not attempted, as the Test says.",
-   "picture": "evidence/ETM-8868/step-14.png"
-  },
-  {
-   "n": 15,
-   "do": "Look at the row, then reload without Save",
-   "expected": "The red border line is still visible on the highlighted row, and the highlight `FFFB8F` is still visible",
-   "verdict": "needs-human",
-   "why": "Depends on step 14: no red border was made, so border + FFFB8F cannot be checked. Reloaded without Save: 0 error cells, no highlight, Save disabled.",
-   "picture": "evidence/ETM-8868/step-15.png"
   }
  ],
- "actions": []
+ "actions": [],
+ "confirmedBy": "user"
 }
