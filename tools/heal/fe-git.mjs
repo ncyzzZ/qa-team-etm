@@ -6,6 +6,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { resolveRepos } from './config.mjs';
+import { profile } from '../profile.mjs';
 
 // per subcommand: allowed flags. "=" suffix = prefix match (--format=...), "+" suffix = takes the next arg as its value
 const FLAGS = {
@@ -19,7 +21,6 @@ const FLAGS = {
 };
 const EXACT = {
   fetch: [['--quiet', 'origin'], ['origin']],
-  pull: [['--ff-only', '--quiet', 'origin', 'develop']],
 };
 const NO_HOOKS = path.join(os.tmpdir(), 'qa-heal-no-hooks-dir-that-does-not-exist');
 const SAFE_CONFIG = [
@@ -28,7 +29,12 @@ const SAFE_CONFIG = [
 ].flatMap((c) => ['-c', c]);
 const EXTRA = { diff: ['--no-ext-diff', '--no-textconv'], show: ['--no-ext-diff', '--no-textconv'], log: ['--no-ext-diff', '--no-textconv'], fetch: ['--no-recurse-submodules'], pull: ['--no-recurse-submodules'] };
 
-function flagsOk(sub, rest) {
+// The branch that may be pulled: the profile's FE branch (repos.feBranch), unless a caller passes one.
+const defaultBranch = () => resolveRepos().feBranch;
+const feName = () => profile().repos.feRepoDir; // for messages only
+
+function flagsOk(sub, rest, branch) {
+  if (sub === 'pull') return rest.length === 4 && ['--ff-only', '--quiet', 'origin', branch].every((a, i) => a === rest[i]);
   if (EXACT[sub]) return EXACT[sub].some((e) => e.length === rest.length && e.every((a, i) => a === rest[i]));
   const spec = FLAGS[sub];
   if (!spec) return false;
@@ -74,22 +80,22 @@ function assertRepoRoot(feRepo) {
 }
 
 /** Run one allowed git command in feRepo; returns stdout (trimmed). Throws on a refused command or a git error. */
-export function git(feRepo, args, { timeout = 30_000 } = {}) {
+export function git(feRepo, args, { timeout = 30_000, branch: feBranch = defaultBranch() } = {}) {
   const [sub, ...rest] = args;
-  if (!flagsOk(sub, rest)) throw new Error(`git ${sub} not allowed on stms-fe (${args.join(' ')})`);
+  if (!flagsOk(sub, rest, feBranch)) throw new Error(`git ${sub} not allowed on ${feName()} (${args.join(' ')})`);
   const repo = assertRepoRoot(feRepo);
   if (sub === 'pull') {
     let branch = '';
     try { branch = raw(repo, ['symbolic-ref', '--short', '-q', 'HEAD'], 10_000); } catch { branch = '(detached)'; }
-    if (branch !== 'develop') throw new Error(`git pull refused: stms-fe is on ${branch}, not develop`);
-    if (raw(repo, ['status', '--porcelain', '--untracked-files=no'], 30_000) !== '') throw new Error('git pull refused: stms-fe has local changes');
+    if (branch !== feBranch) throw new Error(`git pull refused: ${feName()} is on ${branch}, not ${feBranch}`);
+    if (raw(repo, ['status', '--porcelain', '--untracked-files=no'], 30_000) !== '') throw new Error(`git pull refused: ${feName()} has local changes`);
   }
   return raw(repo, [sub, ...(EXTRA[sub] || []), ...rest], timeout);
 }
 
-function newest(feRepo) {
+function newest(feRepo, branch) {
   try {
-    const [commit, date] = git(feRepo, ['log', '-1', '--format=%H %cI', 'origin/develop']).split(' ');
+    const [commit, date] = git(feRepo, ['log', '-1', '--format=%H %cI', `origin/${branch}`], { branch }).split(' ');
     return { commit, date };
   } catch { return null; }
 }
@@ -99,25 +105,27 @@ const why = (e) => (e.stderr || e.message).trim().split('\n').filter(Boolean).po
  * Bring the latest stms-fe code down without editing anything.
  * @returns {{ mode: 'pull'|'fetch'|'offline', reason: string, newest: { commit: string, date: string }|null }}
  */
-export function updateFe(feRepo) {
+export function updateFe(feRepo, { branch: feBranch = defaultBranch() } = {}) {
+  const opt = { branch: feBranch };
+  const name = feName();
   let branch = '';
-  try { branch = git(feRepo, ['symbolic-ref', '--short', '-q', 'HEAD']); } catch { branch = '(detached)'; }
-  const dirty = git(feRepo, ['status', '--porcelain', '--untracked-files=no']) !== '';
+  try { branch = git(feRepo, ['symbolic-ref', '--short', '-q', 'HEAD'], opt); } catch { branch = '(detached)'; }
+  const dirty = git(feRepo, ['status', '--porcelain', '--untracked-files=no'], opt) !== '';
   let reason;
-  if (branch === 'develop' && !dirty) {
+  if (branch === feBranch && !dirty) {
     try {
-      git(feRepo, ['pull', '--ff-only', '--quiet', 'origin', 'develop'], { timeout: 60_000 });
-      return { mode: 'pull', reason: 'clean develop, fast-forwarded', newest: newest(feRepo) };
+      git(feRepo, ['pull', '--ff-only', '--quiet', 'origin', feBranch], { timeout: 60_000, branch: feBranch });
+      return { mode: 'pull', reason: `clean ${feBranch}, fast-forwarded`, newest: newest(feRepo, feBranch) };
     } catch (e) {
       reason = `pull --ff-only failed (${why(e)}), trying fetch`;
     }
   } else {
-    reason = branch !== 'develop' ? `stms-fe is on branch ${branch}, not develop: fetch only` : 'stms-fe has local changes: fetch only';
+    reason = branch !== feBranch ? `${name} is on branch ${branch}, not ${feBranch}: fetch only` : `${name} has local changes: fetch only`;
   }
   try {
-    git(feRepo, ['fetch', '--quiet', 'origin'], { timeout: 60_000 });
-    return { mode: 'fetch', reason, newest: newest(feRepo) };
+    git(feRepo, ['fetch', '--quiet', 'origin'], { timeout: 60_000, branch: feBranch });
+    return { mode: 'fetch', reason, newest: newest(feRepo, feBranch) };
   } catch (e) {
-    return { mode: 'offline', reason: `GitLab not reachable (${why(e)}): using the origin/develop already in the clone`, newest: newest(feRepo) };
+    return { mode: 'offline', reason: `GitLab not reachable (${why(e)}): using the origin/${feBranch} already in the clone`, newest: newest(feRepo, feBranch) };
   }
 }

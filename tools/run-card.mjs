@@ -19,6 +19,8 @@ import { triageRun, countByCause } from './heal/triage.mjs';
 import { propose as proposeHeals, summaryLine } from './heal/auto-heal.mjs';
 import { pagesUsedBy, advanceBaseline } from './heal/baseline.mjs';
 import { git as feGit } from './heal/fe-git.mjs';
+import { resolveRepos } from './heal/config.mjs';
+import { profile } from './profile.mjs';
 import { dataGate, holdLock } from './data-gate.mjs';
 import { hasCreate, ledgerEmpty, planFlow, runStep, lockHeld } from './card-data-flow.mjs';
 import { recordRunResults, sourceOf, rowsFromResults } from './run-results.mjs';
@@ -27,13 +29,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 const GEN = path.join(HERE, 'evidence-report-v4.mjs');
 // PW_REPO: environment variable, else `PW_REPO=...` in the git-ignored `.env` at the repo root, else ../ep-etm-fe-qa
-function envFileValue(name) {
-  try {
-    const m = fs.readFileSync(path.join(ROOT, '.env'), 'utf8').match(new RegExp('^\s*' + name + '\s*=\s*(.+?)\s*$', 'm'));
-    return m ? m[1].replace(/^["']|["']$/g, '') : '';
-  } catch { return ''; }
-}
-const REPO = process.env.PW_REPO || envFileValue('PW_REPO') || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
+const { pwRepo: REPO } = resolveRepos();
+const PROFILE = profile();
 
 const [key, ...argsIn] = process.argv.slice(2);
 // --no-data-check: run without the card data gate (the user asked for it on purpose); not passed to Playwright
@@ -146,7 +143,7 @@ const resultsDirName = path.join('output', 'runs', `${d.getFullYear()}-${pad(d.g
 const resultsDir = path.join(REPO, resultsDirName);
 // call Playwright's own CLI with node, no shell: a "|" in -g "A|B" must reach Playwright untouched
 const PW_CLI = path.join(REPO, 'node_modules', '@playwright', 'test', 'cli.js');
-if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}\nSet PW_REPO to the folder of ep-etm-fe-qa (now: ${REPO}) and run npm install there.`); process.exit(2); }
+if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}\nSet PW_REPO to the folder of ${PROFILE.repos.pwRepoDir} (now: ${REPO}) and run npm install there.`); process.exit(2); }
 // Rerun guard (tools/rerun-guard.mjs): drop tests whose result cannot change, before any data step
 let testHashes = null;
 {
@@ -228,12 +225,12 @@ function healAfterRun(dir, exitCode) {
       } catch (e) { console.log(`[auto-heal] skipped: ${e.message}`); }
     }
     const results = JSON.parse(fs.readFileSync(path.join(dir, 'results.json'), 'utf8'));
-    const fe = process.env.FE_REPO || envFileValue('FE_REPO') || path.resolve(REPO, '..', 'stms-fe');
+    const { feRepo: fe, feBranch } = resolveRepos();
     if (canAdvanceBaseline(rest, exitCode, results) && fs.existsSync(path.join(fe, '.git'))) {
       const units = pagesUsedBy(REPO, specFilesFrom(rest, REPO));
-      const commit = feGit(fe, ['rev-parse', '--verify', '-q', 'origin/develop']);
+      const commit = feGit(fe, ['rev-parse', '--verify', '-q', `origin/${feBranch}`]);
       advanceBaseline(REPO, units, commit);
-      if (units.length) console.log(`[heal] all passed: stms-fe baseline ${commit.slice(0, 8)} recorded for ${units.join(', ')}`);
+      if (units.length) console.log(`[heal] all passed: ${PROFILE.repos.feRepoDir} baseline ${commit.slice(0, 8)} recorded for ${units.join(', ')}`);
     }
   } catch (e) { console.log(`[heal] skipped: ${e.message}`); }
 }

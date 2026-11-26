@@ -12,18 +12,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveRepos } from './heal/config.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
 export const VERDICTS = ['script', 'tc', 'app', 'env', 'flaky'];
 
-function envFileValue(name) {
-  try {
-    const m = fs.readFileSync(path.join(ROOT, '.env'), 'utf8').match(new RegExp('^\\s*' + name + '\\s*=\\s*(.+?)\\s*$', 'm'));
-    return m ? m[1].replace(/^["']|["']$/g, '') : '';
-  } catch { return ''; }
-}
-const pwRepo = () => process.env.PW_REPO || envFileValue('PW_REPO') || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
+const pwRepo = () => resolveRepos().pwRepo;
 const readJson = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 
 /** AI suggestion for one triage row: { suggest, why }. Findings/defects that name the test win over the cause. */

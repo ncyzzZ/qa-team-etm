@@ -16,6 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveRepos } from './heal/config.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(HERE, '..');
@@ -29,13 +30,7 @@ const COLOR_KEYS = new Set(['color', 'background-color', 'border-color']);
 const PX_KEYS = new Set(['border-width', 'border-radius', 'font-size', 'line-height', 'letter-spacing']);
 const COLOR_RE = /^(#[0-9a-f]{6}([0-9a-f]{2})?|rgba?\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*(,\s*[\d.]+\s*)?\))$/i;
 
-function envFileValue(name) {
-  try {
-    const m = fs.readFileSync(path.join(ROOT, '.env'), 'utf8').match(new RegExp('^\\s*' + name + '\\s*=\\s*(.+?)\\s*$', 'm'));
-    return m ? m[1].replace(/^["']|["']$/g, '') : '';
-  } catch { return ''; }
-}
-const pwRepo = () => process.env.PW_REPO || envFileValue('PW_REPO') || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
+const pwRepo = () => resolveRepos().pwRepo;
 export const workDir = (key) => path.join(process.env.FIGMA_SPEC_WORK || path.join(ROOT, '.claude', 'team', 'work'), key);
 
 /** Returns { errors: string[], warnings: string[] } for a parsed spec; dir = folder the image paths are relative to. */

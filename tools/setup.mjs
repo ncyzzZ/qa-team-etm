@@ -12,6 +12,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { resolveRepos } from './heal/config.mjs';
+import { profile } from './profile.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ENV_FILE = path.join(ROOT, '.env');
@@ -40,21 +42,24 @@ if (arg) {
   fs.writeFileSync(ENV_FILE, lines.join('\n') + '\n');
   ok(`saved PW_REPO=${repo} in .env (this file is not committed)`);
 } else {
-  repo = process.env.PW_REPO || fromEnvFile('PW_REPO') || path.resolve(ROOT, '..', 'ep-etm-fe-qa');
-  info(`PW_REPO = ${repo}  (${process.env.PW_REPO ? 'from the environment' : fromEnvFile('PW_REPO') ? 'from .env' : 'default: next to this repo'})`);
+  const R = resolveRepos();
+  repo = R.pwRepo;
+  info(`PW_REPO = ${repo}  (${{ environment: 'from the environment', '.env': 'from .env' }[R.sources.pw] || R.sources.pw})`);
 }
 
 // 2) checks
 const major = Number(process.versions.node.split('.')[0]);
 need(major >= 18, `Node ${process.versions.node}`, `Node ${process.versions.node} is too old: install Node 18 or newer`);
-need(fs.existsSync(repo), 'Playwright repo folder exists', `PW_REPO folder not found: run  node tools/setup.mjs <folder of ep-etm-fe-qa>`);
+need(fs.existsSync(repo), 'Playwright repo folder exists', `PW_REPO folder not found: run  node tools/setup.mjs <folder of ${profile().repos.pwRepoDir}>`);
 need(fs.existsSync(path.join(repo, 'node_modules', '@playwright', 'test', 'cli.js')), 'Playwright is installed there', 'run "npm install" inside the Playwright repo');
 if (fs.existsSync(repo)) info(`Playwright repo has its own .env (logins): ${fs.existsSync(path.join(repo, '.env')) ? 'yes' : 'NO, create it before running tests'}`);
 { // FE repo (stms-fe), used read-only by tools/heal/ (self-healing). A warning, not a hard fail.
-  const fe = process.env.FE_REPO || fromEnvFile('FE_REPO') || path.resolve(repo, '..', 'stms-fe');
-  info(`FE_REPO = ${fe}  (${process.env.FE_REPO ? 'from the environment' : fromEnvFile('FE_REPO') ? 'from .env' : 'default: stms-fe next to PW_REPO'})`);
-  if (fs.existsSync(path.join(fe, '.git'))) ok('FE repo (stms-fe) found, self-healing can read it');
-  else info('WARN  FE repo (stms-fe) not found: self-healing pre-flight is off. Add FE_REPO=<folder of stms-fe> to .env');
+  const feDir = profile().repos.feRepoDir;
+  const R2 = resolveRepos();
+  const fe = R2.sources.fe.startsWith('default') ? path.resolve(repo, '..', feDir) : R2.feRepo; // repo may be the folder just given as an argument
+  info(`FE_REPO = ${fe}  (${{ environment: 'from the environment', '.env': 'from .env' }[R2.sources.fe] || R2.sources.fe})`);
+  if (fs.existsSync(path.join(fe, '.git'))) ok(`FE repo (${feDir}) found, self-healing can read it`);
+  else info(`WARN  FE repo (${feDir}) not found: self-healing pre-flight is off. Add FE_REPO=<folder of ${feDir}> to .env`);
 }
 need(!!(process.env.XRAY_CLIENT_ID && process.env.XRAY_CLIENT_SECRET), 'XRAY_CLIENT_ID and XRAY_CLIENT_SECRET are set', 'set XRAY_CLIENT_ID and XRAY_CLIENT_SECRET as environment variables (never in a committed file)');
 const py = ['python3', 'python'].map((c) => ({ c, r: spawnSync(c, ['--version'], { encoding: 'utf8' }) })).find((x) => x.r.status === 0);

@@ -140,3 +140,10 @@ test('read-only flags for regress.mjs are allowed: log --first-parent / --before
   assert.doesNotThrow(() => git(clone, ['log', '-1', '--format=%H', '--before=2030-01-01', 'HEAD']));
   assert.doesNotThrow(() => git(clone, ['diff', '--find-renames', '--unified=0', 'HEAD', 'HEAD']));
 });
+
+test('the pull branch is a parameter: another branch name is allowed only when passed', () => {
+  const { clone } = makeRepos();
+  assert.throws(() => git(clone, ['pull', '--ff-only', '--quiet', 'origin', 'main']), /not allowed/);
+  assert.throws(() => git(clone, ['pull', '--ff-only', '--quiet', 'origin', 'main'], { branch: 'main' }), /refused: .* is on develop, not main/);
+  assert.equal(updateFe(clone, { branch: 'main' }).mode, 'fetch');
+});
