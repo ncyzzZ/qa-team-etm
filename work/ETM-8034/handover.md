@@ -95,3 +95,9 @@ Spec change for 8859 (steps 22/26) is in ep-etm-fe-qa, not committed.
 - Probe: Export PDF (Overall) of plan S26 Row Colour; PDF colours equal the screen in all 7 columns; uncoloured row default. All 5 steps proposed pass. Details `manual-run-8870-20261126/result.md`. Colours reset to No Color and saved.
 - Not pushed yet: waiting for the user's yes to push 8870 PASSED with the 5 pictures.
 - 11:40 user "push ได้" (chat): ETM-8870 pushed PASSED to ETM-8875 with 5 pictures (manual check, no Playwright run result). Read back: 15 PASSED, 1 FAILED (8868), 3 TO DO (8860, 8861, 8869).
+
+## Update 26 Nov 12:00 - ETM-8869 verdict (from run manual-run-8869-20261125b, measured values)
+- Xray steps already say BAE0FF (step 6), so step 6 matches (cells rgb 186,224,255).
+- Proposed pass 1-3, 5-8: highlight FFFB8F stays as the cell background; hover / selected / focus add a see-through blue layer (rgba 24,144,255 at 0.14 / 0.08); disabled cell keeps b-readonly-cell, its grey layer and grey text over BAE0FF; after No Color + reload it equals step 5.
+- Step 4: row is FFFB8F again, but the clicked Description cell keeps the cell focus (8% blue layer). Normal grid cell focus, not checked on a row without colour. Waiting for the user: pass with note, or ask BA.
+- 12:15 user "push PASSED" (chat): 8869 step 4 accepted as pass (cell focus layer is normal). Verdicts recorded with `results.mjs --decide` (confirmedBy user), pushed with `xray-step-push.mjs --apply`: Xray shows PASSED, 8 steps PASSED with 1 picture each. ETM-8875 now 16 PASSED, 1 FAILED (8868), 2 TO DO (8860, 8861).
