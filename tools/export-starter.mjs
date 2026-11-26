@@ -30,6 +30,7 @@ const SKIP_EXACT = new Map([
   ['.claude/settings.local.json', 'personal settings'],
   ['.claude/active-profile.md', 'generated from the active profile'],
   ['README.md', 'replaced by a generic README'],
+  ['docs/starter-readme.md', 'written as the starter README.md'],
   ['ONBOARDING.md', 'project onboarding'],
 ]);
 const BINARY = /\.(png|jpe?g|gif|zip|pdf|xlsx|docx|webm)$/i;
@@ -172,24 +173,11 @@ export function leakScan(dir, patterns) {
 /** Tests and eval fixtures are examples, not tools: one that names the project is left out, not reworded. */
 export const isFixture = (f) => /\.test\.mjs$/.test(f) || f.startsWith('evals/');
 
-const README = `# QA team starter
-
-A Claude Code QA team: agents (\`.claude/agents/\`), project skills (\`.claude/skills/\`), the status board
-(\`.claude/team/\`, http://localhost:4777), quality gates and tools (\`tools/\`), and the Xray MCP server
-(\`xray-toolkit/\`). Everything project-specific lives in \`profiles/<name>/\`.
-
-Start with **[docs/new-team-setup.md](docs/new-team-setup.md)**.
-
-Quick start:
-
-\`\`\`sh
-git init && git add -A && git commit -m "starter"
-node tools/setup.mjs --new-profile <name> --key <KEY> --site <you>.atlassian.net --project-id <id> --board <id> --pw-repo-dir <pw-repo> --fe-repo-dir <fe-repo>
-node tools/setup.mjs            # checks the whole setup
-\`\`\`
-
-The process is in \`CLAUDE.md\` and \`TEAM.md\`; your project's own rules go in \`profiles/<name>/rules.md\`.
-`;
+/** The starter's README: docs/starter-readme.md (Thai + English), kept in the repo so it is reviewed like other docs. */
+const readmeText = (root) => {
+  const f = path.join(root, 'docs/starter-readme.md');
+  return fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : '# QA team starter\n\nStart with docs/new-team-setup.md.\n';
+};
 
 const ENV_EXAMPLE = `# Copy to .env (git-ignored) and fill in. Never commit .env.
 QA_PROFILE=example
@@ -244,7 +232,7 @@ export function exportStarter(outDir, { root = ROOT, patterns = [] } = {}) {
   fs.copyFileSync(path.join(root, 'profiles/_template/rules.md'), target('profiles/example/rules.md'));
   fs.writeFileSync(target('profiles/example/regress-map.json'), '[]\n');
   fs.writeFileSync(target('.env.example'), ENV_EXAMPLE);
-  fs.writeFileSync(target('README.md'), README);
+  fs.writeFileSync(target('README.md'), readmeText(root));
   return { copied, skipped: plan.skip };
 }
 

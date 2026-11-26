@@ -17,6 +17,7 @@ For the QA lead of a team that received this starter. About 30 minutes.
 ## 1. Make your profile
 
 ```sh
+cd /path/to/qa-team-starter      # always run inside the starter folder
 git init && git add -A && git commit -m "starter"
 node tools/setup.mjs --new-profile <name> --key <KEY> --site <you>.atlassian.net \
   --project-id <id> --board <id> --pw-repo-dir <playwright-repo-folder> --fe-repo-dir <fe-repo-folder>
@@ -59,7 +60,7 @@ and when. Logging defects, deletes and Jira writes should keep asking.
 ## 6. Check it
 
 ```sh
-node --test tools/export-starter.test.mjs tools/setup.test.mjs
+node --test tools/profile-rules.test.mjs tools/export-starter.test.mjs
 node tools/profile-lint.mjs     # no project values hard-coded in tools/
 node tools/profile.mjs show     # your settings as Claude sees them
 ```
