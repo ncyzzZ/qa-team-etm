@@ -12,3 +12,66 @@
 == ETM-8034: ran 13 | passed 11 | failed 2 | flaky 0 | skipped 0
 [run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_094609_ETM-8034/evidence-report-ETM-8034-20261126-094609.html
 === ETM-8042 10:33
+    output/runs/2026-11-26_103354_ETM-8042/fe-e2e-planning-etm8042-ve-80f70-ed-earlier-no-error-message-chromium-retry1/test-failed-1.png
+    output/runs/2026-11-26_103354_ETM-8042/fe-e2e-planning-etm8042-ve-30f89-ck-Panel-Summary-shows-them-chromium/test-failed-1.png
+    output/runs/2026-11-26_103354_ETM-8042/fe-e2e-planning-etm8042-ve-30f89-ck-Panel-Summary-shows-them-chromium-retry1/test-failed-1.png
+    output/runs/2026-11-26_103354_ETM-8042/fe-e2e-planning-etm8042-ve-f7feb--loops-over-the-data-table--chromium/test-failed-1.png
+    output/runs/2026-11-26_103354_ETM-8042/fe-e2e-planning-etm8042-ve-fdad0-r-edit-only-moves-the-lines-chromium/test-failed-1.png
+  9 failed
+  14 passed (32.7m)
+[auto-heal] needs-live 2, manual 1  (/Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_103354_ETM-8042/heal-proposals.md)
+[auto-heal] NEXT: lead starts the heal loop now (TEAM.md Phase 7), no need to be asked
+== ETM-8042: ran 25 | passed 14 | failed 9 | flaky 1 | skipped 1
+  FLAKY ETM-8832 - Ramp Up equal to, one picker step after and outside the Pla (failed, then passed on retry: not a clean pass)
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_103354_ETM-8042/evidence-report-ETM-8042-20261126-103354.html
+=== ETM-8049 11:06
+  14 passed (21.1m)
+[heal] all passed: stms-fe baseline df2a3680 recorded for importWorkPage
+== ETM-8049: ran 20 | passed 14 | failed 0 | flaky 0 | skipped 6
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_110644_ETM-8049/evidence-report-ETM-8049-20261126-110644.html
+=== ETM-8393 11:27
+  15 passed (2.2m)
+[heal] all passed: stms-fe baseline df2a3680 recorded for shutdownLogicPage
+== ETM-8393: ran 15 | passed 15 | failed 0 | flaky 0 | skipped 0
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_112757_ETM-8393/evidence-report-ETM-8393-20261126-112757.html
+=== ETM-8394 11:30
+[rerun-guard] DROP ETM-8767: same result expected: passed in 2026-11-26_112533 and nothing changed since (spec, its imports, card data, stms-fe)
+  1 passed (24.3s)
+  17 passed (24.1m)
+  1 passed (23.1s)
+== ETM-8394: ran 18 | passed 17 | failed 0 | flaky 0 | skipped 1
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_113015_ETM-8394/evidence-report-ETM-8394-20261126-113015.html
+=== ETM-8905 11:55
+    output/runs/2026-11-26_115515_ETM-8905/fe-e2e-shutdownLogic-verif-69779-nflict-after-clicking-SIMOP-chromium/test-failed-1.png
+    output/runs/2026-11-26_115515_ETM-8905/fe-e2e-shutdownLogic-verif-69779-nflict-after-clicking-SIMOP-chromium-retry1/test-failed-1.png
+  1 failed
+  40 passed (33.8m)
+== ETM-8905: ran 55 | passed 40 | failed 1 | flaky 0 | skipped 14
+[run-card] Report: /Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-26_115515_ETM-8905/evidence-report-ETM-8905-20261126-115515.html
+=== no-card 12:29
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7137 observe many_errors 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7124 observe blank_template_copy 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7130 observe header_only_no_records 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7132 observe a_sheet_renamed_Sheet1 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7126 observe c_revise_work_no_breakdown 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7126 observe e_add_work_with_preset_no_rows 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7131 observe a_exactly_3000_rows 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7131 observe b_3001_rows 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7138 observe a_with_error 
+    [chromium] › tests/fe/e2e/importWork/observeImportErrors.spec.ts:59:7 › ETM-7138 observe b_warning_only 
+    [chromium] › tests/fe/e2e/importWork/verifyImportRules.spec.ts:52:7 › Import rules (ETM-6843) › ETM-7129 A Work Breakdown row with no parent Work is rejected 
+    [chromium] › tests/fe/e2e/importWork/verifyImportRules.spec.ts:63:7 › Import rules (ETM-6843) › ETM-7126 An Add Work with no breakdown and no Work Breakdown Type is rejected (Revise is accepted) 
+    [chromium] › tests/fe/e2e/importWork/verifyImportRules.spec.ts:78:7 › Import rules (ETM-6843) › ETM-7119 A breakdown UUID that belongs to another Work is rejected 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:170:7 › Import Work (ETM-6843) › Back with a file loaded asks first, Discard imports nothing 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:382:7 › Import Work data rules (ETM-6843) › ETM-7122 Turnaround Manager imports Work Status and Breakdown Status 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:406:7 › Import Work data rules (ETM-6843) › ETM-7125 Blank Work Breakdown Type imports only the file rows 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:425:7 › Import Work data rules (ETM-6843) › ETM-7127 File rows come first, then the preset rows 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:445:7 › Import Work data rules (ETM-6843) › ETM-7127 File rows come first, then the preset rows (multi-row preset) 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:466:7 › Import Work data rules (ETM-6843) › ETM-7128 Work roll-up is recalculated from the breakdowns that are left 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:507:7 › Import Work data rules (ETM-6843) › ETM-7133 Master Data matching ignores case and stores the standard value 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:533:7 › Import Work data rules (ETM-6843) › ETM-7135 Blank Functional Location and Equipment Number are not checked, a valid hierarchy imports (steps 6-7) 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:571:7 › Import Work data rules (ETM-6843) › ETM-7121 Values typed into system-managed grey columns are ignored on import 
+    [chromium] › tests/fe/e2e/importWork/verifyImportWorkBasic.spec.ts:597:7 › Import Work data rules (ETM-6843) › ETM-7138 A warning does not stop the import: duplicate Works (steps 3-9) 
+  7 did not run
+  4 passed (22.6m)
+=== DONE 12:51
