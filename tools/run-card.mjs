@@ -4,6 +4,7 @@
 //
 //   node tools/run-card.mjs ETM-7879 etm7879/verifyMobPlanNoColumn.spec -g "ETM-8086|ETM-8087"
 //   node tools/run-card.mjs ETM-7879 <spec> -g "<filter>" --workers=2        (extra flags go to Playwright)
+//   node tools/run-card.mjs ETM-7879 <spec> --force-rerun "<why>"            (run tests the rerun guard drops; logged)
 //   node tools/run-card.mjs ETM-7879 --build-only output/runs/2026-11-17_111500_ETM-7879   (report from a saved folder)
 //
 // Env: PW_REPO = folder of the Playwright repo ep-etm-fe-qa (or PW_REPO=... in the git-ignored .env at the repo root; default: the folder `ep-etm-fe-qa` next to this repo)
@@ -39,7 +40,10 @@ const [key, ...argsIn] = process.argv.slice(2);
 const NO_DATA_CHECK = argsIn.includes('--no-data-check');
 // --keep-data: a `create: true` card keeps the data this run made (to look at it); the next run's sweep deletes it
 const KEEP_DATA = argsIn.includes('--keep-data');
-const rest = argsIn.filter((a) => a !== '--no-data-check' && a !== '--keep-data');
+// --force-rerun "<why>": run even the tests the rerun guard drops (logged in work/<KEY>/rerun-log.jsonl)
+const fi = argsIn.indexOf('--force-rerun');
+const FORCE_RERUN = fi >= 0 ? (argsIn[fi + 1] || '') : null;
+const rest = argsIn.filter((a, i) => a !== '--no-data-check' && a !== '--keep-data' && i !== fi && !(fi >= 0 && i === fi + 1));
 if (!key || !/^ETM-\d+$/.test(key)) {
   console.error('Usage: node tools/run-card.mjs ETM-1234 <spec> [-g "ETM-1|ETM-2"] [--no-data-check] [--keep-data] [playwright flags]\n   or: node tools/run-card.mjs ETM-1234 --build-only <result-folder>');
   process.exit(2);
@@ -143,6 +147,30 @@ const resultsDir = path.join(REPO, resultsDirName);
 // call Playwright's own CLI with node, no shell: a "|" in -g "A|B" must reach Playwright untouched
 const PW_CLI = path.join(REPO, 'node_modules', '@playwright', 'test', 'cli.js');
 if (!fs.existsSync(PW_CLI)) { console.error(`Playwright CLI not found: ${PW_CLI}\nSet PW_REPO to the folder of ep-etm-fe-qa (now: ${REPO}) and run npm install there.`); process.exit(2); }
+// Rerun guard (tools/rerun-guard.mjs): drop tests whose result cannot change, before any data step
+let testHashes = null;
+{
+  const rg = await import('./rerun-guard.mjs');
+  const gi = rest.findIndex((a) => a === '-g' || a === '--grep');
+  const specs = specFilesFrom(rest, REPO);
+  const g = specs.length ? rg.plan({ key, pwRepo: REPO, specs, grep: gi >= 0 ? rest[gi + 1] : null, feChangedAt: await rg.feChangedAt() }) : null;
+  if (g) testHashes = g.hashes;
+  if (g && !g.mapped) console.log('[rerun-guard] the -g filter matches no test title: guard not applied');
+  if (g && g.drop.length) {
+    for (const x of g.drop) console.log(`[rerun-guard] DROP ${x.key}: ${x.why}`);
+    if (FORCE_RERUN !== null) {
+      if (FORCE_RERUN.trim().length < 5) { console.error('[rerun-guard] --force-rerun needs a reason, e.g. --force-rerun "QA data was reset by hand"'); process.exit(2); }
+      rg.logForce(ROOT, key, { forced: g.drop.map((x) => x.key), why: FORCE_RERUN, args: rest.join(' ') });
+      console.log(`[rerun-guard] --force-rerun: running them anyway (${FORCE_RERUN}), logged in work/${key}/rerun-log.jsonl`);
+    } else if (!g.keep.length) {
+      console.error(`[rerun-guard] nothing to run: every selected test would give the same result. Change the spec / data, wait for a new FE build, offer it as manual, or add --force-rerun "<why>".`);
+      process.exit(3);
+    } else {
+      if (gi >= 0) rest[gi + 1] = g.grep; else rest.push('-g', g.grep);
+      console.log(`[rerun-guard] running ${g.keep.length} of ${g.keep.length + g.drop.length}: ${g.keep.join(', ')}`);
+    }
+  }
+}
 // Cards with `create: true`: the data is made by script for this run and deleted after it (card-data-flow.mjs)
 const FLOW = NO_DATA_CHECK ? ['run'] : planFlow({ hasCreate: hasCreate(REPO, key), ledgerEmpty: ledgerEmpty(REPO, key), keepData: KEEP_DATA });
 let cleaned = !FLOW.includes('cleanup');
@@ -211,6 +239,8 @@ function healAfterRun(dir, exitCode) {
 }
 
 child.on('exit', (code) => {
+  // after the run: Playwright empties --output when it starts (rerun guard reads this next time)
+  if (testHashes) { try { fs.mkdirSync(resultsDir, { recursive: true }); fs.writeFileSync(path.join(resultsDir, 'test-hashes.json'), JSON.stringify(testHashes, null, 1)); } catch { /* optional */ } }
   unlock();
   cleanupOnce();
   healAfterRun(resultsDir, code);
