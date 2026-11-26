@@ -8,6 +8,8 @@ The mix of a condition colour or a hover/selected/focus/disabled layer with a hi
 ETM-8870 (Export PDF) is not in this file: a person compares the PDF with the screen (`manual-by-hand-8870.md`).
 
 ## ETM-8868 - Condition colour stays visible on a highlighted row (15 steps)
+
+writes data: no (colours and Delete Resource are never saved; reload at the end)
 start: ETM8034_PATH
 Precondition: a task with only one Manpower Resource, shown with no error; use the same task for the whole Test. Steps 1-7 = error first, steps 9-15 = highlight first. At the end reload without Save.
 | # | Do | Expected | Picture |
@@ -29,6 +31,8 @@ Precondition: a task with only one Manpower Resource, shown with no error; use t
 | 15 | Look at the row, then reload without Save | The red border line is still visible on the highlighted row, and the highlight `FFFB8F` is still visible | row |
 
 ## ETM-8869 - Hover, selected, focus and disabled layers on a highlighted row (8 steps)
+
+writes data: no (colours and Delete Resource are never saved; reload at the end)
 start: ETM8034_PATH
 Precondition: right-click a Work row, `Highlight Row` → `FFFB8F` (do not Save). A Platform row (or Work Header row) has a read-only roll-up cell (a column that cannot be edited at that level, ETM-2310) and no highlight. At the end reload without Save.
 | # | Do | Expected | Picture |
@@ -38,6 +42,6 @@ Precondition: right-click a Work row, `Highlight Row` → `FFFB8F` (do not Save)
 | 3 | Click a cell of the row so it has focus | The focus look shows and the highlight is still visible | row |
 | 4 | Click an empty area of the page | The row looks like `FFFB8F` again | row |
 | 5 | Record how the disabled cell of the Platform row looks with no highlight | The look is written down for comparison | close-up of the disabled cell |
-| 6 | Right-click the Platform row, open `Highlight Row` and choose `B9E0FF` | The row background is `B9E0FF` | row |
+| 6 | Right-click the Platform row, open `Highlight Row` and choose `BAE0FF` | The row background is `BAE0FF` | row |
 | 7 | Look at the disabled cell | The disabled look is still visible, mixed with the highlight, and the cell is still recognised as disabled | close-up of the disabled cell |
 | 8 | Right-click the Platform row, open `Highlight Row` and choose `No Color`, then reload without Save | The disabled cell looks as in step 5 | close-up of the disabled cell |

@@ -1,0 +1,1 @@
+{"test":"ETM-8862","stepNo":8,"stepId":"2ad4dbd5-6ee3-4f8d-bab9-719c7f985003","action":"Click `Save` in the Work Details modal.","data":"","result":"The toast `Save Work Successfully` appears.","newResult":"The Work Details modal closes and the row shows the new value (no toast).","why":"QA lead decision 2026-11-26 (round 5 Q1)"}

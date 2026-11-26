@@ -55,3 +55,7 @@
 - Highlight Cell เป็น feature ที่ตั้งใจเพิ่ม (คลิกขวาที่ช่อง Description) ไม่ใช่ defect
 - พักไว้ก่อน: ยังไม่ส่ง R4-1 ให้ BA และยังไม่เพิ่ม TC ของ Highlight Cell (F-35 confirmed, deferred)
 - script คงเดิม: double-click No. -> คลิกขวา -> Highlight Row
+
+## QA lead decisions (user, main chat 2026-11-26, relayed by the lead session)
+- **Round 5 Q1 (Xray ETM-8862 step 8):** no toast is expected after Save in the Work Details modal. Step 8 becomes "the modal closes and the row shows the new values".
+- **Round 6 Q1 (Xray ETM-8867 step 8):** answer a) the colours of a duplicated plan are fully separate from the original. Checked by hand by the user: plan "เทสสีหลัง dup" (duplicate of "Wide Plan B - NN", event NN TEST QA) got Aug01 red and row 11 yellow; the original "Wide Plan B - NN" kept Aug01 green and 08-Maimai02 pink. Our earlier automated finding (original Platform lost FFCCC7) is not reproduced by hand: no defect; re-run 8867 for clean evidence.

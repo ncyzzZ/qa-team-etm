@@ -1,0 +1,20 @@
+{ "id": "defect-draft-highlight-row-label", "sourceHash": "0bd79ba3f4ac", "overall": "defect-proven",
+  "steps": [
+    { "n": 1, "sees": "Full screen, Shutdown Logic: S26 Row Colour (NN TEST QA), histogram collapsed (only grid visible). Row 4 'Inspect and clean heat exchanger E-310 bu...' (Duration 12.00, Predecessor 5+4) has a faint light-blue tint across No., Description, Duration, Predecessor and Location cells; no menu open. Save disabled, undo disabled.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "Same page; context menu opened at the No. cell of row 4. Options in order: 'Highlight Cell' (submenu), 'Change Text Color' (submenu), 'Duplicate Work Breakdown', 'Delete Work Breakdown'. Highlight Cell submenu shows No Color plus 12 light colours. Row 4 keeps the same whole-row light tint. No 'Highlight Row' option anywhere.", "verdict": "fail", "pictureOk": true },
+    { "n": 3, "sees": "Menu closed. Row 4 is coloured light blue across all visible table cells (No. to Location). Save button is now enabled (blue) and undo is enabled. Other rows unchanged.", "verdict": "pass", "pictureOk": true }
+  ],
+  "expectedSources": [
+    "AC 1.1 (as quoted in brief: Highlight Row and Change Text Color as new options; story text not available locally to recheck)",
+    "Behaviour table, user chat 2026-11-24, work/ETM-8034/ba-answers.md lines 39-49: No. column, Select Row + Right Click -> Highlight Row, Change Text Color, Delete",
+    "Xray ETM-8854 step 8 (as quoted in brief; not found in local xray-steps backups, not verified)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Behaviour table came from the user in chat (build 73dfde33), not directly from BA; BA round 5 Q2 asking if rule unchanged is still open.",
+    "Pic 1 shows whole-row selection only as a faint tint; a developer may question whether the row was truly selected.",
+    "Xray ETM-8854 step 8 text could not be checked against a local backup.",
+    "Low severity: label only, colouring of the whole row still works (pic 3)."
+  ],
+  "summary": "ภาพแสดงว่าแถว 4 ถูกเลือกทั้งแถวแล้วคลิกขวาที่ช่อง No. เมนูแรกเป็น Highlight Cell ไม่ใช่ Highlight Row ตามตาราง behaviour (ba-answers.md) และ AC 1.1 จึงพิสูจน์ defect ได้ การลงสีทั้งแถวยังทำงานถูก และคำถาม BA รอบ 5 ยังไม่ได้คำตอบ"
+}

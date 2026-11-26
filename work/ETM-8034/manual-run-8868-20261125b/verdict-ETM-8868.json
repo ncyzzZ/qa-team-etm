@@ -1,0 +1,130 @@
+{
+ "key": "ETM-8034",
+ "test": "ETM-8868",
+ "title": "Condition colour stays visible on a highlighted row",
+ "role": "turnaroundManager",
+ "note": "Build with ETM-10043/10077. Nothing saved, Save never pressed, final reload: 0 error cells, Save disabled. Resource column sits under the Gantt: dragged the grid/Gantt splitter right to see it. Histogram collapsed except Delete Resource steps.",
+ "steps": [
+  {
+   "n": 1,
+   "do": "In the Manpower Resource histogram right-click the resource of the task and choose `Delete Resource` (do not Save)",
+   "expected": "The resource cell of the task turns red",
+   "verdict": "pass",
+   "why": "Delete Resource on Crane Opt (confirm Delete + OK dialogs): task 8 (04-Test1) resource cell got b-invalid-cell, background rgb(255,204,199). Task 16 also red (also only Crane Opt).",
+   "picture": "evidence/ETM-8868/step-1.png"
+  },
+  {
+   "n": 2,
+   "do": "Record how the red cell looks with no highlight",
+   "expected": "The look of the red cell is written down for comparison",
+   "verdict": "pass",
+   "why": "Look noted: cell background rgb(255,204,199) (FFCCC7), solid, no highlight; row has only the blue selected tint.",
+   "picture": "evidence/ETM-8868/step-2.png"
+  },
+  {
+   "n": 3,
+   "do": "Right-click the row with the red cell, open `Highlight Row` and choose `FFFB8F`",
+   "expected": "The row background is `FFFB8F`",
+   "verdict": "pass",
+   "why": "Row cells measured rgb(255,251,143)=FFFB8F; the red cell stays rgb(255,204,199) and does NOT take the highlight colour (ETM-10043 fix: red now solid on top).",
+   "picture": "evidence/ETM-8868/step-3.png"
+  },
+  {
+   "n": 4,
+   "do": "Look at the red cell",
+   "expected": "The red colour is still visible on the cell, shown with the highlight colour, and the cell is still recognised as red",
+   "verdict": "needs-human",
+   "why": "Red cell is clearly red (255,204,199) among yellow cells, so still recognised as red. But it is not shown WITH the highlight colour: it is plain red, no mix with FFFB8F (earlier build: orange mix). Person decides if this meets \"shown with the highlight colour\". Looked at the picture.",
+   "picture": "evidence/ETM-8868/step-4.png"
+  },
+  {
+   "n": 5,
+   "do": "Right-click the same row, open `Highlight Row` and choose `FFCCC6`",
+   "expected": "The row background is `FFCCC6`",
+   "verdict": "pass",
+   "why": "All 7 cells measured rgb(255,204,199) = FFCCC6 (swatch colour9).",
+   "picture": "evidence/ETM-8868/step-5.png"
+  },
+  {
+   "n": 6,
+   "do": "Look at the red cell",
+   "expected": "The red colour is still visible on the cell",
+   "verdict": "needs-human",
+   "why": "Red cell rgb(255,204,199) is the same colour as the highlighted row (255,204,199): red cell cannot be told apart from the rest of the row (picture step-6). Red is \"visible\" only as it equals the highlight; likely fails the intent. Person decides.",
+   "picture": "evidence/ETM-8868/step-6.png"
+  },
+  {
+   "n": 7,
+   "do": "Right-click the row, open `Highlight Row` and choose `No Color`",
+   "expected": "The red cell looks as it did in step 2",
+   "verdict": "pass",
+   "why": "No Color: other cells rgb(255,255,255); red cell back to rgb(255,204,199), same as step 2.",
+   "picture": "evidence/ETM-8868/step-7.png"
+  },
+  {
+   "n": 8,
+   "do": "Reload the page without Save",
+   "expected": "The resource is back and the cell is shown with no error",
+   "verdict": "pass",
+   "why": "After reload without Save: Crane Opt[1] back on task 8, 0 error cells, Save disabled.",
+   "picture": "evidence/ETM-8868/step-8.png"
+  },
+  {
+   "n": 9,
+   "do": "Right-click the row of that task, open `Highlight Row` and choose `FFFB8F`",
+   "expected": "The row background is `FFFB8F`",
+   "verdict": "pass",
+   "why": "All 7 cells of row 8 measured rgb(255,251,143)=FFFB8F.",
+   "picture": "evidence/ETM-8868/step-9.png"
+  },
+  {
+   "n": 10,
+   "do": "In the Manpower Resource histogram right-click the resource and choose `Delete Resource` (do not Save)",
+   "expected": "The resource cell of the task turns red",
+   "verdict": "pass",
+   "why": "Delete Resource on highlighted row: resource cell b-invalid-cell rgb(255,204,199); other 6 cells stay FFFB8F.",
+   "picture": "evidence/ETM-8868/step-10.png"
+  },
+  {
+   "n": 11,
+   "do": "Look at the red cell",
+   "expected": "The red colour is still visible on the cell and the rest of the row keeps `FFFB8F`",
+   "verdict": "pass",
+   "why": "Red cell rgb(255,204,199) clearly red next to FFFB8F cells; the other cells keep rgb(255,251,143). Looked at the picture.",
+   "picture": "evidence/ETM-8868/step-11.png"
+  },
+  {
+   "n": 12,
+   "do": "Right-click the row, open `Highlight Row` and choose `No Color`",
+   "expected": "The red cell stays red; the rest of the row returns to the default background",
+   "verdict": "pass",
+   "why": "Red cell stays rgb(255,204,199); other cells back to rgb(255,255,255).",
+   "picture": "evidence/ETM-8868/step-12.png"
+  },
+  {
+   "n": 13,
+   "do": "Right-click the row again, open `Highlight Row` and choose `FFFB8F`",
+   "expected": "The row background is `FFFB8F`",
+   "verdict": "pass",
+   "why": "6 cells measured rgb(255,251,143)=FFFB8F; red cell stays rgb(255,204,199).",
+   "picture": "evidence/ETM-8868/step-13.png"
+  },
+  {
+   "n": 14,
+   "do": "Make a dependency conflict on the row (no Dev steps yet: if there is no clear way on screen, stop here and mark `needs-human`)",
+   "expected": "The row gets the red border line",
+   "verdict": "needs-human",
+   "why": "No clear on-screen way to make a dependency conflict is given in the Test (no Dev steps); not attempted, as the Test says.",
+   "picture": "evidence/ETM-8868/step-14.png"
+  },
+  {
+   "n": 15,
+   "do": "Look at the row, then reload without Save",
+   "expected": "The red border line is still visible on the highlighted row, and the highlight `FFFB8F` is still visible",
+   "verdict": "needs-human",
+   "why": "Depends on step 14: no red border was made, so border + FFFB8F cannot be checked. Reloaded without Save: 0 error cells, no highlight, Save disabled.",
+   "picture": "evidence/ETM-8868/step-15.png"
+  }
+ ],
+ "actions": []
+}
