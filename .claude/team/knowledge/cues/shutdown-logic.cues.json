@@ -1,0 +1,20 @@
+{
+  "page": "Shutdown Logic",
+  "rules": "shutdown-logic.md",
+  "pageCue": "shutdown[-_ ]?logic|shutdownLogic|/logics/|bryntum\\.query\\(['\"]gantt|sl-splitter|app-shutdown-",
+  "pageSection": "## Layer 1",
+  "blocks": [
+    { "id": "edit-cell", "section": "### edit-cell", "cue": "dblclick|pressSequentially|\\.fill\\(|edit (the )?cell|แก้ช่อง|ดับเบิลคลิก" },
+    { "id": "paste-copy", "section": "### paste-copy", "cue": "(ctrl|control|meta)\\+[cv]\\b|clipboard|\\bpaste|\\bcopy\\b|วาง|คัดลอก" },
+    { "id": "dependency", "section": "### dependency", "cue": "predecessor|successor|b-sch-dependency|dependenc|\\b\\d+(SS|FF|SF|FS)\\b|\\blag\\b|เส้น" },
+    { "id": "cascade-constraint-calendar", "section": "### cascade-constraint-calendar", "cue": "constraint|must (start|finish) on|no (earlier|later) than|working calendar|resource calendar|custom calendar|manual adjust|split task|cascade|dragTo|drag.{0,20}bar" },
+    { "id": "manpower-histogram", "section": "### manpower-histogram", "cue": "manpower|capacity|organic crew|add resource|delete resource|used resource|timelinehistogram|\\bshift\\b" },
+    { "id": "filter-search", "section": "### filter-search", "cue": "filter|search|select all|ค้นหา|กรอง" },
+    { "id": "levels-view", "section": "### levels-view", "cue": "expand|collapse|custom view|focus (critical|dropped)|level button" },
+    { "id": "save-undo", "section": "### save-undo", "cue": "\\bsave\\b|saveWithConfirm|undo|redo|unsaved|discard change|ctrl\\+z" },
+    { "id": "export", "section": "### export", "cue": "export|\\.xlsx|\\.pdf\\b|ant-drawer|daily plan" },
+    { "id": "worklist-effects", "section": "### worklist-effects", "cue": "worklist|edit breakdown|duplicate plan|ramp (down|up)|create work" },
+    { "id": "sorting", "section": "### sorting", "cue": "\\bsort|a-z\\b|localeCompare|เรียง" },
+    { "id": "defect-check", "section": "### defect check", "cue": "defect|dev-brief|log-defect|retest" }
+  ]
+}
