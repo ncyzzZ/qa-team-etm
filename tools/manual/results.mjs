@@ -9,7 +9,7 @@
 // --decide writes the person's answers into the verdict file (decidedBy: "user", and the Test confirmedBy: "user"); --confirm marks a Test
 // confirmed as proposed ("ยืนยันผลทั้งหมด", refused while a step is needs-human). Then results.json is rebuilt from all verdict files.
 // Only a confirmed Test counts as a result (run-results.json) and can be pushed (xray-step-push.mjs).
-import { isKey } from '../profile.mjs';
+import { isKey, profile, escapeKey } from '../profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -94,7 +94,7 @@ export function confirm(v) {
 }
 
 export function readVerdicts(runDir) {
-  return fs.readdirSync(runDir).filter((f) => /^verdict-ETM-\d+\.json$/.test(f)).sort()
+  return fs.readdirSync(runDir).filter((f) => new RegExp(String.raw`^verdict-${escapeKey(profile().jira.projectKey)}-\d+\.json$`).test(f)).sort()
     .map((f) => JSON.parse(fs.readFileSync(path.join(runDir, f), 'utf8')));
 }
 

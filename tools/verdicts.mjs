@@ -9,7 +9,7 @@
 //                                                          save the user's answers to work/<KEY>/verdicts.json
 // Verdicts: script (script bug), tc (test wording wrong), app (real app bug; logging the defect still needs its own yes),
 // env (environment / VPN / login), flaky (passes on a re-run).
-import { isKey, profile } from './profile.mjs';
+import { isKey, profile, escapeKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -67,8 +67,9 @@ export function record(key, pairs, { source, evidence }, root = ROOT) {
   const file = path.join(root, 'work', key, 'verdicts.json');
   const all = readJson(file, {});
   const at = new Date().toISOString();
+  const K = escapeKey(profile().jira.projectKey);
   for (const p of pairs) {
-    const m = p.match(/^(ETM-\d+)=(\w+)(?::(ETM-\d+))?$/);
+    const m = p.match(new RegExp(String.raw`^(${K}-\d+)=(\w+)(?::(${K}-\d+))?$`));
     if (!m || !VERDICTS.includes(m[2])) throw new Error(`bad answer "${p}": use ${profile().jira.projectKey}-<n>=${VERDICTS.join('|')}[:<defect key>]`);
     all[m[1]] = { verdict: m[2], ...(m[3] ? { defect: m[3] } : {}), source, evidence: evidence.slice(0, 200), at };
   }
@@ -98,7 +99,7 @@ if (isMain) {
       console.log(rows.length ? md : `${key}: no failures in ${dir}`);
     } else {
       const flag = (n) => { const i = rest.indexOf(n); return i >= 0 ? rest[i + 1] : ''; };
-      const pairs = rest.filter((a, i) => /^ETM-\d+=/.test(a) && !['--source', '--evidence'].includes(rest[i - 1]));
+      const pairs = rest.filter((a, i) => new RegExp(String.raw`^${escapeKey(profile().jira.projectKey)}-\d+=`).test(a) && !['--source', '--evidence'].includes(rest[i - 1]));
       const all = record(key, pairs, { source: flag('--source'), evidence: flag('--evidence') });
       console.log(`${key}: ${pairs.length} answers saved (${Object.keys(all).length} in verdicts.json)`);
     }

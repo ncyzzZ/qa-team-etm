@@ -19,6 +19,7 @@
 //   node .claude/team/team.mjs open | stop | status
 // Several cards at once: add --job ETM-1234 to start/set/ask/clear/log so each card has its own tab.
 import fs from 'node:fs';
+import { profile, escapeKey } from '../../tools/profile.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn, spawnSync } from 'node:child_process';
@@ -57,7 +58,7 @@ async function decisionCard(card, gateKind) {
   if (card.check) {
     const f = path.resolve(card.check);
     const id = path.basename(f).replace(/\.compare\.json$/, '');
-    const key = (f.match(/work[\\/](ETM-\d+)[\\/]evidence-check/) || [])[1];
+    const key = (f.match(new RegExp(String.raw`work[\\/](${escapeKey(profile().jira.projectKey)}-\d+)[\\/]evidence-check`)) || [])[1];
     if (!key) throw new Error(`--check ${card.check}: expected work/<KEY>/evidence-check/<ID>.compare.json`);
     const ec = await import(new URL('../../tools/evidence-check.mjs', import.meta.url));
     const g = ec.gate(key, id, path.resolve(dir, '..', '..'));
@@ -108,7 +109,7 @@ async function ensureServer(openIt) {
 }
 
 if (cmd === 'start') {
-  const key = text(args) || 'ETM';
+  const key = text(args) || profile().jira.projectKey;
   JOB = JOB || key;
   // restart only this job: drop its old events, keep the other jobs running
   let old = [];

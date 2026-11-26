@@ -11,7 +11,7 @@
 // The lead overrides with `run-card ... --force-rerun "<why>"`; each override goes to work/<KEY>/rerun-log.jsonl.
 //
 //   node tools/rerun-guard.mjs <KEY> <spec ...> [-g "<filter>"]     print what run-card would run and drop (read only)
-import { isKey } from './profile.mjs';
+import { isKey, profile, escapeKey } from './profile.mjs';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import path from 'node:path';
@@ -33,7 +33,7 @@ export function testHashes(text) {
   const bodies = marks.map((t, i) => text.slice(t.at, i + 1 < marks.length ? marks[i + 1].at : text.length));
   const common = marks.length ? text.slice(0, marks[0].at) : text;
   const out = {};
-  marks.forEach((t, i) => { const k = (t.title.match(/^\[?(ETM-\d+)\b/) || [])[1]; if (k) out[k] = crypto.createHash('sha1').update(common).update(bodies[i]).digest('hex').slice(0, 12); });
+  marks.forEach((t, i) => { const k = (t.title.match(new RegExp(String.raw`^\[?(${escapeKey(profile().jira.projectKey)}-\d+)\b`)) || [])[1]; if (k) out[k] = crypto.createHash('sha1').update(common).update(bodies[i]).digest('hex').slice(0, 12); });
   return out;
 }
 

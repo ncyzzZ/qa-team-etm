@@ -4,7 +4,7 @@
 //
 //   node evidence-report.mjs --input <results.json> [<results2.json> ...]  (several runs -> ONE report; a test run twice keeps the last one) --out <folder> --manifest <tc-manifest.json> --title "..." --story ETM-1234 [--review <review.json>]
 //   review.json: {"ETM-8339": {"steps": {"10": {"verdict": "script|defect|tc-update|ba-pending|accepted", "note": "..."}}}}  (accepted = not counted as a fail)
-import { isKey } from './profile.mjs';
+import { isKey, profile, escapeKey, keysIn, firstKey, browseUrl } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -19,7 +19,8 @@ let CUR_DIR = '';
 const OUT_DIR = arg('--out', 'evidence-reports');
 const STORY_ARG = arg('--story');
 const TITLE = arg('--title');
-const JIRA = 'https://pttep.atlassian.net/browse/';
+const JIRA = browseUrl('');
+const K = () => escapeKey(profile().jira.projectKey);
 // --triage <triage.json> (tools/heal/triage.mjs): cause per failed test key, shown next to FAIL
 const TRIAGE = (() => { try { return args.includes('--triage') ? Object.fromEntries(JSON.parse(fs.readFileSync(arg('--triage'), 'utf8')).map((x) => [x.key, x.cause])) : {}; } catch (e) { console.error('Cannot read --triage file: ' + e.message); return {}; } })();
 const CAUSE_TXT = { locator: 'locator พัง', flaky: 'ไม่เสถียร (ผ่านตอนรันซ้ำ)', data: 'ข้อมูลเทส', env: 'สภาพแวดล้อม', assertion: 'ค่าไม่ตรง (อาจเป็นบั๊ก)', unknown: 'ไม่ทราบสาเหตุ' };
@@ -137,8 +138,8 @@ const techHtml = (e, file) => `<details class="tech"><summary>รายละเ
 
 const cards = new Map(); // story key -> tests[]
 const cardOf = (chain, title) => {
-  for (const t of [...chain].reverse()) { const x = t.match(/\((ETM-\d+)\)/); if (x) return x[1]; }
-  const y = title.match(/^(ETM-\d+)\s+TC-/); if (y) return y[1];
+  for (const t of [...chain].reverse()) { const x = t.match(new RegExp(String.raw`\((${K()}-\d+)\)`)); if (x) return x[1]; }
+  const y = title.match(new RegExp(String.raw`^(${K()}-\d+)\s+TC-`)); if (y) return y[1];
   return STORY_ARG || 'ไม่ทราบการ์ด';
 };
 
@@ -160,7 +161,7 @@ function walk(suite, chain) {
       // flaky (failed, then passed on retry): show the failed attempt, its error and its step, not the clean retry
       const firstFail = last.status === 'passed' ? t.results.find((x) => x.status === 'failed' || x.status === 'timedOut') : null;
       const r = firstFail ?? last;
-      const testKey = (spec.title.match(/ETM-\d+(\s+TC-\d+)?/) ?? [''])[0];
+      const testKey = (spec.title.match(new RegExp(String.raw`\b${K()}-\d+\b(\s+TC-\d+)?`)) ?? [''])[0];
       const story = cardOf(nextChain, spec.title);
       const expectedFail = t.status === 'expected' && r.status === 'failed';
       let status = t.status === 'skipped' || r.status === 'skipped' ? 'skipped'
@@ -186,13 +187,13 @@ function walk(suite, chain) {
       steps.forEach((s, i) => { s.state = s.err ? 'failed' : failedIdx >= 0 && i > failedIdx ? 'notrun' : 'passed'; });
       // manual runner (tools/manual/results.mjs): every step was done and has its own verdict; no "not run after the first fail"
       steps.forEach((s) => { if (s.manual) s.state = s.manual === 'fail' ? 'failed' : s.manual === 'needs-human' ? 'needshuman' : 'passed'; });
-      const tcKey0 = (spec.title.match(/ETM-\d+/) ?? [''])[0];
+      const tcKey0 = firstKey(spec.title);
       steps.forEach((s) => { const v = REVIEW[tcKey0]?.steps?.[s.n]; if (v?.verdict) s.review = v; });
       let accepted = false;
       if (status === 'failed' && failedIdx >= 0 && steps[failedIdx].review?.verdict === 'accepted') { status = 'passed'; accepted = true; steps[failedIdx].state = 'accepted'; }
       const notes = (t.annotations ?? []).filter((a) => NOTE[a.type]).map((a) => ({ type: a.type, text: a.description ?? '' }));
       const list = cards.get(story) ?? []; cards.set(story, list);
-      list.push({ title: spec.title, testKey, tcKey: (spec.title.match(/ETM-\d+/) ?? [''])[0], story, status, expectedFail, accepted, notes, ms: r.duration, file: `${spec.file}:${spec.line}`, steps, loose, err: errMsg ? explain(errMsg) : null, failedStep: steps[failedIdx] });
+      list.push({ title: spec.title, testKey, tcKey: tcKey0, story, status, expectedFail, accepted, notes, ms: r.duration, file: `${spec.file}:${spec.line}`, steps, loose, err: errMsg ? explain(errMsg) : null, failedStep: steps[failedIdx] });
     }
   }
   for (const s of suite.suites ?? []) walk(s, nextChain);
@@ -254,7 +255,7 @@ const testHtml = (t) => `
     <b>${esc(MTC[t.tcKey]?.summary ? t.tcKey + ' ' + MTC[t.tcKey].summary : t.title)}</b><span class="mut">${fmtMs(t.ms)}</span></summary>
   <div class="body">
     <div class="links">${isKey(t.tcKey) ? `TC: <a href="${JIRA}${t.tcKey}" target="_blank">${t.tcKey}</a>` : ''}
-      ${/^ETM-/.test(t.story) ? `การ์ด: <a href="${JIRA}${t.story}" target="_blank">${esc(t.story)}</a>` : ''}
+      ${isKey(t.story) ? `การ์ด: <a href="${JIRA}${t.story}" target="_blank">${esc(t.story)}</a>` : ''}
     </div>
     ${t.notes.length ? `<div class="notes">${t.notes.map((n) => `<div><b>หมายเหตุจากสคริปต์:</b> ${esc(NOTE[n.type])}${n.text ? ' - ' + esc(n.text) : ''}</div>`).join('')}</div>` : ''}
     ${t.err && !t.failedStep ? failBox(t) : ''}
@@ -268,7 +269,7 @@ const cardHtml = ([key, tests]) => {
   const st = statsFor(key, tests);
   const f = st.fail;
   return `<section class="card" data-card="${esc(key)}">
-  <h2>${/^ETM-/.test(key) ? `<a href="${JIRA}${key}" target="_blank">${esc(key)}</a>` : esc(key)}
+  <h2>${isKey(key) ? `<a href="${JIRA}${key}" target="_blank">${esc(key)}</a>` : esc(key)}
     <span class="badge ${f ? 'failed' : 'passed'}">ผ่าน ${st.pass} จาก ${tests.length} เคสที่รัน</span></h2>
   <div class="stats"><span class="ok"><b>${st.pass}</b> ผ่าน</span><span class="bad"><b>${st.fail}</b> ไม่ผ่าน</span>${st.skip ? `<span class="sk"><b>${st.skip}</b> ข้าม</span>` : ''}${st.manual.length ? `<span class="mn"><b>${st.manual.length}</b> ต้องเทสเอง</span>` : ''}${st.known ? '' : '<span class="mut">(ไม่มี manifest - นับเฉพาะที่รัน)</span>'}</div>
   ${[...tests].sort((a, b) => (b.status === 'failed') - (a.status === 'failed')).map(testHtml).join('')}

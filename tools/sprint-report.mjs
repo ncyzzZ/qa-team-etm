@@ -11,6 +11,7 @@
 // Method B (Jira worklog of the [QA] subtasks) can be added later as a second column.
 import fs from 'node:fs';
 import path from 'node:path';
+import { profile, escapeKey } from './profile.mjs';
 
 /** % change of defects/story and bugs vs the previous CLOSED sprint. An active sprint is provisional. */
 export function defectChange(rows) {
@@ -27,7 +28,7 @@ export function parseAssessment(md) {
   const out = [];
   for (const line of String(md).split('\n')) {
     const cells = line.split('|').slice(1, -1).map((c) => c.trim());
-    const key = (cells[0] || '').match(/^(ETM-\d+)\b/)?.[1];
+    const key = (cells[0] || '').match(new RegExp(String.raw`^(${escapeKey(profile().jira.projectKey)}-\d+)\b`))?.[1];
     if (!key || cells.length < 6) continue;
     const tc = Number(cells[4]), hours = Number(cells[5]);
     if (Number.isFinite(tc) && Number.isFinite(hours)) out.push({ key, tc, hours });

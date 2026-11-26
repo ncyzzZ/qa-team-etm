@@ -4,6 +4,7 @@
 //   node tools/heal/triage.mjs <run folder with results.json>     writes triage.json + triage.md there
 import fs from 'node:fs';
 import path from 'node:path';
+import { firstKey } from '../profile.mjs';
 import { fileURLToPath } from 'node:url';
 
 /** @typedef {{ cause: 'locator'|'flaky'|'data'|'env'|'assertion'|'unknown', locator: string|null, pageRef: string|null, firstLine: string }} Triage */
@@ -52,7 +53,7 @@ export function triageRun(runDir, { write = true } = {}) {
       const res = t.results || [];
       const bad = res.some((x) => x.status === 'failed' || x.status === 'timedOut');
       if (!bad) continue;
-      const key = (sp.title.match(/ETM-\d+/) || [])[0] || sp.title.slice(0, 40); // same rule as the evidence report's tcKey
+      const key = firstKey(sp.title) || sp.title.slice(0, 40); // same rule as the evidence report's tcKey
       const c = classify(t);
       if (dataReady && c.cause === 'data') c.firstLine = `${c.firstLine} (data was reset and READY before the run: check the test, not the setup)`;
       rows.push({ key, title: sp.title, file: sp.file, ...c });

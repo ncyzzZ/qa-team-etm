@@ -1,6 +1,8 @@
 // selectors.mjs - pull the locator "tokens" (classes, ids, attribute values, texts, accessible names) out of
 // page-object source, so they can be looked up in the front-end repo. Template literals with ${} are skipped.
 
+import { profile } from '../profile.mjs';
+
 /** @typedef {{ file: string, line: number, kind: 'class'|'id'|'attr'|'text'|'role-name'|'placeholder'|'label'|'tag', value: string }} Token */
 
 export const GENERIC_TOKENS = new Set([
@@ -11,8 +13,13 @@ export const GENERIC_TOKENS = new Set([
   'status', 'grid', 'gridcell', 'columnheader', 'combobox', 'checkbox', 'radio', 'switch', 'toast', 'close', 'navigation',
 ]);
 
-/** Classes/tags from a UI library (Bryntum b-, AG Grid ag-, ng-zorro ant-/nz-, Quill ql-), not from stms-fe templates. */
-export const isLibraryToken = (value) => /^(b|ag|ant|nz|ql)-/.test(value);
+/** Classes/tags from a UI library, not from stms-fe templates; the pattern is the profile's ui.libraryTokenRe (ETM: Bryntum b-, AG Grid ag-, ng-zorro ant-/nz-, Quill ql-). */
+let libRe = null; // memoised per profile source string
+export const isLibraryToken = (value) => {
+  const src = profile().ui?.libraryTokenRe || '$^';
+  if (libRe?.src !== src) libRe = { src, re: new RegExp(src) };
+  return libRe.re.test(value);
+};
 
 const STR = String.raw`(['"])((?:\\.|(?!\1).)*)\1`; // a '...' or "..." literal, group 2 = content
 const CALLS = [

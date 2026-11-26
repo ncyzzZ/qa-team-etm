@@ -7,8 +7,10 @@
 //   start: <URL path or .env key> (optional)
 //   | # | Do | Expected | Picture |    (first table under the heading, one row per Xray step)
 
+import { profile, escapeKey } from '../profile.mjs';
+
 export const ROLES = ['turnaroundManager', 'jobOwner'];
-const HEAD = /^##\s+(ETM-\d+)\s+-\s+(.*?)\s*\((\d+)\s+steps?\)\s*$/i;
+const headRe = () => new RegExp(String.raw`^##\s+(${escapeKey(profile().jira.projectKey)}-\d+)\s+-\s+(.*?)\s*\((\d+)\s+steps?\)\s*$`, 'i');
 const TABLE_HEAD = /^\|\s*#\s*\|\s*Do\s*\|\s*Expected\s*\|\s*Picture\s*\|\s*$/i;
 
 const cells = (line) => line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim());
@@ -21,7 +23,7 @@ const cells = (line) => line.trim().replace(/^\|/, '').replace(/\|$/, '').split(
  * @returns {ManualTest[]}
  */
 export function parseManualSteps(md) {
-  const tests = [];
+  const tests = [], HEAD = headRe();
   let cur = null, state = 'none'; // none | options | table | done
   for (const line of md.replace(/\r\n/g, '\n').split('\n')) {
     const h = line.match(HEAD);
@@ -59,7 +61,7 @@ export function xrayStepCounts(md) {
   const out = {};
   let key = null;
   for (const line of md.replace(/\r\n/g, '\n').split('\n')) {
-    const h = line.match(/^##\s+(ETM-\d+)\b/);
+    const h = line.match(new RegExp(String.raw`^##\s+(${escapeKey(profile().jira.projectKey)}-\d+)\b`));
     if (h) { key = h[1]; out[key] = 0; continue; }
     if (/^#{1,2}\s/.test(line)) { key = null; continue; }
     if (key && /^\s*\d+\.\s+\S/.test(line)) out[key]++;

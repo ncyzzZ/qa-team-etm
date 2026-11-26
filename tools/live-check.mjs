@@ -18,6 +18,7 @@
 //   node tools/live-check.mjs stats                     doc / live / assumption counts over every card
 import fs from 'node:fs';
 import path from 'node:path';
+import { profile, escapeKey } from './profile.mjs';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -45,7 +46,7 @@ export function scanSpec(text) {
   const marks = [...code.matchAll(re)].map((m) => ({ title: m[2], at: m.index, whole: m[0] }));
   return marks.map((t, i) => {
     const body = code.slice(t.at + t.whole.length, i + 1 < marks.length ? marks[i + 1].at : code.length);
-    const key = (t.title.match(/^\[?(ETM-\d+)\b/) || [])[1] || '';
+    const key = (t.title.match(new RegExp(String.raw`^\[?(${escapeKey(profile().jira.projectKey)}-\d+)\b`)) || [])[1] || '';
     return { key, title: t.title, skipped: /^test\.(skip|fixme)\(/.test(t.whole), kinds: Object.keys(KINDS).filter((k) => KINDS[k].test(body)) };
   });
 }

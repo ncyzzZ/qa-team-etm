@@ -4,6 +4,7 @@
 // A run folder whose name ends with `_manual` (the manual runner, a person confirmed the steps) is marked source "manual-agent".
 import fs from 'node:fs';
 import path from 'node:path';
+import { keysIn } from './profile.mjs';
 
 const RANK = { failed: 0, timedOut: 0, interrupted: 0, flaky: 1, skipped: 2, passed: 3 };
 
@@ -38,7 +39,7 @@ export function recordRunResults({ root, key, rows, resultsDir, now = new Date()
   try { j = JSON.parse(fs.readFileSync(file, 'utf8')); j.tests = j.tests || {}; } catch { /* first run */ }
   const t = now.toISOString(), run = path.basename(path.resolve(resultsDir)), source = sourceOf(resultsDir), got = {};
   for (const x of rows) {
-    for (const k of new Set(x.title.match(/\bETM-\d+\b/g) || [])) {
+    for (const k of keysIn(x.title)) {
       if (k === key) continue;
       // a manual Test not yet confirmed by a person is not a result: recorded as skipped, never as passed or failed
       const r = x.awaiting && source ? { status: 'skipped', why: 'awaiting-confirmation', t, run, source }

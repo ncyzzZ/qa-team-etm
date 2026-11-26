@@ -13,7 +13,7 @@
 // Always ask when: a matched test (or its describe) is tagged @shared-data (writes data others use: another plan,
 // Active switch, shared event) or @security (API probes), the flags have --no-data-check, or no test matches.
 // The data file's own "NEEDS SETUP" / "NEEDS MANUAL" (card-data.cjs check) still asks: setup is not part of a run.
-import { isKey } from './profile.mjs';
+import { isKey, profile, escapeKey, firstKey } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -53,7 +53,7 @@ export function classify({ key, specs, grep, flags = [], repo = pwRepo(), root =
   for (const s of specs) for (const f of specFiles(repo, s)) {
     for (const t of testsOf(fs.readFileSync(f, 'utf8'))) if (!re || re.test(`${t.title} ${[...t.tags].join(' ')}`)) matched.push({ ...t, file: path.relative(repo, f) });
   }
-  const keys = [...new Set(matched.map((t) => (t.title.match(/ETM-\d+/) ?? [t.title.slice(0, 30)])[0]))];
+  const keys = [...new Set(matched.map((t) => firstKey(t.title) || t.title.slice(0, 30)))];
   const ask = (why) => ({ auto: false, reasons: [why, ...reasons], tests: keys });
   if (!matched.length) return ask('no test matches the spec and filter');
   if (flags.includes('--no-data-check')) return ask('--no-data-check runs on data that was not reset');
@@ -72,7 +72,7 @@ export function classify({ key, specs, grep, flags = [], repo = pwRepo(), root =
   const why = new Set();
   const unsafe = [];
   for (const t of matched) {
-    const k = (t.title.match(/ETM-\d+/) ?? [''])[0];
+    const k = firstKey(t.title);
     if (hasData && ownFile(t.file)) why.add(create ? 'A: the run makes and deletes its own card data' : 'A: card-owned data (QA <KEY> plans), reset before the run');
     else if (t.tags.has('@readonly')) why.add('B: @readonly');
     else if (k && ran[k]) why.add('C: re-run of tests that ran before');
@@ -91,7 +91,7 @@ export function classifyManual({ key, tests, root = ROOT }) {
   const sections = new Map();
   for (const f of files) {
     const parts = fs.readFileSync(path.join(dir, f), 'utf8').split(/^## /m).slice(1);
-    for (const p of parts) { const id = (p.match(/^(ETM-\d+)/) ?? [])[1]; if (id && !sections.has(id)) sections.set(id, { file: f, text: p }); }
+    for (const p of parts) { const id = (p.match(new RegExp(String.raw`^(${escapeKey(profile().jira.projectKey)}-\d+)`)) ?? [])[1]; if (id && !sections.has(id)) sections.set(id, { file: f, text: p }); }
   }
   const ask = (why) => ({ auto: false, reasons: [why], tests });
   if (!tests.length) return ask('no Test given');

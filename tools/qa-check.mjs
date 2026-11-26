@@ -14,7 +14,7 @@
 //   node tools/qa-check.mjs stats                                (how often each gate failed, from .claude/team/metrics.jsonl)
 //
 // Exit code 1 when there is at least one ERR. WARN lines are advice. Run it before handing anything to the user.
-import { isKey, profile } from './profile.mjs';
+import { isKey, profile, escapeKey, firstKey, keysIn } from './profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -123,7 +123,7 @@ function checkDraft() {
   if (!/coverage/i.test(text)) warn('no coverage map found (the designer must list every AC item and screen state)');
   if (!/\b(high|medium|low)\b/i.test(text)) warn('no High / Medium / Low priority counts found');
   // traceability: every AC-n of analyst.md must be in the Trace: line of a case (the coverage map alone does not count)
-  const keyOf = (isKey(arg0) ? arg0 : (file.match(/ETM-\d+/) || [])[0]) || '';
+  const keyOf = (isKey(arg0) ? arg0 : firstKey(file)) || '';
   const anFile = arg('--analyst') || (keyOf ? path.join(WORK(keyOf), 'analyst.md') : '');
   const an = anFile ? read(path.resolve(anFile)) : null;
   for (const c of cases) if (!c.trace) err(`${c.id} (line ${c.line}): no "Trace: AC-1, AC-2" line (or "Trace: none (<what it covers>)")`);
@@ -206,10 +206,10 @@ function falsePass(name, text) {
 const WRITE_RE = /(?:name:\s*(?:['"`]|\/\^?)|getByText\(\s*['"`])(?:[Ss]ave|[Dd]elete|[Rr]emove|[Ii]mport|[Ss]ubmit|[Uu]pdate [Pp]rogress|[Cc]onfirm|[Ff]reeze|[Uu]nfreeze|[Aa]ctivate|[Ss]et [Aa]ctive|[Ee]xtension)\b[^;\n]{0,40}?\)\s*\.(?:first\(\)\.|last\(\)\.)?(?:click|dblclick)\(|\bqueryDb\([^)]*\b(?:INSERT|UPDATE|DELETE)\b|\bawait\s+(?:\w+\.)?(?:save|delete|remove|create|import|activate|freeze|unfreeze|submit)(?!\w*(?:Screenshot|Picture|Evidence|Shot))[A-Z]\w*\(/;
 /** Card keys a spec belongs to: every ETM key named in the spec or in the local files it imports (helpers call cardId('ETM-n')). */
 function cardsOf(specFile, text) {
-  const keys = new Set(text.match(/ETM-\d+/g) || []);
+  const keys = new Set(keysIn(text));
   for (const m of text.matchAll(/from\s+['"](\.{1,2}\/[^'"]+)['"]/g)) {
     const base = path.resolve(path.dirname(path.resolve(specFile)), m[1]);
-    for (const f of [base, base + '.ts']) { const t = read(f); if (t != null) { (t.match(/ETM-\d+/g) || []).forEach((k) => keys.add(k)); break; } }
+    for (const f of [base, base + '.ts']) { const t = read(f); if (t != null) { keysIn(t).forEach((k) => keys.add(k)); break; } }
   }
   return [...keys];
 }
@@ -264,9 +264,10 @@ function checkSpec() {
       nTests++;
       const body = text.slice(t.at, i + 1 < marks.length ? marks[i + 1].at : text.length);
       // Security tests (rules file): title `[ETM-1234][Security] ...`, no Xray Test, so the key comes from the bracket
-      const secKey = (t.title.match(/^\[(ETM-\d+)\]\[Security\]/) || [])[1];
+      const K = escapeKey(profile().jira.projectKey);
+      const secKey = (t.title.match(new RegExp(String.raw`^\[(${K}-\d+)\]\[Security\]`)) || [])[1];
       const skipped = /^test\.(skip|fixme)\(/.test(t.whole);
-      const key = (t.title.match(/^(ETM-\d+)\b/) || [])[1] || secKey;
+      const key = (t.title.match(new RegExp(String.raw`^(${K}-\d+)\b`)) || [])[1] || secKey;
       if (!key) err(`${name}: test "${t.title.slice(0, 50)}" - title must start with the Xray key (${profile().jira.projectKey}-1234 - ...)`);
       else if (testsMd && !secKey && !testsMd.includes(key)) warn(`${name}: ${key} is not in the card's tests file`);
       // A step is a direct test.step(...) or a call of the shared steps() helper (`const S = steps(page, KEY)`, then `await S('...', ...)`):

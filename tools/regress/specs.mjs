@@ -1,5 +1,5 @@
 // specs.mjs - index of the listable Playwright specs for regress.mjs: folder, Xray test keys, locator tokens, owner card.
-import { isKey } from '../profile.mjs';
+import { isKey, profile, escapeKey, keysIn } from '../profile.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { extractTokens, GENERIC_TOKENS, isLibraryToken } from '../heal/selectors.mjs';
@@ -60,7 +60,7 @@ function storyTests(teamRoot) {
       let keys = [];
       try { keys = Object.keys(JSON.parse(fs.readFileSync(path.join(base, d, 'run-results.json'), 'utf8')).tests || {}); } catch { /* none */ }
       if (!keys.length) {
-        try { keys = [...new Set(fs.readFileSync(path.join(base, d, 'tests.md'), 'utf8').match(/ETM-\d+/g) || [])].filter((k) => k !== d); } catch { /* none */ }
+        try { keys = keysIn(fs.readFileSync(path.join(base, d, 'tests.md'), 'utf8')).filter((k) => k !== d); } catch { /* none */ }
       }
       if (keys.length) out.set(d, new Set(keys));
     }
@@ -77,7 +77,8 @@ export function specIndex(pwRepo, teamRoot) {
     const file = rel(pwRepo, abs);
     if (!isListable(file)) continue;
     const src = fs.readFileSync(abs, 'utf8');
-    const keys = [...new Set([...src.matchAll(/test(?:\.\w+)?\(\s*['"`][^'"`]*?(ETM-\d+)/g)].map((m) => m[1]))];
+    const titleKeyRe = new RegExp(String.raw`test(?:\.\w+)?\(\s*['"\`][^'"\`]*?(${escapeKey(profile().jira.projectKey)}-\d+)`, 'g');
+    const keys = [...new Set([...src.matchAll(titleKeyRe)].map((m) => m[1]))];
     const files = [...localFiles(abs)];
     for (const u of pagesUsedBy(pwRepo, [file])) files.push(...unitFiles(pwRepo, u));
     const tokens = new Set();
