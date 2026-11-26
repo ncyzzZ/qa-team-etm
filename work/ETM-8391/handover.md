@@ -70,5 +70,5 @@ Push plan (`push-plan.md`): 10 PASSED + 8656 FAILED. ETM-8897 / ETM-8902 in the 
 
 ## Closeout 26 Nov 2026 (user: "ปิดงานได้เลย")
 - 16 linked Tests ETM-8648..8663: Resolved -> Closed, resolution Done, assignee QA (JQL count 16/16). ETM-8648 closed as not applicable (no user without View Worklist on QA).
-- Test Execution ETM-8874 -> Done. [QA] Execute Test Case ETM-8576 -> Done (no worklog added). Story ETM-8391 -> Ready for UAT.
+- Test Execution ETM-8874 -> Done. [QA] Execute Test Case ETM-8576 -> Done, worklog 2h (= its Original Estimate, logged 26 Nov 12:14). Story ETM-8391 -> Ready for UAT.
 - Not touched: dev sub-tasks ETM-8553/8554/8555 (In Progress), defects ETM-8896/8897/8898/8902/10065 (Ready for UAT).
