@@ -1,7 +1,7 @@
 {
   "etm-nn-fullqa": "qa-fullqa",
   "etm-evidence-report": "qa-evidence-report",
-  "log-defect-jira-etm": "log-defect-jira",
+  "log-defect-jira-etm": "qa-log-defect",
   "etm-xray-delete-test-executions": "xray-delete-test-executions",
   "etm_xray_del.py": "xray_del.py"
 }
