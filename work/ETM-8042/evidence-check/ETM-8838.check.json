@@ -1,0 +1,33 @@
+{ "id": "ETM-8838", "sourceHash": "none (no brief file; lead gave the steps file and picture folder directly)", "overall": "cannot-tell",
+  "steps": [
+    { "n": 1, "sees": "step-1.png: full screen, Shutdown Logic: QA ETM-8042 8836 (event QA S26 Ramp), histogram not visible, 'Export Shutdown Logic' panel open: PDF File selected, Overall, Full Shutdown Timeframe, Export button. Grid shows Ramp Down column on Sun 15/02. step-1-pdf.png: render of a Shutdown Logic PDF (26 task rows, Gantt). Folder holds 'QA S26 Ramp_QA ETM-8042 8836_Overall_20261126.pdf'.", "verdict": "pass", "pictureOk": true },
+    { "n": 2, "sees": "step-2.png is the same PDF render as step-1-pdf.png. Gantt axis: week labels 'Sun 15/02' and 'Sun 22/0..', day columns 15, 16 ... 28. Ramp Down flag at the start of 15, Ramp Up flag at the end of 25 (line between 25 and 26). No 08 and no day before 15 is shown. Axis has no month/year text; it pads on to 28 (end of week).", "verdict": "pass", "pictureOk": true },
+    { "n": 3, "sees": "step-3.png is the same PDF render again. No 'Day 1' / 'DayN' label anywhere in it; only day-of-month numbers 15-28 and the Ramp Down flag on 15. The PDF file name is 'Overall_20261126' (export date), no Day number.", "verdict": "cannot-tell", "pictureOk": true },
+    { "n": 4, "sees": "Full screen, event QA S26 Ramp, Planning tab, toast 'Edit Success / Edit Plan Successfully.' The Planning area is greyed with a loading spinner and a faded Create Plan dialog ghost; no Plan Card, no Plan name 'QA ETM-8042 8836' and no Ramp Down/Up badge is visible.", "verdict": "cannot-tell", "pictureOk": false },
+    { "n": 5, "sees": "Full screen, Daily Report: QA ETM-8042 8836, date 15 Feb 2026, 'Export Daily Report' panel: PDF File, Only Current Date, Full Shutdown Timeframe, Export button. 6 rows (2 WO tasks, job owner QA Auto 8042). Unfreeze button is hidden behind the panel. step-5-pdf.png: Daily Report PDF Gantt. Folder holds 'QA S26 Ramp_QA ETM-8042 8836_DailyReport_Day1_20260215.pdf'.", "verdict": "pass", "pictureOk": true },
+    { "n": 6, "sees": "step-6.png is the Daily Report PDF render: header 'Feb 2026', day columns 15 to 25, Ramp Down flag on 15, a Ramp Up flag cut at the right edge after 25. Task bars run 15 to 25. Not 18-20.", "verdict": "pass", "pictureOk": true },
+    { "n": 7, "sees": "step-7.png is the same Daily Report PDF render (no Day label inside it). The PDF file name in the folder is '..._DailyReport_Day1_20260215.pdf', i.e. Day1 = 15 Feb 2026.", "verdict": "pass", "pictureOk": true },
+    { "n": 8, "sees": "step-8.png: full screen, Daily Report, date 14 Feb 2026, previous-day arrow greyed, Export and Unfreeze buttons look active (Save greyed), grid has no task rows, Ramp Down flag on 15. step-8-pdf.png: PDF 'Daily Report: QA ETM-8042 8836', 14 Feb 2026, S-Curve 14 Feb to 25 Feb, Activity Group Unassigned 100%. Folder holds '..._DailyReport_Day0_20260214.pdf'. The DOM state of Export is not in a picture.", "verdict": "pass", "pictureOk": true },
+    { "n": 9, "sees": "Looks identical to step-4.png: Planning tab, toast 'Edit Success', area greyed with spinner, no Plan Card and no badge with dates visible.", "verdict": "cannot-tell", "pictureOk": false }
+  ],
+  "expectedSources": [
+    "BA answer old Q15 (ba-answers.md line 29): Day 1 in Daily Report PDF = Ramp Down date",
+    "BA answer Q2 (ba-answers.md line 41): Daily Report PDF Day 1 = snapshot Ramp Down; Ramp Down-1 is Day0",
+    "BA/user answer Q13 2026-11-26 (ba-answers.md line 67): Day0 must be exportable even with no tasks",
+    "Xray ETM-8838 step 3 backup xray-steps-before-8838-2026-11-24.json: 'Day 1 of the Shutdown Logic PDF is not confirmed' (pending)",
+    "manual-steps-8838-retest.md for steps 1, 2, 4, 9 (no AC number cited)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Steps 4 and 9: picture taken while Planning was loading; badge with the Plan dates is not shown, so the date edits are unproven.",
+    "Because step 4 is unproven, steps 6-7 (PDF still 15-25) could also mean the edit never saved, not that the snapshot held.",
+    "Step 3: Shutdown Logic PDF has no Day numbering at all; Xray backup says its Day 1 rule is unconfirmed. Needs BA source.",
+    "Step 2: no AC/BA source found for the Shutdown Logic PDF timeframe; expected comes from the steps file only.",
+    "Step 2: the PDF axis shows day numbers only (no year) and runs on to 28 Feb as week padding.",
+    "step-2.png and step-3.png are copies of step-1-pdf.png; step-4 and step-9 look identical.",
+    "No picture shows the step note box the steps file asks for.",
+    "Step 8: Export DOM state is not in evidence; only the look of the button and the Day0 PDF prove it.",
+    "Lead's message hinted at expected answers (e.g. 'no 08 Feb'); I checked against sources, not the hints."
+  ],
+  "summary": "ขั้น 1, 2, 5-8 ผ่านตามภาพ (PDF Shutdown Logic เริ่ม 15 ก.พ. ไม่มี 08, PDF Daily Report ยังเป็น 15-25, ไฟล์ Day1_20260215 และ Day0_20260214 มีจริง, Export ใช้ได้วันที่ 14 ก.พ.) แต่ขั้น 3 อ่าน Day 1 ใน PDF ไม่ได้ และขั้น 4/9 ภาพถ่ายตอนหน้ายังโหลด ไม่เห็น badge วันที่ จึงสรุปทั้งเคสว่า cannot-tell ควรถ่ายขั้น 4/9 ใหม่ก่อนให้ PASSED"
+}

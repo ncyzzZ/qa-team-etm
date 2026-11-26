@@ -1,0 +1,146 @@
+{
+ "config": {
+  "source": "manual-agent"
+ },
+ "suites": [
+  {
+   "title": "Manual run (ETM-8042)",
+   "file": "manual-runner",
+   "line": 0,
+   "column": 0,
+   "specs": [
+    {
+     "title": "ETM-8838 - PDF export of Shutdown Logic uses the Plan dates; Daily Report PDF uses the snapshot dates after the Plan was edited",
+     "ok": true,
+     "tags": [],
+     "file": "manual-runner",
+     "line": 0,
+     "column": 0,
+     "tests": [
+      {
+       "projectName": "manual-runner",
+       "expectedStatus": "passed",
+       "annotations": [],
+       "status": "expected",
+       "results": [
+        {
+         "workerIndex": 0,
+         "status": "passed",
+         "duration": 0,
+         "retry": 0,
+         "startTime": "1970-01-01T00:00:00.000Z",
+         "steps": [
+          {
+           "title": "1. Open SL page, collapse histogram, Export, PDF, Export",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "2. Read the Full Shutdown Timeframe in the PDF",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "3. Read first day of the Day numbering in the PDF",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "4. Edit Plan 'QA ETM-8042 8836' to 18 Feb 2026 09:00 - 20 Feb 2026 09:00, Save",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "5. Daily Report, 15 Feb 2026, Export, PDF",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "6. Read timeframe/date axis in the Daily Report PDF",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "7. Read Day numbering of the PDF (file name and Day label)",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "8. Previous-day arrow until disabled: 14 Feb 2026; read Export state; Export PDF",
+           "duration": 0,
+           "manualVerdict": "pass"
+          },
+          {
+           "title": "9. Edit Plan back to 15 Feb 2026 09:00 - 25 Feb 2026 18:00, Save",
+           "duration": 0,
+           "manualVerdict": "pass"
+          }
+         ],
+         "attachments": [
+          {
+           "name": "Step 1: step-1.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-1.png"
+          },
+          {
+           "name": "Step 2: step-2.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-2.png"
+          },
+          {
+           "name": "Step 3: step-3.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-3.png"
+          },
+          {
+           "name": "Step 4: step-4b.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-4b.png"
+          },
+          {
+           "name": "Step 5: step-5.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-5.png"
+          },
+          {
+           "name": "Step 6: step-6.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-6.png"
+          },
+          {
+           "name": "Step 7: step-7.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-7.png"
+          },
+          {
+           "name": "Step 8: step-8.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-8.png"
+          },
+          {
+           "name": "Step 9: step-9.png",
+           "contentType": "image/png",
+           "path": "/Users/ncy/Downloads/NN/DocforAi/STMS/qa-team-etm/work/ETM-8042/manual-8838-full/step-9.png"
+          }
+         ],
+         "annotations": [],
+         "errors": []
+        }
+       ]
+      }
+     ]
+    }
+   ],
+   "suites": []
+  }
+ ],
+ "errors": [],
+ "stats": {
+  "expected": 1,
+  "unexpected": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "duration": 0,
+  "startTime": "1970-01-01T00:00:00.000Z"
+ }
+}

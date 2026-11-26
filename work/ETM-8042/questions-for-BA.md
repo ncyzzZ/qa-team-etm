@@ -64,3 +64,10 @@ Test cases are drafted (23). Only the points below are still waiting.
     (b) Put back the previous valid value: AC 1.2 and ETM-8851 are updated, no defect.
     Also: should Start and End behave the same (Start puts the value back only on the next click, End already on Tab)?
     — BA 25 Nov: (b), previous value put back, no defect. Start/End timing not answered (both accepted).
+
+## Q15 - ETM-8837: Ramp Down/Up Date in the Manpower and Equipment Mob Plan Excel (26 Nov 2026)
+ETM-8042 AC 8.3 (Manpower Mob Plan) and AC 8.4 (Equipment Mob Plan) say: "Export Excel (ETM-6396 / ETM-7315): `Start Event Date` / `End Event Date` are replaced by `Ramp Down Date` / `Ramp Up Date`."
+On QA (26 Nov 2026, Plan "QA ETM-8042 8836", one person and one equipment added on the screen) both exported files show only the title row (`Manpower Mob Plan: <Plan>` / `Equipment Mob Plan: <Plan>`), the column headers and the data. There is no `Ramp Down Date` / `Ramp Up Date` label, and no `Start Event Date` / `End Event Date` label either. In ETM-6396 and ETM-7315, `Start Event Date` / `End Event Date` appear only under "Data Source", and the AC layout of the sheet has no row for them.
+Question: should the Mob Plan Excel files show the Plan's `Ramp Down Date` and `Ramp Up Date` (if yes: in which cells, and what format)? Or does AC 8.3 / 8.4 only mean the export uses the Plan dates internally (for example for the timeline window), with no visible label?
+Evidence: work/ETM-8042/manual-8837-mobplan/ (step-1..6.png, both .xlsx files and their cell dumps).
+    — QA lead 26 Nov (user, main chat): the Mob Plan Excel files do NOT need to show Ramp Down/Up Date. Closed, no defect.

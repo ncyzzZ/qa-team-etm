@@ -92,3 +92,29 @@ Nothing pushed to Xray and nothing written to Jira in this session.
 - 26 Nov 10:40 (user chat "ยืนยัน push"): ETM-8873 / ETM-8836 **PASSED** with 12 step pictures (steps 1-4: new Plan + round 2 manual; steps 5-12: run 2026-11-24_215348 on Plan A), read back OK. ETM-8873: 22 PASSED, 1 FAILED (8838 / ETM-10140), 1 TO DO (8842 script).
 - 26 Nov 10:45: 8842 script rewritten (delete via Unfreeze extended day -> every task Actual 100% (ActualColorPage.typeActual) -> Save -> Freeze -> "Delete Extended Days" -> Confirm; S-Curve end asserted). Ext report re-made by the setup spec (card-owned). Run **2026-11-26_104546 passed**. Push PASSED waits for the user's yes.
 - 26 Nov 10:55 (user chat "reset แล้ว push"): ETM-8842 run reset to 13 steps, PASSED with 13 pictures (run 104546), read back OK. **ETM-8873 live: 23 PASSED, 1 FAILED (ETM-8838 step 8, defect ETM-10140 open). Only blocker: retest ETM-8838 after ETM-10140 is fixed.**
+- 26 Nov 13:05 (user chat "ได้ push", "รันเลย", "a ผ่าน แล้ว push"): ETM-10140 Deployed to QA. ETM-8838 re-run 9 steps on Plan "QA ETM-8042 8836" (manual-8838-full/; step 4 edited to 18-20 Feb, step 9 set back to 15-25 Feb, badge confirmed). Step 3 by user decision (a): first date column 15 Feb = Day 1. Step 4 picture = step-4b.png (badge 18-20 Feb; toast picture lost). Blind checks: evidence-check/ETM-8838.check.json, ETM-8838-steps4-9.check.json. Xray ETM-8873 / ETM-8838 **PASSED** 9 steps with pictures, read back OK. **ETM-8873: 24/24 PASSED.** ETM-10140 comment 600977 "Retest: Passed" with @dev and 4 embedded pictures. Then (user chat "ได้ ทำเลย"): [QA] Retest sub-task ETM-10150 created, worklog 30m, Done; ETM-10140 -> Ready for UAT. Card ETM-8042 has no blocker left.
+
+## Closeout 26 Nov 2026 (user: "ปิดงานได้เลย")
+- 24 linked Tests (ETM-8829..8851, ETM-8883): Resolved -> Closed, resolution Done (JQL count 24/24).
+- Test Execution ETM-8873 -> Done (24/24 PASSED checked in Xray first). [QA] Execute Test Case ETM-8559 -> Done (no worklog); ETM-8558 already Done. Story ETM-8042 -> Ready for UAT.
+- Not touched: dev sub-tasks ETM-8538..8541 (Done), defects ETM-10092 / ETM-10140 (Ready for UAT).
+
+## Regression heal loop 26 Nov 13:40 (run 2026-11-26_125954_ETM-8042, stms-fe 99817c2; Xray not touched)
+| Test | Cause | Evidence | Fix (not applied) |
+|---|---|---|---|
+| 8837 Manpower + Equipment Mob Plan | script | Mob Plan Export has no menu, it downloads .xlsx directly (healer live; same as etm7879 / equipmentMobPlanExport.helpers.ts). These two never passed in a recorded run. | partial.spec.ts:119 drop `else getByText(/Excel/).click()`; the Export click + `dl` already does it (structure change, guard refuses, edit by hand) |
+| 8842 | data | Report "Plan Scenario Ext" ends 23 Feb and is frozen (an earlier run extended and froze, delete step did not undo). No Freeze button. | re-run tests/fe/setup/setupEtm8042ExtReport.spec.ts (card-owned), optional data guard step |
+| 8831 | data | trace: PUT /shutdown-events -> 500 `SHUTDOWN_EVENT_PLANNED_OVERLAP` for 01-15 Mar 2026 (another ART event uses it); restore then fails because nothing changed | pick a free NEWP range; restore only if step 4 saved |
+| 8839 | env / slow | passed 24 Nov 22:22; today retry0 got past Optimization and timed out at 420 s in step 6, retry1 drawer did not open (likely optimization still running). Not shown as an app change. | re-run once alone (auto-next env rule); raise test timeout if slow again |
+| 8832 | flaky | passed on retry (Create Success toast) | none |
+
+### Re-runs after the fixes (26 Nov 14:00-14:15, user "แก้แล้วรันใหม่", delete D-1 "ลบทั้งหมด"; Xray not touched)
+- 8842: setup setupEtm8042ExtReport re-made the Plan Scenario Ext Daily Report (D-1 done, run 141047); 8842 **passed** (run 141135).
+- 8831: 01-15 Mar 2028 also overlapped (event "No NO No"); range now 23-28 Feb 2026 (free gap on ART, DB read). Run 141255 failed at step 1: Plan A badge was 28 Feb 2026 12:30 (changed by someone else before the run, same service account); restore put Plan A back to 15-25 Feb. Run 141451 **passed**. Restore now only Saves when the event changed.
+- 8837 Mob Plan x2: Export now downloads (script fixed), but the Manpower and Equipment Mob Plan .xlsx have NO `Ramp Down Date` / `Ramp Up Date` labels and no metadata block (run 140002). Xray 8837 PASSED was proven on Shutdown Logic only. Open: TC scope (Mob Plan should not be in 8837) or app gap -> BA/user question, not a script fix.
+- 8839: timed out again at 420 s (run 140041); passed 24 Nov 22:22. Slow Optimization on QA; not retried again today.
+- Spec changes not committed: partial.spec.ts (8837 Excel branch), spec.ts (8831 range + restore guard).
+- 8837 Mob Plan re-proof (14:40, user "พิสูจน์ซ้ำเลย"): Plan "QA ETM-8042 8836" got its Manpower and Equipment Mob Plans with one row "QA 8042 8837" each (left in place). Both .xlsx have no Ramp Down/Up labels and no Start/End Event Date either (manual-8837-mobplan/). ETM-6396 / ETM-7315 define no metadata row in the sheet, so AC 8.3/8.4 is unclear: BA Q15 written. Xray 8837 is PASSED but was proven on Shutdown Logic only: status change waits for the user.
+- 14:50 user "คง PASSED รอ BA": Xray 8837 stays PASSED until BA answers Q15. If BA says the labels must show -> defect + 8837 FAILED (ask user first).
+- Q15 answered (QA lead, user main chat 26 Nov, relayed): Mob Plan Excel does NOT show Ramp Down/Up Date. No defect, 8837 stays PASSED. Spec 8837 Mob Plan variants changed to download + no old labels.
+- 16:55 8837 re-run after Q15 (run 165517): Manpower + Equipment Mob Plan **passed**; Shutdown Logic failed only because the Plan A Logic showed "Optimization Complete" (the slow 8839 optimization from 14:00 finished) and Export was disabled: data state, not app. Not re-run again today. Spec commit f4a47c7 (ep-etm-fe-qa, wip/sprint26-specs).

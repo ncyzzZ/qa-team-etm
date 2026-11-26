@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "id": "D-1",
+      "what": "Daily Report of Plan 'Plan Scenario Ext' (made again by setupEtm8042ExtReport: create, freeze 20-21 Feb, 22 Feb open)",
+      "where": "event QA S26 Ramp / Plan Scenario Ext",
+      "ids": [],
+      "permanent": false,
+      "shared": false,
+      "blocks": true,
+      "status": "deleted",
+      "added": "2026-11-26T07:00:05.822Z",
+      "batch": "B-1",
+      "answer": "ลบทั้งหมด",
+      "doneAt": "2026-11-26T07:11:35.732Z"
+    }
+  ],
+  "plan": null
+}

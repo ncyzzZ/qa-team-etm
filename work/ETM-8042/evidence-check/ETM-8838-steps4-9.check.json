@@ -1,0 +1,32 @@
+{
+  "id": "ETM-8838-steps4-9",
+  "sourceHash": "none (no brief file; lead gave steps file and pictures directly)",
+  "overall": "cannot-tell",
+  "steps": [
+    {
+      "n": 4,
+      "sees": "step-4.png: QA S26 Ramp event (Initiation), Planning tab. Plan card header 'QA ETM-8042 8836', same dark bar holds badge 'Ramp Down/Up Date: 18 Feb 2026 09:00 - 20 Feb 2026 09:00' (red frame), toggle Inactive. Only one Plan card on screen. NO toast anywhere on the screen, although the note box says 'Toast Edit Success'. step-4b.png: same screen, same badge, no toast; its note says the toast is shown in step-4.png, which it is not. Badge belongs to Plan 'QA ETM-8042 8836' (inside its header bar).",
+      "verdict": "cannot-tell",
+      "pictureOk": false
+    },
+    {
+      "n": 9,
+      "sees": "step-9.png: QA S26 Ramp, Planning tab. Plan card header 'QA ETM-8042 8836' with badge 'Ramp Down/Up Date: 15 Feb 2026 09:00 - 25 Feb 2026 18:00' in the same bar, toggle Inactive. Toast bottom right: green check 'Edit Success' / 'Edit Plan Successfully.'. Only one Plan card visible. No step note box in this picture. Badge belongs to Plan 'QA ETM-8042 8836'.",
+      "verdict": "pass",
+      "pictureOk": true
+    }
+  ],
+  "expectedSources": [
+    "work/ETM-8042/manual-steps-8838-retest.md ETM-8838 steps 4 and 9",
+    "Xray backup xray-steps-before-round2-2026-11-20.json (Edit Plan Save step: toast Edit Success and badge 18 Feb 2026 09:00 - 20 Feb 2026 09:00, written for Plan Scenario A)"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 4: no picture shows the Edit Success toast; step-4.png labelled 'toast' shows none, so toast part unproven.",
+    "Step 4 badge value matches expected; only the toast is missing. Re-capture step 4 with the toast visible, or accept badge only.",
+    "step-4.png and step-4b.png are near-identical; notes contradict the screen (step-4b claims toast in step-4.png).",
+    "step-9.png has no step note box, unlike the run rule in the steps file intro.",
+    "No brief file or sourceHash given; checked against the manual-steps file named by the lead."
+  ],
+  "summary": "Step 9 ผ่าน: เห็น toast Edit Success และ badge 15 Feb 2026 09:00 - 25 Feb 2026 18:00 บน Plan QA ETM-8042 8836. Step 4 ตัดสินไม่ได้: badge 18 Feb 2026 09:00 - 20 Feb 2026 09:00 ถูกต้องและเป็นของ Plan นี้ แต่ไม่มีรูปไหนเห็น toast Edit Success (step-4.png ไม่มี toast)."
+}

@@ -1,0 +1,86 @@
+{
+ "key": "ETM-8042",
+ "test": "ETM-8838",
+ "title": "PDF export of Shutdown Logic uses the Plan dates; Daily Report PDF uses the snapshot dates after the Plan was edited",
+ "role": "turnaroundManager",
+ "steps": [
+  {
+   "n": 1,
+   "do": "Open SL page, collapse histogram, Export, PDF, Export",
+   "expected": "A PDF file is downloaded",
+   "verdict": "pass",
+   "why": "Export panel: PDF File enabled (Excel disabled), Overall mode. Downloaded 'QA S26 Ramp_QA ETM-8042 8836_Overall_20261126.pdf' (1 page).",
+   "picture": "step-1.png"
+  },
+  {
+   "n": 2,
+   "do": "Read the Full Shutdown Timeframe in the PDF",
+   "expected": "15 Feb 2026 to 25 Feb 2026, not 08 Feb to 22 Feb",
+   "verdict": "pass",
+   "why": "The Overall PDF has no text label 'Full Shutdown Timeframe'. Read from the render: Gantt axis first column 15 (week header 'Sun 15/02', next 'Sun 22/02'), Ramp Down marker at 15, Ramp Up marker between 25 and 26; axis runs on to 28. No 08 Feb anywhere. Consistent with 15-25 Feb but a person should confirm the axis reading counts as the timeframe.",
+   "picture": "step-2.png",
+   "decidedBy": "user",
+   "answer": "user 26 Nov: axis 15 Feb to 25 Feb, no 08 Feb"
+  },
+  {
+   "n": 3,
+   "do": "Read first day of the Day numbering in the PDF",
+   "expected": "Day 1 is 15 Feb 2026, not 08 Feb 2026",
+   "verdict": "pass",
+   "why": "The Overall PDF has no 'Day N' numbering (text layer and render show only date columns 15..28 with Ramp Down at 15). Cannot read Day 1 from this file; the first date column is 15 Feb, Ramp Down at 15 Feb.",
+   "picture": "step-3.png",
+   "decidedBy": "user",
+   "answer": "user 26 Nov (a): first date column 15 Feb counts as Day 1"
+  },
+  {
+   "n": 4,
+   "do": "Edit Plan 'QA ETM-8042 8836' to 18 Feb 2026 09:00 - 20 Feb 2026 09:00, Save",
+   "expected": "Toast Edit Success, badge 18 Feb 09:00 - 20 Feb 09:00",
+   "verdict": "pass",
+   "why": "Toast 'Edit Success / Edit Plan Successfully.' read; badge text 'Ramp Down/Up Date: 18 Feb 2026 09:00 - 20 Feb 2026 09:00'. Picture step-4b.png: loaded Plan card with the 18-20 Feb badge (toast in step-4.png, gone before the card loaded).",
+   "picture": "step-4b.png"
+  },
+  {
+   "n": 5,
+   "do": "Daily Report, 15 Feb 2026, Export, PDF",
+   "expected": "A PDF file is downloaded",
+   "verdict": "pass",
+   "why": "Header date 15 Feb 2026, DOM buttons: Export, Unfreeze, Save[disabled]. Export dialog (File Type PDF, Mode Only Current Date default, Timeframe Full Shutdown Timeframe). Downloaded 'QA S26 Ramp_QA ETM-8042 8836_DailyReport_Day1_20260215.pdf' (2 pages).",
+   "picture": "step-5.png"
+  },
+  {
+   "n": 6,
+   "do": "Read timeframe/date axis in the Daily Report PDF",
+   "expected": "15 Feb to 25 Feb (snapshot), not 18 to 20 Feb",
+   "verdict": "pass",
+   "why": "PDF page 2 axis 'Feb 2026' columns 15,16,...,25; Ramp Down marker at 15, Ramp Up marker at right edge after 25. First 15 Feb, last 25 Feb. 18-20 Feb not used as range. PDF title: 'Daily Report: QA ETM-8042 8836 15 Feb 2026 (Daily report cut-off: 22:00.)'.",
+   "picture": "step-6.png"
+  },
+  {
+   "n": 7,
+   "do": "Read Day numbering of the PDF (file name and Day label)",
+   "expected": "Day 1 is 15 Feb 2026, not 18 Feb 2026",
+   "verdict": "pass",
+   "why": "File name '..._DailyReport_Day1_20260215.pdf' = Day1 / 20260215. No other 'Day N' label inside the PDF (only the title date 15 Feb 2026). Plan at that time was 18-20 Feb, but the file says Day1 for 15 Feb.",
+   "picture": "step-7.png"
+  },
+  {
+   "n": 8,
+   "do": "Previous-day arrow until disabled: 14 Feb 2026; read Export state; Export PDF",
+   "expected": "Export enabled on 14 Feb 2026 (Day0); PDF of 14 Feb, file name Day0/20260214",
+   "verdict": "pass",
+   "why": "Arrow disabled at header date 14 Feb 2026. DOM: Export enabled (no disabled attribute), Unfreeze shown, Save[disabled]. Downloaded 'QA S26 Ramp_QA ETM-8042 8836_DailyReport_Day0_20260214.pdf'; title 'Daily Report: QA ETM-8042 8836 14 Feb 2026', no tasks, axis Jan-Mar 2026.",
+   "picture": "step-8.png"
+  },
+  {
+   "n": 9,
+   "do": "Edit Plan back to 15 Feb 2026 09:00 - 25 Feb 2026 18:00, Save",
+   "expected": "Toast Edit Success, badge 15 Feb 09:00 - 25 Feb 18:00",
+   "verdict": "pass",
+   "why": "Toast 'Edit Success' read; badge 'Ramp Down/Up Date: 15 Feb 2026 09:00 - 25 Feb 2026 18:00'. Retaken: step-9.png shows the loaded card, badge 15-25 Feb and the toast.",
+   "picture": "step-9.png"
+  }
+ ],
+ "actions": [],
+ "confirmedBy": "user"
+}
