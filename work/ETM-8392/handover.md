@@ -48,3 +48,26 @@ All 7 Tests await the user's --confirm. 8690 s7 / 8692 s4 wait for BA round 3.
   - ETM-10055 (D2, F-13): Ramp Up badge late on D+2 cut. Xray: ETM-8690 s8 FAILED + linked. [QA] ETM-10057 Done, 15m.
 - Xray ETM-8825 now: 16 PASSED, 8690 FAILED, 8692 FAILED. 8693 back to PASSED (the "column cut" was a wrong reading).
 - Possible extra point seen by the checker (not logged): in the 11 Jun PDF the Ramp Down badge covers part of the "Jun 2026" header, leaving "26".
+
+## 25 Nov 2026 (evening) - retest of ETM-10054 / ETM-10055 on QA (read only)
+Run: `/Users/ncy/Downloads/NN/DocforAi/PTTEP_Auto/ep-etm-fe-qa/output/runs/2026-11-25_191802_ETM-8392_manual` (RUN-POLICY auto, manual, writes data: no). Jira at start: ETM-10054 In Progress, ETM-10055 Deployed to QA.
+| Test | Result | Note |
+|---|---|---|
+| 8690 | 7/8, step 8 FAIL | ETM-10055 still there: 11 Jun PDF text layer has only "R" at x=1186.3 (page 1191.1); "amp Up" off page. Step 7 pass (14 Jun PDF: no "Down" fragment, "Ramp Up" full). Step 2: ZIP now has 10-20 Jun (8797 extended Snap C), decided pass |
+| 8692 | 6/6 pass | 17 Jun PDF and ART For PSD 05 Jun PDF: no Ramp/Up/Down text, zoom clean. ETM-10054 not seen any more although its Jira status is In Progress |
+So: **8692 can go PASSED** (Xray change from FAILED, needs the user's yes). **8690 stays FAILED, blocked by open defect ETM-10055** (retest failed: comment "Retest: Failed" + `[QA] Reopen Defect` sub-task need the user's yes). ETM-10054: fix seen on QA; formal "Retest: Passed" on the Defect when dev moves it to Deployed to QA (or now, if the user says).
+Still noted, not logged: the 11 Jun Ramp Down badge covers "Jun 2026" header (shows "26").
+
+## 25 Nov 2026 (night) - written after user yes "ทำทั้ง 3"
+Evidence check: 8690 AGREE-WITH-WARNINGS (fail at s8); 8692 UNSURE only on s1 (ZIP picture), lead decided s1=pass (ZIP + PDFs saved in run exports/). Text layer proof: `retest-2026-11-25-textlayer.md`.
+- Xray ETM-8825 (read back): **17 PASSED, 1 FAILED**. 8692 PASSED (6/6, 8 pictures). 8690 FAILED: s1-s7 PASSED, s8 FAILED linked ETM-10055 (s7 still linked ETM-10054).
+- ETM-10055: comment "Retest: Failed" (600667, image, mention), [QA] Reopen ETM-10081 Done 15m, Defect -> Open.
+- ETM-10054: comment "Retest: Passed" (600668, 3 images, mention), [QA] Retest ETM-10082 Done 15m, Defect -> Ready for UAT.
+
+**State: card blocked by open defect ETM-10055** (Ramp Up badge cut on D+2 in Focus PDF). When dev moves it to Deployed to QA: re-run manual ETM-8690 (read only, RUN-POLICY auto), check page 2 of the 11 Jun Snap C PDF text layer shows a full "Ramp Up", then Retest Passed on ETM-10055 and 8690 -> PASSED.
+
+## 25 Nov 2026 (21:18-21:56) - ETM-10055 fixed, card closed in Xray
+Done from another chat (run `2026-11-25_211800_ETM-8392_manual`): ETM-8690 8/8 pass; ETM-10055 "Retest: Passed" comment 600676 with pictures, [QA] Retest ETM-10089, Defect -> Ready for UAT.
+Lead re-check (pdfjs text layer of that run's 11 Jun PDF): page 2 has full "Ramp Up" at x=1133.4, w=35.7 (ends 1169.1, page 1191.1); "Ramp Down" x=1010.8. 14 Jun PDF: only "Ramp Up", no "Down" fragment.
+**Xray ETM-8825: 18/18 PASSED.** ETM-10054 and ETM-10055 both Ready for UAT. Nothing left on this card in Test Plan ETM-8636.
+Still noted, not logged: the 11 Jun Ramp Down badge covers the "Jun 2026" header (shows "26").

@@ -1,0 +1,59 @@
+{
+ "id": "ETM-8692",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "step 1: picture blank, cut or not full screen",
+  "step 4: picture blank, cut or not full screen",
+  "step 6: picture blank, cut or not full screen",
+  "Step 1 picture shows the PDF page, not the ZIP download; ZIP is only implied by text-layer file name Day7_20260617.pdf.",
+  "Pics 1, 2 and 3 are the same image; no separate evidence per step.",
+  "step-4-fullpage.png and step-6-fullpage.png named by the lead were not found in the brief folder; used pic-2 and pic-5 as full pages.",
+  "17 Jun PDF has 2 pages and 05 Jun PDF has 4; pictures show one page each, other pages rely on text layer only.",
+  "Text layer proves no badge text, not absence of a drawn line; lines judged by eye on the one visible page.",
+  "Step 5 expects 'header + PDF page' picture; app header/export not shown, only PDF.",
+  "Round-3 BA question reported 'p Up' fragment in 17 Jun PDF earlier; current text layer shows none, so a fix is implied."
+ ],
+ "summary": "ขั้น 2-6 ผ่านจากรูปและ text layer (ไม่มีเส้น/ข้อความ Ramp ใน PDF 17 มิ.ย. และ 05 มิ.ย.) แต่ขั้น 1 รูปไม่แสดงไฟล์ ZIP ที่ดาวน์โหลด จึงสรุปรวมเป็น cannot-tell; ถ้ายอมรับชื่อไฟล์ใน text layer เป็นหลักฐาน ZIP ก็ผ่านทั้งเคส",
+ "sourceHash": "6837cebc4a34"
+}

@@ -1,0 +1,60 @@
+{
+  "id": "ETM-8692",
+  "sourceHash": "6837cebc4a34",
+  "overall": "cannot-tell",
+  "steps": [
+    {
+      "n": 1,
+      "sees": "PDF Gantt page (table No. 1-24: ASSET, BS, FP, PL; Gantt header Jun 2026, columns 16, 17 (highlighted), 18, 19). No download bar, no ZIP name, no file list. Same picture as pic-2 and pic-3.",
+      "verdict": "cannot-tell",
+      "pictureOk": false
+    },
+    {
+      "n": 2,
+      "sees": "PDF Gantt page: header Jun 2026, day columns 16, 17 (blue, highlighted), 18, 19; bars and yellow plan lines per row; rows 1-24 with Plan % and Actual 0%.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 3,
+      "sees": "Same page as pic-2: Gantt chart drawn on the right with bars for all 18 rows shown, scale 16-19 Jun 2026.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 4,
+      "sees": "Zoomed crop of the Gantt header and first three rows: Jun 2026, 16, 17 (highlighted), 18, 19; bars and yellow lines; no vertical line and no Ramp badge text. Full page (pic-2) also shows no vertical line. Text layer: 17 Jun PDF pages 1-2 have no Ramp/Up/Down text.",
+      "verdict": "pass",
+      "pictureOk": false
+    },
+    {
+      "n": 5,
+      "sees": "PDF Gantt page: header Jun 2026, columns 04, 05 (highlighted), 06, 07; rows 1-24 (ASSET, BS, FP, PL) with Plan/Actual values (e.g. 63%, 100%, 24%). No app header or export panel visible.",
+      "verdict": "pass",
+      "pictureOk": true
+    },
+    {
+      "n": 6,
+      "sees": "Zoomed crop: Jun 2026, 04, 05 (highlighted), 06, 07; three bars and yellow lines; no vertical line, no Ramp badge. Full page (pic-5) shows no vertical line. Text layer: 05 Jun PDF pages 1-4 have no Ramp/Up/Down text.",
+      "verdict": "pass",
+      "pictureOk": false
+    }
+  ],
+  "expectedSources": [
+    "Story ETM-8392 AC 4 (Export PDF: line shown only inside exported timeframe), as cited in questions-for-BA.md Q1/Q6 and round2 Q1",
+    "BA DEC-061 (Focus window D-1 00:00 to D+2 23:59; edge day counts as inside), as cited in manual-steps-pdf-8690-8692.md and questions-for-BA-round3.md",
+    "App export panel text 'Timeline scale spans from day-1 to day+2 of the report date' (manual-steps-pdf-8690-8692.md, checked on QA 24 Nov 2026)",
+    "manual-steps-pdf-8690-8692.md data table: Snap C RD 11 Jun / RU 13 Jun; ART For PSD RD 08 Jun / RU 16 Jun"
+  ],
+  "uiReachable": "yes",
+  "problems": [
+    "Step 1 picture shows the PDF page, not the ZIP download; ZIP is only implied by text-layer file name Day7_20260617.pdf.",
+    "Pics 1, 2 and 3 are the same image; no separate evidence per step.",
+    "step-4-fullpage.png and step-6-fullpage.png named by the lead were not found in the brief folder; used pic-2 and pic-5 as full pages.",
+    "17 Jun PDF has 2 pages and 05 Jun PDF has 4; pictures show one page each, other pages rely on text layer only.",
+    "Text layer proves no badge text, not absence of a drawn line; lines judged by eye on the one visible page.",
+    "Step 5 expects 'header + PDF page' picture; app header/export not shown, only PDF.",
+    "Round-3 BA question reported 'p Up' fragment in 17 Jun PDF earlier; current text layer shows none, so a fix is implied."
+  ],
+  "summary": "ขั้น 2-6 ผ่านจากรูปและ text layer (ไม่มีเส้น/ข้อความ Ramp ใน PDF 17 มิ.ย. และ 05 มิ.ย.) แต่ขั้น 1 รูปไม่แสดงไฟล์ ZIP ที่ดาวน์โหลด จึงสรุปรวมเป็น cannot-tell; ถ้ายอมรับชื่อไฟล์ใน text layer เป็นหลักฐาน ZIP ก็ผ่านทั้งเคส"
+}

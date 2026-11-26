@@ -1,0 +1,71 @@
+{
+ "id": "ETM-8690",
+ "kind": "manual",
+ "result": "unsure",
+ "firstOverall": "pass",
+ "checkerOverall": "cannot-tell",
+ "steps": [
+  {
+   "n": 1,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 2,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 3,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 4,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 5,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 6,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  },
+  {
+   "n": 7,
+   "first": "pass",
+   "checker": "cannot-tell",
+   "match": false
+  },
+  {
+   "n": 8,
+   "first": "pass",
+   "checker": "pass",
+   "match": true
+  }
+ ],
+ "warnings": [
+  "step 4: picture blank, cut or not full screen",
+  "step 5: picture blank, cut or not full screen",
+  "step 7: picture blank, cut or not full screen",
+  "step 8: picture blank, cut or not full screen",
+  "Step 2: no picture of the downloaded ZIP or its PDF list; 'one PDF per frozen day 10-17 Jun' is unproven and has no source found.",
+  "Step 7: the known issue is a faint white 'Down' fragment; a cropped picture cannot rule it out. Check the PDF text layer.",
+  "PDF pictures show no file name or date title; which PDF each one is comes only from the highlighted day column.",
+  "Pictures 4 and 5 are the same image; pictures 4, 5, 7, 8 are crops, not full pages.",
+  "ba-answers.md (allowed source) lists expected fails for steps 3, 7, 8; these pictures show no cut column or 'R'-only badge. Confirm the pictures' build/date.",
+  "Step 1 Expected has no Story/AC source in the files I may read (Story text and analyst.md not in work folder)."
+ ],
+ "summary": "ยังสรุปไม่ได้: รูปขั้น 1, 3-6, 8 ตรงกับ Expected (เส้น Ramp Down 11 มิ.ย. ราว 1/3 วัน, Ramp Up 13 มิ.ย. ราว 5/6 วัน, ไม่เห็นคอลัมน์ D+2 ถูกตัด) แต่ขั้น 2 ไม่มีรูป ZIP และขั้น 7 รูป crop พิสูจน์ไม่ได้ว่าไม่มีเศษข้อความ 'Down' สีขาวจาง",
+ "sourceHash": "6da21ede09ec"
+}
